@@ -1,0 +1,130 @@
+/**
+ * Description : settings.json - 📌 VS Code에서 Setting 설정 파일
+ * Author : Shiwoo Min
+ * Date : 2025-09-02
+ */
+ {
+    // 탭 크기
+    "editor.tabSize": 2,
+    // 탭 대신 공백 사용
+    "editor.insertSpaces": true,
+    // 파일마다 다른 들여쓰기 감지 방지
+    "editor.detectIndentation": false,
+    // 저장 시 자동 포맷팅
+    "editor.formatOnSave": true,
+    // 붙여넣기 시 자동 포맷팅
+    "editor.formatOnPaste": true,
+    // Prettier 사용
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "explicit"
+    },
+    // 문자열 입력 시 자동 완성 활성화
+    "editor.quickSuggestions": {
+      "comments": false,
+      "strings": true,
+      "other": true
+    },
+    // 150자 길이의 가이드 라인(세로선) 표시
+    "editor.rulers": [150],
+    // 중괄호 가이드라인
+    "editor.guides.bracketPairs": true,
+    // 중괄호 색상 구별
+    "editor.bracketPairColorization.enabled": true,
+    // 코드 미니맵 표시
+    "editor.minimap.enabled": true,
+    // 긴 코드 자동 줄 바꿈
+    "editor.wordWrap": "on",
+    // AI 코드 추천 (GitHub Copilot, CodeWhisperer 등 사용 가능)
+    "editor.inlineSuggest.enabled": true,
+    // 일정 시간 후 자동 저장
+    "files.autoSave": "afterDelay",
+    // 저장 시 불필요한 공백 제거
+    "files.trimTrailingWhitespace": true,
+    // 파일 끝에 빈 줄 추가
+    "files.insertFinalNewline": true,
+    // 숨길 파일/폴더 설정
+    "files.exclude": {
+      "**/node_modules": false,
+      "**/dist": true,
+      "**/out": true,
+      "**/.vscode": false,
+      "**/.git": true,
+      "**/.DS_Store": true
+    },
+    // 상대 경로 import 사용
+    "typescript.preferences.importModuleSpecifier": "relative",
+    // 파일 이동 시 import 경로 자동 업데이트
+    "typescript.updateImportsOnFileMove.enabled": "always",
+    // 자동 타입 획득을 방지하여 불필요한 네트워크 요청을 막음
+    "typescript.suggestionActions.enabled": false,
+    // VSCode가 프로젝트 내 TypeScript를 사용하게 함
+    "typescript.tsdk": "node_modules/typescript/lib",
+    // tsconfig 경로 명시 (보통 필요 없음, tsconfig.json 루트에 있으면 자동 인식)
+    "typescript.enablePromptUseWorkspaceTsdk": true,
+    // 파일을 새 탭에서 열기
+    "workbench.editor.enablePreview": false,
+    // 열린 탭 표시
+    "workbench.editor.showTabs": "multiple",
+    // 아이콘 테마
+    "workbench.iconTheme": "material-icon-theme",
+    // VS Code 테마
+    "workbench.colorTheme": "Chromodynamics",
+    // Playwright 트레이스 뷰어 활성화
+    "playwright.trace.viewer": true,
+    // Playwright 테스트 결과를 터미널에서 출력
+    "playwright.testExplorer.output": "terminal",
+    // 브라우저 인스턴스 재사용 (테스트 속도 향상)
+    "playwright.reuseBrowser": true,
+    // Windows에서 기본 터미널 설정 (Git Bash 추천)
+    "terminal.integrated.defaultProfile.windows": "Git Bash",
+    // Linux 기본 터미널 (bash)
+    "terminal.integrated.defaultProfile.linux": "bash",
+    // macOS에서 기본 터미널 셸을 zsh로 설정
+    "terminal.integrated.defaultProfile.osx": "zsh",
+    "terminal.integrated.profiles.osx": {
+      "zsh": {
+        "path": "/bin/zsh"
+      }
+    },
+    // 터미널 글자 크기
+    "terminal.integrated.fontSize": 14,
+    // 터미널 스크롤 백 로그 길이
+    "terminal.integrated.scrollback": 10000,
+    // 터미널 탭 활성화
+    "terminal.integrated.tabs.enabled": true,
+    // 터미널에서 선택하면 자동 복사
+    "terminal.integrated.copyOnSelection": true,
+    // TabNine에서 실험적인 자동 import 기능 사용
+    "tabnine.experimentalAutoImports": true,
+    // 터미널 문자 인코딩을 UTF-8로 설정
+    "terminal.integrated.encoding": "UTF-8",
+    // Windows용 터미널 환경 변수 설정
+    "terminal.integrated.env.windows": {},
+    // 기본적으로 큰따옴표(") 또는 작은따옴표(') 설정을 유지
+    // "typescript.preferences.quoteStyle": "single",
+    // Git 저장소 변경사항을 자동으로 가져오기
+    "git.autofetch": true,
+    // ESLint 유효성 검사 언어 명시
+    "eslint.validate": ["typescript", "javascript"],
+    // 파일 저장 시 포맷 오류 무시
+    "typescript.tsserver.experimental.enableProjectDiagnostics": false,
+    // 스펠링 검사에서 제외할 사용자 정의 단어 목록
+    "cSpell.userWords": [
+      "ShiwooMin",
+      "Artiordex",
+      "UiAutomator2",
+      "mplan",
+      "Shiwoo",
+      "taskkill",
+      "coupang",
+      "pnpm",
+      "playwright",
+      "connectwon",
+      "kosa",
+      "trivago",
+      "Make-DirsAndFiles",
+      "VERCEL",
+      "vercel_*",
+    ]
+  }

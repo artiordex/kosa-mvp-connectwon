@@ -1,0 +1,54 @@
+/**
+ * Description : launch.json - 📌 VS Code에서 Debug 및 Testing 실행 설정 파일
+ * Author : Shiwoo Min
+ * Date : 2025-09-02
+ */
+ {
+    "version": "0.2.0",
+    "configurations": [
+      // PC 웹 테스트 실행
+      {
+        "name": "Run Playwright E2E-PC",
+        "type": "node",
+        "request": "launch",
+        "program": "${workspaceFolder}/node_modules/@playwright/test/cli.js",
+        "args": ["test", "e2e/pc-web", "--headed", "--reporter=html"],
+        "runtimeArgs": ["--require", "tsconfig-paths/register.js"],
+        "env": {
+          "POC": "pc"
+        },
+        "console": "integratedTerminal",
+        "internalConsoleOptions": "neverOpen"
+      },
+
+      // 모바일 웹 (PC 뷰포트) 테스트 실행
+      {
+        "name": "Run Playwright E2E-PC-Mobile-Web",
+        "type": "node",
+        "request": "launch",
+        "program": "${workspaceFolder}/node_modules/@playwright/test/cli.js",
+        "args": ["test", "e2e/pc-mobile-web", "--headed", "--reporter=html"],
+        "runtimeArgs": ["--require", "tsconfig-paths/register.js"],
+        "env": {
+          "POC": "mw"
+        },
+        "console": "integratedTerminal",
+        "internalConsoleOptions": "neverOpen"
+      },
+
+      // API 테스트 실행
+      {
+        "name": "Run Playwright E2E-API",
+        "type": "node",
+        "request": "launch",
+        "program": "${workspaceFolder}/node_modules/@playwright/test/cli.js",
+        "args": ["test", "e2e/api", "--headed", "--reporter=html"],
+        "runtimeArgs": ["--require", "tsconfig-paths/register.js"],
+        "env": {
+          "POC": "api"
+        },
+        "console": "integratedTerminal",
+        "internalConsoleOptions": "neverOpen"
+      },
+    ]
+  }

@@ -1,0 +1,65 @@
+/**
+ * Description : extensions.json - 📌 VS Code에서 확장 프로그램 정의 파일
+ * Author : Shiwoo Min
+ * Date : 2025-09-02
+ */
+  {
+    "recommendations": [
+      // Error Lens - 오류 표시
+      "usernamehw.errorlens",
+      // Material Icon Theme - 아이콘 테마
+      "PKief.material-icon-theme",
+      // Playwright 공식 확장 프로그램
+      "ms-playwright.playwright",
+      // Playwright Test Explorer - 테스트를 VS Code 내에서 실행 후 UI로 결과 확인
+      "krizzdewizz.playwright-test-explorer",
+      // VS Code 테스트 실행 UI 지원
+      "ms-vscode.test-adapter",
+      // Playwright 테스트 결과 변환기
+      "ms-vscode.test-adapter-converter",
+      // Playwright Test Runner (클릭 한 번 실행)
+      "sakamoto66.vscode-playwright-test",
+      // Playwright Helpers (자동화 스크립트)
+      "jaktestowac.playwright-helpers",
+      // Playwright Snippets (테스트 코드 자동완성)
+      "mkaufman.playwright-test-snippets",
+      // Prettier - 코드 자동 포맷팅
+      "esbenp.prettier-vscode",
+      // ESLint - 코드 스타일 체크
+      "dbaeumer.vscode-eslint",
+      // Test Explorer UI - 다양한 테스트 프레임워크 실행 및 관리
+      "hbenl.vscode-test-explorer",
+      // Live Server
+      "ritwickdey.LiveServer",
+      // GitLens - Git 히스토리 및 코드 변경 추적
+      "eamodio.gitlens",
+      // GitHub Copilot - AI 코드 자동 완성
+      "GitHub.copilot",
+      // ChatGPT - 대체 확장 (추가 옵션)
+      "chatgpt-vscode.chatgpt",
+      // ChatGPT Code - 코드 자동 완성 및 최적화
+      "CodedotAI.chatgpt-code",
+      // 코드 철자 검사 (오타 방지)
+      "streetsidesoftware.code-spell-checker",
+      // Git Graph - Git 브랜치 시각화
+      "mhutchie.git-graph",
+      // Dev Container 환경 지원 (Docker 사용 시)
+      "ms-vscode-remote.remote-containers",
+      // 들여쓰기 색상화
+      "oderwat.indent-rainbow",
+      // Markdown 지원
+      "yzhang.markdown-all-in-one",
+      // TODO 및 FIXME 주석 하이라이트
+      "gruntfuggly.todo-tree",
+      // Test Explorer UI - VS Code에서 테스트 실행 및 관리
+      "hbenl.vscode-test-explorer",
+      // Thunder Client - Postman 대체용 API 클라이언트
+      "rangav.vscode-thunder-client",
+      // REST Client - VS Code 내에서 HTTP 요청 실행 가능
+      "humao.rest-client",
+      // Docker - 컨테이너 관리 및 배포 지원
+      "ms-azuretools.vscode-docker",
+      // TypeScript Import Sorter 자동정렬
+      "mika-perry.vscode-typescript-imports-sorter"
+    ]
+  }

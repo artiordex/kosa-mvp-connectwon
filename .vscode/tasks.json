@@ -1,0 +1,33 @@
+/**
+ * Description : tasks.json - 📌 VS Code에서 자동화 작업을 설정하는 파일
+ * Author : Shiwoo Min
+ * Date : 2025-09-02
+ */
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      // TypeScript 파일을 컴파일
+      "label": "Compile TypeScript",
+      "type": "shell",
+      "command": "tsc",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": ["$tsc"]
+    },
+    {
+      // Playwright Test 실행
+      "label": "Run Playwright Tests",
+      "type": "shell",
+      "command": "pnpm playwright test",
+      "group": "test",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+  ]
+}

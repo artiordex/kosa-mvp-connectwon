@@ -1,0 +1,24 @@
+# node_modules 폴더는 ESLint 검사 제외
+node_modules/
+
+# 빌드된 파일 검사 제외
+dist/
+build/
+coverage/
+
+# 환경설정 관련 파일 제외
+*.config.js
+*.config.ts
+
+# ESLint로 검사할 필요 없는 JSON/YAML 파일 제외
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+*.snap
+
+# Playwright 테스트 결과 제외
+test-results/
+
+# 필요 시 특정 설정 파일만 제외
+vite.config.ts
+eslintrc.cjs

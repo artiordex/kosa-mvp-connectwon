@@ -1,0 +1,40 @@
+{
+  "compilerOptions": {
+    // 공통 타겟 및 모듈 시스템
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+
+    // 타입 검사 관련
+    "strict": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+
+    // 디버깅 지원
+    "sourceMap": true,
+    "resolveJsonModule": true,
+
+    // 경로 alias
+    "baseUrl": ".",
+    "paths": {
+      "@apps/*": ["apps/*/src"],
+      "@web/*": ["apps/web/src/*"],
+      "@admin/*": ["apps/admin/src/*"],
+      "@api/*": ["apps/api/src/*"],
+      "@e2e/*": ["apps/e2e/src/*"],
+
+      "@database/*": ["packages/database/src/*"],
+      "@ui/*": ["packages/ui/src/*"],
+      "@api-contract/*": ["packages/api-contract/src/*"],
+      "@core/*": ["packages/core/src/*"],
+      "@email/*": ["packages/email/src/*"],
+      "@testing/*": ["packages/testing/src/*"]
+    },
+
+    // 공통 타입 정의
+    "types": ["node"]
+  },
+  "exclude": ["node_modules", "dist"]
+}
