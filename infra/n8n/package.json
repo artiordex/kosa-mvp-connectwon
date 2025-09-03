@@ -1,0 +1,12 @@
+{
+  "name": "@connectwon/n8n",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "n8n",
+    "start": "n8n"
+  },
+  "dependencies": {
+    "n8n": "^1.44.0"
+  }
+}
