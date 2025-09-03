@@ -125,6 +125,8 @@
       "trivago",
       "Make-DirsAndFiles",
       "VERCEL",
-      "vercel_*",
+      "healthcheck",
+      "initdb",
+      "CITEXT"
     ]
   }

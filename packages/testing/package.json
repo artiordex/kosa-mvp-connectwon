@@ -1,131 +1,13 @@
 {
-  "name": "@repo/core",
+  "name": "@connectwon/testing",
   "version": "1.0.0",
   "private": true,
-  "description": "ConnectWon Core - 비즈니스 로직 및 도메인 서비스",
-  "author": {
-    "name": "아티올덱스(Artiordex)",
-    "email": "contact@connectwon.com"
-  },
-  "license": "MIT",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.js"
-    },
-    "./auth": {
-      "types": "./dist/domain/auth/index.d.ts",
-      "import": "./dist/domain/auth/index.js",
-      "require": "./dist/domain/auth/index.js"
-    },
-    "./user": {
-      "types": "./dist/domain/user/index.d.ts",
-      "import": "./dist/domain/user/index.js",
-      "require": "./dist/domain/user/index.js"
-    },
-    "./booking": {
-      "types": "./dist/domain/booking/index.d.ts",
-      "import": "./dist/domain/booking/index.js",
-      "require": "./dist/domain/booking/index.js"
-    },
-    "./payment": {
-      "types": "./dist/domain/payment/index.d.ts",
-      "import": "./dist/domain/payment/index.js",
-      "require": "./dist/domain/payment/index.js"
-    },
-    "./venue": {
-      "types": "./dist/domain/venue/index.d.ts",
-      "import": "./dist/domain/venue/index.js",
-      "require": "./dist/domain/venue/index.js"
-    },
-    "./utils": {
-      "types": "./dist/utils/index.d.ts",
-      "import": "./dist/utils/index.js",
-      "require": "./dist/utils/index.js"
-    },
-    "./types": {
-      "types": "./dist/types/index.d.ts",
-      "import": "./dist/types/index.js",
-      "require": "./dist/types/index.js"
-    }
-  },
-  "files": [
-    "dist/**/*",
-    "package.json",
-    "README.md"
-  ],
+  "main": "index.ts",
   "scripts": {
-    "build": "tsc",
-    "dev": "tsc --watch",
-    "clean": "rimraf dist",
-    "type-check": "tsc --noEmit",
-    "lint": "eslint src --ext .ts --report-unused-disable-directives --max-warnings 0",
-    "lint:fix": "eslint src --ext .ts --fix",
-    "test": "vitest",
-    "test:ui": "vitest --ui",
-    "test:run": "vitest run",
-    "test:coverage": "vitest run --coverage"
-  },
-  "dependencies": {
-    "@repo/database": "workspace:*",
-    "@repo/api-contract": "workspace:*",
-    "zod": "^3.22.4",
-    "bcryptjs": "^2.4.3",
-    "jsonwebtoken": "^9.0.2",
-    "dayjs": "^1.11.10",
-    "uuid": "^9.0.1",
-    "lodash": "^4.17.21",
-    "stripe": "^14.5.0",
-    "redis": "^4.6.10"
+    "build": "tsc -p tsconfig.json"
   },
   "devDependencies": {
-    "@types/node": "^20.9.0",
-    "@types/bcryptjs": "^2.4.6",
-    "@types/jsonwebtoken": "^9.0.5",
-    "@types/uuid": "^9.0.7",
-    "@types/lodash": "^4.14.202",
-    "@typescript-eslint/eslint-plugin": "^6.12.0",
-    "@typescript-eslint/parser": "^6.12.0",
-    "eslint": "^8.54.0",
-    "eslint-config-prettier": "^9.0.0",
-    "eslint-plugin-prettier": "^5.0.1",
-    "prettier": "^3.1.0",
-    "typescript": "^5.3.2",
-    "rimraf": "^5.0.5",
-    "vitest": "^1.0.0",
-    "@vitest/coverage-v8": "^1.0.0",
-    "@vitest/ui": "^1.0.0"
-  },
-  "peerDependencies": {
-    "typescript": "^5.0.0"
-  },
-  "engines": {
-    "node": ">=18.17.0",
-    "pnpm": ">=8.0.0"
-  },
-  "publishConfig": {
-    "access": "restricted"
-  },
-  "keywords": [
-    "business-logic",
-    "domain-service",
-    "typescript",
-    "booking",
-    "payment",
-    "auth",
-    "user-management",
-    "venue"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/your-username/kosa-mvp-connectwon.git",
-    "directory": "packages/core"
-  },
-  "bugs": {
-    "url": "https://github.com/your-username/kosa-mvp-connectwon/issues"
-  },
-  "homepage": "https://github.com/your-username/kosa-mvp-connectwon#readme"
+    "jest": "^29.6.0",
+    "typescript": "^5.2.2"
+  }
 }

@@ -1,0 +1,97 @@
+# 컨테이너 올리기
+# docker compose up -d
+
+services:
+  # Next.js 빌드
+  web:
+    build:
+      context: ../../
+      dockerfile: infra/docker/Dockerfile
+      args:
+        APP_DIR: apps/web
+    container_name: web
+    environment:
+      - PORT=3000
+    expose:
+      - "3000"
+
+  # API Nest.js 빌드
+  api:
+    build:
+      context: ../../
+      dockerfile: infra/docker/Dockerfile
+      args:
+        APP_DIR: apps/api
+    container_name: api
+    environment:
+      - PORT=8080
+    expose:
+      - "8080"
+
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: nginx
+    # 단일 진입 포트
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - web
+      - api
+
+  postgres:
+    build:
+      context: ../../packages/db
+      dockerfile: Dockerfile
+    image: postgres:17
+    container_name: postgres
+    # 루트 .env 위치
+    env_file: [../../.env]
+    ports:
+      - "5432:5432"
+    volumes:
+      # 영구 데이터
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    env_file: [../../.env]
+    ports:
+      - "6379:6379"
+    command: >
+      sh -c 'exec redis-server
+        --appendonly yes
+        --appendfsync everysec
+        --requirepass "$$REDIS_PASSWORD"
+        --maxmemory "${REDIS_MAXMEMORY:-512mb}"
+        --maxmemory-policy "${REDIS_EVICTION:-allkeys-lru}"'
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a $${REDIS_PASSWORD} ping | grep PONG"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  redisinsight:
+    image: redis/redisinsight:latest
+    container_name: redisinsight
+    ports:
+      - "5540:5540"
+    depends_on:
+      - redis
+    volumes:
+      - redisinsight:/data
+
+volumes:
+  pg_data:
+  redis_data:
+  redisinsight:
+

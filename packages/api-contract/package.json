@@ -1,5 +1,5 @@
 {
-  "name": "@connectwon/api",
+  "name": "@connectwon/api-contract",
   "version": "1.0.0",
   "private": true,
   "description": "ConnectWon API Server - 예약 기반 생활 서비스 플랫폼 백엔드",
@@ -42,10 +42,6 @@
     "@fastify/cookie": "^9.2.0",
     "@fastify/session": "^10.7.0",
     "@fastify/multipart": "^8.0.0",
-    "@repo/database": "workspace:*",
-    "@repo/core": "workspace:*",
-    "@repo/api-contract": "workspace:*",
-    "@repo/email": "workspace:*",
     "zod": "^3.22.4",
     "zod-openapi": "^2.12.0",
     "bcryptjs": "^2.4.3",

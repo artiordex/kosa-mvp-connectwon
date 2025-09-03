@@ -1,0 +1,780 @@
+{
+  "version": "6.0",
+  "nxVersion": "21.4.1",
+  "pathMappings": {
+    "@apps/*": [
+      "apps/*/src"
+    ],
+    "@web/*": [
+      "apps/web/src/*"
+    ],
+    "@admin/*": [
+      "apps/admin/src/*"
+    ],
+    "@api/*": [
+      "apps/api/src/*"
+    ],
+    "@e2e/*": [
+      "apps/e2e/src/*"
+    ],
+    "@database/*": [
+      "packages/database/src/*"
+    ],
+    "@ui/*": [
+      "packages/ui/src/*"
+    ],
+    "@api-contract/*": [
+      "packages/api-contract/src/*"
+    ],
+    "@core/*": [
+      "packages/core/src/*"
+    ],
+    "@email/*": [
+      "packages/email/src/*"
+    ],
+    "@testing/*": [
+      "packages/testing/src/*"
+    ]
+  },
+  "nxJsonPlugins": [],
+  "pluginsConfig": {
+    "@nx/js": {},
+    "@nx/web": {}
+  },
+  "fileMap": {
+    "nonProjectFiles": [
+      {
+        "file": "packages/db/conf/pg_hba.conf",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "README.md",
+        "hash": "17717318176084121399"
+      },
+      {
+        "file": "configs/typescript/base.json",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "configs/typescript/nextjs.json",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "LICENSE",
+        "hash": "2274332351746093755"
+      },
+      {
+        "file": "infra/docker/docker-compose.yml",
+        "hash": "707037023477991826"
+      },
+      {
+        "file": ".github/CODEOWNERS",
+        "hash": "3637559529422793240"
+      },
+      {
+        "file": "docs/api/README.md",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "nx.json",
+        "hash": "7188603780584800730"
+      },
+      {
+        "file": "configs/tailwind/admin.js",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "scripts/build.sh",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "project_structure.txt",
+        "hash": "793650545680744517"
+      },
+      {
+        "file": "scripts/setup.sh",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": ".vscode/settings.json",
+        "hash": "11231961171944776696"
+      },
+      {
+        "file": "configs/tailwind/web.js",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "tsconfig.json",
+        "hash": "9439890925103537450"
+      },
+      {
+        "file": "docs/deployment/README.md",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": ".github/workflows/ci.yml",
+        "hash": "18108176329550581641"
+      },
+      {
+        "file": ".vscode/launch.json",
+        "hash": "6046040701148293644"
+      },
+      {
+        "file": "configs/typescript/react.json",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "packages/db/conf/postgresql.conf",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "setup-structure.ps1",
+        "hash": "9246759968394491384"
+      },
+      {
+        "file": "scripts/cleanup.sh",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "pnpm-lock.yaml",
+        "hash": "5414406828364836440"
+      },
+      {
+        "file": "configs/eslint/react.js",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "packages/db/Dockerfile",
+        "hash": "2015713434760204709"
+      },
+      {
+        "file": "pnpm-workspace.yaml",
+        "hash": "4990828892716530809"
+      },
+      {
+        "file": "configs/eslint/base.js",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "configs/tailwind/base.js",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "scripts/seed-data.ts",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "packages/db/init/ddl.sql",
+        "hash": "6554592637274124646"
+      },
+      {
+        "file": ".gitignore",
+        "hash": "13119912102255678890"
+      },
+      {
+        "file": "configs/eslint/node.js",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": ".vscode/tasks.json",
+        "hash": "5607030757506003372"
+      },
+      {
+        "file": "configs/page.tsx",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": ".github/workflows/deploy.yml",
+        "hash": "5400311752490377327"
+      },
+      {
+        "file": "configs/typescript/node.json",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": ".prettierrc.json",
+        "hash": "9263230188339818866"
+      },
+      {
+        "file": "infra/docker/Dockerfile",
+        "hash": "4383489764017455142"
+      },
+      {
+        "file": ".vscode/extensions.json",
+        "hash": "5115602799627009404"
+      },
+      {
+        "file": "scripts/deploy.sh",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": ".cz-config.cjs",
+        "hash": "17825521043647645717"
+      },
+      {
+        "file": "docs/development/setup.md",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "scripts/test.sh",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "tsconfig.base.json",
+        "hash": "5121651421387792190"
+      },
+      {
+        "file": ".eslintignore",
+        "hash": "5172069621935954860"
+      },
+      {
+        "file": "package.json",
+        "hash": "11596628580630071771"
+      },
+      {
+        "file": "configs/eslint/next.js",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": ".eslintrc.js",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "docs/README.md",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "infra/docker/nginx.conf",
+        "hash": "12905326758268572762"
+      }
+    ],
+    "projectFileMap": {
+      "@connectwon/core": [
+        {
+          "file": "packages/core/package.json",
+          "hash": "17639676730629565788",
+          "deps": [
+            "npm:typescript",
+            "npm:rimraf@2.6.3",
+            "npm:@types/node",
+            "npm:@types/bcryptjs",
+            "npm:@types/jsonwebtoken",
+            "npm:@types/uuid",
+            "npm:@types/lodash",
+            "npm:@typescript-eslint/eslint-plugin",
+            "npm:@typescript-eslint/parser",
+            "npm:eslint",
+            "npm:eslint-config-prettier",
+            "npm:eslint-plugin-prettier",
+            "npm:prettier",
+            "npm:vitest",
+            "npm:@vitest/coverage-v8",
+            "npm:@vitest/ui",
+            "npm:zod",
+            "npm:bcryptjs",
+            "npm:jsonwebtoken",
+            "npm:dayjs",
+            "npm:uuid",
+            "npm:lodash",
+            "npm:stripe",
+            "npm:redis"
+          ]
+        },
+        {
+          "file": "packages/core/project.json",
+          "hash": "15899302036247633481"
+        },
+        {
+          "file": "packages/core/tsconfig.json",
+          "hash": "3244421341483603138"
+        }
+      ],
+      "@connectwon/email": [
+        {
+          "file": "packages/email/project.json",
+          "hash": "15605996065354518926"
+        },
+        {
+          "file": "packages/email/src/index.ts",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "packages/email/tsconfig.json",
+          "hash": "3244421341483603138"
+        }
+      ],
+      "@connectwon/sdk": [
+        {
+          "file": "packages/sdk/package.json",
+          "hash": "12802073325001762574",
+          "deps": [
+            "npm:typescript"
+          ]
+        }
+      ],
+      "@connectwon/ui": [
+        {
+          "file": "packages/ui/package.json",
+          "hash": "6128363430307941942",
+          "deps": [
+            "npm:typescript",
+            "npm:storybook"
+          ]
+        },
+        {
+          "file": "packages/ui/project.json",
+          "hash": "461284192640801585"
+        },
+        {
+          "file": "packages/ui/src/index.ts",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "packages/ui/tailwind.config.js",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "packages/ui/tsconfig.json",
+          "hash": "3244421341483603138"
+        }
+      ],
+      "@connectwon/e2e": [
+        {
+          "file": "apps/e2e/package.json",
+          "hash": "3750625544334277267"
+        },
+        {
+          "file": "apps/e2e/playwright.config.ts",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/e2e/project.json",
+          "hash": "356540696732108946"
+        },
+        {
+          "file": "apps/e2e/tests/admin/dashboard.spec.ts",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/e2e/tests/auth/login.spec.ts",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/e2e/tests/user/booking-flow.spec.ts",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/e2e/tsconfig.json",
+          "hash": "3244421341483603138"
+        }
+      ],
+      "@connectwon/queue": [
+        {
+          "file": "packages/queue/package.json",
+          "hash": "9832070583986052698",
+          "deps": [
+            "npm:typescript",
+            "npm:bullmq"
+          ]
+        }
+      ],
+      "@connectwon/api": [
+        {
+          "file": "apps/api/.env.example",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/api/ecosystem.config.js",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/api/package.json",
+          "hash": "11185190850946024299",
+          "deps": [
+            "npm:tsx",
+            "npm:typescript",
+            "npm:express"
+          ]
+        },
+        {
+          "file": "apps/api/project.json",
+          "hash": "3965586985069602500"
+        },
+        {
+          "file": "apps/api/src/app.ts",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/api/src/server.ts",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/api/tsconfig.json",
+          "hash": "3244421341483603138"
+        }
+      ],
+      "@connectwon/web": [
+        {
+          "file": "apps/web/next.config.js",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/web/package.json",
+          "hash": "10485176884417171225",
+          "deps": [
+            "npm:next",
+            "npm:react",
+            "npm:react-dom"
+          ]
+        },
+        {
+          "file": "apps/web/project.json",
+          "hash": "2794733571663199984"
+        },
+        {
+          "file": "apps/web/src/app/(auth)/layout.tsx",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/web/src/app/(auth)/login/page.tsx",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/web/src/app/(auth)/signup/page.tsx",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/web/src/app/api/auth/[...nextauth]/route.ts",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/web/src/app/api/proxy/[...path]/route.ts",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/web/src/app/api/webhooks/stripe/route.ts",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/web/src/app/booking/[id]/page.tsx",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/web/src/app/booking/page.tsx",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/web/src/app/booking/success/page.tsx",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/web/src/app/error.tsx",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/web/src/app/globals.css",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/web/src/app/layout.tsx",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/web/src/app/loading.tsx",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/web/src/app/mypage/bookings/page.tsx",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/web/src/app/mypage/page.tsx",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/web/src/app/mypage/points/page.tsx",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/web/src/app/mypage/profile/page.tsx",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/web/src/app/not-found.tsx",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/web/src/app/page.tsx",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/web/src/app/programs/[id]/page.tsx",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/web/src/app/programs/loading.tsx",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/web/src/app/programs/page.tsx",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/web/src/app/venues/[id]/page.tsx",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/web/src/app/venues/page.tsx",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/web/tailwind.config.js",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/web/tsconfig.json",
+          "hash": "3244421341483603138"
+        }
+      ],
+      "@connectwon/testing": [
+        {
+          "file": "packages/testing/package.json",
+          "hash": "14763759355524683227",
+          "deps": [
+            "npm:jest",
+            "npm:typescript"
+          ]
+        },
+        {
+          "file": "packages/testing/project.json",
+          "hash": "12735653636175902171"
+        },
+        {
+          "file": "packages/testing/tsconfig.json",
+          "hash": "3244421341483603138"
+        }
+      ],
+      "@connectwon/admin": [
+        {
+          "file": "apps/admin/hooks/page.tsx",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/admin/next.config.js",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/admin/package.json",
+          "hash": "11695938082583046497"
+        },
+        {
+          "file": "apps/admin/project.json",
+          "hash": "5093680514756669423"
+        },
+        {
+          "file": "apps/admin/src/app/(auth)/layout.tsx",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/admin/src/app/(auth)/login/page.tsx",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/admin/src/app/bookings/page.tsx",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/admin/src/app/dashboard/page.tsx",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/admin/src/app/error.tsx",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/admin/src/app/globals.css",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/admin/src/app/layout.tsx",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/admin/src/app/loading.tsx",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/admin/src/app/programs/page.tsx",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/admin/src/app/settings/page.tsx",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/admin/src/app/users/page.tsx",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/admin/src/app/venues/page.tsx",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/admin/tailwind.config.js",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/admin/tsconfig.json",
+          "hash": "3244421341483603138"
+        }
+      ],
+      "@connectwon/database": [
+        {
+          "file": "packages/database/package.json",
+          "hash": "998249916474238144",
+          "deps": [
+            "npm:prisma",
+            "npm:typescript",
+            "npm:@prisma/client"
+          ]
+        },
+        {
+          "file": "packages/database/prisma/dev.db",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "packages/database/prisma/schema.prisma",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "packages/database/project.json",
+          "hash": "7137983208529369319"
+        },
+        {
+          "file": "packages/database/src/client.ts",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "packages/database/src/types.ts",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "packages/database/src/utils.ts",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "packages/database/tsconfig.json",
+          "hash": "3244421341483603138"
+        }
+      ],
+      "@connectwon/api-contract": [
+        {
+          "file": "packages/api-contract/package.json",
+          "hash": "7238819884422491263",
+          "deps": [
+            "npm:@types/node",
+            "npm:@types/bcryptjs",
+            "npm:@types/jsonwebtoken",
+            "npm:@types/nodemailer",
+            "npm:@types/uuid",
+            "npm:@types/mime-types",
+            "npm:@typescript-eslint/eslint-plugin",
+            "npm:@typescript-eslint/parser",
+            "npm:eslint",
+            "npm:eslint-config-prettier",
+            "npm:eslint-plugin-prettier",
+            "npm:prettier",
+            "npm:typescript",
+            "npm:tsx",
+            "npm:rimraf@2.6.3",
+            "npm:vitest",
+            "npm:@vitest/coverage-v8",
+            "npm:@vitest/ui",
+            "npm:supertest",
+            "npm:@types/supertest",
+            "npm:prisma",
+            "npm:fastify",
+            "npm:@fastify/cors",
+            "npm:@fastify/jwt",
+            "npm:@fastify/helmet",
+            "npm:@fastify/rate-limit",
+            "npm:@fastify/swagger",
+            "npm:@fastify/swagger-ui",
+            "npm:@fastify/cookie",
+            "npm:@fastify/session",
+            "npm:@fastify/multipart",
+            "npm:zod",
+            "npm:zod-openapi",
+            "npm:bcryptjs",
+            "npm:jsonwebtoken",
+            "npm:stripe",
+            "npm:redis",
+            "npm:bullmq",
+            "npm:nodemailer",
+            "npm:openai",
+            "npm:@anthropic-ai/sdk",
+            "npm:@huggingface/inference",
+            "npm:axios",
+            "npm:dotenv",
+            "npm:pino-pretty",
+            "npm:dayjs",
+            "npm:uuid",
+            "npm:mime-types"
+          ]
+        },
+        {
+          "file": "packages/api-contract/page.tsx",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "packages/api-contract/project.json",
+          "hash": "12677420997475211308"
+        },
+        {
+          "file": "packages/api-contract/src/client.ts",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "packages/api-contract/src/index.ts",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "packages/api-contract/src/schemas/auth.ts",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "packages/api-contract/src/schemas/bookings.ts",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "packages/api-contract/src/schemas/common.ts",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "packages/api-contract/src/schemas/payments.ts",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "packages/api-contract/src/schemas/programs.ts",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "packages/api-contract/src/schemas/users.ts",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "packages/api-contract/src/schemas/venues.ts",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "packages/api-contract/src/types.ts",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "packages/api-contract/tsconfig.json",
+          "hash": "3244421341483603138"
+        }
+      ]
+    }
+  }
+}
