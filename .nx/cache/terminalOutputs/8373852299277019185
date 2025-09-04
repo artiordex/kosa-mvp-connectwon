@@ -1,0 +1,4 @@
+
+> @connectwon/ui@1.0.0 build E:\kosa-mvp-connectwon\packages\ui
+> tsc -p tsconfig.json
+

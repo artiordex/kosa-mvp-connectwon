@@ -3,7 +3,7 @@
  * Author : Shiwoo Min
  * Date : 2025-09-02
  */
- {
+  {
     // 탭 크기
     "editor.tabSize": 2,
     // 탭 대신 공백 사용
@@ -69,7 +69,7 @@
     // 아이콘 테마
     "workbench.iconTheme": "material-icon-theme",
     // VS Code 테마
-    "workbench.colorTheme": "Chromodynamics",
+    "workbench.colorTheme": "Copilot Theme",
     // Playwright 트레이스 뷰어 활성화
     "playwright.trace.viewer": true,
     // Playwright 테스트 결과를 터미널에서 출력

@@ -1,0 +1,4 @@
+
+> @connectwon/database@1.0.0 build E:\kosa-mvp-connectwon\packages\database
+> tsc -p tsconfig.json
+

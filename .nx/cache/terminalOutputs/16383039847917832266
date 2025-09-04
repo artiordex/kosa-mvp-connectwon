@@ -1,0 +1,6 @@
+
+> @connectwon/api-contract@1.0.0 build E:\kosa-mvp-connectwon\packages\api-contract
+> tsc
+
+../../node_modules/.pnpm/@types+nodemailer@6.4.19/node_modules/@types/nodemailer/lib/ses-transport/index.d.ts(3,8): error TS1192: Module '"E:/kosa-mvp-connectwon/node_modules/.pnpm/@aws-sdk+client-ses@3.879.0/node_modules/@aws-sdk/client-ses/dist-types/index"' has no default export.
+[41m[30m ELIFECYCLE [39m[49m [31mCommand failed with exit code 2.[39m

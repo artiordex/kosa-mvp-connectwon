@@ -1,0 +1,6 @@
+
+> @connectwon/testing@1.0.0 build E:\kosa-mvp-connectwon\packages\testing
+> tsc -p tsconfig.json
+
+error TS18003: No inputs were found in config file 'E:/kosa-mvp-connectwon/packages/testing/tsconfig.json'. Specified 'include' paths were '["**/*"]' and 'exclude' paths were '[]'.
+[41m[30m ELIFECYCLE [39m[49m [31mCommand failed with exit code 2.[39m

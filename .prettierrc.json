@@ -11,9 +11,10 @@
     "^node:",
     "^github",
     "^vscode",
-    "^docs",
-    "^common",
-    "^e2e/*",
+    "^apps/*",
+    "^configs/*",
+    "^infra/*",
+    "^packages/*",
     "^[.]",
     ".scss$"
   ],

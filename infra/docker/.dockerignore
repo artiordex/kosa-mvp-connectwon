@@ -1,0 +1,32 @@
+# Dependencies
+node_modules
+*/node_modules
+**/node_modules
+
+# Build outputs
+dist
+.nx
+.next
+coverage
+build
+out
+.nyc_output
+
+# Version control
+.git
+
+# Configuration files
+Dockerfile
+docker-compose.yml
+
+# Logs
+*.log
+logs
+
+# Environment
+.env.local
+.env.development.local
+
+# Development tools
+.vscode
+.idea

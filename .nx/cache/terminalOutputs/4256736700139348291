@@ -1,0 +1,4 @@
+
+> @connectwon/api@1.0.0 build E:\kosa-mvp-connectwon\apps\api
+> tsc -p tsconfig.json
+

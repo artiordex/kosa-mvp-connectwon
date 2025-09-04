@@ -1,0 +1,87 @@
+{
+  "run": {
+    "command": "nx run-many -t build",
+    "startTime": "2025-09-04T09:11:33.854Z",
+    "endTime": "2025-09-04T09:11:59.823Z",
+    "inner": false
+  },
+  "tasks": [
+    {
+      "taskId": "@connectwon/ui:build",
+      "target": "build",
+      "projectName": "@connectwon/ui",
+      "hash": "5349158867243838025",
+      "startTime": "2025-09-04T09:11:33.973Z",
+      "endTime": "2025-09-04T09:11:40.981Z",
+      "params": "",
+      "cacheStatus": "cache-miss",
+      "status": 1
+    },
+    {
+      "taskId": "@connectwon/api:build",
+      "target": "build",
+      "projectName": "@connectwon/api",
+      "hash": "6045172658011741622",
+      "startTime": "2025-09-04T09:11:41.016Z",
+      "endTime": "2025-09-04T09:11:41.056Z",
+      "params": "",
+      "cacheStatus": "local-cache-hit",
+      "status": 0
+    },
+    {
+      "taskId": "@connectwon/core:build",
+      "target": "build",
+      "projectName": "@connectwon/core",
+      "hash": "4650311033824297142",
+      "startTime": "2025-09-04T09:11:41.087Z",
+      "endTime": "2025-09-04T09:11:49.312Z",
+      "params": "",
+      "cacheStatus": "cache-miss",
+      "status": 1
+    },
+    {
+      "taskId": "@connectwon/api-contract:build",
+      "target": "build",
+      "projectName": "@connectwon/api-contract",
+      "hash": "16383039847917832266",
+      "startTime": "2025-09-04T09:11:33.973Z",
+      "endTime": "2025-09-04T09:11:55.327Z",
+      "params": "",
+      "cacheStatus": "cache-miss",
+      "status": 1
+    },
+    {
+      "taskId": "@connectwon/database:build",
+      "target": "build",
+      "projectName": "@connectwon/database",
+      "hash": "8987067332404543511",
+      "startTime": "2025-09-04T09:11:55.374Z",
+      "endTime": "2025-09-04T09:11:55.397Z",
+      "params": "",
+      "cacheStatus": "local-cache-hit",
+      "status": 0
+    },
+    {
+      "taskId": "@connectwon/testing:build",
+      "target": "build",
+      "projectName": "@connectwon/testing",
+      "hash": "11305071189118750178",
+      "startTime": "2025-09-04T09:11:49.328Z",
+      "endTime": "2025-09-04T09:11:55.446Z",
+      "params": "",
+      "cacheStatus": "cache-miss",
+      "status": 1
+    },
+    {
+      "taskId": "@connectwon/web:build",
+      "target": "build",
+      "projectName": "@connectwon/web",
+      "hash": "1861814130550673154",
+      "startTime": "2025-09-04T09:11:33.972Z",
+      "endTime": "2025-09-04T09:11:59.758Z",
+      "params": "",
+      "cacheStatus": "cache-miss",
+      "status": 1
+    }
+  ]
+}

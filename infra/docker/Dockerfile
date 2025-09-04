@@ -1,21 +1,35 @@
-FROM node:20-alpine
-
+FROM node:20-slim AS build
 WORKDIR /app
 
-# 루트의 package.json과 pnpm-lock.yaml 복사
-COPY ../../package.json ../../pnpm-lock.yaml ./
+RUN corepack enable && corepack prepare pnpm@10.15.1 --activate
 
-# pnpm 설치
-RUN npm install -g pnpm
+# 의존성 파일들 복사
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY packages/*/package.json packages/*/
+COPY apps/*/package.json apps/*/
 
-# 종속성 설치 (루트 기준)
-RUN pnpm install
+# 전체 설치
+ENV NODE_ENV=development
+RUN --mount=type=cache,id=pnpm,target=/root/.pnpm-store \
+    pnpm install --no-frozen-lockfile
 
-# 각각의 앱 소스 복사 (context 기준 상대 경로)
+# 소스 복사
 COPY . .
 
-# 빌드
+# 전체 빌드 (nx 사용)
 RUN pnpm build
 
+FROM node:20-slim AS runtime
+WORKDIR /app
+ARG APP_DIR
+
+# 런타임 의존성만 설치
+COPY package.json pnpm-lock.yaml ./
+RUN corepack enable && \
+    pnpm install --prod --no-frozen-lockfile
+
+# 빌드 결과만 복사
+COPY --from=build /app/dist/${APP_DIR} ./dist
+
 EXPOSE 3000
-CMD ["pnpm", "start"]
+CMD ["node", "dist/main.js"]

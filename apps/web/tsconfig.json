@@ -1,0 +1,28 @@
+{
+  // 루트 공통 규칙 상속
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "strict": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+
+    // React/Next.js에 필요한 추가 설정
+    "jsx": "react-jsx",
+    // 타입 로딩 명시
+    "types": ["node", "react", "react-dom"],
+    // JS도 import 허용
+    "allowJs": true,
+    // JSON import 허용
+    "resolveJsonModule": true,
+
+    "outDir": "dist",
+    "rootDir": "src"
+  },
+  // Next 자동 생성 타입 파일 포함
+  "include": ["src", "next-env.d.ts"],
+  "exclude": ["node_modules", "dist"]
+}

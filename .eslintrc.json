@@ -1,0 +1,72 @@
+{
+  "env": {
+    "es2022": true,
+    "node": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "airbnb-base",
+    "airbnb-typescript/base",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:import/typescript",
+    "plugin:playwright/playwright-test"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    // 루트 tsconfig 또는 workspace별 tsconfig 경로로 지정
+    "project": "./tsconfig.json",
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "plugins": [
+    "@typescript-eslint",
+    "playwright"
+  ],
+  "settings": {
+    "import/resolver": {
+      "typescript": {
+        // 모듈 경로 alias를 tsconfig 기반으로 해석
+        "project": "./tsconfig.json"
+      }
+    }
+  },
+  "rules": {
+    // 기본 룰 비활성화 or 커스터마이징
+    "semi": ["error", "always"],
+    "quotes": "off",
+    "@typescript-eslint/quotes": "off",
+    "indent": "off",
+    "@typescript-eslint/indent": "off",
+    "linebreak-style": "off",
+    "no-trailing-spaces": "off",
+    "no-console": "off",
+    "object-shorthand": "off",
+    "class-methods-use-this": "off",
+    "no-underscore-dangle": "off",
+    "no-plusplus": "off",
+    "function-paren-newline": "off",
+    "function-call-argument-newline": "off",
+    "lines-between-class-members": "off",
+    "@typescript-eslint/lines-between-class-members": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+    "no-await-in-loop": "off",
+    "import/no-extraneous-dependencies": "off",
+
+    // 줄 길이 제한 완화
+    "max-len": [
+      "warn",
+      {
+        "code": 120,
+        "ignoreComments": true,
+        "ignoreTrailingComments": true,
+        "ignoreTemplateLiterals": true,
+        "ignoreUrls": true
+      }
+    ],
+
+    // Playwright 테스트 관련 룰
+    "playwright/no-focused-test": "error",
+    "playwright/no-skipped-test": "warn",
+    "playwright/no-conditional-in-test": "warn"
+  }
+}

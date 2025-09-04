@@ -1,0 +1,6 @@
+
+> @connectwon/core@1.0.0 build E:\kosa-mvp-connectwon\packages\core
+> tsc --project tsconfig.json
+
+error TS18003: No inputs were found in config file 'E:/kosa-mvp-connectwon/packages/core/tsconfig.json'. Specified 'include' paths were '["src"]' and 'exclude' paths were '["node_modules","dist"]'.
+[41m[30m ELIFECYCLE [39m[49m [31mCommand failed with exit code 2.[39m

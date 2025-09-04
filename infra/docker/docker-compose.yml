@@ -1,8 +1,8 @@
-# 컨테이너 올리기
-# docker compose up -d
+# 컨테이너 올리기: docker compose up -d
+# 빌드 캐시 정리: docker compose build --no-cache
 
 services:
-  # Next.js 빌드
+  # Next.js (웹 프론트엔드)
   web:
     build:
       context: ../../
@@ -14,8 +14,16 @@ services:
       - PORT=3000
     expose:
       - "3000"
+    # Next.js 실행
+    command: ["pnpm", "--filter", "@connectwon/web", "start", "--", "-p", "3000"]
+    healthcheck:
+      # 웹 서버 응답 확인
+      test: ["CMD", "curl", "-fsS", "http://localhost:3000/"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
 
-  # API Nest.js 빌드
+  # Nest.js (백엔드 API)
   api:
     build:
       context: ../../
@@ -27,31 +35,43 @@ services:
       - PORT=8080
     expose:
       - "8080"
+    # Nest.js 실행
+    command: ["node", "dist/main.js"]
+    healthcheck:
+      # /health 엔드포인트 확인
+      test: ["CMD", "curl", "-fsS", "http://localhost:8080/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
 
+  # Nginx 리버스 프록시
   nginx:
     image: nginx:1.27-alpine
     container_name: nginx
-    # 단일 진입 포트
     ports:
+      # 외부 → Nginx 포트
       - "80:80"
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
     depends_on:
-      - web
-      - api
+      web:
+        condition: service_healthy
+      api:
+        condition: service_healthy
 
+  # PostgreSQL
   postgres:
     build:
       context: ../../packages/db
       dockerfile: Dockerfile
     image: postgres:17
     container_name: postgres
-    # 루트 .env 위치
+    # DB 사용자/비밀번호 환경변수
     env_file: [../../.env]
     ports:
       - "5432:5432"
     volumes:
-      # 영구 데이터
+      # 영구 저장소
       - pg_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
@@ -59,12 +79,14 @@ services:
       timeout: 5s
       retries: 10
 
+  # Redis (캐시/세션 스토어)
   redis:
     image: redis:7-alpine
     container_name: redis
     env_file: [../../.env]
     ports:
       - "6379:6379"
+    # Redis 보안/메모리 정책 설정
     command: >
       sh -c 'exec redis-server
         --appendonly yes
@@ -80,18 +102,21 @@ services:
       timeout: 3s
       retries: 10
 
+  # RedisInsight (모니터링 UI)
   redisinsight:
     image: redis/redisinsight:latest
     container_name: redisinsight
     ports:
+      # 브라우저에서 접근 가능
       - "5540:5540"
     depends_on:
-      - redis
+      redis:
+        condition: service_healthy
     volumes:
       - redisinsight:/data
 
+# 데이터는 볼륨 영구 저장
 volumes:
   pg_data:
   redis_data:
   redisinsight:
-
