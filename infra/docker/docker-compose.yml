@@ -8,6 +8,7 @@ version: '3.8'
 # 초기빌드: docker compose build --no-cache --progress=plain
 # 루트에서 빌드: docker compose -f infra/docker/docker-compose.yml build --no-cache
 # Docker 빌드 캐시 완전 제거: docker builder prune -af
+# Compose 파일 경로 명시하여 컨테이너 실행: docker compose -f infra/docker/docker-compose.yml up
 
 services:
   # Next.js (웹 프론트엔드)
