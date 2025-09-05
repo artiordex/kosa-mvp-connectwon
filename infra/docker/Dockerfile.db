@@ -1,0 +1,24 @@
+# postgres:17 이미지 기반
+FROM postgres:17
+ENV TZ=Asia/Seoul
+
+# 디버깅: 빌드 컨텍스트 내용 확인
+RUN echo "=== Build context contents ===" && \
+    ls -la / 2>/dev/null || echo "Root listing failed" && \
+    ls -la /infra 2>/dev/null || echo "No /infra found" && \
+    find / -name "infra" -type d 2>/dev/null || echo "infra directory not found"
+
+# 현재 작업 디렉토리 확인
+WORKDIR /
+RUN echo "=== Current directory ===" && pwd && ls -la
+
+# 단계별 복사 테스트
+RUN echo "=== Testing file paths ===" && \
+    test -f "infra/database/conf/pg_hba.conf" && echo "pg_hba.conf found" || echo "pg_hba.conf NOT found" && \
+    test -f "infra/database/conf/postgresql.conf" && echo "postgresql.conf found" || echo "postgresql.conf NOT found" && \
+    test -d "infra/database/init/" && echo "init directory found" || echo "init directory NOT found"
+
+# 복사 시도
+COPY infra/database/conf/pg_hba.conf /etc/postgresql/pg_hba.conf
+COPY infra/database/conf/postgresql.conf /etc/postgresql/postgresql.conf
+COPY infra/database/init/ /docker-entrypoint-initdb.d/

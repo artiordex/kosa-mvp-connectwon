@@ -10,4 +10,3 @@ packages:
   - '!packages/sdk'
   - '!packages/core'
   - '!packages/testing'
-  - '!packages/api-contract'

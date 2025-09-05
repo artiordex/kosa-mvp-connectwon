@@ -111,7 +111,7 @@ app.use('*', (req, res) => {
 // 에러 핸들러
 app.use(errorHandler)
 
-const PORT = process.env.PORT || 8080
+const PORT = process.env.PORT || 8000
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)

@@ -1,0 +1,33 @@
+# Description : Dockerfile.api - 📌 api docker build (디버깅용)
+# Author : Shiwoo Min
+# Date : 2025-09-06
+
+FROM node:20-slim AS build
+
+WORKDIR /app
+
+# pnpm 활성화
+RUN corepack enable && corepack prepare pnpm@10.15.1 --activate
+
+# 모든 파일을 복사 (나중에 최적화)
+COPY . .
+
+# 의존성 설치
+RUN pnpm install --frozen-lockfile
+
+# 빌드
+RUN pnpm --filter @connectwon/api build
+
+# 프로덕션 단계
+FROM node:20-slim AS production
+
+WORKDIR /app
+ENV NODE_ENV=production
+
+# 빌드 결과물 복사
+COPY --from=build /app/apps/api/dist ./dist
+COPY --from=build /app/apps/api/package.json ./
+COPY --from=build /app/node_modules ./node_modules
+
+EXPOSE 8000
+CMD ["node", "dist/app.js"]

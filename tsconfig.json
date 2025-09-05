@@ -1,19 +1,35 @@
 /**
-  * Description : tsconfig.json - 📌 모노레포 전체를 위한 통합 TypeScript 설정
-  * Author : Shiwoo Min
-  * Date : 2025-09-02
-  *
-  * 참고 명령어:
-  *   npx tsc --project tsconfig.json --showConfig
-  */
+ * Description : tsconfig.json - 📌 모노레포 전체를 위한 통합 TypeScript 설정
+ * Author : Shiwoo Min
+ * Date : 2025-09-05
+ *
+ * 참고 명령어:
+ *   npx tsc --project tsconfig.json --showConfig
+ */
 {
+  "extends": "./tsconfig.base.json",
+
   "compilerOptions": {
     // 프로젝트의 기본 경로 지정 (모듈 경로 설정을 위한 기준)
-    "baseUrl": ".",
+    "rootDir": "./",
 
-    // 모듈 Path 별칭 설정 - 모노레포 패키지들을 쉽게 import
+    // 컴파일된 JavaScript 파일이 저장될 디렉터리
+    "outDir": "./dist",
+
+    // 타입 정의 파일 경로 지정
+    "typeRoots": ["./node_modules/@types"],
+
+    // 타입 선언 파일(.d.ts) 관련
+    "declarationMap": true,
+
+    // 모노레포에서 빌드 성능 향상을 위한 증분 빌드 정보 파일
+    "tsBuildInfoFile": "./dist/.tsbuildinfo",
+
+    // 컴파일 에러 시 .js 파일 출력 여부
+    "noEmitOnError": false,
+
+    // 기존 @repo 스타일 유지 (호환성을 위해)
     "paths": {
-      // 기존 @repo 스타일 유지 (호환성을 위해)
       "@repo/database": ["./packages/database/src"],
       "@repo/database/*": ["./packages/database/src/*"],
       "@repo/ui": ["./packages/ui/src"],
@@ -21,87 +37,8 @@
       "@repo/api-contract": ["./packages/api-contract/src"],
       "@repo/api-contract/*": ["./packages/api-contract/src/*"],
       "@repo/core": ["./packages/core/src"],
-      "@repo/core/*": ["./packages/core/src/*"],
-
-      // tsconfig.base.json과 통합된 새로운 스타일
-      "@apps/*": ["apps/*/src"],
-      "@web/*": ["apps/web/src/*"],
-      "@admin/*": ["apps/admin/src/*"],
-      "@api/*": ["apps/api/src/*"],
-      "@e2e/*": ["apps/e2e/src/*"],
-
-      "@database/*": ["packages/database/src/*"],
-      "@ui/*": ["packages/ui/src/*"],
-      "@api-contract/*": ["packages/api-contract/src/*"],
-      "@core/*": ["packages/core/src/*"],
-      "@email/*": ["packages/email/src/*"],
-      "@testing/*": ["packages/testing/src/*"]
-    },
-
-    // 컴파일된 JavaScript 파일이 저장될 디렉터리
-    "outDir": "./dist",
-
-    // TypeScript 파일의 루트 디렉터리 지정
-    "rootDir": "./",
-
-    // Node.js 환경과 번들러 환경을 모두 지원하기 위한 설정
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-
-    // 컴파일된 코드의 타겟 ES 버전
-    "target": "ES2022",
-
-    // 사용할 라이브러리 정의 (ES 표준 + DOM API + Node.js)
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
-
-    // 타입 정의 파일 경로 지정
-    "typeRoots": ["./node_modules/@types"],
-
-    // ESM과 CommonJS 호환성을 위한 설정
-    "verbatimModuleSyntax": true,
-
-    // 타입 선언 파일(.d.ts) 생성
-    "declaration": true,
-    "declarationMap": true,
-
-    // 엄격한 타입 검사 모드 활성화
-    "strict": true,
-    "noImplicitAny": true,
-    "strictPropertyInitialization": false,
-
-    // CommonJS 및 ES 모듈 간 상호 운용성 지원
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-
-    // 라이브러리 파일(.d.ts)의 타입 검사를 건너뜀 (빌드 속도 향상)
-    "skipLibCheck": true,
-
-    // 디버깅을 위한 소스맵 설정
-    "sourceMap": true,
-    "inlineSourceMap": false,
-    "inlineSources": true,
-
-    // 빌드 설정
-    "noEmitOnError": false,
-    "allowJs": true,
-    "resolveJsonModule": true,
-
-    // 대소문자 일관성을 유지하여 파일을 가져오기 (OS 간 호환성 문제 방지)
-    "forceConsistentCasingInFileNames": true,
-
-    // 모노레포에서 빌드 성능 향상을 위한 증분 빌드
-    "incremental": true,
-    "tsBuildInfoFile": "./dist/.tsbuildinfo",
-
-    // 모듈 간 격리를 보장 (번들러 호환성)
-    "isolatedModules": true,
-
-    // 추가적인 엄격한 검사 옵션들
-    "noUncheckedIndexedAccess": true,
-    "exactOptionalPropertyTypes": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "noImplicitOverride": true
+      "@repo/core/*": ["./packages/core/src/*"]
+    }
   },
 
   // TypeScript 컴파일에 포함할 파일들 - 모든 패키지와 앱 포함
@@ -114,7 +51,7 @@
     "apps/*/*.tsx",
     "*.ts",
     "*.tsx"
-  ],
+, "apps/web/next.config.mjs"  ],
 
   // TypeScript 컴파일 대상에서 제외
   "exclude": [
@@ -133,5 +70,5 @@
     // Playwright 관련 제외 항목
     "test-results",
     "playwright-report"
-  ],
+  ]
 }

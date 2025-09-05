@@ -1,32 +1,30 @@
-  /**
-   * Description : tsconfig.json - 📌 web 의 tsconfig.json 최소유지
-   * Author : Shiwoo Min
-   * Date : 2025-09-05
-   */
+/**
+ * Description : tsconfig.json - 📌 web 의 tsconfig.json 최소유지
+ * Author : Shiwoo Min
+ * Date : 2025-09-06
+ */
 {
   // 루트 공통 규칙 상속
   "extends": "../../tsconfig.base.json",
-  "compilerOptions": {
-    "target": "ES2022",
-    "module": "ESNext",
-    "moduleResolution": "Node",
-    "strict": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "skipLibCheck": true,
 
+  "compilerOptions": {
     // React/Next.js에 필요한 추가 설정
     "jsx": "react-jsx",
+
     // 타입 로딩 명시
     "types": ["node", "react", "react-dom", "tailwindcss"],
+
     // JS도 import 허용
     "allowJs": true,
-    // JSON import 허용
-    "resolveJsonModule": true,
 
-    "outDir": "dist",
-    "rootDir": "src"
+    // JSON import 허용
+    "resolveJsonModule": true
+
+    // 아래 항목들은 Next.js에서 직접 tsc로 빌드하지 않기 때문에 생략 가능
+    // "outDir": "dist",
+    // "rootDir": "src"
   },
+
   // Next 자동 생성 타입 파일 포함
   "include": ["src", "next-env.d.ts"],
   "exclude": ["node_modules", "dist"]

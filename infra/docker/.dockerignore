@@ -1,7 +1,8 @@
 /**
  * Description : .dockerignore - 📌 도커 빌드 시 제외할 파일 및 디렉토리
  * Author      : Shiwoo Min
- * Date        : 2025-09-05
+ * Date        : 2025-09-06
+ * 09-06: Docker 자체 설정 파일 제외 제거
  */
 
 # Node.js 의존성 디렉토리 제외
@@ -20,10 +21,6 @@ out
 
 # Git 버전 관리 관련 제외
 .git
-
-# Docker 자체 설정 파일 제외
-Dockerfile
-docker-compose.yml
 
 # 로그 파일 제외
 *.log

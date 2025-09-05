@@ -1,52 +1,47 @@
 # Description : docker-compose.yml - 📌 도커 컴포즈 설정 파일
 # Author      : Shiwoo Min
-# Date        : 2025-09-05
+# Date        : 2025-09-06
 
 version: '3.8'
 # 컨테이너 올리기: docker compose up -d
 # 빌드 캐시 정리: docker compose build --no-cache
-# Dockerfile 찾기: find ../.. -name "Dockerfile" -type f
+# 초기빌드: docker compose build --no-cache --progress=plain
+# 루트에서 빌드: docker compose -f infra/docker/docker-compose.yml build --no-cache
+# Docker 빌드 캐시 완전 제거: docker builder prune -af
 
 services:
-  # Next.js (웹 프론트엔드, 빌드 후 런타임 실행)
+  # Next.js (웹 프론트엔드)
   web:
     build:
       context: ../../
-      dockerfile: ./apps/web/Dockerfile
-      args:
-        APP_DIR: apps/web
-    container_name: web
+      dockerfile: ./infra/docker/Dockerfile.web
+    container_name: web:latest
     environment:
+      - NODE_ENV=production
       - PORT=3000
     expose:
       - "3000"
-    # Next.js 실행
-    command: ["pnpm", "--filter", "@connectwon/web", "start", "--", "-p", "3000"]
+    # Dockerfile의 CMD 사용 (command 제거)
     healthcheck:
-      # 웹 서버 응답 확인
-      test: ["CMD", "curl", "-fsS", "http://localhost:3000/"]
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/"]
       interval: 10s
       timeout: 3s
       retries: 10
 
-  # Nest.js (백엔드 API, /health 엔드포인트로 상태 확인)
+  # Express.js API (백엔드)
   api:
     build:
-      # ls -la ../../apps/api/Dockerfile
       context: ../../
-      dockerfile: ./apps/api/Dockerfile
-      args:
-        APP_DIR: apps/api
-    container_name: api
+      dockerfile: ./infra/docker/Dockerfile.api
+    container_name: api:latest
     environment:
-      - PORT=8080
+      - NODE_ENV=production
+      - PORT=8000
     expose:
-      - "8080"
-    # Nest.js 실행
-    command: ["node", "dist/main.js"]
+      - "8000"
+    # Dockerfile의 CMD 사용 (command 제거)
     healthcheck:
-      # /health 엔드포인트 확인
-      test: ["CMD", "curl", "-fsS", "http://localhost:8080/health"]
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8000/health"]
       interval: 10s
       timeout: 3s
       retries: 10
@@ -56,7 +51,6 @@ services:
     image: nginx:1.27-alpine
     container_name: nginx
     ports:
-      # 외부 → Nginx 포트
       - "80:80"
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
@@ -69,20 +63,17 @@ services:
   # PostgreSQL
   postgres:
     build:
-      context: ../database
-      dockerfile: Dockerfile
+      context: ../../
+      dockerfile: infra/docker/Dockerfile.db
     image: postgres:17
     container_name: postgres
-    # DB 사용자/비밀번호 환경변수
     env_file: [../../.env]
     ports:
       - "5432:5432"
-    # 커스텀 conf 경로 사용
     command: >
       postgres -c config_file=/etc/postgresql/postgresql.conf
               -c hba_file=/etc/postgresql/pg_hba.conf
     volumes:
-      # 영구 저장소
       - pg_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
@@ -97,7 +88,6 @@ services:
     env_file: [../../.env]
     ports:
       - "6379:6379"
-    # Redis 보안/메모리 정책 설정
     command: >
       sh -c 'exec redis-server
         --appendonly yes
@@ -118,7 +108,6 @@ services:
     image: redis/redisinsight:latest
     container_name: redisinsight
     ports:
-      # 브라우저에서 접근 가능
       - "5540:5540"
     depends_on:
       redis:
@@ -126,7 +115,6 @@ services:
     volumes:
       - redisinsight:/data
 
-# 데이터는 볼륨 영구 저장
 volumes:
   pg_data:
   redis_data:

@@ -1,14 +1,15 @@
 /**
-  * Description : tsconfig.base.json - 📌 루트 TypeScript 공통 설정(호이스팅 적용)
-  * Author : Shiwoo Min
-  * Date : 2025-09-05
-  */
+ * Description : tsconfig.base.json - 📌 루트 TypeScript 공통 설정(호이스팅 적용)
+ * Author : Shiwoo Min
+ * Date : 2025-09-06
+ */
 {
   "compilerOptions": {
     // 공통 타겟 및 모듈 시스템
     "target": "ES2022",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
 
     // 타입 검사 관련
     "strict": true,
@@ -19,6 +20,7 @@
 
     // 디버깅 지원
     "sourceMap": true,
+    "inlineSources": true,
     "resolveJsonModule": true,
     "allowJs": true,
 
@@ -65,13 +67,7 @@
   "include": [
     // 모든 앱과 패키지의 src 디렉터리
     "apps/*/src/**/*",
-    "packages/*/src/**/*",
-
-    // 특별히 포함해야 할 파일들
-    "apps/admin/page.tsx",
-    "apps/admin/lib/**/*",
-    "apps/*/next.config.ts",
-    "apps/*/tailwind.config.ts"
+    "packages/*/src/**/*"
   ],
 
   "exclude": [

@@ -9880,6 +9880,11 @@
     "@connectwon/api": [
       {
         "source": "@connectwon/api",
+        "target": "npm:typescript",
+        "type": "static"
+      },
+      {
+        "source": "@connectwon/api",
         "target": "npm:prisma",
         "type": "static"
       },
@@ -9979,6 +9984,11 @@
     "@connectwon/web": [
       {
         "source": "@connectwon/web",
+        "target": "npm:typescript",
+        "type": "static"
+      },
+      {
+        "source": "@connectwon/web",
         "target": "npm:@types/react@18.3.24",
         "type": "static"
       },
@@ -9999,7 +10009,27 @@
       },
       {
         "source": "@connectwon/web",
+        "target": "npm:tailwindcss",
+        "type": "static"
+      },
+      {
+        "source": "@connectwon/web",
         "target": "npm:eslint-config-next",
+        "type": "static"
+      },
+      {
+        "source": "@connectwon/web",
+        "target": "npm:next",
+        "type": "static"
+      },
+      {
+        "source": "@connectwon/web",
+        "target": "npm:react",
+        "type": "static"
+      },
+      {
+        "source": "@connectwon/web",
+        "target": "npm:react-dom",
         "type": "static"
       }
     ],
@@ -21158,5 +21188,5 @@
   },
   "version": "6.0",
   "errors": [],
-  "computedAt": 1757039702262
+  "computedAt": 1757063702359
 }
