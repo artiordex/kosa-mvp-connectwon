@@ -2,12 +2,13 @@
   "name": "connectwon",
   "private": true,
   "version": "1.0.0",
-  "description": "ConnectWon monorepo (Nx + pnpm)",
+  "description": "ConnectWon - 도전자들을 위한 예약 기반 생활 서비스",
   "type": "module",
   "author": "Shiwoo Min",
-  "license": "ISC",
+  "license": "MIT",
   "engines": {
-    "node": ">=20.11.0"
+    "node": ">=20.11.0",
+    "pnpm": ">=10.7.0"
   },
   "engineStrict": true,
   "packageManager": "pnpm@10.7.0",
@@ -59,7 +60,8 @@
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "tsx": "^4.19.3",
-    "typescript": "^5.4.0"
+    "typescript": "^5.4.0",
+    "rimraf": "^6.0.0"
   },
   "lint-staged": {
     "*.{ts,tsx,js,json}": [

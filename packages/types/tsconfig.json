@@ -1,0 +1,14 @@
+/**
+  * Description : tsconfig.json - 📌 types 의 tsconfig.json 최소유지
+  * Author : Shiwoo Min
+  * Date : 2025-09-05
+  */
+{
+  // 루트의 tsconfig.json 상속{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "declaration": true,
+    "outDir": "./dist",
+    "rootDir": "./src"
+  }
+}

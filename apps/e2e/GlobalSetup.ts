@@ -1,12 +1,12 @@
 /**
  * Description : GlobalSetup.ts - 📌 Playwright 테스트 실행 초기화 작업
  * Author : Shiwoo Min
- * Date : 2025-09-12
+ * Date : 2025-09-04
  */
-import { PocInitializer } from '@common/initializers/PocInitializer.js';
-import { Logger } from '@common/logger/customLogger.js';
-import { POCEnv } from '@common/utils/env/POCEnv.js';
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
+import { PocInitializer } from "./src/initializers/PocInitializer.js";
+import { logger } from "./src/logger/customLogger.js";
+import { POCEnv } from "./src/utils/env/POCEnv.js";
 import type winston from 'winston';
 
 dotenv.config();

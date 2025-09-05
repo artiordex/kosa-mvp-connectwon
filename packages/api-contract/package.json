@@ -2,110 +2,21 @@
   "name": "@connectwon/api-contract",
   "version": "1.0.0",
   "private": true,
-  "description": "ConnectWon API Server - 예약 기반 생활 서비스 플랫폼 백엔드",
-  "author": {
-    "name": "아티올덱스(Artiordex)",
-    "email": "contact@connectwon.com"
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
   },
-  "license": "MIT",
-  "main": "dist/server.js",
   "scripts": {
-    "dev": "tsx watch --clear-screen=false src/server.ts",
     "build": "tsc",
-    "start": "node dist/server.js",
-    "start:prod": "NODE_ENV=production node dist/server.js",
-    "clean": "rimraf dist",
-    "type-check": "tsc --noEmit",
-    "lint": "eslint src --ext .ts,.js --report-unused-disable-directives --max-warnings 0",
-    "lint:fix": "eslint src --ext .ts,.js --fix",
-    "test": "vitest",
-    "test:ui": "vitest --ui",
-    "test:run": "vitest run",
-    "test:coverage": "vitest run --coverage",
-    "db:migrate": "prisma migrate dev",
-    "db:deploy": "prisma migrate deploy",
-    "db:generate": "prisma generate",
-    "db:studio": "prisma studio",
-    "db:seed": "tsx src/scripts/seed.ts",
-    "db:reset": "prisma migrate reset --force",
-    "docker:build": "docker build -t connectwon-api .",
-    "docker:run": "docker run -p 3001:3001 connectwon-api"
+    "dev": "tsc --watch",
+    "clean": "rimraf dist"
   },
   "dependencies": {
-    "fastify": "^4.24.3",
-    "@fastify/cors": "^8.4.0",
-    "@fastify/jwt": "^7.2.4",
-    "@fastify/helmet": "^11.1.1",
-    "@fastify/rate-limit": "^9.0.1",
-    "@fastify/swagger": "^8.12.0",
-    "@fastify/swagger-ui": "^2.1.0",
-    "@fastify/cookie": "^9.2.0",
-    "@fastify/session": "^10.7.0",
-    "@fastify/multipart": "^8.0.0",
-    "zod": "^3.22.4",
-    "zod-openapi": "^2.12.0",
-    "bcryptjs": "^2.4.3",
-    "jsonwebtoken": "^9.0.2",
-    "stripe": "^14.5.0",
-    "redis": "^4.6.10",
-    "bullmq": "^4.15.0",
-    "nodemailer": "^6.9.7",
-    "openai": "^4.20.1",
-    "@anthropic-ai/sdk": "^0.9.1",
-    "@huggingface/inference": "^2.6.4",
-    "axios": "^1.6.2",
-    "dotenv": "^16.3.1",
-    "pino": "^8.16.2",
-    "pino-pretty": "^10.2.3",
-    "dayjs": "^1.11.10",
-    "uuid": "^9.0.1",
-    "mime-types": "^2.1.35",
-    "sharp": "^0.32.6"
-  },
-  "devDependencies": {
-    "@types/node": "^20.9.0",
-    "@types/bcryptjs": "^2.4.6",
-    "@types/jsonwebtoken": "^9.0.5",
-    "@types/nodemailer": "^6.4.14",
-    "@types/uuid": "^9.0.7",
-    "@types/mime-types": "^2.1.4",
-    "@typescript-eslint/eslint-plugin": "^6.12.0",
-    "@typescript-eslint/parser": "^6.12.0",
-    "eslint": "^8.54.0",
-    "eslint-config-prettier": "^9.0.0",
-    "eslint-plugin-prettier": "^5.0.1",
-    "prettier": "^3.1.0",
-    "typescript": "^5.3.2",
-    "tsx": "^4.6.0",
-    "rimraf": "^5.0.5",
-    "vitest": "^1.0.0",
-    "@vitest/coverage-v8": "^1.0.0",
-    "@vitest/ui": "^1.0.0",
-    "supertest": "^6.3.3",
-    "@types/supertest": "^2.0.16",
-    "prisma": "^5.6.0"
-  },
-  "engines": {
-    "node": ">=18.17.0",
-    "pnpm": ">=8.0.0"
-  },
-  "keywords": [
-    "api",
-    "fastify",
-    "typescript",
-    "reservation",
-    "booking",
-    "startup",
-    "incubator",
-    "coworking"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/your-username/kosa-mvp-connectwon.git",
-    "directory": "apps/api"
-  },
-  "bugs": {
-    "url": "https://github.com/your-username/kosa-mvp-connectwon/issues"
-  },
-  "homepage": "https://github.com/your-username/kosa-mvp-connectwon#readme"
+    "zod": "^3.23.8"
+  }
 }

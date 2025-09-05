@@ -1,3 +1,8 @@
+  /**
+   * Description : tsconfig.json - 📌 web 의 tsconfig.json 최소유지
+   * Author : Shiwoo Min
+   * Date : 2025-09-05
+   */
 {
   // 루트 공통 규칙 상속
   "extends": "../../tsconfig.base.json",
@@ -13,7 +18,7 @@
     // React/Next.js에 필요한 추가 설정
     "jsx": "react-jsx",
     // 타입 로딩 명시
-    "types": ["node", "react", "react-dom"],
+    "types": ["node", "react", "react-dom", "tailwindcss"],
     // JS도 import 허용
     "allowJs": true,
     // JSON import 허용

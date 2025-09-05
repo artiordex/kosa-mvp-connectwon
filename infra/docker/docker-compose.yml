@@ -1,12 +1,18 @@
+# Description : docker-compose.yml - 📌 도커 컴포즈 설정 파일
+# Author      : Shiwoo Min
+# Date        : 2025-09-05
+
+version: '3.8'
 # 컨테이너 올리기: docker compose up -d
 # 빌드 캐시 정리: docker compose build --no-cache
+# Dockerfile 찾기: find ../.. -name "Dockerfile" -type f
 
 services:
-  # Next.js (웹 프론트엔드)
+  # Next.js (웹 프론트엔드, 빌드 후 런타임 실행)
   web:
     build:
       context: ../../
-      dockerfile: infra/docker/Dockerfile
+      dockerfile: ./apps/web/Dockerfile
       args:
         APP_DIR: apps/web
     container_name: web
@@ -23,11 +29,12 @@ services:
       timeout: 3s
       retries: 10
 
-  # Nest.js (백엔드 API)
+  # Nest.js (백엔드 API, /health 엔드포인트로 상태 확인)
   api:
     build:
+      # ls -la ../../apps/api/Dockerfile
       context: ../../
-      dockerfile: infra/docker/Dockerfile
+      dockerfile: ./apps/api/Dockerfile
       args:
         APP_DIR: apps/api
     container_name: api
@@ -62,7 +69,7 @@ services:
   # PostgreSQL
   postgres:
     build:
-      context: ../../packages/db
+      context: ../database
       dockerfile: Dockerfile
     image: postgres:17
     container_name: postgres
@@ -70,6 +77,10 @@ services:
     env_file: [../../.env]
     ports:
       - "5432:5432"
+    # 커스텀 conf 경로 사용
+    command: >
+      postgres -c config_file=/etc/postgresql/postgresql.conf
+              -c hba_file=/etc/postgresql/pg_hba.conf
     volumes:
       # 영구 저장소
       - pg_data:/var/lib/postgresql/data

@@ -1,9 +1,15 @@
-# Dependencies
+/**
+ * Description : .dockerignore - 📌 도커 빌드 시 제외할 파일 및 디렉토리
+ * Author      : Shiwoo Min
+ * Date        : 2025-09-05
+ */
+
+# Node.js 의존성 디렉토리 제외
 node_modules
 */node_modules
 **/node_modules
 
-# Build outputs
+# 빌드 결과물 제외
 dist
 .nx
 .next
@@ -12,21 +18,29 @@ build
 out
 .nyc_output
 
-# Version control
+# Git 버전 관리 관련 제외
 .git
 
-# Configuration files
+# Docker 자체 설정 파일 제외
 Dockerfile
 docker-compose.yml
 
-# Logs
+# 로그 파일 제외
 *.log
 logs
 
-# Environment
+# 로컬 환경 변수 파일 제외
 .env.local
 .env.development.local
+.env
 
-# Development tools
+# 개발 도구 설정 제외
 .vscode
 .idea
+
+# 민감 정보 파일
+*.pem
+*.key
+
+# 테스트 스냅샷 제외
+*.snap

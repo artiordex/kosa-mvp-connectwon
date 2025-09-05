@@ -1,59 +1,22 @@
+  /**
+   * Description : tsconfig.json - 📌 admin 의 tsconfig.json 최소유지
+   * Author : Shiwoo Min
+   * Date : 2025-09-05
+   */
 {
-  // Next.js 14 Admin TypeScript 설정
+  // 루트의 tsconfig.json 상속
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
-    // 모듈은 ES2022로 설정
-    "target": "ES2022",
-    // Node.js, React, Next.js 타입 정의 포함
-    "types": ["node", "react", "next"],
-    // 브라우저 DOM API와 ES2022 기능 사용 가능
-    "lib": ["dom", "dom.iterable", "ES2022"],
-    // JavaScript 파일도 컴파일 허용
-    "allowJs": true,
-    // 타입 검사 건너뛰기 (빌드 속도 향상)
-    "skipLibCheck": true,
-    // 엄격한 타입 검사 활성화
-    "strict": true,
-    // Next.js가 빌드를 처리하므로 TypeScript는 타입 검사만
+    // Next.js가 빌드 처리
     "noEmit": true,
-    // CommonJS와 ES 모듈 상호 운용성
-    "esModuleInterop": true,
-    // 최신 ES 모듈 시스템 사용
-    "module": "esnext",
-    // Bundler 방식의 모듈 해상도 (Webpack, Vite 등과 호환)
-    "moduleResolution": "bundler",
-    // JSON 파일을 모듈로 import 가능
-    "resolveJsonModule": true,
-    // 각 파일을 독립적으로 컴파일 (빠른 빌드)
-    "isolatedModules": true,
-    // JSX를 그대로 유지 (Next.js가 처리)
+    // Next.js JSX 처리
     "jsx": "preserve",
-    // 증분 컴파일로 빌드 속도 향상
-    "incremental": true,
-    // 파일명 대소문자 일관성 강제
-    "forceConsistentCasingInFileNames": true,
-    // Next.js TypeScript 플러그인 사용
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ],
-
-    // 절대 경로 기준점 설정
-    "baseUrl": ".",
-    // 경로 별칭 설정 (@/ = src/ 폴더)
-    "paths": {
-      "@/*": ["./src/*"]
-    }
+    "plugins": [{ "name": "next" }]
   },
-
-  // 컴파일에 포함할 파일들
   "include": [
     "next-env.d.ts",
+    ".next/types/**/*.ts",
     "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts"
-  ],
-
-  // 컴파일에서 제외할 폴더들
-  "exclude": ["node_modules", "dist"]
+    "**/*.tsx"
+  ]
 }

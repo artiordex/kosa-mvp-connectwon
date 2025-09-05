@@ -1,7 +1,7 @@
 /**
  * Description : GlobalTeardown.ts - 📌 Playwright 테스트 실행 후 정리 작업
  * Author : Shiwoo Min
- * Date : 2025-04-11
+ * Date : 2025-09-04
  */
 import { PocInitializer } from '@common/initializers/PocInitializer.js';
 import { Logger } from '@common/logger/customLogger.js';

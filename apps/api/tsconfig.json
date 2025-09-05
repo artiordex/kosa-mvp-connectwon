@@ -1,106 +1,20 @@
+  /**
+   * Description : tsconfig.json - 📌 api 의 tsconfig.json 최소유지 (Express API)
+   * Author : Shiwoo Min
+   * Date : 2025-09-05
+   */
 {
-  // Express API TypeScript 설정
+  // 루트의 tsconfig.json 상속
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
-    // ES2022 모듈 타겟
-    "target": "ES2022",
-
-    // Node.js 타입 정의 포함 (브라우저 DOM 제외)
-    "types": ["node"],
-
-    // Node.js 환경에 필요한 라이브러리
-    "lib": ["ES2022"],
-
-    // JavaScript 파일도 컴파일 허용
-    "allowJs": true,
-
-    // 타입 검사 건너뛰기 (빌드 속도 향상)
-    "skipLibCheck": true,
-
-    // 엄격한 타입 검사 활성화
-    "strict": true,
-
-    // JavaScript 파일 생성 (Express 서버이므로 필요)
+    // ESM, CommonJS, NodeNext
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    // JS 파일 생성 필요시 true
     "noEmit": false,
-
-    // CommonJS와 ES 모듈 상호 운용성
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-
-    // CommonJS 모듈 시스템 (Node.js 기본)
-    "module": "CommonJS",
-
-    // Node.js 모듈 해상도
-    "moduleResolution": "node",
-
-    // JSON 파일을 모듈로 import 가능
-    "resolveJsonModule": true,
-
-    // 각 파일을 독립적으로 컴파일
-    "isolatedModules": true,
-
-    // 빌드 출력 디렉토리
     "outDir": "./dist",
-
-    // 소스 루트 디렉토리
-    "rootDir": "./src",
-
-    // 증분 컴파일로 빌드 속도 향상
-    "incremental": true,
-
-    // 파일명 대소문자 일관성 강제
-    "forceConsistentCasingInFileNames": true,
-
-    // 소스맵 생성 (디버깅용)
-    "sourceMap": true,
-
-    // 선언 파일 생성 (다른 패키지에서 사용할 경우)
-    "declaration": false,
-
-    // 미사용 로컬 변수 검사
-    "noUnusedLocals": true,
-
-    // 미사용 매개변수 검사
-    "noUnusedParameters": true,
-
-    // switch문에서 fallthrough 방지
-    "noFallthroughCasesInSwitch": true,
-
-    // 절대 경로 기준점 설정
-    "baseUrl": "./src",
-
-    // 경로 별칭 설정
-    "paths": {
-      "@/*": ["./*"],
-      "@config/*": ["./config/*"],
-      "@routes/*": ["./routes/*"],
-      "@middleware/*": ["./middleware/*"],
-      "@services/*": ["./services/*"],
-      "@utils/*": ["./utils/*"],
-      "@types/*": ["./types/*"]
-    },
-
-    // 데코레이터 지원 (NestJS 사용 시 필요)
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
-  },
-
-  // 컴파일에 포함할 파일들
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.js"
-  ],
-
-  // 컴파일에서 제외할 폴더들
-  "exclude": [
-    "node_modules",
-    "dist",
-    "**/*.test.ts",
-    "**/*.spec.ts"
-  ],
-
-  // TypeScript 컴파일러 옵션
-  "ts-node": {
-    "esm": false,
-    "experimentalSpecifierResolution": "node"
+    // DOM 타입 제외
+    "types": ["node"],
+    "allowSyntheticDefaultImports": true
   }
 }

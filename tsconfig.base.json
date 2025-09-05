@@ -1,3 +1,8 @@
+/**
+  * Description : tsconfig.base.json - 📌 루트 TypeScript 공통 설정(호이스팅 적용)
+  * Author : Shiwoo Min
+  * Date : 2025-09-05
+  */
 {
   "compilerOptions": {
     // 공통 타겟 및 모듈 시스템
@@ -15,26 +20,70 @@
     // 디버깅 지원
     "sourceMap": true,
     "resolveJsonModule": true,
+    "allowJs": true,
 
-    // 경로 alias
+    // 경로 alias - 실제 구조에 맞게 수정
     "baseUrl": ".",
     "paths": {
+      // 앱들
       "@apps/*": ["apps/*/src"],
       "@web/*": ["apps/web/src/*"],
-      "@admin/*": ["apps/admin/src/*"],
+      "@admin/*": ["apps/admin/src/*", "apps/admin/lib/*"],
       "@api/*": ["apps/api/src/*"],
       "@e2e/*": ["apps/e2e/src/*"],
 
+      // 패키지들 - 실제 존재하는 패키지들만
       "@database/*": ["packages/database/src/*"],
       "@ui/*": ["packages/ui/src/*"],
       "@api-contract/*": ["packages/api-contract/src/*"],
       "@core/*": ["packages/core/src/*"],
-      "@email/*": ["packages/email/src/*"],
-      "@testing/*": ["packages/testing/src/*"]
+      "@testing/*": ["packages/testing/src/*"],
+      "@types/*": ["packages/types/src/*"],
+      "@sdk/*": ["packages/sdk/src/*"],
+
+      // configs 패키지의 하위 구조
+      "@configs/*": ["packages/configs/*"],
+      "@configs/eslint/*": ["packages/configs/eslint/*"],
+      "@configs/typescript/*": ["packages/configs/typescript/*"],
+      "@configs/tailwind/*": ["packages/configs/tailwind/*"]
     },
 
     // 공통 타입 정의
-    "types": ["node"]
+    "types": ["node"],
+
+    // 추가 설정들
+    "declaration": true,
+    "isolatedModules": true,
+    "incremental": true,
+
+    // 엄격한 검사 옵션
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true
   },
-  "exclude": ["node_modules", "dist"]
+
+  "include": [
+    // 모든 앱과 패키지의 src 디렉터리
+    "apps/*/src/**/*",
+    "packages/*/src/**/*",
+
+    // 특별히 포함해야 할 파일들
+    "apps/admin/page.tsx",
+    "apps/admin/lib/**/*",
+    "apps/*/next.config.ts",
+    "apps/*/tailwind.config.ts"
+  ],
+
+  "exclude": [
+    "node_modules",
+    "dist",
+    "build",
+    ".next",
+    "coverage",
+    ".nx",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.spec.ts",
+    "**/*.spec.tsx"
+  ]
 }

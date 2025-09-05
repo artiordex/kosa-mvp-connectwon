@@ -1,3 +1,4 @@
+# postgres:17 이미지 기반
 FROM postgres:17
 ENV TZ=Asia/Seoul
 

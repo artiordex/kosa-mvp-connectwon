@@ -1,18 +1,19 @@
 /**
- * Description : tsconfig.json - 📌 컴파일러 옵션 및 빌드 설정을 정의하는 구성 파일
- * Author : Shiwoo Min
- * Date : 2025-09-02
- *
- * 참고 명령어:
- *   npx tsc --project tsconfig.json --showConfig
- */
+  * Description : tsconfig.json - 📌 모노레포 전체를 위한 통합 TypeScript 설정
+  * Author : Shiwoo Min
+  * Date : 2025-09-02
+  *
+  * 참고 명령어:
+  *   npx tsc --project tsconfig.json --showConfig
+  */
 {
   "compilerOptions": {
     // 프로젝트의 기본 경로 지정 (모듈 경로 설정을 위한 기준)
     "baseUrl": ".",
 
-    // 모듈 Path 별칭 설정
+    // 모듈 Path 별칭 설정 - 모노레포 패키지들을 쉽게 import
     "paths": {
+      // 기존 @repo 스타일 유지 (호환성을 위해)
       "@repo/database": ["./packages/database/src"],
       "@repo/database/*": ["./packages/database/src/*"],
       "@repo/ui": ["./packages/ui/src"],
@@ -21,82 +22,116 @@
       "@repo/api-contract/*": ["./packages/api-contract/src/*"],
       "@repo/core": ["./packages/core/src"],
       "@repo/core/*": ["./packages/core/src/*"],
-      "@repo/email": ["./packages/email/src"],
-      "@repo/email/*": ["./packages/email/src/*"],
-      "@repo/testing": ["./packages/testing/src"],
-      "@repo/testing/*": ["./packages/testing/src/*"]
+
+      // tsconfig.base.json과 통합된 새로운 스타일
+      "@apps/*": ["apps/*/src"],
+      "@web/*": ["apps/web/src/*"],
+      "@admin/*": ["apps/admin/src/*"],
+      "@api/*": ["apps/api/src/*"],
+      "@e2e/*": ["apps/e2e/src/*"],
+
+      "@database/*": ["packages/database/src/*"],
+      "@ui/*": ["packages/ui/src/*"],
+      "@api-contract/*": ["packages/api-contract/src/*"],
+      "@core/*": ["packages/core/src/*"],
+      "@email/*": ["packages/email/src/*"],
+      "@testing/*": ["packages/testing/src/*"]
     },
 
     // 컴파일된 JavaScript 파일이 저장될 디렉터리
-    "outDir": "dist",
+    "outDir": "./dist",
 
     // TypeScript 파일의 루트 디렉터리 지정
     "rootDir": "./",
 
-    // Node.js 환경에서 사용하기 위한 모듈 시스템 설정 (ESNext, NodeNext, CommonJS 가능)
-    "module": "ESNext",
-
-    // 모듈 해석 방법을 Node.js 스타일(ESM 지원)로 지정
-    "moduleResolution": "bundler",
+    // Node.js 환경과 번들러 환경을 모두 지원하기 위한 설정
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
 
     // 컴파일된 코드의 타겟 ES 버전
     "target": "ES2022",
 
-    // 사용할 라이브러리 정의 (ES 표준 + DOM API)
-    "lib": ["ES2022", "DOM"],
+    // 사용할 라이브러리 정의 (ES 표준 + DOM API + Node.js)
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
 
     // 타입 정의 파일 경로 지정
     "typeRoots": ["./node_modules/@types"],
 
-    // TypeScript 타입 선언 파일(.d.ts) 생성
+    // ESM과 CommonJS 호환성을 위한 설정
+    "verbatimModuleSyntax": true,
+
+    // 타입 선언 파일(.d.ts) 생성
     "declaration": true,
+    "declarationMap": true,
 
-    // 엄격한 타입 검사 모드 활성화 (타입 안정성을 높임)
+    // 엄격한 타입 검사 모드 활성화
     "strict": true,
-
-    // 생성자에서 초기화하지 않은 클래스 프로퍼티를 허용
+    "noImplicitAny": true,
     "strictPropertyInitialization": false,
 
     // CommonJS 및 ES 모듈 간 상호 운용성 지원
     "esModuleInterop": true,
-
-    // import 시 기본 내보내기 허용
     "allowSyntheticDefaultImports": true,
 
     // 라이브러리 파일(.d.ts)의 타입 검사를 건너뜀 (빌드 속도 향상)
     "skipLibCheck": true,
 
-    // TS 디버깅 - 소스 맵 활성화
+    // 디버깅을 위한 소스맵 설정
     "sourceMap": true,
-
-    // 외부 .map 파일을 생성하지 않고 inline으로 포함
     "inlineSourceMap": false,
-
-    // 디버깅 시 TypeScript 원본 코드 표시
     "inlineSources": true,
 
-    // 오류 발생 시에도 컴파일된 파일을 출력
+    // 빌드 설정
     "noEmitOnError": false,
-
-    // JavaScript 허용
     "allowJs": true,
-
-    // JSON 파일을 import할 수 있도록 허용
     "resolveJsonModule": true,
 
     // 대소문자 일관성을 유지하여 파일을 가져오기 (OS 간 호환성 문제 방지)
     "forceConsistentCasingInFileNames": true,
 
-    // `any` 타입을 허용하지 않음
-    "noImplicitAny": true,
-
     // 모노레포에서 빌드 성능 향상을 위한 증분 빌드
     "incremental": true,
+    "tsBuildInfoFile": "./dist/.tsbuildinfo",
 
     // 모듈 간 격리를 보장 (번들러 호환성)
-    "isolatedModules": true
+    "isolatedModules": true,
+
+    // 추가적인 엄격한 검사 옵션들
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true
   },
 
+  // TypeScript 컴파일에 포함할 파일들 - 모든 패키지와 앱 포함
+  "include": [
+    "packages/*/src/**/*.ts",
+    "packages/*/src/**/*.tsx",
+    "apps/*/src/**/*.ts",
+    "apps/*/src/**/*.tsx",
+    "apps/*/*.ts",
+    "apps/*/*.tsx",
+    "*.ts",
+    "*.tsx"
+  ],
+
   // TypeScript 컴파일 대상에서 제외
-  "exclude": ["node_modules", "dist", ".next", "out", "build", "coverage"]
+  "exclude": [
+    "node_modules",
+    "dist",
+    ".next",
+    "out",
+    "build",
+    "coverage",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.spec.ts",
+    "**/*.spec.tsx",
+    "**/node_modules",
+    "**/dist",
+    // Playwright 관련 제외 항목
+    "test-results",
+    "playwright-report"
+  ],
 }

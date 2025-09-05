@@ -3,10 +3,15 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "n8n",
-    "start": "n8n"
+    "dev": "cross-env NODE_ENV=development n8n",
+    "start": "cross-env NODE_ENV=production n8n",
+    "export": "node scripts/export-workflows.js",
+    "import": "node scripts/import-workflows.js"
   },
-  "dependencies": {
-    "n8n": "^1.44.0"
+  "devDependencies": {
+    "n8n": "1.44.0",
+    "cross-env": "^7.0.3",
+    "axios": "^1.7.7"
   }
 }
+
