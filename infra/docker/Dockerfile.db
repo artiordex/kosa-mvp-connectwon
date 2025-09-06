@@ -2,6 +2,7 @@
 # Description : Dockerfile.db - 📌 db docker build
 # Author : Shiwoo Min
 # Date : 2025-09-06
+# 09/06 - 도커 빌드 테스트: docker compose -f infra/docker/docker-compose.yml build postgres
 
 # 커스텀 Postgres 이미지
 FROM postgres:17
@@ -9,21 +10,14 @@ FROM postgres:17
 # 타임존 설정
 ENV TZ=Asia/Seoul
 
-# 최소 설정: 아무 설정도 건드리지 않고 오직 init만 복사
+# 설정 파일 복사
+COPY infra/database/conf/pg_hba.conf /etc/postgresql/pg_hba.conf
+COPY infra/database/conf/postgresql.conf /etc/postgresql/postgresql.conf
+
+# 초기화 스크립트 복사
 COPY infra/database/init/ /docker-entrypoint-initdb.d/
 
-# # 로그 디렉토리 미리 생성 (안 만들면 서버 실행 실패 가능성 있음)
-# RUN mkdir -p /var/lib/postgresql/data/pg_log && \
-#     chown -R postgres:postgres /var/lib/postgresql/data/pg_log
+# 퍼미션(보수적; init 스크립트가 .sh라면 실행 권한 부여)
+RUN mkdir -p /var/lib/postgresql/data/pg_log && \
+    chown -R postgres:postgres /var/lib/postgresql/data/pg_log
 
-# # 설정 파일 복사 (이미지 내 위치로)
-# COPY infra/database/conf/pg_hba.conf /etc/postgresql/pg_hba.conf
-# COPY infra/database/conf/postgresql.conf /etc/postgresql/postgresql.conf
-
-# # DB 초기화 SQL 스크립트 복사 (PostgreSQL의 init hook에 자동 실행됨)
-# COPY infra/database/init/ /docker-entrypoint-initdb.d/
-
-# # 디버깅용 로그 출력 (선택)
-# RUN echo "Custom DB image built with:" && \
-#     ls -l /etc/postgresql && \
-#     ls -l /docker-entrypoint-initdb.d || true

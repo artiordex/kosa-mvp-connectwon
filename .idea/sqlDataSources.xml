@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DdlMappings">
+    <mapping uuid="65b19be4-88b3-4af7-94bc-e7494c08f525" name="connectwon_db@localhost Mapping">
+      <data-sources db="f54369a3-ee46-434c-8070-941e693ac63a" />
+      <scope>
+        <node kind="database" negative="1">
+          <node kind="schema" negative="1" />
+        </node>
+      </scope>
+    </mapping>
+  </component>
+</project>

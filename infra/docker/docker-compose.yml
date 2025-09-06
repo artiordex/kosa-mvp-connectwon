@@ -3,12 +3,15 @@
 # Date        : 2025-09-06
 
 version: '3.8'
+
 # 컨테이너 올리기: docker compose up -d
 # 빌드 캐시 정리: docker compose build --no-cache
 # 초기빌드: docker compose build --no-cache --progress=plain
 # 루트에서 빌드: docker compose -f infra/docker/docker-compose.yml build --no-cache
 # Docker 빌드 캐시 완전 제거: docker builder prune -af
 # Compose 파일 경로 명시하여 컨테이너 실행: docker compose -f infra/docker/docker-compose.yml up
+# infra/docker 디렉토리에서 직접 실행: cd infra/docker && docker compose up -d
+# 환경변수 파일: .env.docker (Docker 컨테이너 전용 설정)
 
 services:
   # Next.js (웹 프론트엔드)
@@ -16,13 +19,14 @@ services:
     build:
       context: ../../
       dockerfile: ./infra/docker/Dockerfile.web
-    container_name: web:latest
+    container_name: web
+    env_file:
+      - .env
     environment:
       - NODE_ENV=production
       - PORT=3000
     expose:
       - "3000"
-    # Dockerfile의 CMD 사용 (command 제거)
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/"]
       interval: 10s
@@ -34,13 +38,14 @@ services:
     build:
       context: ../../
       dockerfile: ./infra/docker/Dockerfile.api
-    container_name: api:latest
+    container_name: api
+    env_file:
+      - .env
     environment:
       - NODE_ENV=production
       - PORT=8000
     expose:
       - "8000"
-    # Dockerfile의 CMD 사용 (command 제거)
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8000/health"]
       interval: 10s
@@ -65,15 +70,17 @@ services:
   postgres:
     build:
       context: ../../
-      dockerfile: infra/docker/Dockerfile.db
-    image: postgres:17
+      dockerfile: ./infra/docker/Dockerfile.db
+    image: connectwon-postgres:17-local
     container_name: postgres
-    env_file: [../../.env]
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_DB=${POSTGRES_DB:-connectwon}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
     ports:
       - "5432:5432"
-    command: >
-      postgres -c config_file=/etc/postgresql/postgresql.conf
-              -c hba_file=/etc/postgresql/pg_hba.conf
     volumes:
       - pg_data:/var/lib/postgresql/data
     healthcheck:
@@ -86,16 +93,21 @@ services:
   redis:
     image: redis:7-alpine
     container_name: redis
-    env_file: [../../.env]
+    env_file:
+      - .env
     ports:
       - "6379:6379"
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD:?REDIS_PASSWORD is required}
+      - REDIS_MAXMEMORY=${REDIS_MAXMEMORY:-512mb}
+      - REDIS_EVICTION=${REDIS_EVICTION:-allkeys-lru}
     command: >
       sh -c 'exec redis-server
         --appendonly yes
         --appendfsync everysec
-        --requirepass "$$REDIS_PASSWORD"
-        --maxmemory "${REDIS_MAXMEMORY:-512mb}"
-        --maxmemory-policy "${REDIS_EVICTION:-allkeys-lru}"'
+        --requirepass "$${REDIS_PASSWORD}"
+        --maxmemory "$${REDIS_MAXMEMORY}"
+        --maxmemory-policy "$${REDIS_EVICTION}"'
     volumes:
       - redis_data:/data
     healthcheck:
