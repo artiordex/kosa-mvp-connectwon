@@ -50,6 +50,12 @@ web_modules/
 # Optional npm cache directory
 .npm
 
+# Nx cache
+.nx
+
+# DataGrip cache
+.idea
+
 # Optional eslint cache
 .eslintcache
 
