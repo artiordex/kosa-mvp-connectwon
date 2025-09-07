@@ -27,8 +27,8 @@ services:
     env_file:
       - .env
     environment:
-      - NODE_ENV=production
-      - PORT=3000
+      - NODE_ENV=${NODE_ENV:-production}
+      - PORT=${WEB_PORT:-3000}
     expose:
       - "3000"
     healthcheck:
@@ -46,8 +46,8 @@ services:
     env_file:
       - .env
     environment:
-      - NODE_ENV=production
-      - PORT=8000
+      - NODE_ENV=${NODE_ENV:-production}
+      - PORT=${API_PORT:-8000}
     expose:
       - "8000"
     healthcheck:
@@ -65,8 +65,8 @@ services:
     env_file:
       - .env
     environment:
-      - NODE_ENV=production
-      - PORT=3001
+      - NODE_ENV=${NODE_ENV:-production}
+      - PORT=${ADMIN_PORT:-3001}
     expose:
       - "3001"
     healthcheck:

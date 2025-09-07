@@ -1,10 +1,14 @@
-import { PrismaClient } from '../generated'
+// packages/database/src/index.ts
+export { PrismaClient } from '../generated'
+export type * from '../generated'
 import { config } from 'dotenv'
 import path from 'path'
 
 config({ path: path.join(__dirname, '../.env') })
 
-// 이제 process.env.NODE_ENV 사용 가능
+// 싱글톤 Prisma 클라이언트
+import { PrismaClient } from '../generated'
+
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined
 }
@@ -15,8 +19,8 @@ export const prisma = globalForPrisma.prisma ?? new PrismaClient({
 
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
 
-// 데이터베이스 연결 유틸리티
-export async function connectDatabase() {
+// 데이터베이스 연결 테스트
+export async function testConnection() {
   try {
     await prisma.$connect()
     console.log('Database connected successfully')
@@ -27,6 +31,7 @@ export async function connectDatabase() {
   }
 }
 
-export async function disconnectDatabase() {
+// 데이터베이스 연결 종료
+export async function disconnect() {
   await prisma.$disconnect()
 }

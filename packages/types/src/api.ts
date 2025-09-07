@@ -2,7 +2,7 @@
  * API 관련 타입 (api-contract에서 생성)
  */
 import { z } from 'zod'
-import type * as schemas from '@connectwon/api-contract'
+import type * as schemas from '../../api-contract/src/schemas'
 
 // 사용자 관련 타입
 export type User = z.infer<typeof schemas.UserSchema>

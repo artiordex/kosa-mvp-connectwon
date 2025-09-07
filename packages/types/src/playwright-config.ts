@@ -1,8 +1,10 @@
 /**
- * Playwright 설정 관련 타입
+ * Description : playwright-config.ts - 📌 Playwright 설정 관련 타입정의
+ * Author : Shiwoo Min
+ * Date : 2025-09-07
  */
 import type { BrowserContextOptions, LaunchOptions } from '@playwright/test'
-import type { Platform, DeviceType, BrowserType } from './platform'
+import type { Platform, DeviceType, BrowserType } from './platform.js'
 
 export interface E2EProjectConfig {
   // 프로젝트 이름

@@ -1,5 +1,7 @@
 /**
- * 알림 관련 타입 (간소화)
+ * Description : notification.ts - 📌 알림 관련 타입정의
+ * Author : Shiwoo Min
+ * Date : 2025-09-07
  */
 
 export interface SlackConfig {

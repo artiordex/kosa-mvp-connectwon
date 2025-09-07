@@ -1,4 +1,8 @@
-/** 플랫폼, 디바이스, 브라우저 타입 정의 */
+/**
+ * Description : platform.ts - 📌 플랫폼 관련 타입정의
+ * Author : Shiwoo Min
+ * Date : 2025-09-07
+ */
 
 // 플랫폼 구분 (웹 데스크탑, 웹 모바일)
 export const Platform = {

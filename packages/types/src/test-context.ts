@@ -1,7 +1,9 @@
 /**
- * ConnectWon 테스트 컨텍스트 타입
+ * Description : test-context.ts - 📌 테스트 컨텍스트 관련 타입정의
+ * Author : Shiwoo Min
+ * Date : 2025-09-07
  */
-import type { Platform, DeviceType } from './platform'
+import type { Platform, DeviceType } from './platform.js'
 
 export interface TestContext {
   // 테스트 대상 플랫폼

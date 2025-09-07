@@ -1,0 +1,193 @@
+// packages/database/prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ================================
+// 사용자 관리
+// ================================
+
+model User {
+  id          BigInt    @id @default(autoincrement())
+  email       String?   @unique @db.Citext
+  name        String?
+  googleSub   String?   @unique @map("google_sub")
+  lastLoginAt DateTime? @map("last_login_at") @db.Timestamptz
+  roleFlags   Int       @default(0) @map("role_flags")
+  preferences Json      @default("{}") @db.JsonB
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt   DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  // 관계
+  createdPrograms     Program[]            @relation("ProgramCreator")
+  roomReservations    RoomReservation[]
+  programParticipants ProgramParticipant[]
+  aiInteractions      AiInteraction[]
+
+  @@map("users")
+}
+
+// ================================
+// 프로그램 관리
+// ================================
+
+model Program {
+  id              BigInt   @id @default(autoincrement())
+  createdByUserId BigInt   @map("created_by_user_id")
+  type            String?
+  title           String
+  description     String?
+  aiSummaryTags   Json     @default("[]") @map("ai_summary_tags") @db.JsonB
+  isActive        Boolean  @default(true) @map("is_active")
+  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt       DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  // 관계
+  createdBy      User            @relation("ProgramCreator", fields: [createdByUserId], references: [id], onDelete: Restrict)
+  sessions       Session[]
+  aiInteractions AiInteraction[]
+
+  @@map("programs")
+}
+
+// ================================
+// 세션 관리
+// ================================
+
+model Session {
+  id                BigInt   @id @default(autoincrement())
+  programId         BigInt   @map("program_id")
+  startsAt          DateTime @map("starts_at") @db.Timestamptz
+  endsAt            DateTime @map("ends_at") @db.Timestamptz
+  capacity          Int?
+  participantFee    Int?     @map("participant_fee")
+  status            String   @default("SCHEDULED")
+  roomReservationId BigInt?  @unique @map("room_reservation_id")
+  locationText      String?  @map("location_text")
+  createdAt         DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt         DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  // 관계
+  program         Program              @relation(fields: [programId], references: [id], onDelete: Cascade)
+  roomReservation RoomReservation?     @relation(fields: [roomReservationId], references: [id], onDelete: SetNull)
+  participants    ProgramParticipant[]
+  aiInteractions  AiInteraction[]
+
+  @@map("sessions")
+}
+
+// ================================
+// 장소 관리
+// ================================
+
+model Venue {
+  id            BigInt   @id @default(autoincrement())
+  name          String
+  address       String?
+  openingHours  Json?    @map("opening_hours") @db.JsonB
+  blackoutRules Json?    @map("blackout_rules") @db.JsonB
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt     DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  // 관계
+  rooms Room[]
+
+  @@map("venues")
+}
+
+model Room {
+  id        BigInt   @id @default(autoincrement())
+  venueId   BigInt   @map("venue_id")
+  name      String
+  capacity  Int?
+  status    String   @default("ACTIVE")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  // 관계
+  venue        Venue             @relation(fields: [venueId], references: [id], onDelete: Cascade)
+  reservations RoomReservation[]
+
+  @@unique([venueId, name], map: "rooms_uniq_per_venue")
+  @@map("rooms")
+}
+
+// ================================
+// 방 예약 관리
+// ================================
+
+model RoomReservation {
+  id        BigInt   @id @default(autoincrement())
+  roomId    BigInt   @map("room_id")
+  userId    BigInt?  @map("user_id")
+  startsAt  DateTime @map("starts_at") @db.Timestamptz
+  endsAt    DateTime @map("ends_at") @db.Timestamptz
+  purpose   String?
+  status    String   @default("PENDING")
+  meta      Json     @default("{}") @db.JsonB
+  sessionId BigInt?  @unique @map("session_id")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  // 관계
+  room    Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  user    User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  session Session?
+
+  @@map("room_reservations")
+}
+
+// ================================
+// 프로그램 참여자 관리
+// ================================
+
+model ProgramParticipant {
+  id        BigInt    @id @default(autoincrement())
+  sessionId BigInt    @map("session_id")
+  userId    BigInt    @map("user_id")
+  role      String    @default("ATTENDEE")
+  status    String    @default("APPLIED")
+  joinedAt  DateTime? @default(now()) @map("joined_at") @db.Timestamptz
+
+  // 관계
+  session Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([sessionId, userId], map: "program_participants_uniq")
+  @@map("program_participants")
+}
+
+// ================================
+// AI 상호작용 관리
+// ================================
+
+model AiInteraction {
+  id               BigInt   @id @default(autoincrement())
+  userId           BigInt?  @map("user_id")
+  programId        BigInt?  @map("program_id")
+  sessionId        BigInt?  @map("session_id")
+  provider         String
+  model            String
+  kind             String
+  promptTokens     Int      @default(0) @map("prompt_tokens")
+  completionTokens Int      @default(0) @map("completion_tokens")
+  cost             Decimal  @default(0) @db.Decimal(12, 6)
+  status           String   @default("OK")
+  traceId          String?  @map("trace_id")
+  meta             Json     @default("{}") @db.JsonB
+  createdAt        DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  // 관계
+  user    User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  program Program? @relation(fields: [programId], references: [id], onDelete: SetNull)
+  session Session? @relation(fields: [sessionId], references: [id], onDelete: SetNull)
+
+  @@map("ai_interactions")
+}
