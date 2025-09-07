@@ -6,12 +6,10 @@ packages:
   - 'apps/e2e'
   # packages
   - 'packages/api-contract'
-  - 'packages/config'
+  - 'packages/configs'
   - 'packages/core'
   - 'packages/logger'
   - 'packages/sdk'
   - 'packages/database'
-
+  - 'packages/types'
   - 'packages/ui'
-
-  - 'packages/testing'
