@@ -1,7 +1,7 @@
 /**
  * Description : tsconfig.json - 📌 모노레포 전체를 위한 통합 TypeScript 설정
  * Author : Shiwoo Min
- * Date : 2025-09-05
+ * Date : 2025-09-07
  *
  * 참고 명령어:
  *   npx tsc --project tsconfig.json --showConfig
@@ -10,7 +10,11 @@
   "extends": "./tsconfig.base.json",
 
   "compilerOptions": {
-    // 프로젝트의 기본 경로 지정 (모듈 경로 설정을 위한 기준)
+
+    // 절대경로 import를 위한 기준 디렉터리
+    "baseUrl": ".",
+
+    // 소스 루트 디렉터리
     "rootDir": "./",
 
     // 컴파일된 JavaScript 파일이 저장될 디렉터리
@@ -25,50 +29,142 @@
     // 모노레포에서 빌드 성능 향상을 위한 증분 빌드 정보 파일
     "tsBuildInfoFile": "./dist/.tsbuildinfo",
 
+    // JSON 모듈 import 지원
+    "resolveJsonModule": true,
+
+    // CommonJS 모듈을 ES6 스타일로 import/export 가능
+    "esModuleInterop": true,
+
+    // 외부 라이브러리의 타입 검사 건너뜀(빌드 속도 향상)
+    "skipLibCheck": true,
+
+    // default import 지원 (esModuleInterop과 함께 사용 권장)
+    "allowSyntheticDefaultImports": true,
+
+    // import/export 구문을 원본 그대로 유지 (Next.js 호환 ↑)
+    "verbatimModuleSyntax": true,
+
+    // 파일명 대소문자 일관성 검사 (대소문자 오류 방지)
+    "forceConsistentCasingInFileNames": true,
+
     // 컴파일 에러 시 .js 파일 출력 여부
     "noEmitOnError": false,
 
-    // 기존 @repo 스타일 유지 (호환성을 위해)
+    // ESM/번들러 친화 모듈 해석(Next.js/Vite 호환 ↑)
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+
+    // 런타임 타깃/라이브러리
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM"],
+
+    // 경로 별칭 설정
     "paths": {
-      "@repo/database": ["./packages/database/src"],
-      "@repo/database/*": ["./packages/database/src/*"],
-      "@repo/ui": ["./packages/ui/src"],
-      "@repo/ui/*": ["./packages/ui/src/*"],
-      "@repo/api-contract": ["./packages/api-contract/src"],
-      "@repo/api-contract/*": ["./packages/api-contract/src/*"],
-      "@repo/core": ["./packages/core/src"],
-      "@repo/core/*": ["./packages/core/src/*"]
+
+      // 프론트
+      "@connectwon/web": ["apps/web/src/index.ts"],
+      "@connectwon/web/*": ["apps/web/src/*"],
+
+      // 백엔드
+      "@connectwon/api": ["apps/api/src/index.ts"],
+      "@connectwon/api/*": ["apps/api/src/*"],
+
+      // e2e 테스트
+      "@connectwon/e2e": ["apps/e2e/src/index.ts"],
+      "@connectwon/e2e/*": ["apps/e2e/src/*"],
+
+      // 어드민
+      "@connectwon/admin": ["apps/admin/src/index.ts"],
+      "@connectwon/admin/*": ["apps/admin/src/*"],
+
+      // packages: 공통 라이브러리
+
+      // API 계약
+      "@connectwon/api-contract": ["packages/api-contract/src/index.ts"],
+      "@connectwon/api-contract/*": ["packages/api-contract/src/*"],
+
+      // 컴포넌트
+      "@connectwon/components": ["packages/components/index.ts"],
+      "@connectwon/components/*": ["packages/components/*"],
+
+      // 설정
+      "@connectwon/configs": ["packages/configs/index.ts"],
+      "@connectwon/configs/*": ["packages/configs/*"],
+
+      // 핵심 기능
+      "@connectwon/core": ["packages/core/src/index.ts"],
+      "@connectwon/core/*": ["packages/core/src/*"],
+
+      // 데이터베이스
+      "@connectwon/database": ["packages/database/src/index.ts"],
+      "@connectwon/database/*": ["packages/database/src/*"],
+
+      // 로거
+      "@connectwon/logger/*": ["packages/logger/*"],
+
+      // SDK
+      "@connectwon/sdk": ["packages/sdk/src/index.ts"],
+      "@connectwon/sdk/*": ["packages/sdk/src/*"],
+
+      // 테스트 유틸리티(Vitest)
+      "@connectwon/testing": ["packages/testing/src/index.ts"],
+      "@connectwon/testing/*": ["packages/testing/src/*"],
+
+      // 타입 정의
+      "@connectwon/types": ["packages/types/src/index.ts"],
+      "@connectwon/types/*": ["packages/types/src/*"],
+
+      // UI 라이브러리
+      "@connectwon/ui": ["packages/ui/src/index.ts"],
+      "@connectwon/ui/*": ["packages/ui/src/*"],
+
+      // 유틸리티 함수
+      "@connectwon/utils": ["packages/utils/src/index.ts"],
+      "@connectwon/utils/*": ["packages/utils/src/*"]
     }
   },
 
   // TypeScript 컴파일에 포함할 파일들 - 모든 패키지와 앱 포함
   "include": [
+   // 공통 패턴
     "packages/*/src/**/*.ts",
     "packages/*/src/**/*.tsx",
     "apps/*/src/**/*.ts",
     "apps/*/src/**/*.tsx",
-    "apps/*/*.ts",
-    "apps/*/*.tsx",
+
+    "packages/logger/**/*.ts",
+
+    // 루트/툴링 스크립트
     "*.ts",
-    "*.tsx"
-, "apps/web/next.config.mjs"  ],
+    "*.tsx",
+    "vitest.config.ts",
+
+    // Next.js(웹) 설정 파일(런타임 alias/TS 로더가 필요 시)
+    "apps/web/next.config.mjs",
+
+    // utils가 src 바깥에 있는 경우까지 커버(현재 트리 고려)
+    "packages/**/utils/**/*.ts",
+    "packages/**/utils/**/*.tsx"
+],
 
   // TypeScript 컴파일 대상에서 제외
   "exclude": [
     "node_modules",
+    "**/node_modules",
     "dist",
+    "**/dist",
     ".next",
     "out",
     "build",
     "coverage",
+    // Playwright 관련 제외 항목
+    "test-results",
+    "playwright-report",
+
+    // 유닛/통합/예제 테스트 파일
     "**/*.test.ts",
     "**/*.test.tsx",
     "**/*.spec.ts",
     "**/*.spec.tsx",
-    "**/node_modules",
-    "**/dist",
-    // Playwright 관련 제외 항목
-    "test-results",
-    "playwright-report"
   ]
 }
