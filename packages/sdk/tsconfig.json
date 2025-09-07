@@ -18,5 +18,10 @@
   "exclude": [
     "dist",
     "node_modules"
+  ],
+  "references": [
+    { "path": "../types" },
+    { "path": "../api-contract" },
+    { "path": "../logger" }
   ]
 }

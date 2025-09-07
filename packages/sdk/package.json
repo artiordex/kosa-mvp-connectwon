@@ -2,12 +2,26 @@
   "name": "@connectwon/sdk",
   "version": "1.0.0",
   "private": true,
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
   "scripts": {
-    "build": "tsc -p tsconfig.json"
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "clean": "rimraf dist"
+  },
+  "dependencies": {
+    "@connectwon/api-contract": "workspace:*",
+    "@connectwon/types": "workspace:*",
+    "@connectwon/logger": "workspace:*"
   },
   "devDependencies": {
-    "typescript": "^5.2.2"
+    "@connectwon/configs": "workspace:*"
   }
 }

@@ -13,10 +13,14 @@
     "composite": true
   },
   "include": [
-    "src/**/*"
+    "src/**/*",
+    "prisma/**/*"
   ],
   "exclude": [
     "dist",
     "node_modules"
+  ],
+  "references": [
+    { "path": "../types" }
   ]
 }

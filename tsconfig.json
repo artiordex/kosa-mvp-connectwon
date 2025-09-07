@@ -10,15 +10,8 @@
   "extends": "./tsconfig.base.json",
 
   "compilerOptions": {
-
     // 절대경로 import를 위한 기준 디렉터리
     "baseUrl": ".",
-
-    // 소스 루트 디렉터리
-    "rootDir": "./",
-
-    // 컴파일된 JavaScript 파일이 저장될 디렉터리
-    "outDir": "./dist",
 
     // 타입 정의 파일 경로 지정
     "typeRoots": ["./node_modules/@types"],
@@ -58,36 +51,13 @@
     "target": "ES2022",
     "lib": ["ES2022", "DOM"],
 
-    // 경로 별칭 설정
+    // 경로 별칭 설정 - 실제 존재하는 패키지들만
     "paths": {
-
-      // 프론트
-      "@connectwon/web": ["apps/web/src/index.ts"],
-      "@connectwon/web/*": ["apps/web/src/*"],
-
-      // 백엔드
-      "@connectwon/api": ["apps/api/src/index.ts"],
-      "@connectwon/api/*": ["apps/api/src/*"],
-
-      // e2e 테스트
-      "@connectwon/e2e": ["apps/e2e/src/index.ts"],
-      "@connectwon/e2e/*": ["apps/e2e/src/*"],
-
-      // 어드민
-      "@connectwon/admin": ["apps/admin/src/index.ts"],
-      "@connectwon/admin/*": ["apps/admin/src/*"],
-
-      // packages: 공통 라이브러리
-
       // API 계약
       "@connectwon/api-contract": ["packages/api-contract/src/index.ts"],
       "@connectwon/api-contract/*": ["packages/api-contract/src/*"],
 
-      // 컴포넌트
-      "@connectwon/components": ["packages/components/index.ts"],
-      "@connectwon/components/*": ["packages/components/*"],
-
-      // 설정
+      // 설정 (src 폴더가 없다면 루트에서 직접)
       "@connectwon/configs": ["packages/configs/index.ts"],
       "@connectwon/configs/*": ["packages/configs/*"],
 
@@ -99,16 +69,13 @@
       "@connectwon/database": ["packages/database/src/index.ts"],
       "@connectwon/database/*": ["packages/database/src/*"],
 
-      // 로거
-      "@connectwon/logger/*": ["packages/logger/*"],
+      // 로거 (src 폴더 확인 필요)
+      "@connectwon/logger": ["packages/logger/src/index.ts"],
+      "@connectwon/logger/*": ["packages/logger/src/*"],
 
       // SDK
       "@connectwon/sdk": ["packages/sdk/src/index.ts"],
       "@connectwon/sdk/*": ["packages/sdk/src/*"],
-
-      // 테스트 유틸리티(Vitest)
-      "@connectwon/testing": ["packages/testing/src/index.ts"],
-      "@connectwon/testing/*": ["packages/testing/src/*"],
 
       // 타입 정의
       "@connectwon/types": ["packages/types/src/index.ts"],
@@ -116,55 +83,22 @@
 
       // UI 라이브러리
       "@connectwon/ui": ["packages/ui/src/index.ts"],
-      "@connectwon/ui/*": ["packages/ui/src/*"],
-
-      // 유틸리티 함수
-      "@connectwon/utils": ["packages/utils/src/index.ts"],
-      "@connectwon/utils/*": ["packages/utils/src/*"]
+      "@connectwon/ui/*": ["packages/ui/src/*"]
     }
   },
 
-  // TypeScript 컴파일에 포함할 파일들 - 모든 패키지와 앱 포함
-  "include": [
-   // 공통 패턴
-    "packages/*/src/**/*.ts",
-    "packages/*/src/**/*.tsx",
-    "apps/*/src/**/*.ts",
-    "apps/*/src/**/*.tsx",
+  // 루트 프로젝트는 빈 파일 배열 - references로만 관리
+  "files": [],
 
-    "packages/logger/**/*.ts",
-
-    // 루트/툴링 스크립트
-    "*.ts",
-    "*.tsx",
-    "vitest.config.ts",
-
-    // Next.js(웹) 설정 파일(런타임 alias/TS 로더가 필요 시)
-    "apps/web/next.config.mjs",
-
-    // utils가 src 바깥에 있는 경우까지 커버(현재 트리 고려)
-    "packages/**/utils/**/*.ts",
-    "packages/**/utils/**/*.tsx"
-],
-
-  // TypeScript 컴파일 대상에서 제외
-  "exclude": [
-    "node_modules",
-    "**/node_modules",
-    "dist",
-    "**/dist",
-    ".next",
-    "out",
-    "build",
-    "coverage",
-    // Playwright 관련 제외 항목
-    "test-results",
-    "playwright-report",
-
-    // 유닛/통합/예제 테스트 파일
-    "**/*.test.ts",
-    "**/*.test.tsx",
-    "**/*.spec.ts",
-    "**/*.spec.tsx",
+  // TypeScript Project References로 의존성 관리
+  "references": [
+    { "path": "./packages/types" },
+    { "path": "./packages/configs" },
+    { "path": "./packages/logger" },
+    { "path": "./packages/database" },
+    { "path": "./packages/api-contract" },
+    { "path": "./packages/core" },
+    { "path": "./packages/sdk" },
+    { "path": "./packages/ui" }
   ]
 }

@@ -1,5 +1,5 @@
 {
-  "name": "@connectwon/types",
+  "name": "@connectwon/logger",
   "version": "1.0.0",
   "private": true,
   "type": "module",
@@ -10,19 +10,18 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
-    "./api": {
-      "types": "./dist/api.d.ts",
-      "import": "./dist/api.js"
-    },
-    "./platform": {
-      "types": "./dist/platform.d.ts",
-      "import": "./dist/platform.js"
+    "./result-handler": {
+      "types": "./dist/ResultHandler.d.ts",
+      "import": "./dist/ResultHandler.js"
     }
   },
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
     "clean": "rimraf dist"
+  },
+  "dependencies": {
+    "@connectwon/types": "workspace:*"
   },
   "devDependencies": {
     "@connectwon/configs": "workspace:*"

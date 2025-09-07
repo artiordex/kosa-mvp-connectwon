@@ -1,0 +1,31 @@
+{
+  "name": "@connectwon/configs",
+  "version": "1.0.0",
+  "private": true,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    "./eslint/*": {
+      "import": "./eslint/*.js"
+    },
+    "./typescript/*": {
+      "import": "./typescript/*.json"
+    },
+    "./tailwind/*": {
+      "import": "./tailwind/*.js"
+    }
+  },
+  "scripts": {
+    "build": "echo 'No build needed for configs'",
+    "clean": "echo 'No clean needed for configs'"
+  },
+  "dependencies": {
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.0.0",
+    "eslint-config-next": "^14.0.0",
+    "eslint-plugin-react": "^7.0.0",
+    "eslint-plugin-react-hooks": "^4.0.0",
+    "tailwindcss": "^3.0.0"
+  }
+}

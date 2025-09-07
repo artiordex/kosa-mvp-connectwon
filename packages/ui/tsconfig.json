@@ -10,7 +10,9 @@
   "compilerOptions": {
     "outDir": "./dist",
     "rootDir": "./src",
-    "composite": true
+    "composite": true,
+    "jsx": "react-jsx",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"]
   },
   "include": [
     "src/**/*"
@@ -18,5 +20,8 @@
   "exclude": [
     "dist",
     "node_modules"
+  ],
+  "references": [
+    { "path": "../types" }
   ]
 }

@@ -9,14 +9,17 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "./dist",
-    "rootDir": "./src",
-    "composite": true
+    "rootDir": ".",
+    "composite": true,
+    "noEmit": true
   },
   "include": [
-    "src/**/*"
+    "**/*.js",
+    "**/*.json",
+    "**/*.ts"
   ],
   "exclude": [
-    "dist",
-    "node_modules"
+    "node_modules",
+    "dist"
   ]
 }

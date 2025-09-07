@@ -1,12 +1,17 @@
 packages:
+  # apps
   - 'apps/admin'
   - 'apps/api'
   - 'apps/web'
   - 'apps/e2e'
-  - 'packages/database'
+  # packages
   - 'packages/api-contract'
-  - '!packages/queue'
-  - '!packages/ui'
-  - '!packages/sdk'
-  - '!packages/core'
-  - '!packages/testing'
+  - 'packages/config'
+  - 'packages/core'
+  - 'packages/logger'
+  - 'packages/sdk'
+  - 'packages/database'
+
+  - 'packages/ui'
+
+  - 'packages/testing'
