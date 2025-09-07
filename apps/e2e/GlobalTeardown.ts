@@ -3,49 +3,32 @@
  * Author : Shiwoo Min
  * Date : 2025-09-04
  */
-import { PocInitializer } from '@common/initializers/PocInitializer.js';
-import { Logger } from '@common/logger/customLogger.js';
-import { ResultHandler } from '@common/logger/ResultHandler.js';
-import { POCEnv } from '@common/utils/env/POCEnv.js';
 import dotenv from 'dotenv';
-import type winston from 'winston';
+import { logger } from '../../packages/logger/customLogger.js';
+import { ResultHandler } from '../../packages/logger/ResultHandler.js';
 
-dotenv.config();
-
-class GlobalTeardown {
-  // 단일 실행 POC 타입
-  private readonly poc: string;
-  // 전역 로거 인스턴스
-  private readonly logger: winston.Logger;
-  // 결과 저장 핸들러
-  private readonly resultHandler: ResultHandler;
-
-  constructor() {
-    this.poc = POCEnv.getType();
-    this.logger = Logger.getLogger(this.poc.toUpperCase()) as winston.Logger;
-    this.resultHandler = new ResultHandler(this.poc);
-  }
-
-  public async run(): Promise<void> {
-    this.logger.info(`[GLOBAL TEARDOWN] 시작 - 대상 POC: ${this.poc}`);
-
-    try {
-      const initializer = new PocInitializer(this.poc);
-      await initializer.teardown();
-      this.logger.info(`[GLOBAL TEARDOWN] 전체 테스트 환경 정리 완료`);
-
-      await this.resultHandler.saveTestResult('PASS', '[GLOBAL TEARDOWN] 테스트 정상 종료');
-    } catch (err: unknown) {
-      const errorMessage = err instanceof Error ? err.message : String(err);
-      this.logger.error(`[GLOBAL TEARDOWN] 실패: ${errorMessage}`);
-
-      await this.resultHandler.saveTestResult('FAIL', `[GLOBAL TEARDOWN] 오류: ${errorMessage}`);
-      throw err;
-    }
-  }
-}
+dotenv.config(); // e2e/.env 로드(없어도 무시)
 
 export default async function globalTeardown(): Promise<void> {
-  const handler = new GlobalTeardown();
-  await handler.run();
+  logger.info('[GlobalTeardown] 시작');
+
+  // ResultHandler는 MVP 버전(패스/로그 저장)으로 가정
+  const result = new ResultHandler();
+
+  try {
+    // 여기서 별도의 리소스 정리가 필요하면 수행(큐/세션/임시파일 등)
+    // 예: await someTmpCleaner();
+
+    logger.info('[GlobalTeardown] 전체 테스트 환경 정리 완료');
+
+    // 최종 결과 PASS 저장
+    await result.saveTestResult('PASS', '[GlobalTeardown] 테스트 정상 종료');
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : String(err);
+    logger.error(`[GlobalTeardown] 실패: ${msg}`);
+
+    // 최종 결과 FAIL 저장
+    await result.saveTestResult('FAIL', `[GlobalTeardown] 오류: ${msg}`);
+    throw err; // Playwright에 종료 에러 전파
+  }
 }

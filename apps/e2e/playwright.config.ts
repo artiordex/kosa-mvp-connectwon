@@ -1,23 +1,16 @@
 /**
- * Description : playwright.config.ts - 📌 Playwright Config 테스트 실행 환경 정의 파일
+ * Description : playwright.config.ts - 📌 Playwright 테스트 실행 환경 정의 파일
  * Author : Shiwoo Min
- * Date : 2025-09-04
+ * Date : 2025-09-07
+ * 최소 설정으로 웹/ 모바일 웹 e2e 테스트만 진행
+ *
  */
-import { ANDROID_DEVICES, BASE_DEVICES, IOS_DEVICES } from '@src/devices/DeviceList.js';
-import {
-  AND_BROWSER_MAP,
-  IOS_BROWSER_MAP,
-  MW_BROWSER_MAP,
-  TEST_RESULT_FILE_NAME,
-} from '@common/constants/PathConstants.js';
-import type { Platform } from '@common/types/platform-types.js';
-import type { E2EProjectConfig } from '@common/types/playwright-config.js';
-import { POCEnv } from '@common/utils/env/POCEnv.js';
-import { defineConfig, devices, type Project } from '@playwright/test';
+
 /**
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
  */
+import { defineConfig, devices } from '@playwright/test';
 import dotenv from 'dotenv';
 import os from 'os';
 import path from 'path';
@@ -32,288 +25,132 @@ const __dirname = dirname(__filename);
 // .env 파일 로드
 dotenv.config({ path: path.resolve(__dirname, '.env') });
 
-// 현재 POC 환경 정보 출력
-const pocList = POCEnv.getPOCList();
-POCEnv.printPOCInfo();
+// ----- 환경 변수 기본값 -----
+// HEADLESS=false 브라우저 UI 모드
+const HEADLESS = process.env.HEADLESS !== 'false';
 
-// 브라우저 조합 동적 생성
-const browserMatrix: Record<string, string[]> = {
-  // pc-web: ['chrome', 'firefox', 'safari', 'edge']
-  PC: ['pc-chrome'],
-  // pc-mobile-web, device-mobile-web, emulate-mobile-web: ['chrome', 'safari']
-  MW: Object.values(MW_BROWSER_MAP),
-  // android-app
-  AOS: Object.values(AND_BROWSER_MAP),
-  // ios-app
-  IOS: Object.values(IOS_BROWSER_MAP),
-  API: [],
-  ALL: [],
+// BASE_URL은 테스트 대상 서비스의 루트 URL
+const BASE_URL = process.env.BASE_URL ?? 'http://localhost:3000';
+
+// CI=true 인 경우에만 RETRIES 2회 재시도, 로컬은 재시도 없음
+const RETRIES = process.env.CI ? 2 : 0;
+
+// 로컬에선 CPU의 75%만 워커로 사용하여 과부하 방지
+const WORKERS = process.env.CI ? 1 : Math.max(1, Math.floor(os.cpus().length * 0.75));
+
+// 전역 테스트 타임아웃(ms)
+const GLOBAL_TIMEOUT_MS = 30 * 60 * 1000; // 30분
+
+// 액션/네비게이션 타임아웃(초) → ms 변환
+const ACTION_TIMEOUT_MS = (parseInt(process.env.ACTION_TIMEOUT ?? '30', 10)) * 1000;
+const NAVIGATION_TIMEOUT_MS = (parseInt(process.env.NAVIGATION_TIMEOUT ?? '60', 10)) * 1000;
+
+// 슬로모션(ms). UI 깜박임/타이밍 이슈를 완화할 때 100~300 권장
+const SLOW_MO_MS = parseInt(process.env.SLOW_MO ?? '0', 10);
+
+// 브라우저 시작 타임아웃(ms). CI 환경에서 여유를 두고 싶을 때 증가
+const BROWSER_LAUNCH_TIMEOUT_MS = parseInt(process.env.BROWSER_LAUNCH_TIMEOUT ?? '60000', 10);
+
+// ----- 공통 use 옵션(모든 프로젝트에 기본 적용) -----
+// trace/video/screenshot 정책은 디버깅 친화적으로 최소화 구성
+const commonUse = {
+  baseURL: BASE_URL,
+  headless: HEADLESS,
+  // 사내 인증서 등으로 인한 HTTPS 경고 무시
+  ignoreHTTPSErrors: true,
+  // 다운로드 허용(파일 저장 테스트 등)
+  acceptDownloads: true,
+  actionTimeout: ACTION_TIMEOUT_MS,
+  navigationTimeout: NAVIGATION_TIMEOUT_MS,
+  // 실패한 케이스에만 스크린샷 저장
+  screenshot: 'only-on-failure' as const,
+  // 실패한 케이스에만 비디오 보관
+  video: 'retain-on-failure' as const,
+  // 첫 재시도에서만 트레이스 저장(용량 최소화 + 디버깅 효율)
+  trace: 'on-first-retry' as const,
+  // 콘솔/네트워크 소음 줄이기 위한 로거(경고/에러만 출력)
+  logger: {
+    isEnabled: (_name: string, severity: string) => ['warning', 'error'].includes(severity),
+    log: (name: string, severity: string, message: string) =>
+      console.log(`[${severity}] ${name}: ${message}`),
+  },
+};
+// ----- 프로젝트 정의 -----
+// Desktop Chrome: 일반 웹 화면(1920x1080 권장)
+const desktopProject = {
+  name: 'Desktop Chrome',
+  use: {
+    ...devices['Desktop Chrome'], // 데스크톱 UA/환경
+    viewport: { width: 1920, height: 1080 }, // 리그레션 일관성
+    slowMo: SLOW_MO_MS,
+    launchOptions: {
+      args: [
+        '--start-maximized', // 시작 시 최대화
+        '--disable-extensions', // 확장프로그램 비활성화
+        '--disable-dev-shm-usage', // /dev/shm 이슈 회피(CI 컨테이너)
+        '--no-sandbox', // 일부 CI 필수
+        '--disable-gpu', // GPU 가속 비활성화(헤드리스 안정성)
+        '--disable-blink-features=AutomationControlled', // 자동화 탐지 회피(일부 사이트)
+      ],
+      timeout: BROWSER_LAUNCH_TIMEOUT_MS,
+    },
+  },
 };
 
-// ALL에 나머지 POC의 모든 브라우저/디바이스를 병합해서 넣기
-browserMatrix.ALL = [
-  ...new Set(
-    Object.entries(browserMatrix)
-      .filter(([key]) => key !== 'ALL')
-      .flatMap(([, value]) => value),
-  ),
-];
-
-// POC 별 테스트 프로젝트 정의
-const pocProjects: Project[] = pocList.flatMap(poc => {
-  const deviceInfo = BASE_DEVICES[poc as keyof typeof BASE_DEVICES];
-  // 테스트 결과 파일 경로 (파일명 포함)
-  const resultFilePaths = TEST_RESULT_FILE_NAME(poc);
-  const browsers = browserMatrix[poc];
-  // 디바이스 정보가 없거나 브라우저가 없으면 빈 배열 반환
-  if (!deviceInfo || !browsers) return [];
-
-  // device 필드 또는 device 배열 요소에서 Playwright 디바이스 추출
-  let resolvedDevice: any;
-  if (Array.isArray(deviceInfo)) {
-    resolvedDevice = deviceInfo[0]?.device;
-  } else if ('device' in deviceInfo) {
-    resolvedDevice = deviceInfo.device;
-  } else {
-    resolvedDevice = undefined;
-  }
-
-  return browsers.map(browser => {
-    const label = browser.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-    /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
-    // 기본 환경 설정 (Global Configuration)
-    const useOptions = {
-      ...(resolvedDevice ?? {}),
-      /**
-       * 브라우저 실행 모드 설정:
-       * - process.env.HEADLESS=true - 브라우저 headless 모드
-       * - process.env.HEADLESS=false - 브라우저 UI 표시
-       */
-      headless: process.env.HEADLESS !== 'false',
-      /* Base URL to use in actions like `await page.goto('/')`. */
-      baseURL: process.env.BASE_URL || 'http://localhost:3000',
-      // 기본 화면 크기 설정
-      viewport: resolvedDevice?.viewport ?? { width: 1920, height: 1080 },
-      // 테스트 실패 시만 스크린샷 저장
-      screenshot: 'only-on-failure',
-      // 실패한 테스트의 경우에만 비디오 녹화 유지
-      video: 'retain-on-failure',
-      /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-      // 첫 번째 재시도에서 trace 파일 저장
-      trace: 'on-first-retry',
-      ignoreHTTPSErrors: true,
-      // HTTPS 인증서 오류 무시 (보안 경고 무시)
-      acceptDownloads: true,
-      // 브라우저 실행 타임아웃 (기본값: 60000ms)
-      timeout: parseInt(process.env.BROWSER_LAUNCH_TIMEOUT ?? '60000', 10),
-      // 슬로우 모션 (기본값: 0ms)
-      slowMo: parseInt(process.env.SLOW_MO ?? '0', 10),
-      // 단일 액션 타임아웃 (초 단위 → ms 변환)
-      actionTimeout: parseInt(process.env.ACTION_TIMEOUT ?? '30', 10) * 1000,
-      // 페이지 이동 타임아웃 (초 단위 → ms 변환)
-      navigationTimeout: parseInt(process.env.NAVIGATION_TIMEOUT ?? '60', 10) * 1000,
-      // 콘솔 로그 캡처
-      logger: {
-        isEnabled: (name: string, severity: string) => ['error', 'warning'].includes(severity),
-        log: (name: string, severity: string, message: string) =>
-          console.log(`[${severity}] ${name}: ${message}`),
-      },
-
-      /**
-       * 브라우저 실행 시 추가 옵션 (arguments)
-       * - `--start-maximized`         : 브라우저 최대화
-       * - `--disable-extensions`      : 브라우저 확장프로그램 비활성화
-       * - `--disable-plugins`         : 브라우저 플러그인 비활성화
-       * - `--disable-dev-shm-usage`   : 공유 메모리(/dev/shm)사용 비활성화
-       * - `--no-sandbox`              : 샌드박스 비활성화(일부 CI/CD 환경에서 필수)
-       * - `--disable-gpu`             : GPU 가속 비활성화(CI 환경에서 렌더링 최적화)
-       * - `--disable-blink-features=AutomationControlled`: Selenium 등 자동화 탐지를 피하기 위한 설정
-       */
-      args:
-        browser === 'edge'
-          ? [
-              '--no-sandbox',
-              '--disable-gpu',
-              '--disable-blink-features=AutomationControlled',
-              '--window-size=1280,720',
-            ]
-          : [
-              '--start-maximized',
-              '--disable-extensions',
-              '--disable-plugins',
-              '--disable-dev-shm-usage',
-              '--no-sandbox',
-              '--disable-gpu',
-              '--disable-blink-features=AutomationControlled',
-            ],
-    };
-
-    return {
-      name: `POC - ${poc} - ${label}`,
-      testMatch: [`**/${browser}/src/steps/**/*.spec.ts`],
-      /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-      // 테스트 리포트 설정 (Reporter Configuration)
-      reporter: [
-        // 기본 콘솔 출력
-        ['list'],
-        // HTML 리포트 생성
-        ['html', { outputFolder: resultFilePaths.playwrightReport[0], open: 'never' }],
-        // JSON 리포트 생성
-        ['json', { outputFile: resultFilePaths.log[0] }],
-        // allure 리포트 생성
-        ['allure-playwright', { outputFolder: resultFilePaths.allureResult[0] }],
-      ],
-      use: useOptions,
-    };
-  });
-});
-
-const E2E_CONFIGS: E2EProjectConfig[] = [
-  // PC Web - Chrome
-  {
-    name: 'PC Web - Chrome',
-    path: 'e2e/pc-web',
-    device: 'Desktop Chrome',
-    outputKey: 'pc',
-    viewport: { width: 1920, height: 1080 },
+// Mobile Chrome: Pixel 5 에뮬(UA/뷰포트/터치/스케일 모두 프리셋)
+const mobileProject = {
+  name: 'Mobile Chrome',
+  use: {
+    ...devices['Pixel 5'], // 모바일 UA/뷰포트/터치 적용
+    slowMo: SLOW_MO_MS,
     launchOptions: {
-      slowMo: 100,
-      devtools: true,
-      args: ['--start-maximized'],
+      args: [
+        '--disable-dev-shm-usage',
+        '--no-sandbox',
+        '--disable-gpu',
+        '--disable-blink-features=AutomationControlled',
+      ],
+      timeout: BROWSER_LAUNCH_TIMEOUT_MS,
     },
   },
-  // PC Mobile Web - Chrome
-  {
-    name: 'Mobile Web - PC Chrome (Responsive)',
-    path: 'e2e/pc-mobile-web',
-    device: 'Desktop Chrome',
-    viewport: { width: 412, height: 915 },
-    userAgent:
-      'Mozilla/5.0 (Linux; Android 13; SM-G981B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Mobile Safari/537.36',
-    launchOptions: {
-      args: ['--start-maximized'],
-      slowMo: 100,
-      devtools: true,
-    },
-    contextOptions: {
-      isMobile: true,
-      hasTouch: true,
-      deviceScaleFactor: 3.5,
-    },
-    outputKey: 'mw',
-  },
-  // 갤럭시 노트20 울트라 기기로 android-app 테스트
-  ...Object.entries(ANDROID_DEVICES)
-    .filter(([name]) => name === 'Galaxy Note20 Ultra')
-    .map(([name, config]) => ({
-      name: `Android App - ${name}`,
-      path: 'e2e/android-app',
-      device: name,
-      deviceConfig: config,
-      outputKey: 'aos',
-    })),
-  // 갤럭시 노트20 울트라 기기로 speedtest 테스트
-  ...Object.entries(ANDROID_DEVICES)
-    .filter(([name]) => name === 'Galaxy Note20 Ultra')
-    .map(([name, config]) => ({
-      name: `Android App - ${name}`,
-      path: 'speedtest',
-      device: name,
-      deviceConfig: config,
-      outputKey: 'aos',
-    })),
-  // iOS App - LGUPLUS
-  ...Object.entries(IOS_DEVICES)
-    .filter(([name]) => name === 'iPhone 15 Plus')
-    .map(([name, config]) => ({
-      name: `iOS App - ${name}`,
-      path: 'e2e/ios-app',
-      device: name,
-      deviceConfig: config,
-      outputKey: 'ios',
-    })),
-];
+};
 
-// E2E 테스트 프로젝트 변환
-function generateE2EProjects(): Project[] {
-  return E2E_CONFIGS.filter(config => {
-    return !config.platform || config.platform.includes(process.platform);
-  }).map(config => {
-    const resultPaths = TEST_RESULT_FILE_NAME(config.outputKey);
-    return {
-      name: `E2E - ${config.name}`,
-      testMatch: [`**/${config.path}/**/*.spec.ts`],
-      use: {
-        ...devices[config.device],
-        headless: process.env.HEADLESS !== 'false',
-        baseURL: process.env.BASE_URL || 'http://localhost:3000',
-        viewport: config.viewport,
-        userAgent: config.userAgent,
-        slowMo: config.launchOptions?.slowMo,
-        devtools: config.launchOptions?.devtools,
-        args: config.launchOptions?.args,
-        screenshot: 'only-on-failure',
-        video: 'retain-on-failure',
-        trace: 'on-first-retry',
-      },
-      reporter: [
-        ['list'],
-        ['html', { outputFolder: resultPaths.playwrightReport[0], open: 'never' }],
-        ['json', { outputFile: resultPaths.log[0] }],
-        ['allure-playwright', { outputFolder: resultPaths.allureResult[0] }],
-      ],
-    };
-  });
-}
-
-/**
- * See https://playwright.dev/docs/test-configuration.
- */
-// 최종 설정 export
+// ----- 최종 설정 -----
 export default defineConfig({
-  // 공통 초기화 작업
-  globalSetup: path.resolve(__dirname, './GlobalSetup.ts'),
-  // 공통 종료 작업
-  globalTeardown: path.resolve(__dirname, './GlobalTeardown.ts'),
-  // 공통 테스트 폴더 경로
+  // 테스트 파일 위치와 패턴(권장: e2e 하위만 사용)
   testDir: '.',
-  testMatch: [
-    '**/*.spec.ts',
-    '**/src/steps/**/*.ts',
-    'tests-examples/**/*.spec.ts',
-    'e2e/**/*.spec.ts',
+  testMatch: ['e2e/**/*.spec.ts'],
+
+  // 병렬 실행/리트라이/가드
+  fullyParallel: true, // 파일 단위 병렬 허용
+  forbidOnly: !!process.env.CI, // CI에서 test.only 방지
+  retries: RETRIES,
+  workers: WORKERS,
+  timeout: GLOBAL_TIMEOUT_MS,
+
+  // 공통 use 옵션
+  use: commonUse,
+
+  // 프로젝트(브라우저+디바이스) 목록
+  projects: [desktopProject, mobileProject],
+
+  // 리포터: list + html(기본 경로: playwright-report)
+  reporter: [
+    ['list'],
+    ['html', { open: 'never' }],
+    // ['junit', { outputFile: 'reports/junit.xml' }], // 필요 시 추가
+    // ['json',  { outputFile: 'reports/report.json' }], // 필요 시 추가
   ],
-  /* Run tests in files in parallel */
-  fullyParallel: true,
-  /* Fail the build on CI if you accidentally left test.only in the source code. */
-  forbidOnly: !!process.env.CI,
-  /* Retry on CI only */
-  retries: process.env.CI ? 2 : 0,
-  /* Opt out of parallel tests on CI. */
-  // 테스트 실행 시 동시 실행할 워커(worker) 수 설정 : 로컬은 CPU 75% 사용
-  workers: process.env.CI ? 1 : Math.max(1, Math.floor(os.cpus().length * 0.75)),
-  // 타임아웃 설정 (30분)
-  timeout: 30 * 1000 * 10,
-  /* Configure projects for major browsers */
-  // 테스트 프로젝트별 설정 (Test Project Configuration)
-  projects: [...generateE2EProjects(), ...(pocProjects.length ? pocProjects : [])],
-  /* Run your local dev server before starting the tests */
-  // 로컬 개발 서버 설정 (Local Dev Server Configuration)
+
+  // 개발 서버를 테스트 전에 띄우고 싶다면 환경변수로 제어
   webServer:
     process.env.START_WEB_SERVER === 'true'
       ? {
-          command: 'npm run start',
-          url: 'http://localhost:3000',
-          reuseExistingServer: true,
+          command: process.env.WEB_COMMAND ?? 'pnpm dev', // 서버 실행 커맨드
+          url: process.env.WEB_URL ?? 'http://localhost:3000', // 헬스체크 URL
+          reuseExistingServer: true, // 이미 떠 있으면 재사용
           ignoreHTTPSErrors: true,
+          timeout: 120 * 1000, // 서버 부팅 대기 시간
         }
       : undefined,
 });
-
-// 테스트 프로젝트 콘솔 출력
-if (process.env.DEBUG_PROJECTS === 'true') {
-  console.log(
-    'Generated Projects:',
-    [...generateE2EProjects(), ...pocProjects].map(p => p.name),
-  );
-}
