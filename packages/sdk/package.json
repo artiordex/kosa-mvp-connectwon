@@ -18,7 +18,6 @@
   },
   "dependencies": {
     "@connectwon/api-contract": "workspace:*",
-    "@connectwon/types": "workspace:*",
     "@connectwon/logger": "workspace:*"
   },
   "devDependencies": {

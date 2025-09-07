@@ -1,266 +1,331 @@
 /**
- * Description : ResultHandler.ts - 테스트 결과 저장 및 오류 처리 유틸 클래스
+ * Description : resultHandler.ts - 테스트 결과 저장 및 오류 처리 유틸
  * Author : Shiwoo Min
  * Date : 2025-09-07
  */
-import * as fs from 'fs/promises';
-import path from 'path';
 
-// 상태 타입
-export type TestStatus = 'PASS' | 'FAIL';
+import * as fs from 'fs/promises'
+import path from 'path'
+import { testConfig } from '../../connectwon-env'
 
-// 아티팩트 타입
-export type ArtifactKind = 'screenshot' | 'trace' | 'video' | 'custom';
+// 핵심 타입들
+export type TestStatus = 'PASS' | 'FAIL' | 'SKIP' | 'TIMEOUT'
+export type ArtifactKind = 'screenshot' | 'trace' | 'video' | 'log' | 'custom'
 
-// 아티팩트 데이터
 export interface Artifact {
-  kind: ArtifactKind;
-  name: string;           // 파일명(확장자 포함 권장)
-  buffer?: Buffer;        // 메모리 상의 데이터 (있으면 파일로 씀)
-  contentType?: string;   // 선택
-  path?: string;          // 외부에서 이미 저장한 경로 (buffer 미사용 시)
+  kind: ArtifactKind
+  name: string
+  buffer?: Buffer
+  path?: string
+  size?: number
 }
 
-// 로거 인터페이스 (선택 주입)
-export interface LoggerLike {
-  info: (msg: any, ...rest: any[]) => void;
-  warn: (msg: any, ...rest: any[]) => void;
-  error: (msg: any, ...rest: any[]) => void;
-  debug?: (msg: any, ...rest: any[]) => void;
+export interface TestResult {
+  id: string
+  timestamp: string
+  status: TestStatus
+  testName?: string
+  duration?: number
+  details?: string
+  artifacts: string[]
+  error?: {
+    message: string
+    stack?: string
+  }
 }
 
-// 어댑터 인터페이스
-export interface TestAdapter<C = unknown> {
-  name: string;                           // 어댑터 이름 (예: 'playwright')
-  isAvailable: (ctx?: C) => boolean;      // 해당 러너 컨텍스트가 준비됐는지
-  captureOnFail?: (ctx: C) => Promise<Artifact[] | void>; // 실패 시 일괄 캡처
-  captureScreenshot?: (ctx: C) => Promise<Artifact | void>;
-  captureTrace?: (ctx: C) => Promise<Artifact | void>;
-  captureVideo?: (ctx: C) => Promise<Artifact | void>;
+// 기본 설정
+const DEFAULT_OPTIONS = {
+  outputDir: testConfig.artifactsDir,
+  maxArtifactSize: 50 * 1024 * 1024, // 50MB
+  saveTrace: testConfig.saveTrace,
+  logVideo: testConfig.logVideo,
 }
 
-// 옵션
-export interface ResultHandlerOptions<C = unknown> {
-  outputDir?: string;           // 기본: ./e2e-artifacts
-  serviceName?: string;         // 기본: 'test'
-  saveTraceOnFail?: boolean;    // 기본: true
-  logVideoOnFail?: boolean;     // 기본: true (경로 로그만, 보관은 러너 설정 의존)
-  logger?: LoggerLike;          // 기본: console
-  adapter?: TestAdapter<C>;     // 러너별 어댑터 (선택)
+// 유틸리티 함수들
+function nowTs(): string {
+  return new Date().toISOString().replace(/[:.]/g, '-')
 }
 
-// 유틸 함수
-function nowTs() {
-  return new Date().toISOString().replace(/[:.]/g, '-');
-}
-async function ensureDir(dir: string) {
-  await fs.mkdir(dir, { recursive: true });
+function generateResultId(): string {
+  const ts = nowTs()
+  const random = Math.random().toString(36).substr(2, 6)
+  return `${ts}-${random}`
 }
 
-// 메인 클래스
-export class ResultHandler<C = unknown> {
-  private readonly root: string;
-  private readonly dirResults: string;
-  private readonly dirLogs: string;
-  private readonly dirScreenshots: string;
-  private readonly dirTraces: string;
-  private readonly dirVideos: string;
-  private readonly logger: LoggerLike;
-  private readonly adapter?: TestAdapter<C>;
-  private readonly opts: Required<Omit<ResultHandlerOptions<C>, 'logger' | 'adapter' | 'outputDir' | 'serviceName'>>;
+async function ensureDir(dir: string): Promise<void> {
+  await fs.mkdir(dir, { recursive: true })
+}
 
-  constructor(options?: ResultHandlerOptions<C>) {
-    const outputDir = options?.outputDir || process.env.E2E_ARTIFACTS_DIR || path.resolve(process.cwd(), 'e2e-artifacts');
-    const serviceName = options?.serviceName || process.env.SERVICE_NAME || 'test';
+function getArtifactDir(outputDir: string, kind: ArtifactKind): string {
+  const subdirs = {
+    screenshot: 'screenshots',
+    trace: 'traces',
+    video: 'videos',
+    log: 'logs',
+    custom: 'custom'
+  }
+  return path.join(outputDir, subdirs[kind])
+}
 
-    this.root = outputDir;
-    this.dirResults = path.join(this.root, 'results');
-    this.dirLogs = path.join(this.root, 'logs');
-    this.dirScreenshots = path.join(this.root, 'screenshots');
-    this.dirTraces = path.join(this.root, 'traces');
-    this.dirVideos = path.join(this.root, 'videos');
+// 핵심 함수들
+export async function initResultDirs(outputDir = DEFAULT_OPTIONS.outputDir): Promise<void> {
+  const dirs = [
+    outputDir,
+    path.join(outputDir, 'results'),
+    path.join(outputDir, 'logs'),
+    path.join(outputDir, 'screenshots'),
+    path.join(outputDir, 'traces'),
+    path.join(outputDir, 'videos'),
+    path.join(outputDir, 'custom'),
+  ]
 
-    this.logger = options?.logger || console;
-    this.adapter = options?.adapter;
+  await Promise.all(dirs.map(ensureDir))
+}
 
-    this.opts = {
-      saveTraceOnFail: options?.saveTraceOnFail ?? (process.env.SAVE_TRACE_ON_FAIL !== 'false'),
-      logVideoOnFail: options?.logVideoOnFail ?? (process.env.LOG_VIDEO_ON_FAIL !== 'false'),
-    };
+export async function saveTestResult(
+  status: TestStatus,
+  options: {
+    testName?: string
+    duration?: number
+    details?: string
+    error?: Error
+    outputDir?: string
+  } = {}
+): Promise<string> {
+  const outputDir = options.outputDir || DEFAULT_OPTIONS.outputDir
+  const resultId = generateResultId()
 
-    this.logger.info?.(`[ResultHandler] initialized for service='${serviceName}', dir='${this.root}'`);
+  const result: TestResult = {
+    id: resultId,
+    timestamp: new Date().toISOString(),
+    status,
+    testName: options.testName,
+    duration: options.duration,
+    details: options.details,
+    artifacts: [],
+    error: options.error ? {
+      message: options.error.message,
+      stack: options.error.stack
+    } : undefined
   }
 
-  // 초기 폴더 생성
-  public async init(): Promise<void> {
-    await Promise.all([
-      ensureDir(this.root),
-      ensureDir(this.dirResults),
-      ensureDir(this.dirLogs),
-      ensureDir(this.dirScreenshots),
-      ensureDir(this.dirTraces),
-      ensureDir(this.dirVideos),
-    ]);
-  }
+  // 결과 파일 저장
+  const resultPath = path.join(outputDir, 'results', `${resultId}.json`)
+  await fs.writeFile(resultPath, JSON.stringify(result, null, 2))
 
-  // 테스트 결과 저장
-  public async saveTestResult(
-    status: TestStatus,
-    details?: string,
-    ctx?: C
-  ): Promise<void> {
-    const ts = nowTs();
-    const resultPath = path.join(this.dirResults, `test-result-${ts}.json`);
-    const logPath = path.join(this.dirLogs, 'run.log');
+  // 로그 파일에 한줄 추가
+  const logPath = path.join(outputDir, 'logs', 'test-run.log')
+  const logLine = `[${result.timestamp}] [${status}] ${options.testName || 'Unknown'} - ${options.details || ''}\n`
+  await fs.appendFile(logPath, logLine)
 
-    const payload = {
-      timestamp: new Date().toISOString(),
-      status,
-      details: details || 'No additional details',
-    };
+  return resultId
+}
 
-    await fs.writeFile(resultPath, JSON.stringify(payload, null, 2));
-    this.logger.info?.(`결과 저장: ${resultPath}`);
-
-    const line = `[${payload.timestamp}] [${status}] ${details || ''}\n`;
-    await fs.appendFile(logPath, line);
-    this.logger.info?.(`로그 저장: ${logPath}`);
-
-    if (status === 'FAIL') {
-      await this.captureFailureArtifacts(ts, ctx);
+export async function saveArtifact(
+  resultId: string,
+  artifact: Artifact,
+  outputDir = DEFAULT_OPTIONS.outputDir
+): Promise<string | null> {
+  try {
+    if (artifact.buffer && artifact.buffer.length > DEFAULT_OPTIONS.maxArtifactSize) {
+      console.warn(`Artifact too large: ${artifact.name} (${artifact.buffer.length} bytes)`)
+      return null
     }
-  }
 
-  // 실패 시 아티팩트 캡처
-  private async captureFailureArtifacts(ts: string, ctx?: C): Promise<void> {
-    // 어댑터가 있으면 일괄 캡처부터 시도
-    if (this.adapter?.isAvailable(ctx)) {
-      try {
-        const batched = await this.adapter.captureOnFail?.(ctx as C);
-        if (batched?.length) {
-          await this.persistArtifacts(ts, batched);
-        }
-      } catch (err) {
-        this.logger.warn?.('[ResultHandler] captureOnFail 실패, 개별 캡처로 전환');
-      }
+    if (artifact.buffer) {
+      // 메모리 데이터를 파일로 저장
+      const artifactDir = getArtifactDir(outputDir, artifact.kind)
+      await ensureDir(artifactDir)
 
-      // 스크린샷
-      try {
-        const scr = await this.adapter.captureScreenshot?.(ctx as C);
-        if (scr) await this.persistArtifacts(ts, [scr]);
-      } catch (err) {
-        this.logger.error?.('[ResultHandler] 스크린샷 캡처 실패', err);
-      }
+      const filename = `${resultId}-${artifact.name}`
+      const filePath = path.join(artifactDir, filename)
 
-      // 트레이스
-      if (this.opts.saveTraceOnFail) {
-        try {
-          const tr = await this.adapter.captureTrace?.(ctx as C);
-          if (tr) await this.persistArtifacts(ts, [tr]);
-        } catch {
-          this.logger.warn?.('[ResultHandler] 트레이스 저장 생략(활성화 안됨 또는 실패)');
-        }
-      }
-
-      // 비디오
-      if (this.opts.logVideoOnFail) {
-        try {
-          const vd = await this.adapter.captureVideo?.(ctx as C);
-          if (vd) await this.persistArtifacts(ts, [vd]);
-          else this.logger.info?.('비디오는 러너 설정에 따라 자동 보관됩니다.');
-        } catch {
-          this.logger.warn?.('[ResultHandler] 비디오 캡처 스킵');
-        }
-      }
-    } else {
-      // 어댑터 없음: 기본 안내만
-      this.logger.warn?.('[ResultHandler] 어댑터가 없어 실패 아티팩트 캡처를 생략합니다.');
+      await fs.writeFile(filePath, artifact.buffer)
+      return filePath
+    } else if (artifact.path) {
+      // 외부 경로만 기록
+      return artifact.path
     }
-  }
 
-  // 아티팩트 저장
-  private async persistArtifacts(ts: string, artifacts: Artifact[]): Promise<void> {
-    for (const art of artifacts) {
-      if (art.buffer && !art.path) {
-        const outPath = this.resolveArtifactPath(ts, art.kind, art.name);
-        await fs.writeFile(outPath, art.buffer);
-        this.logger.warn?.(`아티팩트 저장: ${outPath}`);
-      } else if (art.path) {
-        this.logger.warn?.(`아티팩트 경로 기록: ${art.kind} -> ${art.path}`);
-      } else {
-        this.logger.warn?.(`아티팩트 무시(데이터 없음): ${art.kind}/${art.name}`);
-      }
-    }
-  }
-
-  // 아티팩트 경로 생성
-  private resolveArtifactPath(ts: string, kind: ArtifactKind, name: string): string {
-    const base =
-      kind === 'screenshot' ? this.dirScreenshots :
-      kind === 'trace'      ? this.dirTraces :
-      kind === 'video'      ? this.dirVideos : this.dirResults;
-    return path.join(base, `${ts}-${name}`);
+    return null
+  } catch (error) {
+    console.error(`Failed to save artifact ${artifact.name}:`, error)
+    return null
   }
 }
 
-// ==========================
-// 어댑터 예시: Playwright
-// ==========================
-// 컨텍스트 형태: { page?: Page; context?: BrowserContext }
-// 사용 중인 프로젝트에서 타입 임포트가 가능하면 타입 선언 추가해도 됨
-export interface PlaywrightCtx {
-  page?: any;       // Page
-  context?: any;    // BrowserContext
+export async function captureScreenshot(
+  resultId: string,
+  screenshotBuffer: Buffer,
+  outputDir = DEFAULT_OPTIONS.outputDir
+): Promise<string | null> {
+  const artifact: Artifact = {
+    kind: 'screenshot',
+    name: 'screenshot.png',
+    buffer: screenshotBuffer
+  }
+
+  return saveArtifact(resultId, artifact, outputDir)
 }
 
-export const PlaywrightAdapter: TestAdapter<PlaywrightCtx> = {
-  name: 'playwright',
-  isAvailable: (ctx) => !!ctx && (!!ctx.page || !!ctx.context),
+export async function saveTrace(
+  resultId: string,
+  tracePath: string,
+  outputDir = DEFAULT_OPTIONS.outputDir
+): Promise<string | null> {
+  if (!DEFAULT_OPTIONS.saveTrace) return null
 
-  // 일괄 캡처는 생략 가능
-  captureOnFail: async () => undefined,
+  const artifact: Artifact = {
+    kind: 'trace',
+    name: 'trace.zip',
+    path: tracePath
+  }
 
-  captureScreenshot: async (ctx) => {
-    if (!ctx.page) return;
-    const buffer = await ctx.page.screenshot({ fullPage: true });
-    return { kind: 'screenshot', name: 'fail.png', buffer };
-  },
+  return saveArtifact(resultId, artifact, outputDir)
+}
 
-  captureTrace: async (ctx) => {
-    if (!ctx.context) return;
+export async function updateResultWithArtifacts(
+  resultId: string,
+  artifactPaths: string[],
+  outputDir = DEFAULT_OPTIONS.outputDir
+): Promise<void> {
+  const resultPath = path.join(outputDir, 'results', `${resultId}.json`)
+
+  try {
+    const content = await fs.readFile(resultPath, 'utf-8')
+    const result: TestResult = JSON.parse(content)
+
+    result.artifacts = [...result.artifacts, ...artifactPaths.filter(Boolean)]
+
+    await fs.writeFile(resultPath, JSON.stringify(result, null, 2))
+  } catch (error) {
+    console.error(`Failed to update result ${resultId}:`, error)
+  }
+}
+
+export async function cleanupOldArtifacts(
+  outputDir = DEFAULT_OPTIONS.outputDir,
+  maxAgeDays = testConfig.cleanupDays
+): Promise<void> {
+  if (maxAgeDays <= 0) return
+
+  const cutoffDate = new Date()
+  cutoffDate.setDate(cutoffDate.getDate() - maxAgeDays)
+
+  const dirs = [
+    path.join(outputDir, 'results'),
+    path.join(outputDir, 'screenshots'),
+    path.join(outputDir, 'traces'),
+    path.join(outputDir, 'videos'),
+    path.join(outputDir, 'logs'),
+  ]
+
+  let cleanedCount = 0
+
+  for (const dir of dirs) {
     try {
-      const pathBuf = await ctx.context.tracing?.stopChunk?.({ path: undefined });
-      // stopChunk 사용 환경이 아닐 수 있어 stop만 가능한 경우가 많음
-    } catch {}
-    // Playwright는 보통 config에서 trace: 'on'/'on-first-retry' 설정해 zip 자동생성
-    // 여기서는 직접 zip 버퍼를 얻기 어렵기 때문에 경로 기록 형태를 권장
-    return { kind: 'trace', name: 'trace.zip', path: '[playwright-managed]' };
-  },
+      const files = await fs.readdir(dir)
 
-  captureVideo: async () => {
-    // 비디오는 프로젝트 설정(use.video)에서 자동 저장되는 경우가 일반적
-    return { kind: 'video', name: 'video.mp4', path: '[playwright-managed]' };
-  },
-};
+      for (const file of files) {
+        const filePath = path.join(dir, file)
+        const stats = await fs.stat(filePath)
 
-// ==========================
-// 어댑터 예시: WebdriverIO
-// ==========================
-// 컨텍스트 형태: { browser?: WebdriverIO.Browser }
-export interface WdioCtx {
-  browser?: any;
+        if (stats.mtime < cutoffDate) {
+          await fs.unlink(filePath)
+          cleanedCount++
+        }
+      }
+    } catch (error) {
+      // 디렉토리가 없거나 접근 불가한 경우 무시
+    }
+  }
+
+  if (cleanedCount > 0) {
+    console.log(`Cleaned up ${cleanedCount} old artifacts (older than ${maxAgeDays} days)`)
+  }
 }
 
-export const WebdriverIOAdapter: TestAdapter<WdioCtx> = {
-  name: 'webdriverio',
-  isAvailable: (ctx) => !!ctx?.browser,
+// 간단한 사용 예시
+export async function handleTestFailure(
+  testName: string,
+  error: Error,
+  screenshotBuffer?: Buffer,
+  tracePath?: string
+): Promise<string> {
+  // 1. 기본 결과 저장
+  const resultId = await saveTestResult('FAIL', {
+    testName,
+    error,
+    details: error.message
+  })
 
-  captureScreenshot: async (ctx) => {
-    const base64 = await ctx.browser.saveScreenshot(); // 일부 WDIO 설정에선 경로 지정해야 함
-    const buffer = Buffer.isBuffer(base64) ? base64 : Buffer.from(base64, 'base64');
-    return { kind: 'screenshot', name: 'fail.png', buffer };
-  },
+  // 2. 아티팩트 수집
+  const artifactPaths: string[] = []
 
-  captureTrace: async () => undefined, // WDIO에선 별도 플러그인 사용 권장
-  captureVideo: async () => undefined,
-};
+  if (screenshotBuffer) {
+    const screenshotPath = await captureScreenshot(resultId, screenshotBuffer)
+    if (screenshotPath) artifactPaths.push(screenshotPath)
+  }
+
+  if (tracePath) {
+    const savedTracePath = await saveTrace(resultId, tracePath)
+    if (savedTracePath) artifactPaths.push(savedTracePath)
+  }
+
+  // 3. 결과 업데이트
+  if (artifactPaths.length > 0) {
+    await updateResultWithArtifacts(resultId, artifactPaths)
+  }
+
+  return resultId
+}
+
+export async function handleTestSuccess(
+  testName: string,
+  duration: number
+): Promise<string> {
+  return saveTestResult('PASS', {
+    testName,
+    duration,
+    details: 'Test passed successfully'
+  })
+}
+
+// 통계 조회 (옵션)
+export async function getTestStats(
+  outputDir = DEFAULT_OPTIONS.outputDir
+): Promise<{
+  total: number
+  passed: number
+  failed: number
+  skipped: number
+}> {
+  const resultsDir = path.join(outputDir, 'results')
+  const stats = { total: 0, passed: 0, failed: 0, skipped: 0 }
+
+  try {
+    const files = await fs.readdir(resultsDir)
+
+    for (const file of files.filter(f => f.endsWith('.json'))) {
+      try {
+        const content = await fs.readFile(path.join(resultsDir, file), 'utf-8')
+        const result: TestResult = JSON.parse(content)
+
+        stats.total++
+
+        switch (result.status) {
+          case 'PASS': stats.passed++; break
+          case 'FAIL': stats.failed++; break
+          case 'SKIP': stats.skipped++; break
+        }
+      } catch {
+        // 파싱 실패한 파일 무시
+      }
+    }
+  } catch {
+    // 디렉토리 없음
+  }
+
+  return stats
+}

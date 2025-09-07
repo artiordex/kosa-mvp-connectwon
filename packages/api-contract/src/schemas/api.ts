@@ -1,8 +1,11 @@
 /**
- * API 관련 타입 (api-contract에서 생성)
+ * Description : api.ts - 📌 API 관련 타입정의
+ * Author : Shiwoo Min
+ * Date : 2025-09-07
  */
+
 import { z } from 'zod'
-import type * as schemas from '../../api-contract/src/schemas'
+import type * as schemas from '../index.js'
 
 // 사용자 관련 타입
 export type User = z.infer<typeof schemas.UserSchema>

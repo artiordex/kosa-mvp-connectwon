@@ -1,3 +1,9 @@
+/**
+ * Description : programs.ts - 📌 프로그램 관련 타입정의
+ * Author : Shiwoo Min
+ * Date : 2025-09-07
+ */
+
 import { z } from 'zod'
 
 export const ProgramSchema = z.object({

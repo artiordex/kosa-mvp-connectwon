@@ -8,8 +8,6 @@
   // 루트의 tsconfig.json 상속
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "./dist",
-    "rootDir": ".",
     "composite": true,
     "noEmit": true
   },

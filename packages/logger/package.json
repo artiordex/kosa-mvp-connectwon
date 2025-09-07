@@ -21,9 +21,13 @@
     "clean": "rimraf dist"
   },
   "dependencies": {
-    "@connectwon/types": "workspace:*"
+    "pino": "^9.0.0"
   },
   "devDependencies": {
-    "@connectwon/configs": "workspace:*"
+    "@connectwon/api-contract": "workspace:*",
+    "@connectwon/logger": "workspace:*",
+    "@connectwon/configs": "workspace:*",
+    "typescript": "^5.4.0",
+    "rimraf": "^5.0.0"
   }
 }

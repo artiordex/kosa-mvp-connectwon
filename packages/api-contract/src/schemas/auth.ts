@@ -1,3 +1,9 @@
+/**
+ * Description : auth.ts - 📌 인증 관련 타입정의
+ * Author : Shiwoo Min
+ * Date : 2025-09-07
+ */
+
 import { z } from 'zod'
 
 // Google OAuth 성공 후 프론트엔드로 전달되는 사용자 정보

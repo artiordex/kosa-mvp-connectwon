@@ -1,26 +1,37 @@
 /**
-  * Description : tsconfig.json - 📌 types 의 tsconfig.json 최소유지
-  * Author : Shiwoo Min
-  * Date : 2025-09-05
-  */
-
+ * Description : tsconfig.json - 📌 logger 패키지용 TS 설정
+ * Author : Shiwoo Min
+ * Date : 2025-09-08
+ */
 {
-  // 루트의 tsconfig.json 상속
+  // 루트 tsconfig를 상속
   "extends": "../../tsconfig.base.json",
+
   "compilerOptions": {
-    "outDir": "./dist",
-    "rootDir": "./src",
-    "composite": true
+    "rootDir": "src",
+    "outDir": "dist",
+
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "emitDeclarationOnly": false,
+    "moduleResolution": "NodeNext",
+
+    // 품질/호환 옵션 권장
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true
   },
+
   "include": [
-    "src/**/*",
-    "*.ts"
+    "src"
   ],
   "exclude": [
     "dist",
     "node_modules"
   ],
-  "references": [
-    { "path": "../types" }
-  ]
+
+  // 프로젝트 참조 설정
+  "references": []
 }

@@ -22,7 +22,7 @@
   "include": [
     "src/**/*",
     "prisma/seed.ts"
-, "../types/src/domain.ts"  ],
+, "../core/domain/authz/index.ts"  ],
   "exclude": [
     "dist",
     "node_modules",
@@ -30,6 +30,5 @@
     "prisma/migrations"
   ],
   "references": [
-    { "path": "../types" }
   ]
 }

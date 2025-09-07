@@ -2,30 +2,39 @@
   "name": "@connectwon/configs",
   "version": "1.0.0",
   "private": true,
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "type": "module",
+  "sideEffects": false,
+
   "exports": {
-    "./eslint/*": {
-      "import": "./eslint/*.js"
-    },
-    "./typescript/*": {
-      "import": "./typescript/*.json"
-    },
-    "./tailwind/*": {
-      "import": "./tailwind/*.js"
-    }
+    "./eslint/base": "./eslint/base.js",
+    "./eslint/next": "./eslint/next.js",
+    "./eslint/node": "./eslint/node.js",
+
+    "./typescript/base": "./typescript/tsconfig.base.json",
+
+    "./tailwind/preset": "./tailwind/preset.js"
   },
+
+  "files": [
+    "eslint",
+    "typescript",
+    "tailwind",
+    "README.md"
+  ],
+
   "scripts": {
-    "build": "echo 'No build needed for configs'",
-    "clean": "echo 'No clean needed for configs'"
+    "build": "echo \"No build needed for configs\"",
+    "clean": "echo \"No clean needed for configs\""
   },
-  "dependencies": {
-    "@typescript-eslint/eslint-plugin": "^6.0.0",
-    "@typescript-eslint/parser": "^6.0.0",
-    "eslint": "^8.0.0",
-    "eslint-config-next": "^14.0.0",
-    "eslint-plugin-react": "^7.0.0",
-    "eslint-plugin-react-hooks": "^4.0.0",
-    "tailwindcss": "^3.0.0"
+
+  "peerDependencies": {
+    "eslint": ">=8",
+    "@typescript-eslint/eslint-plugin": ">=6",
+    "@typescript-eslint/parser": ">=6",
+    "eslint-plugin-react": ">=7",
+    "eslint-plugin-react-hooks": ">=4",
+    "eslint-config-next": ">=14",
+    "tailwindcss": ">=3",
+    "typescript": ">=5"
   }
 }
