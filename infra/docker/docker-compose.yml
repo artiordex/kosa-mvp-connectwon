@@ -12,13 +12,16 @@ version: '3.8'
 # Compose 파일 경로 명시하여 컨테이너 실행: docker compose -f infra/docker/docker-compose.yml up
 # infra/docker 디렉토리에서 직접 실행: cd infra/docker && docker compose up -d
 # 환경변수 파일: .env.docker (Docker 컨테이너 전용 설정)
+# Docker 컨테이너 로그 확인: docker compose logs -f --tail=100
+# Docker 컨테이너 중지: docker compose down
+# Docker 일부 서비스만 올리기: docker compose up -d postgres redis
 
 services:
   # Next.js (웹 프론트엔드)
   web:
     build:
       context: ../../
-      dockerfile: ./infra/docker/Dockerfile.web
+      dockerfile: infra/docker/Dockerfile.web
     container_name: web
     env_file:
       - .env
@@ -37,7 +40,7 @@ services:
   api:
     build:
       context: ../../
-      dockerfile: ./infra/docker/Dockerfile.api
+      dockerfile: infra/docker/Dockerfile.api
     container_name: api
     env_file:
       - .env
@@ -70,21 +73,46 @@ services:
   postgres:
     build:
       context: ../../
-      dockerfile: ./infra/docker/Dockerfile.db
+      dockerfile: infra/docker/Dockerfile.db
     image: connectwon-postgres:17-local
     container_name: postgres
+    # restart: always, if-failed, unless-stopped, no
+    restart: unless-stopped
     env_file:
       - .env
     environment:
+      # 기본값/검증 처리
+      # Postgres 기본 계정명 (없으면 postgres로 fallback)
       - POSTGRES_USER=${POSTGRES_USER:-postgres}
-      - POSTGRES_DB=${POSTGRES_DB:-connectwon}
+      # 초기 생성할 데이터베이스 이름 (없으면 connectwon_db로 fallback)
+      - POSTGRES_DB=${POSTGRES_DB:-connectwon_db}
+      # 슈퍼유저 암호 (필수, 없으면 에러)
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
+      # 컨테이너 내부 타임존 (기본값 Asia/Seoul)
+      - TZ=${TZ:-Asia/Seoul}
+      # 데이터 디렉토리 경로 (볼륨 안에서 하위 폴더 사용 → lost+found 충돌 방지)
+      - PGDATA=/var/lib/postgresql/data/pgdata
     ports:
       - "5432:5432"
     volumes:
+      # 데이터 영속화
+      # Postgres 실제 데이터 파일이 저장될 볼륨
       - pg_data:/var/lib/postgresql/data
+      # 커스텀 postgresql.conf를 컨테이너 설정 파일로 마운트 (읽기 전용)
+      - ../database/conf/postgresql.conf:/etc/postgresql/postgresql.conf:ro
+      # 인증/접속 정책을 담은 pg_hba.conf 마운트 (읽기 전용)
+      - ../database/conf/pg_hba.conf:/etc/postgresql/pg_hba.conf:ro
+      # 초기 스키마/시드 스크립트가 있는 디렉터리 (init/*.sql 자동 실행)
+      - ../database/init:/docker-entrypoint-initdb.d:ro
+    # conf 경로를 명시적으로 지정
+    command: >
+      postgres
+      -c config_file=/etc/postgresql/postgresql.conf
+      -c hba_file=/etc/postgresql/pg_hba.conf
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      # 초기엔 connectwon_db가 없을 수 있어 항상 존재하는 'postgres' DB로 체크
+      # test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d postgres -h 127.0.0.1 -p 5432"]
       interval: 5s
       timeout: 5s
       retries: 10
@@ -98,8 +126,11 @@ services:
     ports:
       - "6379:6379"
     environment:
+      # Redis 접속 비밀번호 (필수)
       - REDIS_PASSWORD=${REDIS_PASSWORD:?REDIS_PASSWORD is required}
+      # Redis 메모리 제한 (기본 512MB)
       - REDIS_MAXMEMORY=${REDIS_MAXMEMORY:-512mb}
+      # 메모리 초과 시 제거 정책 (LRU: 사용 빈도 적은 키 제거)
       - REDIS_EVICTION=${REDIS_EVICTION:-allkeys-lru}
     command: >
       sh -c 'exec redis-server

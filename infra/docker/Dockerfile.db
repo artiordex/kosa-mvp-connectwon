@@ -3,21 +3,19 @@
 # Author : Shiwoo Min
 # Date : 2025-09-06
 # 09/06 - 도커 빌드 테스트: docker compose -f infra/docker/docker-compose.yml build postgres
+# 09/07 - init 스크립트 수동적용:
+  # docker compose -f docker-compose.yml exec postgres \
+  # bash -lc 'ls -al /docker-entrypoint-initdb.d'
 
-# 커스텀 Postgres 이미지
+# Postgres 이미지
 FROM postgres:17
 
 # 타임존 설정
 ENV TZ=Asia/Seoul
 
 # 설정 파일 복사
-COPY infra/database/conf/pg_hba.conf /etc/postgresql/pg_hba.conf
 COPY infra/database/conf/postgresql.conf /etc/postgresql/postgresql.conf
+COPY infra/database/conf/pg_hba.conf     /etc/postgresql/pg_hba.conf
 
 # 초기화 스크립트 복사
-COPY infra/database/init/ /docker-entrypoint-initdb.d/
-
-# 퍼미션(보수적; init 스크립트가 .sh라면 실행 권한 부여)
-RUN mkdir -p /var/lib/postgresql/data/pg_log && \
-    chown -R postgres:postgres /var/lib/postgresql/data/pg_log
-
+# COPY infra/database/init/ /docker-entrypoint-initdb.d/
