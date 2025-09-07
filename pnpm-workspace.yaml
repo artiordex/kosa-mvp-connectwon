@@ -11,5 +11,4 @@ packages:
   - 'packages/logger'
   - 'packages/sdk'
   - 'packages/database'
-  - 'packages/types'
   - 'packages/ui'

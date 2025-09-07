@@ -17,7 +17,7 @@
     "typeRoots": ["./node_modules/@types"],
 
     // 타입 선언 파일(.d.ts) 관련
-    "declarationMap": true,
+    // "declarationMap": true,
 
     // 모노레포에서 빌드 성능 향상을 위한 증분 빌드 정보 파일
     "tsBuildInfoFile": "./dist/.tsbuildinfo",
@@ -35,7 +35,7 @@
     "allowSyntheticDefaultImports": true,
 
     // import/export 구문을 원본 그대로 유지 (Next.js 호환 ↑)
-    "verbatimModuleSyntax": true,
+    // "verbatimModuleSyntax": true,
 
     // 파일명 대소문자 일관성 검사 (대소문자 오류 방지)
     "forceConsistentCasingInFileNames": true,
@@ -53,6 +53,9 @@
 
     // 경로 별칭 설정 - 실제 존재하는 패키지들만
     "paths": {
+      // 환경변수 설정
+      "@connectwon/env": ["./connectwon-env.ts"],
+
       // API 계약
       "@connectwon/api-contract": ["packages/api-contract/src/index.ts"],
       "@connectwon/api-contract/*": ["packages/api-contract/src/*"],
@@ -77,22 +80,21 @@
       "@connectwon/sdk": ["packages/sdk/src/index.ts"],
       "@connectwon/sdk/*": ["packages/sdk/src/*"],
 
-      // 타입 정의
-      "@connectwon/types": ["packages/types/src/index.ts"],
-      "@connectwon/types/*": ["packages/types/src/*"],
-
       // UI 라이브러리
       "@connectwon/ui": ["packages/ui/src/index.ts"],
       "@connectwon/ui/*": ["packages/ui/src/*"]
-    }
+    },
+    // 엄격 모드 설정
+    "strict": true
   },
 
   // 루트 프로젝트는 빈 파일 배열 - references로만 관리
-  "files": [],
+  "files": [
+
+  ],
 
   // TypeScript Project References로 의존성 관리
   "references": [
-    { "path": "./packages/types" },
     { "path": "./packages/configs" },
     { "path": "./packages/logger" },
     { "path": "./packages/database" },
@@ -100,5 +102,6 @@
     { "path": "./packages/core" },
     { "path": "./packages/sdk" },
     { "path": "./packages/ui" }
+    // Removed reference to './packages/types' as it does not exist
   ]
 }

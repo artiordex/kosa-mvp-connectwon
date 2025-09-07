@@ -128,5 +128,6 @@
       "healthcheck",
       "initdb",
       "CITEXT"
-    ]
+    ],
+    "nxConsole.generateAiAgentRules": true
   }
