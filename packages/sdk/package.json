@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
+  "sideEffects": false,
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
@@ -11,9 +12,10 @@
       "import": "./dist/index.js"
     }
   },
+  "files": ["dist"],
   "scripts": {
-    "build": "tsc",
-    "dev": "tsc --watch",
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsc --watch -p tsconfig.json",
     "clean": "rimraf dist"
   },
   "dependencies": {
@@ -21,6 +23,8 @@
     "@connectwon/logger": "workspace:*"
   },
   "devDependencies": {
-    "@connectwon/configs": "workspace:*"
+    "@connectwon/configs": "workspace:*",
+    "typescript": "^5.5.0",
+    "rimraf": "^6.0.0"
   }
 }
