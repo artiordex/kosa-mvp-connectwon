@@ -2,53 +2,107 @@
  * Description : launch.json - 📌 VS Code에서 Debug 및 Testing 실행 설정 파일
  * Author : Shiwoo Min
  * Date : 2025-09-02
+ * 09-09: Vitest/Playwright 설정 변경
  */
- {
-    "version": "0.2.0",
-    "configurations": [
-      // PC 웹 테스트 실행
-      {
-        "name": "Run Playwright E2E-PC",
-        "type": "node",
-        "request": "launch",
-        "program": "${workspaceFolder}/node_modules/@playwright/test/cli.js",
-        "args": ["test", "e2e/pc-web", "--headed", "--reporter=html"],
-        "runtimeArgs": ["--require", "tsconfig-paths/register.js"],
-        "env": {
-          "POC": "pc"
-        },
-        "console": "integratedTerminal",
-        "internalConsoleOptions": "neverOpen"
-      },
+{
+  "version": "0.2.0",
 
-      // 모바일 웹 (PC 뷰포트) 테스트 실행
-      {
-        "name": "Run Playwright E2E-PC-Mobile-Web",
-        "type": "node",
-        "request": "launch",
-        "program": "${workspaceFolder}/node_modules/@playwright/test/cli.js",
-        "args": ["test", "e2e/pc-mobile-web", "--headed", "--reporter=html"],
-        "runtimeArgs": ["--require", "tsconfig-paths/register.js"],
-        "env": {
-          "POC": "mw"
-        },
-        "console": "integratedTerminal",
-        "internalConsoleOptions": "neverOpen"
-      },
+  "configurations": [
+    // Vitest: 단일 파일 디버그
+    {
+      "name": "Vitest - Current File (debug)",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/node_modules/vitest/vitest.mjs",
+      "args": ["run", "${file}", "--no-threads", "--watch=false", "--config", "vitest.config.ts"],
+      "autoAttachChildProcesses": true,
+      "smartStep": true,
+      "envFile": "${workspaceFolder}/.env",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "skipFiles": ["<node_internals>/**"]
+    },
 
-      // API 테스트 실행
-      {
-        "name": "Run Playwright E2E-API",
-        "type": "node",
-        "request": "launch",
-        "program": "${workspaceFolder}/node_modules/@playwright/test/cli.js",
-        "args": ["test", "e2e/api", "--headed", "--reporter=html"],
-        "runtimeArgs": ["--require", "tsconfig-paths/register.js"],
-        "env": {
-          "POC": "api"
-        },
-        "console": "integratedTerminal",
-        "internalConsoleOptions": "neverOpen"
-      },
-    ]
-  }
+    // Vitest: 전체 테스트 1회 실행
+    {
+      "name": "Vitest - Run All (once)",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/node_modules/vitest/vitest.mjs",
+      "args": ["run", "--no-threads", "--watch=false", "--config", "vitest.config.ts"],
+      "autoAttachChildProcesses": true,
+      "smartStep": true,
+      "envFile": "${workspaceFolder}/.env",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "skipFiles": ["<node_internals>/**"]
+    },
+
+    // Vitest: 워치 모드(코드 저장 시 재실행)
+    {
+      "name": "Vitest - Watch",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/node_modules/vitest/vitest.mjs",
+      "args": ["watch", "--no-threads", "--config", "vitest.config.ts"],
+      "autoAttachChildProcesses": true,
+      "smartStep": true,
+      "envFile": "${workspaceFolder}/.env",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "skipFiles": ["<node_internals>/**"]
+    },
+
+    // E2E: PC 웹 (headed)
+    {
+      "name": "Playwright E2E - PC (headed)",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/node_modules/@playwright/test/cli.js",
+      "args": ["test", "e2e/pc-web", "--reporter=html", "--trace=retain-on-failure"],
+      "runtimeArgs": ["--require", "tsconfig-paths/register"],
+      // .env 자동 로딩
+      "envFile": "${workspaceFolder}/.env",
+      "env": { "POC": "pc" },
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "skipFiles": ["<node_internals>/**"]
+    },
+
+    // E2E: 모바일 웹(PC 뷰포트) (headed)
+    {
+      "name": "Playwright E2E - PC Mobile Web (headed)",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/node_modules/@playwright/test/cli.js",
+      "args": ["test", "e2e/pc-mobile-web", "--reporter=html", "--trace=retain-on-failure"],
+      "runtimeArgs": ["--require", "tsconfig-paths/register"],
+      "envFile": "${workspaceFolder}/.env",
+      "env": { "POC": "mw" },
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "skipFiles": ["<node_internals>/**"]
+    },
+
+    // E2E: API (headed)
+    {
+      "name": "Playwright E2E - API (headed)",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/node_modules/@playwright/test/cli.js",
+      "args": ["test", "e2e/api", "--reporter=html", "--trace=retain-on-failure"],
+      "runtimeArgs": ["--require", "tsconfig-paths/register"],
+      "envFile": "${workspaceFolder}/.env",
+      "env": { "POC": "api" },
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "skipFiles": ["<node_internals>/**"]
+    }
+  ]
+}

@@ -1,0 +1,235 @@
+/**
+ * Description : snippet - 📌 스니펫(자동완성) 설정
+ * Author : Shiwoo Min
+ * Date : 2025-09-09
+ * 참고: https://code.visualstudio.com/docs/editor/userdefinedsnippets
+ */
+
+{
+  // 파일 상단 헤더 주석
+  "File Header Comment": {
+    "scope": "typescript,typescriptreact,javascript,javascriptreact",
+    "prefix": "fileheader",
+    "description": "파일 상단 공통 헤더 블록",
+    "body": [
+      "/**",
+      " * Description : ${TM_FILENAME} - 📌 ${1:설명}",
+      " * Author : ${2:Shiwoo Min}",
+      " * Date : ${CURRENT_YEAR}-${CURRENT_MONTH}-${CURRENT_DATE}",
+      " */",
+      ""
+    ]
+  },
+
+  // React 컴포넌트 (Next/TS 친화)
+  "React Component": {
+    "scope": "typescriptreact,javascriptreact",
+    "prefix": "rfc",
+    "description": "React 함수 컴포넌트 기본 골격(Next.js 친화)",
+    "body": [
+      "${1|'use client';,|}",
+      "interface ${2:Component}Props {",
+      "  ${3:// props}",
+      "}",
+      "",
+      "export function ${2:Component}({ ${4:children} }: ${2:Component}Props): JSX.Element {",
+      "  return (",
+      "    <div className=\"${5:container}\">${6:content}</div>",
+      "  );",
+      "}"
+    ]
+  },
+
+  // 디버깅용 로거(파일/라인 + 태그/페이로드)
+  "Debug Log": {
+    "scope": "typescript,typescriptreact,javascript,javascriptreact",
+    "prefix": "dlog",
+    "description": "파일/라인 번호를 포함한 디버그 로그",
+    "body": [
+      "console.log(`[${TM_FILENAME_BASE}:${TM_LINE_NUMBER}] ${1:tag}`, ${2:payload});"
+    ]
+  },
+
+  // ESM 함수 기본 골격
+  "ESM Function": {
+    "scope": "typescript,javascript",
+    "prefix": "fn",
+    "description": "ESM 함수 + 타입 반환 골격",
+    "body": [
+      "export function ${1:name}(${2:args}: ${3:any}): ${4:void} {",
+      "  ${5:// TODO: 구현}",
+      "}"
+    ]
+  },
+
+  // Async + try/catch 패턴
+  "Async Try/Catch": {
+    "scope": "typescript,javascript",
+    "prefix": "trya",
+    "description": "비동기 함수 try/catch 패턴",
+    "body": [
+      "export async function ${1:run}(${2:args}: ${3:any}) {",
+      "  try {",
+      "    ${4:// await ...}",
+      "  } catch (err) {",
+      "    console.error('[${1:run}] failed:', err);",
+      "    throw err;",
+      "  }",
+      "}"
+    ]
+  },
+
+  // Class 기본 골격
+  "Class Basic": {
+    "scope": "typescript",
+    "prefix": "class",
+    "description": "TypeScript 클래스 기본 구조",
+    "body": [
+      "export class ${1:Service} {",
+      "  constructor(${2:deps?: any}) {",
+      "    ${3:// 초기화}",
+      "  }",
+      "",
+      "  public ${4:method}(${5:param}: ${6:any}): ${7:void} {",
+      "    ${8:// 구현}",
+      "  }",
+      "}"
+    ]
+  },
+
+  // Node ESM 스크립트(Top-Level Await)
+  "Node TLA Script": {
+    "scope": "typescript,javascript",
+    "prefix": "tla",
+    "description": "Node ESM 스크립트 - top-level await",
+    "body": [
+      "/* eslint-disable no-console */",
+      "export {};",
+      "",
+      "(async () => {",
+      "  ${1:// TODO: 비동기 로직}",
+      "  console.log('done');",
+      "})();"
+    ]
+  },
+
+  // Playwright 기본 테스트
+  "Playwright Test": {
+    "scope": "typescript,javascript",
+    "prefix": "pwtest",
+    "description": "Playwright 기본 테스트 스켈레톤",
+    "body": [
+      "import { test, expect } from '@playwright/test';",
+      "",
+      "test.describe('${1:suite}', () => {",
+      "  test('${2:should work}', async ({ page }) => {",
+      "    await page.goto('${3:http://localhost:3000}');",
+      "    await expect(page).toHaveTitle(/${4:Home}/);",
+      "  });",
+      "});"
+    ]
+  },
+
+  // Playwright: 스크린샷 비교(비주얼 리그레션)
+  "Playwright Expect Screenshot": {
+    "scope": "typescript,javascript",
+    "prefix": "pwsnap",
+    "description": "Playwright 스크린샷 비교(비주얼 리그레션)",
+    "body": [
+      "import { test, expect } from '@playwright/test';",
+      "",
+      "test('${1:visual}', async ({ page }) => {",
+      "  await page.goto('${2:http://localhost:3000}');",
+      "  await expect(page).toHaveScreenshot('${3:home}.png', {",
+      "    fullPage: true,",
+      "    animations: 'disabled'",
+      "  });",
+      "});"
+    ]
+  },
+
+  // Vitest 기본 테스트
+  "Vitest Test": {
+    "scope": "typescript,javascript",
+    "prefix": "vitest",
+    "description": "Vitest describe/it/expect 기본 스켈레톤",
+    "body": [
+      "import { describe, it, expect } from 'vitest';",
+      "",
+      "describe('${1:module}', () => {",
+      "  it('${2:works}', () => {",
+      "    expect(${3:1 + 1}).toBe(${4:2});",
+      "  });",
+      "});"
+    ]
+  },
+
+  // Vitest 모킹(vi.mock)
+  "Vitest Mock": {
+    "scope": "typescript,javascript",
+    "prefix": "vimock",
+    "description": "Vitest vi.mock 예제",
+    "body": [
+      "import { describe, it, expect, vi } from 'vitest';",
+      "",
+      "vi.mock('${1:module}', () => ({",
+      "  ${2:fn}: vi.fn(() => ${3:'mocked'})",
+      "}));",
+      "",
+      "describe('${4:mock suite}', () => {",
+      "  it('should mock', () => {",
+      "    expect(${2:fn}()).toBe(${3:'mocked'});",
+      "  });",
+      "});"
+    ]
+  },
+
+  // 환경변수 안전 접근(기본값 포함)
+  "ENV Getter": {
+    "scope": "typescript,javascript",
+    "prefix": "envget",
+    "description": "process.env 안전 접근(기본값 포함)",
+    "body": [
+      "const ${1:VAL} = process.env['${2:KEY}'] ?? '${3:default}';",
+      "if (!${1:VAL}) {",
+      "  throw new Error('Missing env: ${2:KEY}');",
+      "}"
+    ]
+  },
+
+  // AbortController가 포함된 fetch 래퍼
+  "Abortable Fetch": {
+    "scope": "typescript,javascript",
+    "prefix": "fetchab",
+    "description": "AbortController 기반 fetch 래퍼",
+    "body": [
+      "export async function ${1:request}(url: string, init: RequestInit = {}, timeout = ${2:10000}) {",
+      "  const ctrl = new AbortController();",
+      "  const id = setTimeout(() => ctrl.abort(), timeout);",
+      "  try {",
+      "    const res = await fetch(url, { ...init, signal: ctrl.signal });",
+      "    if (!res.ok) throw new Error(`HTTP \\${res.status}`);",
+      "    return res;",
+      "  } finally {",
+      "    clearTimeout(id);",
+      "  }",
+      "}"
+    ]
+  },
+
+  // Promise.allSettled 패턴
+  "Promise AllSettled Map": {
+    "scope": "typescript,javascript",
+    "prefix": "allsettled",
+    "description": "Promise.allSettled 결과 안전 매핑",
+    "body": [
+      "const ${1:results} = await Promise.allSettled(${2:tasks});",
+      "const ${3:fulfilled} = ${1:results}",
+      "  .filter((r): r is PromiseFulfilledResult<any> => r.status === 'fulfilled')",
+      "  .map(r => r.value);",
+      "const ${4:rejected} = ${1:results}",
+      "  .filter((r): r is PromiseRejectedResult => r.status === 'rejected')",
+      "  .map(r => r.reason);"
+    ]
+  }
+}

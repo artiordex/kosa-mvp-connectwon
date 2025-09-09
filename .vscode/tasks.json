@@ -1,33 +1,246 @@
 /**
  * Description : tasks.json - 📌 VS Code에서 자동화 작업을 설정하는 파일
  * Author : Shiwoo Min
- * Date : 2025-09-02
+ * Date : 2025-09-09
+ * 09-09: runOptions/cwd 보강, 패널 정책 정리
  */
 {
   "version": "2.0.0",
   "tasks": [
     {
-      // TypeScript 파일을 컴파일
-      "label": "Compile TypeScript",
+      // TypeScript 컴파일 (전체)
+      "label": "Build: TypeScript",
       "type": "shell",
-      "command": "tsc",
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      },
-      "problemMatcher": ["$tsc"]
+      "command": "pnpm",
+      "args": ["build"],
+      "group": { "kind": "build", "isDefault": true },
+      "problemMatcher": ["$tsc"],
+      "presentation": { "reveal": "silent", "panel": "shared" },
+      // 작업 디렉토리 명시
+      "options": { "cwd": "${workspaceFolder}" },
+      // 재실행 안정화
+      "runOptions": { "reevaluateOnRerun": true }
     },
     {
-      // Playwright Test 실행
-      "label": "Run Playwright Tests",
+      // 개발 서버 시작 (웹)
+      "label": "Dev: Web Server",
       "type": "shell",
-      "command": "pnpm playwright test",
+      "command": "pnpm",
+      "args": ["--filter", "@connectwon/web", "dev"],
+      "group": "build",
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": { "reveal": "always", "panel": "new" },
+      "options": { "cwd": "${workspaceFolder}" },
+      "runOptions": { "reevaluateOnRerun": true }
+    },
+    {
+      // 개발 서버 시작 (API)
+      "label": "Dev: API Server",
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["--filter", "@connectwon/api", "dev"],
+      "group": "build",
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": { "reveal": "always", "panel": "new" },
+      "options": { "cwd": "${workspaceFolder}" },
+      "runOptions": { "reevaluateOnRerun": true }
+    },
+    {
+      // 전체 개발 서버 시작 (병렬)
+      "label": "Dev: All Servers",
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["dev"],
+      "group": "build",
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": { "reveal": "always", "panel": "new" },
+      "options": { "cwd": "${workspaceFolder}" },
+      "runOptions": { "reevaluateOnRerun": true }
+    },
+    {
+      // Playwright 테스트 실행
+      "label": "Test: Playwright E2E",
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["test:e2e"],
       "group": "test",
       "problemMatcher": [],
-      "presentation": {
-        "reveal": "always",
-        "panel": "shared"
-      }
+      "presentation": { "reveal": "always", "panel": "shared" },
+      "options": { "cwd": "${workspaceFolder}" },
+      "runOptions": { "reevaluateOnRerun": true }
     },
+    {
+      // Playwright 테스트 (UI 모드)
+      "label": "Test: Playwright UI",
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["test:e2e:ui"],
+      "group": "test",
+      "problemMatcher": [],
+      "presentation": { "reveal": "always", "panel": "new" },
+      "options": { "cwd": "${workspaceFolder}" },
+      "runOptions": { "reevaluateOnRerun": true }
+    },
+    {
+      // Vitest 단위 테스트
+      "label": "Test: Vitest Unit",
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["test:unit"],
+      "group": "test",
+      "problemMatcher": [],
+      "presentation": { "reveal": "always", "panel": "shared" },
+      "options": { "cwd": "${workspaceFolder}" },
+      "runOptions": { "reevaluateOnRerun": true }
+    },
+    {
+      // Vitest Watch 모드
+      "label": "Test: Vitest Watch",
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["test:unit", "--watch"],
+      "group": "test",
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": { "reveal": "always", "panel": "new" },
+      "options": { "cwd": "${workspaceFolder}" },
+      "runOptions": { "reevaluateOnRerun": true }
+    },
+    {
+      // 전체 테스트 실행
+      "label": "Test: All",
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["test"],
+      "group": "test",
+      "problemMatcher": [],
+      "presentation": { "reveal": "always", "panel": "shared" },
+      "options": { "cwd": "${workspaceFolder}" },
+      "runOptions": { "reevaluateOnRerun": true }
+    },
+    {
+      // 린트 검사
+      "label": "Lint: Check",
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["lint"],
+      "group": "test",
+      "problemMatcher": ["$eslint-stylish"],
+      "presentation": { "reveal": "silent", "panel": "shared" },
+      "options": { "cwd": "${workspaceFolder}" },
+      "runOptions": { "reevaluateOnRerun": true }
+    },
+    {
+      // 린트 자동 수정
+      "label": "Lint: Fix",
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["lint:fix"],
+      "group": "build",
+      "problemMatcher": ["$eslint-stylish"],
+      "presentation": { "reveal": "silent", "panel": "shared" },
+      "options": { "cwd": "${workspaceFolder}" },
+      "runOptions": { "reevaluateOnRerun": true }
+    },
+    {
+      // 타입 체크
+      "label": "Check: Types",
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["type-check"],
+      "group": "test",
+      "problemMatcher": ["$tsc"],
+      "presentation": { "reveal": "silent", "panel": "shared" },
+      "options": { "cwd": "${workspaceFolder}" },
+      "runOptions": { "reevaluateOnRerun": true }
+    },
+    {
+      // 데이터베이스 마이그레이션
+      "label": "DB: Migrate",
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["--filter", "@connectwon/api", "db:migrate"],
+      "group": "build",
+      "problemMatcher": [],
+      "presentation": { "reveal": "always", "panel": "shared" },
+      "options": { "cwd": "${workspaceFolder}" },
+      "runOptions": { "reevaluateOnRerun": true }
+    },
+    {
+      // 데이터베이스 시드
+      "label": "DB: Seed",
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["--filter", "@connectwon/api", "db:seed"],
+      "group": "build",
+      "problemMatcher": [],
+      "presentation": { "reveal": "always", "panel": "shared" },
+      "options": { "cwd": "${workspaceFolder}" },
+      "runOptions": { "reevaluateOnRerun": true }
+    },
+    {
+      // 데이터베이스 리셋
+      "label": "DB: Reset",
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["--filter", "@connectwon/api", "db:reset"],
+      "group": "build",
+      "problemMatcher": [],
+      "presentation": { "reveal": "always", "panel": "shared" },
+      "options": { "cwd": "${workspaceFolder}" },
+      "runOptions": { "reevaluateOnRerun": true }
+    },
+    {
+      // Prisma Studio 실행
+      "label": "DB: Studio",
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["--filter", "@connectwon/api", "db:studio"],
+      "group": "build",
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": { "reveal": "always", "panel": "new" },
+      "options": { "cwd": "${workspaceFolder}" },
+      "runOptions": { "reevaluateOnRerun": true }
+    },
+    {
+      // 의존성 설치
+      "label": "Install: Dependencies",
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["install"],
+      "group": "build",
+      "problemMatcher": [],
+      "presentation": { "reveal": "always", "panel": "shared" },
+      "options": { "cwd": "${workspaceFolder}" },
+      "runOptions": { "reevaluateOnRerun": true }
+    },
+    {
+      // 캐시 정리
+      "label": "Clean: Cache",
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["clean"],
+      "group": "build",
+      "problemMatcher": [],
+      "presentation": { "reveal": "always", "panel": "shared" },
+      "options": { "cwd": "${workspaceFolder}" },
+      "runOptions": { "reevaluateOnRerun": true }
+    },
+    {
+      // 프로덕션 빌드
+      "label": "Build: Production",
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["build:prod"],
+      "group": "build",
+      "problemMatcher": ["$tsc"],
+      "presentation": { "reveal": "always", "panel": "shared" },
+      "options": { "cwd": "${workspaceFolder}" },
+      "runOptions": { "reevaluateOnRerun": true }
+    }
   ]
 }
