@@ -1,7 +1,5 @@
 {
   "name": "@connectwon/logger",
-  "version": "1.0.0",
-  "private": true,
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -9,25 +7,20 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
-    },
-    "./result-handler": {
-      "types": "./dist/ResultHandler.d.ts",
-      "import": "./dist/ResultHandler.js"
     }
   },
   "scripts": {
-    "build": "tsc",
-    "dev": "tsc --watch",
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsc --watch -p tsconfig.json",
     "clean": "rimraf dist"
   },
   "dependencies": {
-    "pino": "^9.0.0"
+    "logform": "^2.7.0",
+    "winston": "^3.13.0",
+    "winston-daily-rotate-file": "^4.7.1"
   },
   "devDependencies": {
-    "@connectwon/api-contract": "workspace:*",
-    "@connectwon/logger": "workspace:*",
-    "@connectwon/configs": "workspace:*",
-    "typescript": "^5.4.0",
-    "rimraf": "^5.0.0"
+    "rimraf": "^6.0.0",
+    "typescript": "^5.5.0"
   }
 }
