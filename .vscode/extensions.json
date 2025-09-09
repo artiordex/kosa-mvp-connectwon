@@ -55,6 +55,9 @@
       // Tailwind IntelliSense(클래스 자동완성)
       "bradlc.vscode-tailwindcss",
 
+      // Tailwind CSS 문서 바로가기
+      "austenc.tailwind-docs",
+
       // Indent Rainbow - 들여쓰기 색상화
       "oderwat.indent-rainbow",
 

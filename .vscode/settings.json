@@ -164,6 +164,15 @@
   // 프로젝트 진단 비활성(노이즈 감소)
   "typescript.tsserver.experimental.enableProjectDiagnostics": false,
 
+  // CSS 유효성 검사 비활성(충돌 방지)
+  "css.validate": false,
+
+  // tailwind CSS IntelliSense 활성화
+  "tailwindCSS.includeLanguages": {
+    "typescript": "javascript",
+    "typescriptreact": "javascript"
+  },
+
   // 스펠링 검사에서 제외할 사용자 정의 단어 목록
   "cSpell.userWords": [
     "ShiwooMin",
@@ -182,7 +191,8 @@
     "VERCEL",
     "healthcheck",
     "initdb",
-    "CITEXT"
+    "CITEXT",
+    "Sparkline"
   ],
 
   // Nx Console AI 규칙 사용

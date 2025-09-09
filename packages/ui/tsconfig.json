@@ -1,21 +1,22 @@
 /**
-  * Description : tsconfig.json - 📌 types 의 tsconfig.json 최소유지
-  * Author : Shiwoo Min
-  * Date : 2025-09-05
-  */
+ * Description : tsconfig.json - 📌 types 의 tsconfig.json 최소유지
+ * Author : Shiwoo Min
+ * Date : 2025-09-05
+ */
 
 {
   // 루트의 tsconfig.json 상속
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "./dist",
-    "rootDir": "./src",
     "composite": true,
     "jsx": "react-jsx",
     "lib": ["ES2022", "DOM", "DOM.Iterable"]
   },
   "include": [
-    "src/**/*"
+    "src/**/*",
+    "index.ts",
+    "ui-types.ts", "hook-types.ts", "component-types.ts",
   ],
   "exclude": [
     "dist",
