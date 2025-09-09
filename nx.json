@@ -1,6 +1,7 @@
 {
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "extends": "nx/presets/npm.json",
+  "defaultBase": "main",
 
   "namedInputs": {
     "default": [
@@ -9,20 +10,33 @@
       "!{projectRoot}/build/**/*",
       "!{projectRoot}/.next/**/*"
     ],
+
     "production": [
       "default",
       "!{projectRoot}/**/*.spec.ts",
       "!{projectRoot}/**/*.test.ts",
+      "!{projectRoot}/**/*.spec.tsx",
+      "!{projectRoot}/**/*.test.tsx",
+      "!{projectRoot}/**/*.stories.*",
+      "!{projectRoot}/**/*.mdx",
       "!{projectRoot}/playwright-report/**",
-      "!{projectRoot}/coverage/**"
+      "!{projectRoot}/coverage/**",
+      "!{projectRoot}/generated/**"
+    ],
+
+    "env": [
+      "{workspaceRoot}/.env*",
+      "{workspaceRoot}/infra/docker/.env",
+      "{projectRoot}/.env*"
     ]
   },
 
   "targetDefaults": {
     "build": {
-      "inputs": ["production", "^production"],
+      "inputs": ["production", "^production", "env"],
       "outputs": ["{projectRoot}/dist", "{projectRoot}/.next"],
-      "cache": true
+      "cache": true,
+      "dependsOn": ["^build"]
     },
     "dev": {
       "inputs": ["default"],
@@ -39,11 +53,31 @@
     "e2e": {
       "inputs": ["default", "^production"],
       "cache": false
+    },
+
+    "gen:openapi": {
+      "inputs": ["production", "^production"],
+      "outputs": ["{projectRoot}/openapi.json"],
+      "cache": true
+    },
+
+    "prisma:generate": {
+      "inputs": ["default", "^default", "env"],
+      "cache": false
+    },
+    "db:generate": {
+      "inputs": ["default", "^default", "env"],
+      "cache": false
     }
   },
 
   "pluginsConfig": {
     "@nx/js": {},
     "@nx/web": {}
+  },
+
+  "workspaceLayout": {
+    "appsDir": "apps",
+    "libsDir": "packages"
   }
 }

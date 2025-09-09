@@ -5,6 +5,7 @@
  * ESM 프로젝트에서도 이 파일만 CommonJS(.cjs)를 사용
  * commitizen은 내부적으로 CommonJS 방식으로 구성되어 있어 ESM을 지원하지 않음
  */
+
 module.exports = {
   // 커밋 타입 정의
   types: [
@@ -22,6 +23,7 @@ module.exports = {
     { name: 'app' },
     { name: 'api' },
     { name: 'web' },
+    { name: 'admin' },
     { name: 'infra' },
     { name: 'packages' },
     { name: 'setting' },

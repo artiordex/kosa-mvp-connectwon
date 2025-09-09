@@ -4,25 +4,56 @@
  * Date : 2025-09-06
  */
 {
+  // 공통 타겟 및 모듈 시스템
   "compilerOptions": {
-    // 공통 타겟 및 모듈 시스템
+    // 런타임 타겟/라이브러리 (Node.js 18+)
     "target": "ES2022",
+
+    // 서버/라이브러리 기본값 (ESM/Node.js)
     "module": "NodeNext",
+
+    // 패키지 exports/확장자 규칙 (NodeNext)
     "moduleResolution": "NodeNext",
+
+    // 서버/라이브러리 공통은 ES 표준
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
+
+    // 전역 타입 정의
+    "types": ["node"],
 
     // 타입 검사 관련
     "strict": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
+
+    // 외부 d.ts 스킵
     "skipLibCheck": true,
+
+    // JSON 모듈 임포트 허용
+    "resolveJsonModule": true,
+
+    // 암묵적 ESM 감지 강화
+    "moduleDetection": "force",
+
+    // CJS 모듈과의 상호운용
+    "esModuleInterop": true,
+
+    // ESM 모듈과의 상호운용
+    "allowSyntheticDefaultImports": true,
+
+    // import/export 구문 그대로 보존
+    "verbatimModuleSyntax": true,
+
+    // 대소문자 일관성 검사
     "forceConsistentCasingInFileNames": true,
 
     // 디버깅 지원
     "sourceMap": true,
-    "inlineSources": true,
-    "resolveJsonModule": true,
+    "inlineSources": false,
+
+    // JS 파일도 컴파일
     "allowJs": true,
+
+    // JS 출력 관련
+    "checkJs": false,
 
     // TypeScript Project References 지원
     "declaration": true,
@@ -30,9 +61,6 @@
     "isolatedModules": true,
     "incremental": true,
     "composite": true,
-
-    // 공통 타입 정의
-    "types": ["node"],
 
     // 엄격한 검사 옵션
     "noImplicitAny": true,
@@ -46,9 +74,5 @@
     "noUnusedParameters": true,
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
-
-    // 추가 안전성 옵션
-    "checkJs": false,
-    "verbatimModuleSyntax": true
   }
 }

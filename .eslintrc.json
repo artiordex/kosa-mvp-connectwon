@@ -1,8 +1,13 @@
 {
+  // 루트 고정
+  "root": true,
+
   "env": {
     "es2022": true,
     "node": true
   },
+
+  // 기본 확장 설정
   "extends": [
     "eslint:recommended",
     "airbnb-base",
@@ -11,27 +16,59 @@
     "plugin:import/typescript",
     "plugin:playwright/playwright-test"
   ],
+
+  // TypeScript 파서
   "parser": "@typescript-eslint/parser",
+
   "parserOptions": {
-    // 루트 tsconfig 또는 workspace별 tsconfig 경로로 지정
-    "project": "./tsconfig.json",
+    // 모노레포: 각 앱/패키지 tsconfig를 한 번에 인식
+    "project": [
+      "./tsconfig.json",
+      "./apps/*/tsconfig.json",
+      "./packages/*/tsconfig.json"
+    ],
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
+
+  // 플러그인 설정
   "plugins": [
     "@typescript-eslint",
     "playwright"
   ],
+
+  // import 경로 해석 설정
   "settings": {
     "import/resolver": {
+      // TS 경로 별칭/프로젝트 해석
       "typescript": {
-        // 모듈 경로 alias를 tsconfig 기반으로 해석
-        "project": "./tsconfig.json"
+        "project": [
+          "./tsconfig.json",
+          "./apps/*/tsconfig.json",
+          "./packages/*/tsconfig.json"
+        ],
+        "alwaysTryTypes": true
+      },
+      // ESM/Node 해석도 병행(.mjs/.js/.ts)
+      "node": {
+        "extensions": [".mjs", ".js", ".ts", ".tsx", ".cjs"]
       }
     }
   },
+
+  // 산출물/캐시 무시
+  "ignorePatterns": [
+    "node_modules/",
+    "dist/",
+    "build/",
+    ".next/",
+    ".nx/",
+    "coverage/",
+    "generated/"
+  ],
+
   "rules": {
-    // 기본 룰 비활성화 or 커스터마이징
+    // 팀 스타일
     "semi": ["error", "always"],
     "quotes": "off",
     "@typescript-eslint/quotes": "off",
@@ -50,23 +87,74 @@
     "@typescript-eslint/lines-between-class-members": "off",
     "@typescript-eslint/no-explicit-any": "off",
     "no-await-in-loop": "off",
-    "import/no-extraneous-dependencies": "off",
 
-    // 줄 길이 제한 완화
-    "max-len": [
-      "warn",
-      {
-        "code": 120,
-        "ignoreComments": true,
-        "ignoreTrailingComments": true,
-        "ignoreTemplateLiterals": true,
-        "ignoreUrls": true
-      }
-    ],
+    // 의존성 안전: 테스트/툴링에선 devDeps 허용
+    "import/no-extraneous-dependencies": ["error", {
+      "peerDependencies": true,
+      "optionalDependencies": true,
+      "devDependencies": false
+    }],
 
-    // Playwright 테스트 관련 룰
+    // 가독성/중복 임포트 방지
+    "import/order": ["warn", {
+      "groups": ["builtin", "external", "internal", "parent", "sibling", "index", "object", "type"],
+      "pathGroups": [
+        { "pattern": "@connectwon/**", "group": "internal", "position": "after" }
+      ],
+      "pathGroupsExcludedImportTypes": ["builtin"],
+      "newlines-between": "always",
+      "alphabetize": { "order": "asc", "caseInsensitive": true }
+    }],
+    "import/no-duplicates": "warn",
+    "import/newline-after-import": ["warn", { "count": 1 }],
+
+    // 줄 길이 완화
+    "max-len": ["warn", {
+      "code": 120,
+      "ignoreComments": true,
+      "ignoreTrailingComments": true,
+      "ignoreTemplateLiterals": true,
+      "ignoreUrls": true
+    }],
+
+    // Playwright
     "playwright/no-focused-test": "error",
     "playwright/no-skipped-test": "warn",
     "playwright/no-conditional-in-test": "warn"
-  }
+  },
+
+  // 테스트/스토리/툴링 파일: devDependencies 허용 오버라이드
+  "overrides": [
+    {
+      "files": [
+        "**/*.test.ts",
+        "**/*.spec.ts",
+        "**/*.test.tsx",
+        "**/*.spec.tsx",
+        "**/*.stories.*",
+        "**/*.mdx",
+        "**/playwright.config.*",
+        "**/vitest.config.*",
+        "**/*.config.*",
+        "scripts/**"
+      ],
+      "rules": {
+        "import/no-extraneous-dependencies": ["error", {
+          "devDependencies": true,
+          "peerDependencies": true,
+          "optionalDependencies": true
+        }]
+      }
+    },
+    // JS/Config 파일에서는 TS 전용 룰 일부 비활성화
+    {
+      "files": ["**/*.js", "**/*.cjs", "**/*.mjs"],
+      "rules": {
+        "@typescript-eslint/no-var-requires": "off"
+      }
+    }
+  ],
+
+  // eslint-disable 주석 남발 방지(유용)
+  "reportUnusedDisableDirectives": true
 }

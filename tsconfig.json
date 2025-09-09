@@ -6,6 +6,7 @@
  * 참고 명령어:
  *   npx tsc --project tsconfig.json --showConfig
  */
+
 {
   "extends": "./tsconfig.base.json",
 
@@ -43,9 +44,9 @@
     // 컴파일 에러 시 .js 파일 출력 여부
     "noEmitOnError": false,
 
-    // ESM/번들러 친화 모듈 해석(Next.js/Vite 호환 ↑)
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
+    // ESM/번들러 모듈에러 방지를 위한 주석처리
+    // "module": "ESNext",
+    // "moduleResolution": "Bundler",
 
     // 런타임 타깃/라이브러리
     "target": "ES2022",
@@ -95,11 +96,11 @@
 
   // TypeScript Project References로 의존성 관리
   "references": [
-    { "path": "./packages/configs" },
-    { "path": "./packages/logger" },
-    { "path": "./packages/database" },
     { "path": "./packages/api-contract" },
+    { "path": "./packages/configs" },
     { "path": "./packages/core" },
+    { "path": "./packages/database" },
+    { "path": "./packages/logger" },
     { "path": "./packages/sdk" },
     { "path": "./packages/ui" }
     // Removed reference to './packages/types' as it does not exist

@@ -1,0 +1,37 @@
+.changeset/
+.cz-config.cjs
+.env
+.eslintignore
+.eslintrc.json
+.husky/
+.idea/
+.nx/
+.prettierrc.json
+.vscode/
+apps/
+clean.tree
+connectwon-env.ts
+docs/
+folders-only.tree
+infra/
+LICENSE
+logs/
+nx.json
+package.json
+packages/
+pnpm-lock.yaml
+pnpm-workspace.yaml
+project_structure.txt
+README.md
+setup-structure.ps1
+structure.txt
+tsconfig.base.json
+tsconfig.json
+vitest.config.ts
+
+Too many parameters - A:/
+
+Too many parameters - A:/
+
+Too many parameters - A:/
+
