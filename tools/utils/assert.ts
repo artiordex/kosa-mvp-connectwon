@@ -13,7 +13,9 @@ export class SoftAssert {
     this.errors.push(err instanceof Error ? err : new Error(String(err)));
   }
 
-  get size() { return this.errors.length; }
+  get size() {
+    return this.errors.length;
+  }
 
   flush(msgPrefix = 'SoftAssert failures') {
     if (this.errors.length === 0) return;
@@ -25,7 +27,7 @@ export class SoftAssert {
 // 내부 에러 처리기: soft 있으면 누적, 없으면 즉시 throw
 function handle(err: unknown, soft?: SoftAssert): void {
   if (soft) soft.add(err);
-  else throw (err instanceof Error ? err : new Error(String(err)));
+  else throw err instanceof Error ? err : new Error(String(err));
 }
 
 function makeMsg(desc: string, tail: string) {
@@ -39,10 +41,13 @@ function stableStringify(v: unknown): string {
       // 키 정렬
       return Object.keys(value as Record<string, unknown>)
         .sort()
-        .reduce((acc, key) => {
-          (acc as any)[key] = (value as any)[key];
-          return acc;
-        }, {} as Record<string, unknown>);
+        .reduce(
+          (acc, key) => {
+            (acc as any)[key] = (value as any)[key];
+            return acc;
+          },
+          {} as Record<string, unknown>,
+        );
     }
     return value;
   });
@@ -52,27 +57,33 @@ function stableStringify(v: unknown): string {
 export function assertTrue(cond: boolean, desc = 'assertTrue', soft?: SoftAssert) {
   try {
     if (!cond) throw new Error(makeMsg(desc, 'expected true'));
-  } catch (e) { handle(e, soft); }
+  } catch (e) {
+    handle(e, soft);
+  }
 }
 
 // Assert 값이 false여야 함
 export function assertFalse(cond: boolean, desc = 'assertFalse', soft?: SoftAssert) {
   try {
     if (cond) throw new Error(makeMsg(desc, 'expected false'));
-  } catch (e) { handle(e, soft); }
+  } catch (e) {
+    handle(e, soft);
+  }
 }
 
 // Assert 값이 정의되어 있어야 함
 export function assertDefined<T>(
   val: T | null | undefined,
   desc = 'assertDefined',
-  soft?: SoftAssert
+  soft?: SoftAssert,
 ): asserts val is T {
   try {
     if (val === null || val === undefined) {
       throw new Error(makeMsg(desc, `expected defined value, got ${val}`));
     }
-  } catch (e) { handle(e, soft); }
+  } catch (e) {
+    handle(e, soft);
+  }
 }
 
 // Assert 값이 null/undefined여야 함
@@ -85,12 +96,13 @@ export function assertEquals<T>(actual: T, expected: T, desc = 'assertEquals', s
         : stableStringify(actual) === stableStringify(expected);
 
     if (!equal) {
-      throw new Error(makeMsg(
-        desc,
-        `expected ${stableStringify(expected)}, got ${stableStringify(actual)}`
-      ));
+      throw new Error(
+        makeMsg(desc, `expected ${stableStringify(expected)}, got ${stableStringify(actual)}`),
+      );
     }
-  } catch (e) { handle(e, soft); }
+  } catch (e) {
+    handle(e, soft);
+  }
 }
 
 // Assert 값이 근사치여야 함
@@ -99,7 +111,7 @@ export function assertApprox(
   expected: number,
   epsilon = 1e-6,
   desc = 'assertApprox',
-  soft?: SoftAssert
+  soft?: SoftAssert,
 ) {
   try {
     if (Number.isNaN(actual) || Number.isNaN(expected)) {
@@ -108,7 +120,9 @@ export function assertApprox(
     if (Math.abs(actual - expected) > epsilon) {
       throw new Error(makeMsg(desc, `|${actual} - ${expected}| > ${epsilon}`));
     }
-  } catch (e) { handle(e, soft); }
+  } catch (e) {
+    handle(e, soft);
+  }
 }
 
 // Assert 값이 포함되어 있어야 함
@@ -116,7 +130,7 @@ export function assertContains(
   hay: string | unknown[],
   needle: string | RegExp | unknown,
   desc = 'assertContains',
-  soft?: SoftAssert
+  soft?: SoftAssert,
 ) {
   try {
     let ok = false;
@@ -129,12 +143,16 @@ export function assertContains(
     }
 
     if (!ok) {
-      throw new Error(makeMsg(
-        desc,
-        `expected ${JSON.stringify(hay)} to contain ${needle instanceof RegExp ? String(needle) : JSON.stringify(needle)}`
-      ));
+      throw new Error(
+        makeMsg(
+          desc,
+          `expected ${JSON.stringify(hay)} to contain ${needle instanceof RegExp ? String(needle) : JSON.stringify(needle)}`,
+        ),
+      );
     }
-  } catch (e) { handle(e, soft); }
+  } catch (e) {
+    handle(e, soft);
+  }
 }
 
 // Assert 요소가 화면에 보여야 함
@@ -142,7 +160,7 @@ export async function pwAssertVisible(
   expect: PwExpect,
   locator: any,
   desc = 'pwAssertVisible',
-  soft?: SoftAssert
+  soft?: SoftAssert,
 ) {
   try {
     await expect(locator).toBeVisible();
@@ -158,7 +176,7 @@ export async function pwAssertText(
   locator: any,
   expected: string | RegExp,
   desc = 'pwAssertText',
-  soft?: SoftAssert
+  soft?: SoftAssert,
 ) {
   try {
     await expect(locator).toHaveText(expected as any);
@@ -174,7 +192,7 @@ export async function pwAssertCount(
   locator: any,
   n: number,
   desc = 'pwAssertCount',
-  soft?: SoftAssert
+  soft?: SoftAssert,
 ) {
   try {
     await expect(locator).toHaveCount(n);
@@ -189,12 +207,14 @@ export function pwAssertUrlContains(
   page: PwPage,
   expectedSubstring: string,
   desc = 'pwAssertUrlContains',
-  soft?: SoftAssert
+  soft?: SoftAssert,
 ) {
   try {
     const url = page.url();
     if (!url.includes(expectedSubstring)) {
       throw new Error(makeMsg(desc, `URL not contains '${expectedSubstring}' (got '${url}')`));
     }
-  } catch (e) { handle(e, soft); }
+  } catch (e) {
+    handle(e, soft);
+  }
 }

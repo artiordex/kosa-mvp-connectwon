@@ -24,11 +24,7 @@
       "!{projectRoot}/generated/**"
     ],
 
-    "env": [
-      "{workspaceRoot}/.env*",
-      "{workspaceRoot}/infra/docker/.env",
-      "{projectRoot}/.env*"
-    ]
+    "env": ["{workspaceRoot}/.env*", "{workspaceRoot}/infra/docker/.env", "{projectRoot}/.env*"]
   },
 
   "targetDefaults": {

@@ -3,9 +3,8 @@
  * Author : Shiwoo Min
  * Date : 2025-09-09
  */
-
-import http from 'node:http';
 import { mkdirSync, writeFileSync } from 'node:fs';
+import http from 'node:http';
 import { join } from 'node:path';
 
 // 설정
@@ -38,10 +37,15 @@ const server = http.createServer(async (req, res) => {
 });
 
 // 안전한 JSON 파싱
-function tryParse(s: string) { try { return JSON.parse(s); } catch { return s; } }
+function tryParse(s: string) {
+  try {
+    return JSON.parse(s);
+  } catch {
+    return s;
+  }
+}
 
-process.on('SIGINT', () => { server.close(() => process.exit(0)); });
+process.on('SIGINT', () => {
+  server.close(() => process.exit(0));
+});
 server.listen(PORT, () => console.log(`webhook-catcher listening on :${PORT}`));
-
-
-

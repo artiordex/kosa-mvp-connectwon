@@ -27,6 +27,7 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
   },
+
   // 문자열 입력 시 자동 완성 활성화
   "editor.quickSuggestions": {
     "comments": false,
@@ -192,7 +193,25 @@
     "healthcheck",
     "initdb",
     "CITEXT",
-    "Sparkline"
+    "Sparkline",
+    "subdirs",
+    "traceparent",
+    "Retryable",
+    "maxsize",
+    "autoincrement",
+    "winston",
+    "Timestamptz",
+    "logform",
+    "loggers",
+    "apikey",
+    "smhd",
+    "huggingface",
+    "sendgrid",
+    "anthropic",
+    "Prefs",
+    "Mixtral",
+    "mistralai",
+    "pids"
   ],
 
   // Nx Console AI 규칙 사용

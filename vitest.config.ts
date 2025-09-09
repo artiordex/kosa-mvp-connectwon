@@ -3,11 +3,10 @@
  * Author : Shiwoo Min
  * Date : 2025-09-07
  */
-
 /// <reference types="vite/client" />
+import react from '@vitejs/plugin-react';
+import path from 'path';
 import { defineConfig } from 'vitest/config';
-import react from '@vitejs/plugin-react'
-import path from 'path'
 
 export default defineConfig({
   plugins: [react()],
@@ -18,14 +17,9 @@ export default defineConfig({
     include: [
       'apps/**/*.{test,spec}.{js,ts,jsx,tsx}',
       'packages/**/*.{test,spec}.{js,ts,jsx,tsx}',
-      'test/**/*.{test,spec}.{js,ts,jsx,tsx}'
+      'test/**/*.{test,spec}.{js,ts,jsx,tsx}',
     ],
-    exclude: [
-      '**/node_modules/**',
-      '**/dist/**',
-      '**/build/**',
-      '**/.next/**'
-    ],
+    exclude: ['**/node_modules/**', '**/dist/**', '**/build/**', '**/.next/**'],
   },
   resolve: {
     alias: {
@@ -35,4 +29,4 @@ export default defineConfig({
       '@/ui': path.resolve(__dirname, './packages/ui/src'),
     },
   },
-})
+});
