@@ -2,7 +2,8 @@
  * Description : tsconfig.json - 📌 database 패키지의 tsconfig.json
  * Author : Shiwoo Min
  * Date : 2025-09-05
- * Updated : 2025-09-07 (prisma 지원 추가)
+ * 09-07 : prisma 지원 추가
+ * 09-10 : core 패키지의 domain/authz 참조 추가
  */
 
 {
@@ -10,19 +11,18 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "./dist",
-    // rootDir 제거 - prisma 폴더 때문에 충돌 발생
+    "rootDir": "./src",
     "types": ["node"],
     "composite": true,
-    // ES 모듈 지원
-    "module": "esnext",
-    "moduleResolution": "bundler",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true
   },
   "include": [
     "src/**/*",
     "prisma/seed.ts"
-, "../core/domain/authz/index.ts"  ],
+  ],
   "exclude": [
     "dist",
     "node_modules",

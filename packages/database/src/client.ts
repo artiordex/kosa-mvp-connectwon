@@ -1,32 +1,29 @@
-import { PrismaClient } from '../generated'
-import { config } from 'dotenv'
-import path from 'path'
+/**
+ * Description : client.ts - 📌 database 패키지의 클라이언트
+ * Author : Shiwoo Min
+ * Date : 2025-09-10
+ */
 
-config({ path: path.join(__dirname, '../.env') })
+import { PrismaClient } from '@prisma/client'
 
-// 이제 process.env.NODE_ENV 사용 가능
-const globalForPrisma = globalThis as unknown as {
-  prisma: PrismaClient | undefined
+// dev 핫리로드 시 다중 인스턴스 방지
+const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
+
+export const prisma =
+  globalForPrisma.prisma ??
+  new PrismaClient({
+    // 타입 에러 방지를 위해 as any 사용
+    log: [
+      { emit: 'stdout', level: 'error' },
+      { emit: 'stdout', level: 'warn' },
+      ...(process.env['PRISMA_LOG_QUERIES'] === 'true'
+        ? [{ emit: 'stdout', level: 'query' }]
+        : []),
+    ] as any,
+  });
+
+if (process.env['NODE_ENV'] !== 'production') {
+  globalForPrisma.prisma = prisma;
 }
 
-export const prisma = globalForPrisma.prisma ?? new PrismaClient({
-  log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
-})
-
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
-
-// 데이터베이스 연결 유틸리티
-export async function connectDatabase() {
-  try {
-    await prisma.$connect()
-    console.log('Database connected successfully')
-    return true
-  } catch (error) {
-    console.error('Database connection failed:', error)
-    return false
-  }
-}
-
-export async function disconnectDatabase() {
-  await prisma.$disconnect()
-}
+export default prisma;
