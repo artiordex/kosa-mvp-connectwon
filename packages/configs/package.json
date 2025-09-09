@@ -4,37 +4,30 @@
   "private": true,
   "type": "module",
   "sideEffects": false,
-
-  "exports": {
-    "./eslint/base": "./eslint/base.js",
-    "./eslint/next": "./eslint/next.js",
-    "./eslint/node": "./eslint/node.js",
-
-    "./typescript/base": "./typescript/tsconfig.base.json",
-
-    "./tailwind/preset": "./tailwind/preset.js"
-  },
-
+  "description": "ConnectWon 모노레포 프로젝트 공통 설정 파일들을 관리하는 패키지",
+  "author": "Shiwoo Min <artiordex@gmail.com>",
   "files": [
-    "eslint",
-    "typescript",
-    "tailwind",
-    "README.md"
+    "eslint/*",
+    "tailwind/*",
+    "testing/*",
+    "typescript/*"
   ],
-
-  "scripts": {
-    "build": "echo \"No build needed for configs\"",
-    "clean": "echo \"No clean needed for configs\""
+  "exports": {
+    "./eslint/base": "./eslint/base.ts",
+    "./tailwind/base": "./tailwind/base.ts",
+    "./tailwind/web": "./tailwind/web.ts",
+    "./tailwind/admin": "./tailwind/admin.ts",
+    "./testing/vitest": "./testing/vitest.ts",
+    "./tsconfig/base": "./typescript/base.json"
   },
-
   "peerDependencies": {
-    "eslint": ">=8",
-    "@typescript-eslint/eslint-plugin": ">=6",
-    "@typescript-eslint/parser": ">=6",
-    "eslint-plugin-react": ">=7",
-    "eslint-plugin-react-hooks": ">=4",
-    "eslint-config-next": ">=14",
-    "tailwindcss": ">=3",
-    "typescript": ">=5"
+    "eslint": ">=8.57",
+    "tailwindcss": ">=3.4",
+    "typescript": ">=5.4",
+    "vite-tsconfig-paths": ">=4.3",
+    "vitest": ">=1.5"
+  },
+  "devDependencies": {
+    "vite-tsconfig-paths": "^5.1.4"
   }
 }

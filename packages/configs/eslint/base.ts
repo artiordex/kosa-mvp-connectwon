@@ -4,15 +4,30 @@
  * Date : 2025-09-09
  */
 
+import js from '@eslint/js';
 import tseslint from 'typescript-eslint';
 import type { Linter } from 'eslint';
 
-// Flat Config 방식
-const config: Linter.FlatConfig[] = [
+const config: Linter.Config[] = [
+  // 공통 무시 경로
   {
-    ignores: ['node_modules/**', 'dist/**', '.next/**', 'coverage/**'],
+    ignores: [
+      '**/node_modules/**',
+      '**/dist/**',
+      '**/.next/**',
+      '**/.nx/**',
+      '**/coverage/**',
+      '**/generated/**',
+    ],
   },
-  ...tseslint.configs.recommended,
+
+  // JS 코어 추천 규칙 (@eslint/js)
+  js.configs.recommended,
+
+  // TS 추천 규칙(타입 인지) – tsconfig 자동 탐색
+  ...tseslint.configs.recommendedTypeChecked,
+
+  // 프로젝트 공통 커스터마이즈 (JS/TS 공통)
   {
     files: ['**/*.{js,jsx,ts,tsx}'],
     languageOptions: {
@@ -20,6 +35,7 @@ const config: Linter.FlatConfig[] = [
       sourceType: 'module',
       parser: tseslint.parser,
       parserOptions: {
+        // tsconfig 자동 탐색
         project: true,
       },
     },
@@ -33,21 +49,23 @@ const config: Linter.FlatConfig[] = [
       'comma-dangle': ['error', 'es5'],
       'no-console': 'warn',
       'no-debugger': 'error',
+      'prefer-const': 'error', // ← fix: 코어 룰
 
-      // TypeScript 규칙
-      '@typescript-eslint/no-unused-vars': ['warn', {
-        argsIgnorePattern: '^_',
-        varsIgnorePattern: '^_'
-      }],
+      // TS 전용 규칙
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
+      ],
       '@typescript-eslint/no-explicit-any': 'warn',
-      '@typescript-eslint/prefer-const': 'error',
-      '@typescript-eslint/no-var-requires': 'off', // CommonJS 호환성
+      '@typescript-eslint/no-var-requires': 'off', // CommonJS 호환성(필요 시)
     },
   },
+
+  // JS 전용 추가 조정
   {
-    // JavaScript 파일용 별도 설정
     files: ['**/*.{js,jsx}'],
     rules: {
+      // JS 파일에서 TS 전용 규칙 강제 비활성화(안전망)
       '@typescript-eslint/no-var-requires': 'off',
     },
   },
