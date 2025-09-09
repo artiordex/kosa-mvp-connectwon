@@ -3,11 +3,19 @@
  * Author : Shiwoo Min
  * Date : 2025-09-09
  */
-
 // AreaChart.tsx
 import { useMemo } from 'react';
-import { CHART_HEIGHTS, DEFAULT_COLORS, type AreaChartProps } from '../../ui-types.js';
-import { AreaChart as RechartsAreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip,ResponsiveContainer } from 'recharts';
+import {
+  Area,
+  CartesianGrid,
+  AreaChart as RechartsAreaChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts';
+
+import { type AreaChartProps, CHART_HEIGHTS, DEFAULT_COLORS } from '../../ui-types.js';
 
 export function AreaChart({
   data,
@@ -22,18 +30,12 @@ export function AreaChart({
   className = '',
 }: AreaChartProps) {
   // 고유 gradient id (SSR/CSR 모두 안전하게)
-  const gradientId = useMemo(
-    () => `area-gradient-${Math.random().toString(36).slice(2)}`,
-    []
-  );
+  const gradientId = useMemo(() => `area-gradient-${Math.random().toString(36).slice(2)}`, []);
 
   return (
     <div className={className}>
       <ResponsiveContainer width="100%" height={height}>
-        <RechartsAreaChart
-          data={data}
-          margin={{ top: 8, right: 16, bottom: 8, left: 8 }}
-        >
+        <RechartsAreaChart data={data} margin={{ top: 8, right: 16, bottom: 8, left: 8 }}>
           <defs>
             <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
               <stop offset="5%" stopColor={color} stopOpacity={fillOpacity} />

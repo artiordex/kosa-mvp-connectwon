@@ -3,7 +3,6 @@
  * Author : Shiwoo Min
  * Date : 2025-09-09
  */
-
 // 기본 유틸 타입
 export type AnyFn = (...args: any[]) => any;
 

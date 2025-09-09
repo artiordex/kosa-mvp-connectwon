@@ -3,8 +3,8 @@
  * Author : Shiwoo Min
  * Date : 2025-09-09
  */
-
 import { useEffect, useMemo, useRef, useState } from 'react';
+
 import type { ThrottleOptions } from '../../hook-types.js';
 
 // 스로틀 값 훅
@@ -32,7 +32,10 @@ export function useThrottle<T>(value: T, delay = 300, opts: ThrottleOptions = {}
     }
 
     if (remaining <= 0) {
-      if (timer.current) { clearTimeout(timer.current); timer.current = null; }
+      if (timer.current) {
+        clearTimeout(timer.current);
+        timer.current = null;
+      }
       invoke();
     } else if (trailing) {
       if (timer.current) clearTimeout(timer.current);
@@ -50,7 +53,7 @@ export function useThrottle<T>(value: T, delay = 300, opts: ThrottleOptions = {}
 export function useThrottledCallback<T extends (...args: any[]) => any>(
   fn: T,
   delay = 300,
-  opts: ThrottleOptions = {}
+  opts: ThrottleOptions = {},
 ): (...args: Parameters<T>) => void {
   const { leading = true, trailing = true } = opts;
   const lastExec = useRef(0);
@@ -62,7 +65,10 @@ export function useThrottledCallback<T extends (...args: any[]) => any>(
   return useMemo(() => {
     return (...args: Parameters<T>) => {
       const now = Date.now();
-      const invoke = (a: Parameters<T>) => { lastExec.current = Date.now(); fnRef.current(...a); };
+      const invoke = (a: Parameters<T>) => {
+        lastExec.current = Date.now();
+        fnRef.current(...a);
+      };
       const remaining = delay - (now - lastExec.current);
 
       queued.current = args;
@@ -73,7 +79,10 @@ export function useThrottledCallback<T extends (...args: any[]) => any>(
       }
 
       if (remaining <= 0) {
-        if (timer.current) { clearTimeout(timer.current); timer.current = null; }
+        if (timer.current) {
+          clearTimeout(timer.current);
+          timer.current = null;
+        }
         invoke(queued.current!);
       } else if (trailing) {
         if (timer.current) clearTimeout(timer.current);

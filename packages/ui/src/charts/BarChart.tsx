@@ -3,9 +3,17 @@
  * Author : Shiwoo Min
  * Date : 2025-09-09
  */
+import {
+  Bar,
+  CartesianGrid,
+  BarChart as RechartsBarChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts';
 
-import { CHART_HEIGHTS, DEFAULT_COLORS, type BarChartProps } from '../../ui-types.js';
-import { BarChart as RechartsBarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { type BarChartProps, CHART_HEIGHTS, DEFAULT_COLORS } from '../../ui-types.js';
 
 export function BarChart({
   data,

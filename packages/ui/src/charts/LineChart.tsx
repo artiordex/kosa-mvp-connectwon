@@ -3,9 +3,17 @@
  * Author : Shiwoo Min
  * Date : 2025-09-05
  */
+import {
+  CartesianGrid,
+  Line,
+  LineChart as RechartsLineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts';
 
 import { CHART_HEIGHTS, DEFAULT_COLORS, type LineChartProps } from '../../ui-types.js';
-import { LineChart as RechartsLineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 export function LineChart({
   data,
@@ -25,7 +33,14 @@ export function LineChart({
           <XAxis dataKey={xKey} className="text-xs" />
           <YAxis className="text-xs" />
           {showTooltip && <Tooltip />}
-          <Line type="monotone" dataKey={yKey} stroke={color} strokeWidth={2} dot={{ r: 4 }} activeDot={{ r: 6 }} />
+          <Line
+            type="monotone"
+            dataKey={yKey}
+            stroke={color}
+            strokeWidth={2}
+            dot={{ r: 4 }}
+            activeDot={{ r: 6 }}
+          />
         </RechartsLineChart>
       </ResponsiveContainer>
     </div>

@@ -3,8 +3,7 @@
  * Author : Shiwoo Min
  * Date : 2025-09-10
  */
-
-import type { Transport, LogLevel, SlackTransportOptions } from '../../logger-types.js';
+import type { LogLevel, SlackTransportOptions, Transport } from '../../logger-types.js';
 import { levelWeight } from '../../logger-types.js';
 
 // Slack 전송 트랜스포트
@@ -18,7 +17,9 @@ export function SlackTransport(opts: SlackTransportOptions): Transport {
         `*${String(rec.level).toUpperCase()}* ${rec.msg ?? rec.message ?? ''}`,
         rec.service ? `• service: \`${rec.service}\`` : '',
         rec.error?.message ? `• error: \`${rec.error.message}\`` : '',
-      ].filter(Boolean).join('\n');
+      ]
+        .filter(Boolean)
+        .join('\n');
       try {
         const res = await fetchFn(opts.webhookUrl, {
           method: 'POST',
@@ -37,6 +38,8 @@ export function SlackTransport(opts: SlackTransportOptions): Transport {
         console.error('Error sending Slack webhook:', error);
       }
     },
-    async flush() { /* noop */ }
+    async flush() {
+      /* noop */
+    },
   };
 }

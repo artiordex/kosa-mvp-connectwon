@@ -3,9 +3,9 @@
  * Author : Shiwoo Min
  * Date : 2025-09-09
  */
+import { Line, LineChart } from 'recharts';
 
 import { DEFAULT_COLORS, type SparklineChartProps } from '../../ui-types.js';
-import { LineChart, Line } from 'recharts';
 
 export function SparklineChart({
   data,
@@ -22,8 +22,8 @@ export function SparklineChart({
       ? (data[data.length - 1]?.value ?? 0) > (data[0]?.value ?? 0)
         ? 'up'
         : (data[data.length - 1]?.value ?? 0) < (data[0]?.value ?? 0)
-        ? 'down'
-        : 'neutral'
+          ? 'down'
+          : 'neutral'
       : 'neutral';
   const t = trend ?? auto;
   const trendColor = t === 'up' ? '#10b981' : t === 'down' ? '#ef4444' : color;

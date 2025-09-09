@@ -3,9 +3,9 @@
  * Author : Shiwoo Min
  * Date : 2025-09-09
  */
-
-import { forwardRef } from 'react';
 import { cva } from 'class-variance-authority';
+import { forwardRef } from 'react';
+
 import { type ButtonProps } from '../../component-types.js';
 
 // 버튼 variant 스타일 정의
@@ -33,10 +33,8 @@ const buttonVariants = cva(
       variant: 'default',
       size: 'default',
     },
-  }
+  },
 );
-
-
 
 // 버튼 컴포넌트 정의
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
@@ -69,7 +67,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         {children}
       </button>
     );
-  }
+  },
 );
 
 Button.displayName = 'Button';

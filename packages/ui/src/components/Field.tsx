@@ -3,8 +3,8 @@
  * Author : Shiwoo Min
  * Date : 2025-09-09
  */
-
 import { forwardRef } from 'react';
+
 import { type FieldProps } from '../../component-types.js';
 
 // 폼 필드 래퍼 컴포넌트 정의
@@ -26,7 +26,7 @@ export const Field = forwardRef<HTMLDivElement, FieldProps>(
         )}
       </div>
     );
-  }
+  },
 );
 
 Field.displayName = 'Field';

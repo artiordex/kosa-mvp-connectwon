@@ -3,7 +3,6 @@
  * Author : Shiwoo Min
  * Date : 2025-09-10
  */
-
 import { prisma } from './dist/index.js';
 import 'dotenv/config'
 

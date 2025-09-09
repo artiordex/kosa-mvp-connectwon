@@ -3,7 +3,6 @@
  * Author : Shiwoo Min
  * Date : 2025-09-09
  */
-
 import { DEFAULT_COLORS, type FunnelChartProps } from '../../ui-types.js';
 
 export function FunnelChart({
@@ -14,8 +13,8 @@ export function FunnelChart({
   height = 300,
   className = '',
 }: FunnelChartProps) {
-  const W = 100;             // viewBox 가로(상대)
-  const H = height;          // 세로는 실제 px 사용
+  const W = 100; // viewBox 가로(상대)
+  const H = height; // 세로는 실제 px 사용
   const rows = data.length;
   const segH = H / rows - 6; // segment height (작은 갭 포함)
   const max = Math.max(...data.map(d => d.value));
@@ -41,10 +40,7 @@ export function FunnelChart({
       <svg width="100%" height={H} viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMid meet">
         {data.map((d, i) => (
           <g key={i}>
-            <polygon
-              points={pointsFor(i)}
-              fill={d.color || colors[i % colors.length]}
-            />
+            <polygon points={pointsFor(i)} fill={d.color || colors[i % colors.length]} />
             {(showLabels || showValues) && (
               <>
                 <text className="cw-fn-label" x={W / 2} y={i * (H / rows) + segH / 2 - 8}>

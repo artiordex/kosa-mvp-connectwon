@@ -5,7 +5,6 @@
  * 09-07 : prisma 지원 추가
  * 09-10 : core 패키지의 domain/authz 참조 추가
  */
-
 {
   // 루트의 tsconfig.json 상속
   "extends": "../../tsconfig.base.json",

@@ -3,9 +3,16 @@
  * Author : Shiwoo Min
  * Date : 2025-09-09
  */
+import {
+  Cell,
+  Legend,
+  Pie,
+  PieChart as RechartsPieChart,
+  ResponsiveContainer,
+  Tooltip,
+} from 'recharts';
 
-import {CHART_HEIGHTS, DEFAULT_COLORS, type PieChartProps } from '../../ui-types.js';
-import { PieChart as RechartsPieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
+import { CHART_HEIGHTS, DEFAULT_COLORS, type PieChartProps } from '../../ui-types.js';
 
 export function PieChart({
   data,

@@ -3,8 +3,7 @@
  * Author : Shiwoo Min
  * Date : 2025-09-10
  */
-
-import type { Transport, LogRecord, LogLevel, PrettyTransportOptions } from '../../logger-types.js';
+import type { LogLevel, LogRecord, PrettyTransportOptions, Transport } from '../../logger-types.js';
 import { levelWeight } from '../../logger-types.js';
 
 // 색상 함수들
@@ -34,7 +33,10 @@ export function PrettyTransport(opts: PrettyTransportOptions = {}): Transport {
   const min = levelWeight(opts.level ?? 'info');
 
   const ts = (r: LogRecord) => {
-    const t = typeof r.time === 'number' ? new Date(r.time).toISOString() : (r.time ?? new Date().toISOString());
+    const t =
+      typeof r.time === 'number'
+        ? new Date(r.time).toISOString()
+        : (r.time ?? new Date().toISOString());
     return C.dim(t);
   };
 
@@ -72,6 +74,8 @@ export function PrettyTransport(opts: PrettyTransportOptions = {}): Transport {
         if (body.trim()) process.stdout.write(body + '\n');
       }
     },
-    async flush() { /* noop */ }
+    async flush() {
+      /* noop */
+    },
   };
 }

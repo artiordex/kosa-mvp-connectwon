@@ -3,7 +3,6 @@
  * Author : Shiwoo Min
  * Date : 2025-09-09
  */
-
 {
   // 루트 tsconfig를 상속
   "extends": "../../tsconfig.base.json",
@@ -23,8 +22,5 @@
   },
   "include": ["src/**/*", "sdk-types.ts"],
   "exclude": ["dist", "node_modules", "../../tools/**/*", "../../tests/**/*"],
-  "references": [
-    { "path": "../api-contract" },
-    { "path": "../logger" }
-  ]
+  "references": [{ "path": "../api-contract" }, { "path": "../logger" }]
 }

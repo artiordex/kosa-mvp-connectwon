@@ -3,8 +3,8 @@
  * Author : Shiwoo Min
  * Date : 2025-09-09
  */
-
 import { useCallback, useState } from 'react';
+
 import type { UseBooleanActions } from '../../hook-types.js';
 
 // boolean 상태 토글 훅

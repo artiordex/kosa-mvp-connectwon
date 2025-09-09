@@ -3,9 +3,9 @@
  * Author : Shiwoo Min
  * Date : 2025-09-09
  */
-
-import { forwardRef } from 'react';
 import { cva } from 'class-variance-authority';
+import { forwardRef } from 'react';
+
 import type { ToolbarProps } from '../../component-types.js';
 
 // 툴바 variant 스타일 정의
@@ -34,24 +34,27 @@ const toolbarVariants = cva(
       variant: 'default',
       position: 'static',
     },
-  }
+  },
 );
 
 // 툴바 컴포넌트 정의
 export const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(
-  ({
-    className = '',
-    size = 'default',
-    variant = 'default',
-    position = 'static',
-    title,
-    subtitle,
-    leftContent,
-    rightContent,
-    centerContent,
-    children,
-    ...props
-  }, ref) => {
+  (
+    {
+      className = '',
+      size = 'default',
+      variant = 'default',
+      position = 'static',
+      title,
+      subtitle,
+      leftContent,
+      rightContent,
+      centerContent,
+      children,
+      ...props
+    },
+    ref,
+  ) => {
     return (
       <div
         ref={ref}
@@ -63,37 +66,25 @@ export const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(
           {leftContent}
           {(title || subtitle) && (
             <div className="flex flex-col">
-              {title && (
-                <h1 className="text-sm font-medium text-text truncate">
-                  {title}
-                </h1>
-              )}
-              {subtitle && (
-                <p className="text-xs text-text-muted truncate">
-                  {subtitle}
-                </p>
-              )}
+              {title && <h1 className="text-sm font-medium text-text truncate">{title}</h1>}
+              {subtitle && <p className="text-xs text-text-muted truncate">{subtitle}</p>}
             </div>
           )}
         </div>
 
         {/* Center Section */}
         {centerContent && (
-          <div className="flex-1 flex items-center justify-center">
-            {centerContent}
-          </div>
+          <div className="flex-1 flex items-center justify-center">{centerContent}</div>
         )}
 
         {/* Right Section */}
-        <div className="flex items-center gap-2">
-          {rightContent}
-        </div>
+        <div className="flex items-center gap-2">{rightContent}</div>
 
         {/* Children (if no specific sections are used) */}
         {!leftContent && !rightContent && !centerContent && children}
       </div>
     );
-  }
+  },
 );
 
 Toolbar.displayName = 'Toolbar';

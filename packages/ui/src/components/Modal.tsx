@@ -3,9 +3,9 @@
  * Author : Shiwoo Min
  * Date : 2025-09-09
  */
-
 import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
+
 import type { ModalProps } from '../../component-types.js';
 
 // 모달 컴포넌트 인터페이스
@@ -76,10 +76,7 @@ export function Modal({
         {(title || showCloseButton) && (
           <div className="flex items-center justify-between p-6 border-b border-border">
             {title && (
-              <h2
-                id="modal-title"
-                className="text-lg font-semibold text-text"
-              >
+              <h2 id="modal-title" className="text-lg font-semibold text-text">
                 {title}
               </h2>
             )}
@@ -89,12 +86,7 @@ export function Modal({
                 className="text-text-muted hover:text-text transition-colors p-1 rounded-md hover:bg-bg-soft"
                 aria-label="닫기"
               >
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -108,11 +100,9 @@ export function Modal({
         )}
 
         {/* Body */}
-        <div className="p-6">
-          {children}
-        </div>
+        <div className="p-6">{children}</div>
       </div>
     </div>,
-    document.body
+    document.body,
   );
 }

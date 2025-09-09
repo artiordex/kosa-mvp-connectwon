@@ -3,7 +3,6 @@
  * Author : Shiwoo Min
  * Date : 2025-09-09
  */
-
 import { type WaterfallChartProps } from '../../ui-types.js';
 
 export function WaterfallChart({
@@ -17,7 +16,7 @@ export function WaterfallChart({
 }: WaterfallChartProps) {
   // 누적 합계 계산
   let running = 0;
-  const processed = data.map((d) => {
+  const processed = data.map(d => {
     const start = running;
     if (d.type === 'total') {
       running = d.value;
@@ -31,7 +30,7 @@ export function WaterfallChart({
   const max = Math.max(...processed.map(p => Math.max(p.start, p.end)));
   const min = Math.min(0, ...processed.map(p => Math.min(p.start, p.end)));
 
-  const W = 600;       // 고정 뷰박스 가로
+  const W = 600; // 고정 뷰박스 가로
   const H = height;
   const n = processed.length;
   const gap = 12;
@@ -42,8 +41,14 @@ export function WaterfallChart({
     return H - ((v - min) / range) * (H - 40) - 20; // 위/아래 패딩 20
   };
 
-  const colorOf = (d: typeof processed[number]) =>
-    d.color ? d.color : d.type === 'total' ? totalColor : d.end >= d.start ? positiveColor : negativeColor;
+  const colorOf = (d: (typeof processed)[number]) =>
+    d.color
+      ? d.color
+      : d.type === 'total'
+        ? totalColor
+        : d.end >= d.start
+          ? positiveColor
+          : negativeColor;
 
   return (
     <div className={`cw-card ${className}`}>

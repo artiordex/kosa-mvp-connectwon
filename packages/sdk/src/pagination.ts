@@ -10,7 +10,7 @@ type PageExtractor<T, J = any> = (json: J) => { items: T[]; nextCursor?: string 
 
 export function cursorPager<T, J = any>(
   fetchPage: (cursor?: string | null) => Promise<J>,
-  extract: PageExtractor<T, J>
+  extract: PageExtractor<T, J>,
 ) {
   return {
     async *pages() {
@@ -28,7 +28,7 @@ export function cursorPager<T, J = any>(
       for await (const page of this.pages()) {
         for (const item of page) yield item;
       }
-    }
+    },
   };
 }
 
@@ -36,7 +36,7 @@ export function cursorPager<T, J = any>(
 export function offsetPager<T, J = any>(
   fetchPage: (offset: number, limit: number) => Promise<J>,
   extract: (json: J) => { items: T[]; total?: number },
-  limit = 50
+  limit = 50,
 ) {
   return {
     async *pages() {
@@ -54,6 +54,6 @@ export function offsetPager<T, J = any>(
       for await (const page of this.pages()) {
         for (const it of page) yield it;
       }
-    }
+    },
   };
 }

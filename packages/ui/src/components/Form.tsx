@@ -3,8 +3,8 @@
  * Author : Shiwoo Min
  * Date : 2025-09-09
  */
-
 import { forwardRef } from 'react';
+
 import { type FormProps } from '../../component-types.js';
 
 // 폼 컴포넌트 정의
@@ -17,18 +17,13 @@ export const Form = forwardRef<HTMLFormElement, FormProps>(
     };
 
     return (
-      <form
-        ref={ref}
-        className={`space-y-4 ${className}`}
-        onSubmit={handleSubmit}
-        {...props}
-      >
+      <form ref={ref} className={`space-y-4 ${className}`} onSubmit={handleSubmit} {...props}>
         <fieldset disabled={loading} className="space-y-4">
           {children}
         </fieldset>
       </form>
     );
-  }
+  },
 );
 
 Form.displayName = 'Form';

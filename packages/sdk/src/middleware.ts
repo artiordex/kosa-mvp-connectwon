@@ -3,11 +3,16 @@
  * Author : Shiwoo Min
  * Date : 2025-09-09
  */
-
 import type { HttpContext, HttpRequest, HttpResponse, Middleware } from '../sdk-types.js';
 
 // 미들웨어 배열을 단일 함수로 합성
-export function composeMiddlewares(mw: Middleware[]): (req: HttpRequest, ctx: HttpContext, next: (req: HttpRequest) => Promise<HttpResponse>) => Promise<HttpResponse> {
+export function composeMiddlewares(
+  mw: Middleware[],
+): (
+  req: HttpRequest,
+  ctx: HttpContext,
+  next: (req: HttpRequest) => Promise<HttpResponse>,
+) => Promise<HttpResponse> {
   return async (req, ctx, next) => {
     let i = -1;
 
@@ -31,4 +36,3 @@ export function composeMiddlewares(mw: Middleware[]): (req: HttpRequest, ctx: Ht
     return run(0, req);
   };
 }
-

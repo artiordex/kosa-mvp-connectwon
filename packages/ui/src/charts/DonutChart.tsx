@@ -3,9 +3,9 @@
  * Author : Shiwoo Min
  * Date : 2025-09-09
  */
+import { Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts';
 
 import { CHART_HEIGHTS, DEFAULT_COLORS, type DonutChartProps } from '../../ui-types.js';
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 
 export function DonutChart({
   data,

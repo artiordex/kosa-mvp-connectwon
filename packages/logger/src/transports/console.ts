@@ -3,11 +3,13 @@
  * Author : Shiwoo Min
  * Date : 2025-09-10
  */
-
-import type { Transport, LogRecord, LogLevel, ConsoleTransportOptions } from '../../logger-types.js';
+import type {
+  ConsoleTransportOptions,
+  LogLevel,
+  LogRecord,
+  Transport,
+} from '../../logger-types.js';
 import { levelWeight } from '../../logger-types.js';
-
-
 
 // 콘솔 출력 트랜스포트
 export function ConsoleTransport(opts: ConsoleTransportOptions = {}): Transport {
@@ -17,7 +19,7 @@ export function ConsoleTransport(opts: ConsoleTransportOptions = {}): Transport 
   const toLine = (r: LogRecord) =>
     opts.json
       ? JSON.stringify(r)
-      : `[${typeof r.time === 'number' ? new Date(r.time).toISOString() : r.time ?? ''}] ${String(r.level).toUpperCase()} ${r.msg ?? r.message ?? ''}`;
+      : `[${typeof r.time === 'number' ? new Date(r.time).toISOString() : (r.time ?? '')}] ${String(r.level).toUpperCase()} ${r.msg ?? r.message ?? ''}`;
 
   return {
     log(rec) {
@@ -26,6 +28,8 @@ export function ConsoleTransport(opts: ConsoleTransportOptions = {}): Transport 
       const line = toLine(rec) + '\n';
       (w >= errMin ? process.stderr : process.stdout).write(line);
     },
-    async flush() { /* noop */ }
+    async flush() {
+      /* noop */
+    },
   };
 }

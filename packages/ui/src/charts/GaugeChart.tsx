@@ -3,7 +3,6 @@
  * Author : Shiwoo Min
  * Date : 2025-09-09
  */
-
 import { GAUGE_COLORS, type GaugeChartProps } from '../../ui-types.js';
 
 export function GaugeChart({
@@ -30,9 +29,19 @@ export function GaugeChart({
   return (
     <div className={`cw-card flex flex-col items-center ${className}`}>
       <svg width={size} height={size} viewBox="0 0 120 120" className="-rotate-90">
-        <circle cx="60" cy="60" r={r} stroke={backgroundColor} strokeWidth="8" fill="none" opacity={0.3} />
         <circle
-          cx="60" cy="60" r={r}
+          cx="60"
+          cy="60"
+          r={r}
+          stroke={backgroundColor}
+          strokeWidth="8"
+          fill="none"
+          opacity={0.3}
+        />
+        <circle
+          cx="60"
+          cy="60"
+          r={r}
           stroke={strokeColor}
           strokeWidth="8"
           fill="none"
@@ -42,7 +51,12 @@ export function GaugeChart({
       </svg>
 
       <div className="cw-overlay-center">
-        {showValue && <div className="text-2xl font-bold text-gray-900">{value.toFixed(1)}{unit}</div>}
+        {showValue && (
+          <div className="text-2xl font-bold text-gray-900">
+            {value.toFixed(1)}
+            {unit}
+          </div>
+        )}
       </div>
 
       {title && <div className="mt-2 text-sm font-medium text-gray-700 text-center">{title}</div>}

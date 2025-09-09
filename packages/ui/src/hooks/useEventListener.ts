@@ -3,27 +3,28 @@
  * Author : Shiwoo Min
  * Date : 2025-09-09
  */
-
 import { useEffect, useRef } from 'react';
+
 import type { TargetLike } from '../../hook-types.js';
 
 // 대상이 함수일 경우 호출하여 실제 대상을 반환
 function getTarget(target: TargetLike) {
-  return (typeof target === 'function' ? (target as unknown as () => TargetLike)() : target) ?? null;
+  return (
+    (typeof target === 'function' ? (target as unknown as () => TargetLike)() : target) ?? null
+  );
 }
 
 // 안전한 이벤트 리스너 훅
-export function useEventListener<
-  TTarget extends TargetLike,
-  TType extends string
->(
+export function useEventListener<TTarget extends TargetLike, TType extends string>(
   target: TTarget,
   type: TType,
   listener: (ev: Event) => void,
-  options?: AddEventListenerOptions | boolean
+  options?: AddEventListenerOptions | boolean,
 ) {
   const saved = useRef(listener);
-  useEffect(() => { saved.current = listener; }, [listener]);
+  useEffect(() => {
+    saved.current = listener;
+  }, [listener]);
 
   useEffect(() => {
     const t = getTarget(target);

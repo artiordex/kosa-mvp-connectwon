@@ -3,9 +3,9 @@
  * Author : Shiwoo Min
  * Date : 2025-09-09
  */
-
-import { forwardRef } from 'react';
 import { cva } from 'class-variance-authority';
+import { forwardRef } from 'react';
+
 import { type InputProps } from '../../component-types.js';
 
 // 입력 필드 variant 스타일 정의
@@ -28,7 +28,7 @@ const inputVariants = cva(
       variant: 'default',
       size: 'default',
     },
-  }
+  },
 );
 
 // 입력 필드 컴포넌트 정의
@@ -55,7 +55,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         )}
       </div>
     );
-  }
+  },
 );
 
 Input.displayName = 'Input';

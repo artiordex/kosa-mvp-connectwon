@@ -3,12 +3,13 @@
  * Author : Shiwoo Min
  * Date : 2025-09-10
  */
+import type { TransformableInfo } from 'logform';
+import winston from 'winston';
+import DailyRotateFile from 'winston-daily-rotate-file';
 
 import fs from 'node:fs';
 import path from 'node:path';
-import winston from 'winston';
-import DailyRotateFile from 'winston-daily-rotate-file';
-import type { TransformableInfo } from 'logform';
+
 import type { LogConfig, LogError, LoggerOptions, LogLevel } from '../logger-types.js';
 
 // 환경변수로부터 불리언 값 해석
@@ -21,19 +22,20 @@ const asBool = (v: string | undefined, def = false) => {
 // 기본 설정
 const DEFAULT_LOG_CONFIG: LogConfig = {
   serviceName: process.env['SERVICE_NAME'] ?? 'connectwon-app',
-  level:       process.env['LOG_LEVEL'] ?? 'info',
-  enableLogs:  asBool(process.env['ENABLE_LOGS'], true),
-  logToFile:   asBool(process.env['LOG_TO_FILE'], false),
-  logDir:      process.env['LOG_DIR'] ?? './logs',
-  maxFiles:    process.env['LOG_MAX_FILES'] ?? '7d',
+  level: process.env['LOG_LEVEL'] ?? 'info',
+  enableLogs: asBool(process.env['ENABLE_LOGS'], true),
+  logToFile: asBool(process.env['LOG_TO_FILE'], false),
+  logDir: process.env['LOG_DIR'] ?? './logs',
+  maxFiles: process.env['LOG_MAX_FILES'] ?? '7d',
 };
 
 // 개발 환경 여부
-export const isDevelopment = () =>
-  (process.env['NODE_ENV'] ?? 'development') === 'development';
+export const isDevelopment = () => (process.env['NODE_ENV'] ?? 'development') === 'development';
 
-const resolveLogConfig = (overrides?: Partial<LogConfig>): LogConfig =>
-  ({ ...DEFAULT_LOG_CONFIG, ...(overrides ?? {}) });
+const resolveLogConfig = (overrides?: Partial<LogConfig>): LogConfig => ({
+  ...DEFAULT_LOG_CONFIG,
+  ...(overrides ?? {}),
+});
 
 // 디렉터리 보장
 function ensureDir(dir: string): void {
@@ -94,11 +96,13 @@ function makeFormats(serviceName: string) {
       const json = toSafeJSON(info, serviceName);
       const extra = json.meta ? ` ${JSON.stringify(json.meta)}` : '';
       return `${json.timestamp} [${json.service}] ${json.level}: ${json.message ?? ''}${extra}`;
-    })
+    }),
   );
   const jsonFormat = winston.format.combine(
     ...base,
-    winston.format.printf((info: TransformableInfo) => JSON.stringify(toSafeJSON(info, serviceName)))
+    winston.format.printf((info: TransformableInfo) =>
+      JSON.stringify(toSafeJSON(info, serviceName)),
+    ),
   );
   return { devConsoleFormat, jsonFormat };
 }
@@ -107,11 +111,13 @@ function makeFormats(serviceName: string) {
 function buildTransports(cfg: LogConfig): winston.transport[] {
   const { devConsoleFormat, jsonFormat } = makeFormats(cfg.serviceName);
   const transports: winston.transport[] = [];
-  transports.push(new winston.transports.Console({
-    silent: !cfg.enableLogs,
-    level: cfg.level,
-    format: isDevelopment() ? devConsoleFormat : jsonFormat,
-  }));
+  transports.push(
+    new winston.transports.Console({
+      silent: !cfg.enableLogs,
+      level: cfg.level,
+      format: isDevelopment() ? devConsoleFormat : jsonFormat,
+    }),
+  );
 
   if (cfg.logToFile) {
     ensureDir(cfg.logDir);
@@ -125,7 +131,7 @@ function buildTransports(cfg: LogConfig): winston.transport[] {
         maxSize: '20m',
         level: cfg.level,
         format: jsonFormat,
-      }) as unknown as winston.transport
+      }) as unknown as winston.transport,
     );
 
     transports.push(
@@ -137,7 +143,7 @@ function buildTransports(cfg: LogConfig): winston.transport[] {
         maxSize: '10m',
         level: 'error',
         format: jsonFormat,
-      }) as unknown as winston.transport
+      }) as unknown as winston.transport,
     );
   }
   return transports;
@@ -146,7 +152,7 @@ function buildTransports(cfg: LogConfig): winston.transport[] {
 // 로거 생성 함수
 export function createLogger(
   service: string = DEFAULT_LOG_CONFIG.serviceName,
-  overrides?: LoggerOptions
+  overrides?: LoggerOptions,
 ): winston.Logger {
   const cfg = resolveLogConfig(overrides);
   const logger = winston.createLogger({
@@ -155,10 +161,20 @@ export function createLogger(
     defaultMeta: { service, pid: process.pid },
     transports: buildTransports(cfg),
     exceptionHandlers: cfg.logToFile
-      ? [ new winston.transports.File({ filename: path.join(cfg.logDir, 'exceptions.log'), format: makeFormats(cfg.serviceName).jsonFormat }) ]
+      ? [
+          new winston.transports.File({
+            filename: path.join(cfg.logDir, 'exceptions.log'),
+            format: makeFormats(cfg.serviceName).jsonFormat,
+          }),
+        ]
       : [],
     rejectionHandlers: cfg.logToFile
-      ? [ new winston.transports.File({ filename: path.join(cfg.logDir, 'rejections.log'), format: makeFormats(cfg.serviceName).jsonFormat }) ]
+      ? [
+          new winston.transports.File({
+            filename: path.join(cfg.logDir, 'rejections.log'),
+            format: makeFormats(cfg.serviceName).jsonFormat,
+          }),
+        ]
       : [],
     exitOnError: false,
   });
@@ -182,10 +198,10 @@ export const httpStream = { write: (message: string) => logger.http(message.trim
 // 단순 함수형 로거
 export const log = {
   error: (message: string, meta?: unknown) => logger.error(message, meta),
-  warn:  (message: string, meta?: unknown) => logger.warn(message, meta),
-  info:  (message: string, meta?: unknown) => logger.info(message, meta),
-  http:  (message: string, meta?: unknown) => logger.http(message, meta),
-  verbose:(message: string, meta?: unknown) => logger.verbose(message, meta),
+  warn: (message: string, meta?: unknown) => logger.warn(message, meta),
+  info: (message: string, meta?: unknown) => logger.info(message, meta),
+  http: (message: string, meta?: unknown) => logger.http(message, meta),
+  verbose: (message: string, meta?: unknown) => logger.verbose(message, meta),
   debug: (message: string, meta?: unknown) => logger.debug(message, meta),
   silly: (message: string, meta?: unknown) => logger.silly(message, meta),
 };
@@ -193,20 +209,39 @@ export const log = {
 // 컨텍스트 로거 클래스
 export class ContextLogger {
   private base: winston.Logger;
-  constructor(private ctx: Record<string, unknown> = {}, baseLogger?: winston.Logger) {
+  constructor(
+    private ctx: Record<string, unknown> = {},
+    baseLogger?: winston.Logger,
+  ) {
     this.base = (baseLogger ?? logger).child(this.ctx);
   }
   private logWith(level: LogLevel, message: string, meta: Record<string, unknown> = {}) {
     this.base.log(level, message, meta);
   }
-  error(m: string, meta?: Record<string, unknown>) { this.logWith('error', m, meta ?? {}); }
-  warn(m: string, meta?: Record<string, unknown>)  { this.logWith('warn',  m, meta ?? {}); }
-  info(m: string, meta?: Record<string, unknown>)  { this.logWith('info',  m, meta ?? {}); }
-  http(m: string, meta?: Record<string, unknown>)  { this.logWith('http',  m, meta ?? {}); }
-  verbose(m: string, meta?: Record<string, unknown>) { this.logWith('verbose', m, meta ?? {}); }
-  debug(m: string, meta?: Record<string, unknown>) { this.logWith('debug', m, meta ?? {}); }
-  silly(m: string, meta?: Record<string, unknown>) { this.logWith('silly', m, meta ?? {}); }
-  child(extra: Record<string, unknown>) { return new ContextLogger({ ...this.ctx, ...extra }, this.base); }
+  error(m: string, meta?: Record<string, unknown>) {
+    this.logWith('error', m, meta ?? {});
+  }
+  warn(m: string, meta?: Record<string, unknown>) {
+    this.logWith('warn', m, meta ?? {});
+  }
+  info(m: string, meta?: Record<string, unknown>) {
+    this.logWith('info', m, meta ?? {});
+  }
+  http(m: string, meta?: Record<string, unknown>) {
+    this.logWith('http', m, meta ?? {});
+  }
+  verbose(m: string, meta?: Record<string, unknown>) {
+    this.logWith('verbose', m, meta ?? {});
+  }
+  debug(m: string, meta?: Record<string, unknown>) {
+    this.logWith('debug', m, meta ?? {});
+  }
+  silly(m: string, meta?: Record<string, unknown>) {
+    this.logWith('silly', m, meta ?? {});
+  }
+  child(extra: Record<string, unknown>) {
+    return new ContextLogger({ ...this.ctx, ...extra }, this.base);
+  }
 }
 
 // 컨텍스트 로거 생성 함수
@@ -221,5 +256,9 @@ export function closeLogger(l: winston.Logger = logger) {
   }
 }
 
-process.on('SIGTERM', () => { closeLogger(); });
-process.on('SIGINT',  () => { closeLogger(); });
+process.on('SIGTERM', () => {
+  closeLogger();
+});
+process.on('SIGINT', () => {
+  closeLogger();
+});

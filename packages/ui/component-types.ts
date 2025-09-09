@@ -3,8 +3,15 @@
  * Author : Shiwoo Min
  * Date : 2025-09-09
  */
-
-import { type ButtonHTMLAttributes, type InputHTMLAttributes, type SelectHTMLAttributes, type TextareaHTMLAttributes, type HTMLAttributes, type FormHTMLAttributes, type ReactNode } from 'react';
+import {
+  type ButtonHTMLAttributes,
+  type FormHTMLAttributes,
+  type HTMLAttributes,
+  type InputHTMLAttributes,
+  type ReactNode,
+  type SelectHTMLAttributes,
+  type TextareaHTMLAttributes,
+} from 'react';
 
 // 공통 타입들
 export type Size = 'sm' | 'md' | 'lg' | 'xl';
@@ -13,15 +20,13 @@ export type Variant = 'default' | 'destructive' | 'outline' | 'secondary' | 'gho
 export type InputVariant = 'default' | 'error' | 'success';
 
 // Button 컴포넌트 타입
-export interface ButtonProps
-  extends ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: Variant;
   size?: ComponentSize | 'icon';
   loading?: boolean;
 }
 
-export interface InputProps
-  extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> {
+export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> {
   variant?: InputVariant;
   size?: ComponentSize;
   error?: string;
@@ -36,8 +41,7 @@ export interface SelectOption {
   disabled?: boolean;
 }
 
-export interface SelectProps
-  extends Omit<SelectHTMLAttributes<HTMLSelectElement>, 'size'> {
+export interface SelectProps extends Omit<SelectHTMLAttributes<HTMLSelectElement>, 'size'> {
   options: SelectOption[];
   variant?: InputVariant;
   size?: ComponentSize;
@@ -48,8 +52,7 @@ export interface SelectProps
 }
 
 // Textarea 컴포넌트 타입
-export interface TextareaProps
-  extends TextareaHTMLAttributes<HTMLTextAreaElement> {
+export interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   variant?: InputVariant;
   resize?: 'none' | 'both' | 'horizontal' | 'vertical';
   error?: string;
@@ -58,8 +61,7 @@ export interface TextareaProps
 }
 
 // Checkbox 컴포넌트 타입
-export interface CheckboxProps
-  extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> {
+export interface CheckboxProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> {
   size?: ComponentSize;
   label?: string;
   description?: string;
@@ -74,8 +76,7 @@ export interface RadioOption {
   disabled?: boolean;
 }
 
-export interface RadioGroupProps
-  extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> {
+export interface RadioGroupProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> {
   options: RadioOption[];
   size?: ComponentSize;
   value?: string;

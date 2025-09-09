@@ -3,7 +3,6 @@
  * Author : Shiwoo Min
  * Date : 2025-09-09
  */
-
 import type { ProblemDetails } from '../sdk-types.js';
 
 // API 오류 표준 클래스
@@ -16,7 +15,7 @@ export class ApiError extends Error {
   constructor(
     message: string,
     status: number,
-    opts: { requestId?: string; details?: ProblemDetails } = {}
+    opts: { requestId?: string; details?: ProblemDetails } = {},
   ) {
     super(message);
     // Error 상속 시 instanceof/프로토타입 정정
@@ -34,7 +33,7 @@ export class ApiError extends Error {
       message: this.message,
       status: this.status,
       ...(this.requestId !== undefined ? { requestId: this.requestId } : {}),
-      ...(this.details !== undefined ? { details: this.details } : {})
+      ...(this.details !== undefined ? { details: this.details } : {}),
     };
   }
 }

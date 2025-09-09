@@ -3,9 +3,9 @@
  * Author : Shiwoo Min
  * Date : 2025-09-09
  */
-
-import { forwardRef } from 'react';
 import { cva } from 'class-variance-authority';
+import { forwardRef } from 'react';
+
 import { type CheckboxProps } from '../../component-types.js';
 
 // 체크박스 variant 스타일 정의
@@ -22,7 +22,7 @@ const checkboxVariants = cva(
     defaultVariants: {
       size: 'default',
     },
-  }
+  },
 );
 
 // 체크박스 컴포넌트 정의
@@ -39,25 +39,15 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
         {(label || description) && (
           <div className="flex-1 min-w-0">
             {label && (
-              <label className="text-sm font-medium text-text cursor-pointer">
-                {label}
-              </label>
+              <label className="text-sm font-medium text-text cursor-pointer">{label}</label>
             )}
-            {description && (
-              <p className="text-sm text-text-muted">
-                {description}
-              </p>
-            )}
-            {error && (
-              <p className="text-sm text-error mt-1">
-                {error}
-              </p>
-            )}
+            {description && <p className="text-sm text-text-muted">{description}</p>}
+            {error && <p className="text-sm text-error mt-1">{error}</p>}
           </div>
         )}
       </div>
     );
-  }
+  },
 );
 
 Checkbox.displayName = 'Checkbox';

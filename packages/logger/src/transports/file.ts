@@ -3,12 +3,14 @@
  * Author : Shiwoo Min
  * Date : 2025-09-10
  */
-
-import * as fsSync from 'node:fs';          // WriteStream 생성용
-import { promises as fsp } from 'node:fs';   // fs.promises (open/sync/close)
-import path from 'node:path';
+import * as fsSync from 'node:fs';
+// WriteStream 생성용
+import { promises as fsp } from 'node:fs';
 import type { WriteStream } from 'node:fs';
-import type { Transport, LogRecord, FileTransportOptions } from '../../logger-types.js';
+// fs.promises (open/sync/close)
+import path from 'node:path';
+
+import type { FileTransportOptions, LogRecord, Transport } from '../../logger-types.js';
 import { levelWeight } from '../../logger-types.js';
 
 // 디렉터리 보장
@@ -36,23 +38,23 @@ export function FileTransport(opts: FileTransportOptions): Transport {
     const filename = rotate === 'daily' ? `${prefix}-${key}.ndjson` : `${prefix}.ndjson`;
     const full = path.join(opts.dir, filename);
     if (stream && currentPath === full) return; // 동일 파일이면 유지
-    stream?.end();                              // 기존 스트림 종료
+    stream?.end(); // 기존 스트림 종료
     stream = fsSync.createWriteStream(full, { flags: 'a' }); // append 모드
-    currentPath = full;                         // 현재 파일 경로 저장
+    currentPath = full; // 현재 파일 경로 저장
   }
 
   // 안전 플러시: drain 필요 시 대기 → 파일 핸들을 열어 sync (fd 의존 X)
   async function flushImpl() {
     if (!stream) return;
-    await new Promise<void>((res) =>
-      stream!.writableNeedDrain ? stream!.once('drain', res) : res()
+    await new Promise<void>(res =>
+      stream!.writableNeedDrain ? stream!.once('drain', res) : res(),
     );
     if (currentPath) {
       const fh = await fsp.open(currentPath, 'a'); // 동일 파일 잠깐 열기
       try {
-        await fh.sync();                            // 디스크 동기화
+        await fh.sync(); // 디스크 동기화
       } finally {
-        await fh.close();                           // 핸들 닫기
+        await fh.close(); // 핸들 닫기
       }
     }
   }

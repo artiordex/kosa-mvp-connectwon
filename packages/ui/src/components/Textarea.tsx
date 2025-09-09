@@ -3,9 +3,9 @@
  * Author : Shiwoo Min
  * Date : 2025-09-09
  */
-
-import { forwardRef } from 'react';
 import { cva } from 'class-variance-authority';
+import { forwardRef } from 'react';
+
 import { type TextareaProps } from '../../component-types.js';
 
 // 텍스트 영역 variant 스타일 정의
@@ -29,7 +29,7 @@ const textareaVariants = cva(
       variant: 'default',
       resize: 'vertical',
     },
-  }
+  },
 );
 
 // 텍스트 영역 컴포넌트 정의
@@ -56,7 +56,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
         )}
       </div>
     );
-  }
+  },
 );
 
 Textarea.displayName = 'Textarea';

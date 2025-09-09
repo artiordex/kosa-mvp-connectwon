@@ -3,9 +3,9 @@
  * Author : Shiwoo Min
  * Date : 2025-09-09
  */
-
-import { forwardRef } from 'react';
 import { cva } from 'class-variance-authority';
+import { forwardRef } from 'react';
+
 import { type SelectProps } from '../../component-types.js';
 
 // 선택 드롭다운 variant 스타일 정의
@@ -28,12 +28,15 @@ const selectVariants = cva(
       variant: 'default',
       size: 'default',
     },
-  }
+  },
 );
 
 // 선택 드롭다운 props 타입 정의
 export const Select = forwardRef<HTMLSelectElement, SelectProps>(
-  ({ className = '', variant, size, options, error, label, helperText, placeholder, ...props }, ref) => {
+  (
+    { className = '', variant, size, options, error, label, helperText, placeholder, ...props },
+    ref,
+  ) => {
     const selectVariant = error ? 'error' : variant;
 
     return (
@@ -54,12 +57,8 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
                 {placeholder}
               </option>
             )}
-            {options.map((option) => (
-              <option
-                key={option.value}
-                value={option.value}
-                disabled={option.disabled}
-              >
+            {options.map(option => (
+              <option key={option.value} value={option.value} disabled={option.disabled}>
                 {option.label}
               </option>
             ))}
@@ -72,7 +71,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
         )}
       </div>
     );
-  }
+  },
 );
 
 Select.displayName = 'Select';

@@ -3,9 +3,8 @@
  * Author : Shiwoo Min
  * Date : 2025-09-10
  */
-
 // 로그를 HTTP 엔드포인트로 배치 전송
-import type { Transport, LogRecord, LogLevel, HttpTransportOptions } from '../../logger-types.js';
+import type { HttpTransportOptions, LogLevel, LogRecord, Transport } from '../../logger-types.js';
 import { levelWeight } from '../../logger-types.js';
 
 export function HttpTransport(opts: HttpTransportOptions): Transport {
@@ -29,7 +28,7 @@ export function HttpTransport(opts: HttpTransportOptions): Transport {
         method: 'POST',
         headers: {
           'content-type': 'application/json',
-          ...(opts.headers ?? {})
+          ...(opts.headers ?? {}),
         },
         body: JSON.stringify(batch),
       });
@@ -59,6 +58,6 @@ export function HttpTransport(opts: HttpTransportOptions): Transport {
 
     close() {
       clearInterval(timer);
-    }
+    },
   };
 }

@@ -3,9 +3,9 @@
  * Author : Shiwoo Min
  * Date : 2025-09-09
  */
-
-import { forwardRef, useState } from 'react';
 import { cva } from 'class-variance-authority';
+import { forwardRef, useState } from 'react';
+
 import { type RadioGroupProps } from '../../component-types.js';
 
 // 라디오 버튼 variant 스타일 정의
@@ -22,25 +22,28 @@ const radioVariants = cva(
     defaultVariants: {
       size: 'default',
     },
-  }
+  },
 );
 
 // 라디오 그룹 컴포넌트 정의
 export const RadioGroup = forwardRef<HTMLInputElement, RadioGroupProps>(
-  ({
-    className = '',
-    size,
-    options,
-    value,
-    defaultValue,
-    error,
-    label,
-    helperText,
-    orientation = 'vertical',
-    onValueChange,
-    name,
-    ...props
-  }, ref) => {
+  (
+    {
+      className = '',
+      size,
+      options,
+      value,
+      defaultValue,
+      error,
+      label,
+      helperText,
+      orientation = 'vertical',
+      onValueChange,
+      name,
+      ...props
+    },
+    ref,
+  ) => {
     const [internalValue, setInternalValue] = useState(defaultValue || '');
     const currentValue = value !== undefined ? value : internalValue;
 
@@ -53,14 +56,12 @@ export const RadioGroup = forwardRef<HTMLInputElement, RadioGroupProps>(
 
     return (
       <div className={`space-y-2 ${className}`}>
-        {label && (
-          <label className="text-sm font-medium leading-none text-text">
-            {label}
-          </label>
-        )}
+        {label && <label className="text-sm font-medium leading-none text-text">{label}</label>}
 
-        <div className={`space-y-2 ${orientation === 'horizontal' ? 'flex space-x-6 space-y-0' : ''}`}>
-          {options.map((option) => (
+        <div
+          className={`space-y-2 ${orientation === 'horizontal' ? 'flex space-x-6 space-y-0' : ''}`}
+        >
+          {options.map(option => (
             <div key={option.value} className="flex items-start space-x-2">
               <input
                 ref={ref}
@@ -81,9 +82,7 @@ export const RadioGroup = forwardRef<HTMLInputElement, RadioGroupProps>(
                   {option.label}
                 </label>
                 {option.description && (
-                  <p className="text-sm text-text-muted">
-                    {option.description}
-                  </p>
+                  <p className="text-sm text-text-muted">{option.description}</p>
                 )}
               </div>
             </div>
@@ -97,7 +96,7 @@ export const RadioGroup = forwardRef<HTMLInputElement, RadioGroupProps>(
         )}
       </div>
     );
-  }
+  },
 );
 
 RadioGroup.displayName = 'RadioGroup';
