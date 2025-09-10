@@ -211,7 +211,11 @@
     "Prefs",
     "Mixtral",
     "mistralai",
-    "pids"
+    "pids",
+    "Usecase",
+    "Usecases",
+    "Waitlist",
+    "pgvector"
   ],
 
   // Nx Console AI 규칙 사용

@@ -10,6 +10,8 @@
     "test:debug": "playwright test --debug"
   },
   "devDependencies": {
+    "@connectwon/api-contract": "workspace:*",
+    "@connectwon/logger": "workspace:*",
     "@playwright/test": "^1.40.0",
     "@types/dotenv": "^8.2.3",
     "dotenv": "^17.2.2"

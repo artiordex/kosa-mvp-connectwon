@@ -1,27 +1,19 @@
 /**
-  * Description : tsconfig.json - 📌 types 의 tsconfig.json 최소유지
-  * Author : Shiwoo Min
-  * Date : 2025-09-05
-  */
+ * Description : tsconfig.json - 📌 core 의 tsconfig.json 최소유지
+ * Author : Shiwoo Min
+ * Date : 2025-09-10
+ */
 
 {
   // 루트의 tsconfig.json 상속
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "./dist",
-    "rootDir": "./src",
-    "composite": true
+    "rootDir": ".",
+    "composite": true,
+    "lib": ["ES2022"]
   },
-  "include": [
-    "src/**/*"
-  ],
-  "exclude": [
-    "dist",
-    "node_modules"
-  ],
-  "references": [
-    { "path": "../logger" },
-    { "path": "../database" },
-    { "path": "../api-contract" }
-  ]
+  "include": ["src/**/*.ts", "src/**/**/*.ts", "core-types.ts"],
+  "exclude": ["dist", "node_modules"],
+  "references": [{ "path": "../logger" }, { "path": "../database" }, { "path": "../api-contract" }]
 }
