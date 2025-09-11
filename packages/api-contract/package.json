@@ -13,6 +13,10 @@
     "./schemas/*": {
       "types": "./dist/schemas/*.d.ts",
       "import": "./dist/schemas/*.js"
+    },
+    "./openapi/*": {
+      "types": "./dist/openapi/*.d.ts",
+      "import": "./dist/openapi/*.js"
     }
   },
   "scripts": {
