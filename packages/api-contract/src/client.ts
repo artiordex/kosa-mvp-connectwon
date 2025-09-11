@@ -1,8 +1,7 @@
-// src/openapi/client.ts
 /**
- * Description : openapi/client.ts - 📌 Typed fetch client for Program Management API
+ * Description : client.ts - 📌 Typed fetch client for Program Management API
  * Author      : Shiwoo Min
- * Date        : 2025-09-11 (fixed)
+ * Date        : 2025-09-11
  */
 
 /////////////////////////
