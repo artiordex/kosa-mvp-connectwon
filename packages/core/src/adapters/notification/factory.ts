@@ -16,7 +16,7 @@ import type {
   SlackTemplate,
 } from '../../../core-types.js';
 
-// ============== 유틸: 템플릿 타입가드 ==============
+// 템플릿 타입 가드
 function isEmailTemplateDefinition(x: unknown): x is EmailTemplateDefinition {
   return (
     !!x &&
@@ -25,41 +25,49 @@ function isEmailTemplateDefinition(x: unknown): x is EmailTemplateDefinition {
     'html_template' in (x as any)
   );
 }
+
+// 슬랙 템플릿 타입 가드
 function isSlackTemplate(x: unknown): x is SlackTemplate {
   return !!x && typeof x === 'object' && 'text_template' in (x as any);
 }
 
-// ============== 알림 팩토리 ==============
+// 알림 팩토리 인터페이스
 export interface NotificationProvider {
   channel: NotificationChannel;
   send(request: SendEmailRequest | SendSlackRequest): Promise<BaseNotification>;
   isAvailable(): boolean;
 }
 
+// 알림 팩토리 구현체
 export class NotificationFactory {
   private providers = new Map<NotificationChannel, NotificationProvider>();
   private preferences = new Map<string, NotificationPreferences>();
   private templates = new Map<string, NotificationTemplate>();
 
+  // 채널별 알림 제공자 등록
   registerProvider(provider: NotificationProvider): void {
     this.providers.set(provider.channel, provider);
   }
 
+  // 사용자별 알림 환경설정 저장
   setUserPreferences(userId: string, preferences: NotificationPreferences): void {
     this.preferences.set(userId, preferences);
   }
 
+  // 알림 템플릿 등록
   registerTemplate(tpl: NotificationTemplate): void {
     this.templates.set(tpl.id, tpl);
   }
+
+  // 템플릿 조회
   private getTemplate(id?: string): NotificationTemplate | undefined {
     if (!id) return undefined;
     return this.templates.get(id);
   }
 
+  // 이벤트 기반 알림 전송
   async sendEventNotification(event: NotificationEvent): Promise<NotificationResult[]> {
     const results: NotificationResult[] = [];
-
     for (const userId of event.recipients.user_ids || []) {
       const userPrefs = this.preferences.get(userId);
       if (!userPrefs) continue;
@@ -69,24 +77,24 @@ export class NotificationFactory {
         results.push(result);
       }
     }
-
+    // 직접 이메일/슬랙 채널로 전송
     if (event.recipients.email_addresses) {
       for (const email of event.recipients.email_addresses) {
         const result = await this.sendEmailDirect(email, event);
         results.push(result);
       }
     }
-
+    // Slack 채널로 직접 전송
     if (event.recipients.slack_channels) {
       for (const channel of event.recipients.slack_channels) {
         const result = await this.sendSlackDirect(channel, event);
         results.push(result);
       }
     }
-
     return results;
   }
 
+  // 특정 채널로 직접 알림 전송
   async sendDirectNotification(
     channel: NotificationChannel,
     request: SendEmailRequest | SendSlackRequest,
@@ -98,19 +106,21 @@ export class NotificationFactory {
     return provider.send(request);
   }
 
+  // 대량 알림 전송
   async sendBulkNotifications(
     channel: NotificationChannel,
     requests: (SendEmailRequest | SendSlackRequest)[],
   ): Promise<BaseNotification[]> {
     const provider = this.providers.get(channel);
     if (!provider) throw new Error(`Provider for channel '${channel}' not found`);
-
+    // 병렬 전송
     const results = await Promise.allSettled(requests.map(request => provider.send(request)));
     return results.map(r =>
       r.status === 'fulfilled' ? r.value : this.createFailedNotification(channel),
     );
   }
 
+  // 이벤트 타입에 따른 활성화된 채널 조회
   private getEnabledChannels(
     eventType: NotificationEventType,
     preferences: NotificationPreferences,
@@ -132,6 +142,7 @@ export class NotificationFactory {
     return preferences.channels[key] || [];
   }
 
+  // 특정 사용자에게 채널별 알림 전송
   private async sendToChannel(
     channel: NotificationChannel,
     event: NotificationEvent,
@@ -160,6 +171,7 @@ export class NotificationFactory {
     }
   }
 
+  // 사용자에게 이메일 전송
   private async sendEmailToUser(
     userId: string,
     event: NotificationEvent,
@@ -171,7 +183,6 @@ export class NotificationFactory {
     const tpl = this.getTemplate(event.template_id);
     const emailTpl =
       tpl && isEmailTemplateDefinition(tpl.template_data) ? tpl.template_data : undefined;
-
     const request: SendEmailRequest = {
       to: [{ email: userInfo.email, name: userInfo.name }],
       subject: emailTpl?.subject_template ?? this.generateSubject(event),
@@ -181,6 +192,7 @@ export class NotificationFactory {
     return emailProvider.send(request);
   }
 
+  // 사용자에게 슬랙 메시지 전송
   private async sendSlackToUser(
     userId: string,
     event: NotificationEvent,
@@ -199,7 +211,7 @@ export class NotificationFactory {
     };
     return slackProvider.send(request);
   }
-
+  // 이메일 직접 전송
   private async sendEmailDirect(
     email: string,
     event: NotificationEvent,
@@ -229,6 +241,7 @@ export class NotificationFactory {
     }
   }
 
+  // 슬랙 채널로 직접 전송
   private async sendSlackDirect(
     channel: string,
     event: NotificationEvent,
@@ -236,10 +249,8 @@ export class NotificationFactory {
     try {
       const slackProvider = this.providers.get('slack');
       if (!slackProvider) throw new Error('Slack provider not configured');
-
       const tpl = this.getTemplate(event.template_id);
       const slackTpl = tpl && isSlackTemplate(tpl.template_data) ? tpl.template_data : undefined;
-
       const request: SendSlackRequest = {
         channel_name: channel,
         text: slackTpl?.text_template ?? this.generateSlackText(event),
@@ -256,6 +267,7 @@ export class NotificationFactory {
     }
   }
 
+  // 기본 제목/내용 생성 (템플릿 미등록 시 사용)
   private generateSubject(event: NotificationEvent): string {
     const subjectMap: Record<NotificationEventType, string> = {
       session_reminder: '세션 알림',
@@ -273,6 +285,7 @@ export class NotificationFactory {
     return subjectMap[event.event_type] ?? '알림';
   }
 
+  // 기본 이메일 내용 생성
   private generateDefaultEmailContent(event: NotificationEvent): string {
     return `
       <h2>${this.generateSubject(event)}</h2>
@@ -281,18 +294,22 @@ export class NotificationFactory {
     `;
   }
 
+  // 기본 슬랙 메시지 생성
   private generateSlackText(event: NotificationEvent): string {
     return `${this.generateSubject(event)}: ${event.event_type}`;
   }
 
+  // 사용자 정보 조회 (더미 구현 - 실제로는 DB/API 호출)
   private async getUserInfo(userId: string): Promise<{ email: string; name: string }> {
     return { email: `user${userId}@example.com`, name: `User ${userId}` };
   }
 
+  // 사용자 ID로 슬랙 유저 ID 조회 (더미 구현)
   private async getSlackUserId(userId: string): Promise<string> {
     return `U${userId}`;
   }
 
+  // 실패한 알림 생성
   private createFailedNotification(channel: NotificationChannel): BaseNotification {
     return {
       id: `failed_${Date.now()}`,
@@ -307,7 +324,7 @@ export class NotificationFactory {
   }
 }
 
-// ============== 결과 타입 ==============
+// 결과 타입
 export interface NotificationResult {
   success: boolean;
   channel: NotificationChannel;
@@ -316,7 +333,7 @@ export interface NotificationResult {
   error?: string;
 }
 
-// ============== 간소화된 팩토리 헬퍼 ==============
+// 간소화된 팩토리 헬퍼
 export function createNotificationFactory(): NotificationFactory {
   return new NotificationFactory();
 }

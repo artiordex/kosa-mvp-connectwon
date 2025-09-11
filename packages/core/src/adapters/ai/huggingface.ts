@@ -1,5 +1,5 @@
 /**
- * Description : huggingface.adapter.ts - 📌 Hugging Face Inference 어댑터
+ * Description : huggingface.ts - 📌 Hugging Face Inference 어댑터
  * Author : Shiwoo Min
  * Date : 2025-09-10
  */

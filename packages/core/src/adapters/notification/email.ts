@@ -1,7 +1,7 @@
 /**
  * Description : email.ts - 📌 SMTP(NodeMailer) 어댑터
- * Author      : Shiwoo Min
- * Date        : 2025-09-10
+ * Author : Shiwoo Min
+ * Date : 2025-09-10
  */
 import nodemailer from 'nodemailer';
 
@@ -13,12 +13,12 @@ import type {
   SendVerificationCodeParams,
 } from '../../../core-types.js';
 
-// ← 경로 조정
-
+// 이메일 주소를 "Name <email>" 형식으로 변환
 function toAddressString(a: EmailAddress): string {
   return a.name ? `"${a.name}" <${a.email}>` : a.email;
 }
 
+// SMTP 이메일 어댑터
 export class EmailAdapter {
   private transporter: nodemailer.Transporter;
 
@@ -34,6 +34,7 @@ export class EmailAdapter {
     });
   }
 
+  // SMTP 서버 연결 테스트
   async verify(): Promise<boolean> {
     try {
       await this.transporter.verify();
@@ -43,14 +44,13 @@ export class EmailAdapter {
     }
   }
 
+  // 이메일 전송
   async sendEmail(req: SendEmailRequest): Promise<EmailResult> {
     try {
       const from = toAddressString(this.config.from);
-
       const to = req.to.map(toAddressString).join(', ');
       const cc = req.cc?.map(toAddressString).join(', ');
       const bcc = req.bcc?.map(toAddressString).join(', ');
-
       const mailOptions: nodemailer.SendMailOptions = {
         from,
         to,
@@ -95,6 +95,7 @@ export class EmailAdapter {
     }
   }
 
+  // 인증 코드 이메일 전송
   async sendVerificationCode(p: SendVerificationCodeParams): Promise<EmailResult> {
     const expiry = p.expires_in_minutes ?? 10;
 

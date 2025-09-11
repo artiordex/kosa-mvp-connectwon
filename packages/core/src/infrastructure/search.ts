@@ -1,14 +1,12 @@
 /**
  * Description : search.ts - 📌 검색 어댑터(PGVector 래퍼)
- * Author      : Shiwoo Min
- * Date        : 2025-09-10
- *
- * - node-postgres Pool/Client 같은 SQL 클라이언트를 주입
- * - 테이블/컬럼 이름은 프로젝트 실스키마에 맞게 바꿔 사용
+ * Author : Shiwoo Min
+ * Date : 2025-09-10
  */
 
 // import type { Search } from '@connectwon/core/ports/search';
 
+// 인덱싱 문서
 export interface IndexDoc {
   id: string;
   content: string;
@@ -16,13 +14,14 @@ export interface IndexDoc {
   metadata?: Record<string, unknown>;
 }
 
+// pgvector 확장 사용 가정
 export class PgvectorSearch /* implements Search */ {
   constructor(
     private readonly pg: any,
     private readonly table = 'documents',
   ) {}
 
-  /** 인덱싱(Upsert) */
+  // 인덱싱(Upsert)
   async index(doc: IndexDoc): Promise<void> {
     // 메타데이터는 jsonb로 저장
     const text = `
@@ -42,12 +41,7 @@ export class PgvectorSearch /* implements Search */ {
     await this.pg.query(text, values);
   }
 
-  /**
-   * 유사도 검색
-   * @param queryEmbedding 질의 벡터
-   * @param limit          반환 개수
-   * @param filterJsonPath metadata 필터 (jsonpath 문자열, 선택)
-   */
+  // 유사도 검색
   async query(
     queryEmbedding: number[],
     limit = 10,
@@ -72,7 +66,7 @@ export class PgvectorSearch /* implements Search */ {
     }));
   }
 
-  /** 간단 헬스체크 */
+  // 간단 헬스체크
   async health(): Promise<boolean> {
     try {
       await this.pg.query('SELECT 1');
@@ -82,7 +76,7 @@ export class PgvectorSearch /* implements Search */ {
     }
   }
 
-  /** float[] → pgvector 캐스팅 헬퍼 */
+  // float[] → pgvector 캐스팅 헬퍼
   private toVector(vec: number[]): any {
     // node-postgres는 pgvector 확장 타입 등록 시 배열을 그대로 넘겨도 되고,
     // 문자열 캐스팅이 필요한 경우가 있어 프로젝트 설정에 맞춰 조정

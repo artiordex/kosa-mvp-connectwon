@@ -1,10 +1,7 @@
 /**
  * Description : payments.ts - 📌 결제 어댑터(Stripe 래퍼)
- * Author      : Shiwoo Min
- * Date        : 2025-09-10
- *
- * - Stripe 같은 결제 SDK를 생성자 주입
- * - 금액은 "최소단위 정수"(예: KRW=원, USD=센트) 기준
+ * Author : Shiwoo Min
+ * Date : 2025-09-10
  */
 
 // import type { Payments } from '@connectwon/core/ports/payments';
@@ -29,7 +26,7 @@ export interface RefundParams {
 export class StripePayments /* implements Payments */ {
   constructor(private readonly stripe: any) {}
 
-  /** 결제 승인/즉시청구(환경에 맞춰 capture 전략 조절) */
+  // 결제 승인/즉시청구(환경에 맞춰 capture 전략 조절)
   async charge(params: ChargeParams): Promise<{ id: string }> {
     try {
       // PaymentIntent 기반 예시
@@ -52,7 +49,7 @@ export class StripePayments /* implements Payments */ {
     }
   }
 
-  /** 환불 */
+  // 환불
   async refund(params: RefundParams): Promise<{ id: string }> {
     try {
       const refund = await this.stripe.refunds.create({
@@ -67,7 +64,7 @@ export class StripePayments /* implements Payments */ {
     }
   }
 
-  /** 헬스체크 */
+  // 헬스체크
   async health(): Promise<boolean> {
     try {
       // 가벼운 API 호출(요금 주의). 사용량 고려해서 적절히 교체

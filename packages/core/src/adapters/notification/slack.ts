@@ -90,7 +90,6 @@ export class SlackAdapter {
   async sendNotification(notification: NotificationPayload): Promise<SlackResult> {
     const resolved = this.resolveChannel(notification.channel);
     if (!resolved.ok) return { success: false, error: resolved.error };
-
     const colorMap: Record<NotificationPayload['type'], string> = {
       info: '#36a64f',
       success: '#2eb886',
@@ -108,12 +107,12 @@ export class SlackAdapter {
       fields: notification.data ? this.formatDataFields(notification.data) : [],
     };
 
+    // 필드가 비어있으면 undefined로
     const message: SlackMessage = {
       text: notification.title,
       channel: resolved.channel,
       attachments: [attachment],
     };
-
     return this.sendMessage(message);
   }
 
@@ -189,7 +188,6 @@ export class SlackAdapter {
 
     const cfg = typeCfg[type];
     const startTime = new Date(sessionData.starts_at).toLocaleString('ko-KR');
-
     const attachment: SlackAttachment = {
       color: cfg.color,
       title: cfg.title,
@@ -211,7 +209,6 @@ export class SlackAdapter {
       channel: resolved.channel,
       attachments: [attachment],
     };
-
     return this.sendMessage(message);
   }
 

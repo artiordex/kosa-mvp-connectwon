@@ -1,7 +1,7 @@
 /**
  * Description : clock.ts - 📌 시스템 시계 구현체
- * Author      : Shiwoo Min
- * Date        : 2025-09-10
+ * Author : Shiwoo Min
+ * Date : 2025-09-10
  */
 import type { Clock } from '../ports/time.ts';
 

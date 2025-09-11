@@ -1,7 +1,7 @@
 /**
  * Description : cache.ts - 📌 캐시 시스템 포트 인터페이스
- * Author      : Shiwoo Min
- * Date        : 2025-09-10
+ * Author : Shiwoo Min
+ * Date : 2025-09-10
  */
 
 // Redis 기반 캐시 시스템 인터페이스 정의

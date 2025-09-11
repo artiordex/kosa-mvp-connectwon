@@ -1,5 +1,5 @@
 /**
- * Description : overbooking-policy.ts - 📌 초과 예약 정책
+ * Description : overbooking.ts - 📌 초과 예약 정책
  * Author      : Shiwoo Min
  * Date        : 2025-09-10
  */

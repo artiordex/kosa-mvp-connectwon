@@ -1,7 +1,7 @@
 /**
- * Description : create-program.usecase.ts - 📌 프로그램 개설
- * Author      : Shiwoo Min
- * Date        : 2025-09-10
+ * Description : program.ts - 📌 프로그램 개설
+ * Author : Shiwoo Min
+ * Date : 2025-09-10
  */
 import { Injectable } from '@nestjs/common';
 

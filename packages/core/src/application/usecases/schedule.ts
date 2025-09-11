@@ -1,7 +1,7 @@
 /**
- * Description : schedule-session.ts - 📌 세션 스케줄링
- * Author      : Shiwoo Min
- * Date        : 2025-09-10
+ * Description : schedule.ts - 📌 세션 스케줄링
+ * Author : Shiwoo Min
+ * Date : 2025-09-10
  */
 import { Injectable } from '@nestjs/common';
 

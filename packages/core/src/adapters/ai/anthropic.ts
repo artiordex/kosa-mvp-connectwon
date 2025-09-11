@@ -1,5 +1,5 @@
 /**
- * Description : anthropic.adapter.ts - 📌 Anthropic(Claude) 어댑터
+ * Description : anthropic.ts - 📌 Anthropic(Claude) 어댑터
  * Author : Shiwoo Min
  * Date : 2025-09-10
  */

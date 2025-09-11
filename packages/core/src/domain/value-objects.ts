@@ -1,5 +1,5 @@
 /**
- * Description : api-contract-types.ts - 📌 공통 API 타입 정의 (DB DDL 기반)
+ * Description : value-objects.ts - 📌 값 객체 정의
  * Author      : Shiwoo Min
  * Date        : 2025-09-10
  */

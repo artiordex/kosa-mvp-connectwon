@@ -7,12 +7,11 @@ import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 
 import { RequireRoleGuard } from './guards/require-role.js';
-import { OverbookingPolicyService } from './policies/overbooking-policy.js';
-import { WaitlistPolicyService } from './policies/waitlist-policy.js';
-import { BookSessionUsecase } from './usecases/book-session.js';
-import { CancelBookingUsecase } from './usecases/cancel-booking.js';
-import { CreateProgramUsecase } from './usecases/create-program.js';
-import { ScheduleSessionUsecase } from './usecases/schedule-session.js';
+import { OverbookingPolicyService } from './policies/overbooking.js';
+import { WaitlistPolicyService } from './policies/waitlist.js';
+import { CreateProgramUsecase } from './usecases/program.js';
+import { ReservationUsecase } from './usecases/reservation.js';
+import { ScheduleSessionUsecase } from './usecases/schedule.js';
 
 @Module({
   providers: [
@@ -21,14 +20,13 @@ import { ScheduleSessionUsecase } from './usecases/schedule-session.js';
     WaitlistPolicyService,
 
     // Usecases
-    BookSessionUsecase,
-    CancelBookingUsecase,
+    ReservationUsecase,
     CreateProgramUsecase,
     ScheduleSessionUsecase,
 
     // Global Guard (선택): @Roles()가 달린 핸들러만 권한 검사
     { provide: APP_GUARD, useClass: RequireRoleGuard },
   ],
-  exports: [BookSessionUsecase, CancelBookingUsecase, CreateProgramUsecase, ScheduleSessionUsecase],
+  exports: [ReservationUsecase, CreateProgramUsecase, ScheduleSessionUsecase],
 })
 export class ApplicationModule {}

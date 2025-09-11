@@ -1,7 +1,7 @@
 /**
  * Description : openai.ts - 📌 OpenAI 어댑터
- * Author      : Shiwoo Min
- * Date        : 2025-09-10
+ * Author : Shiwoo Min
+ * Date : 2025-09-10
  */
 import type { ChatCompletionCreateParamsNonStreaming } from 'openai/resources/chat/completions';
 

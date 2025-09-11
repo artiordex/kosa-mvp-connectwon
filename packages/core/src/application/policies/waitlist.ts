@@ -1,14 +1,14 @@
 /**
- * Description : waitlist-policy.ts - 📌 대기열 정책
- * Author      : Shiwoo Min
- * Date        : 2025-09-10
+ * Description : waitlist.ts - 📌 대기열 정책
+ * Author : Shiwoo Min
+ * Date : 2025-09-10
  */
 import { Injectable } from '@nestjs/common';
 
 export interface WaitlistPolicyOptions {
-  /** 대기열 최대 인원(기본 10명) */
+  // 대기열 최대 인원(기본 10명)
   maxWaitlist?: number;
-  /** 중복 가입 허용 여부(기본 false) */
+  // 중복 가입 허용 여부(기본 false)
   allowDuplicates?: boolean;
 }
 
@@ -34,11 +34,7 @@ export class WaitlistPolicyService {
     return waitlist.length < max;
   }
 
-  /**
-   * 대기열에서 다음 입장 대상자 추출 (FIFO)
-   * @param waitlist 현재 대기열
-   * @returns next 사용자 ID 또는 undefined
-   */
+  // 대기열에서 다음 사용자 ID를 꺼내는 메서드 (선택적)
   popNext(waitlist: string[]): string | undefined {
     return waitlist.shift();
   }
