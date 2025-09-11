@@ -6,6 +6,9 @@
 {
   // 공통 타겟 및 모듈 시스템
   "compilerOptions": {
+    // 절대경로 import를 위한 기준 디렉터리
+    "baseUrl": ".",
+
     // 런타임 타겟/라이브러리 (Node.js 18+)
     "target": "ES2022",
 
@@ -73,6 +76,41 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "allowUnreachableCode": false,
-    "allowUnusedLabels": false
+    "allowUnusedLabels": false,
+
+    // 경로 별칭 설정 - 실제 존재하는 패키지/소스만
+    "paths": {
+      // 핵심기능 (Core)
+      "@connectwon/core": ["packages/core/src/index.ts"],
+      "@connectwon/core/*": ["packages/core/src/*"],
+
+      // API 계약
+      "@connectwon/api-contract": ["packages/api-contract/src/schemas/index.ts"],
+      "@connectwon/api-contract/*": ["packages/api-contract/src/*"],
+
+      // 설정
+      "@connectwon/configs": ["packages/configs/index.ts"],
+      "@connectwon/configs/*": ["packages/configs/*"],
+
+      // 데이터베이스
+      "@connectwon/database": ["packages/database/src/index.ts"],
+      "@connectwon/database/*": ["packages/database/src/*"],
+
+      // 로거
+      "@connectwon/logger": ["packages/logger/src/index.ts"],
+      "@connectwon/logger/*": ["packages/logger/src/*"],
+
+      // SDK
+      "@connectwon/sdk": ["packages/sdk/src/index.ts"],
+      "@connectwon/sdk/*": ["packages/sdk/src/*"],
+
+      // Nest 유틸
+      "@connectwon/nest-kit": ["packages/nest-kit/src/index.ts"],
+      "@connectwon/nest-kit/*": ["packages/nest-kit/src/*"],
+
+      // UI 라이브러리
+      "@connectwon/ui": ["packages/ui/src/index.ts"],
+      "@connectwon/ui/*": ["packages/ui/src/*"]
+    }
   }
 }

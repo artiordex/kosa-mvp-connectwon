@@ -3,6 +3,7 @@
  * Author : Shiwoo Min
  * Date : 2025-09-09
  * 09-09: ESM 호환, isServer 도입, dotenv 동적 import, 주석 보강
+ * 09-11: 큐 설정 추가(QUEUE_CONCURRENCY, QUEUE_PREFIX), queueConfig 제공
  */
 
 // 런타임 가드 & dotenv 로드 (ESM 안전)
@@ -26,7 +27,7 @@ export const isServer =
 
 // 타입 정의
 export interface ConnectWonEnv {
-  // 환경 구분 (MVP 단계에서는 development 만 사용)
+  // 환경 구분
   NODE_ENV: 'development' | 'staging' | 'production' | 'test';
 
   // 서버 설정
@@ -117,6 +118,10 @@ export interface ConnectWonEnv {
   // 개발 도구
   PRISMA_HIDE_UPDATE_MESSAGE?: 'true' | 'false';
   DISABLE_PRISMA_TELEMETRY?: 'true' | 'false';
+
+  // 큐 설정 (Worker/BullMQ)
+  QUEUE_CONCURRENCY?: string; // 숫자 문자열
+  QUEUE_PREFIX?: string; // 큐 네임스페이스 접두사
 }
 
 // 전역 확장(선택)
@@ -187,7 +192,7 @@ export const envDurationSec = (key: string, defSec: number): number => {
   return n * DUR[u]; // ← 이제 number로 확정
 };
 
-/** URL 유효성 보장 */
+// URL 유효성 보장
 export const envUrl = (key: string, def?: string): string => {
   const value = env(key, def);
   try {
@@ -197,7 +202,7 @@ export const envUrl = (key: string, def?: string): string => {
   }
 };
 
-/** 비밀 키 마스킹 (로그 시 사용) */
+// 비밀 키 마스킹 (로그 시 사용)
 const SECRET_KEYS = new Set([
   'JWT_SECRET',
   'SESSION_SECRET',
@@ -209,7 +214,7 @@ const SECRET_KEYS = new Set([
 export const maskSecret = (k: string, v: string) =>
   SECRET_KEYS.has(k) ? v.replace(/.(?=.{4})/g, '*') : v;
 
-// 환경 판별 & 플래그
+// 환경 판별 & 기본값 테이블
 export function getEnvironment(): ConnectWonEnv['NODE_ENV'] {
   const raw = env('NODE_ENV', 'development');
   if (['development', 'staging', 'production', 'test'].includes(raw)) {
@@ -236,6 +241,8 @@ export const ENV_DEFAULTS = {
     HEADLESS: 'false',
     SAVE_TRACE_ON_FAIL: 'true',
     DEBUG_MODE: 'true',
+    QUEUE_CONCURRENCY: '5',
+    QUEUE_PREFIX: 'connectwon',
   },
   test: {
     WEB_PORT: '3001',
@@ -247,6 +254,8 @@ export const ENV_DEFAULTS = {
     HEADLESS: 'true',
     SAVE_TRACE_ON_FAIL: 'false',
     DEBUG_MODE: 'false',
+    QUEUE_CONCURRENCY: '1',
+    QUEUE_PREFIX: 'connectwon-test',
   },
   staging: {
     WEB_PORT: '3000',
@@ -258,6 +267,8 @@ export const ENV_DEFAULTS = {
     HEADLESS: 'true',
     SAVE_TRACE_ON_FAIL: 'true',
     DEBUG_MODE: 'false',
+    QUEUE_CONCURRENCY: '5',
+    QUEUE_PREFIX: 'connectwon',
   },
   production: {
     WEB_PORT: '3000',
@@ -269,16 +280,19 @@ export const ENV_DEFAULTS = {
     HEADLESS: 'true',
     SAVE_TRACE_ON_FAIL: 'false',
     DEBUG_MODE: 'false',
+    QUEUE_CONCURRENCY: '10',
+    QUEUE_PREFIX: 'connectwon',
   },
 } as const;
 
-// 기본값(ENV_DEFAULTS)까지 고려한 getter 모음
+// 기본값(ENV_DEFAULTS)까지 고려한 getter 래퍼
 export function getConfig<K extends keyof ConnectWonEnv>(key: K, defaultValue?: string): string {
   const envName = getEnvironment();
   const envDefaults = ENV_DEFAULTS[envName] as Record<string, string | undefined>;
-  return env(key, defaultValue ?? envDefaults[key as string] ?? '');
+  return env(key as string, defaultValue ?? envDefaults[key as string] ?? '');
 }
 
+// 불리언 기본값 처리
 export function getConfigBool<K extends keyof ConnectWonEnv>(
   key: K,
   defaultValue?: boolean,
@@ -286,9 +300,10 @@ export function getConfigBool<K extends keyof ConnectWonEnv>(
   const envName = getEnvironment();
   const envDefaults = ENV_DEFAULTS[envName] as Record<string, string | undefined>;
   const fallback = defaultValue ?? envDefaults[key as string] === 'true';
-  return envBool(key, fallback);
+  return envBool(key as string, fallback);
 }
 
+// 정수 기본값 처리
 export const getConfigInt = (key: keyof ConnectWonEnv, defaultValue = 0) =>
   envInt(key as string, defaultValue);
 
@@ -342,7 +357,13 @@ export const testConfig = {
   timeout: getConfigInt('TEST_TIMEOUT', 30000),
 };
 
-// 공통 필수값 검증
+// 큐 설정 모음 (Worker/BullMQ에서 사용)
+export const queueConfig = {
+  prefix: getConfig('QUEUE_PREFIX', 'connectwon'),
+  concurrency: getConfigInt('QUEUE_CONCURRENCY', 5),
+};
+
+// 기본 필수값 검증
 export function validateEnv(): void {
   const required = ['NODE_ENV', 'DATABASE_URL', 'JWT_SECRET', 'API_PORT'] as const;
   const missing = required.filter(k => !process.env[k]);
@@ -354,47 +375,31 @@ export function validateEnv(): void {
 // 환경별 추가 필수값 검증 (AI/결제 등 필요시 확장)
 export function validateEnvByEnvironment(): void {
   const envName = getEnvironment();
-  const envRequirements: Record<ConnectWonEnv['NODE_ENV'], string[]> = {
+
+  // 희소 배열 방지 + 구조 검증
+  const envRequirements = {
     development: ['DATABASE_URL', 'JWT_SECRET'],
     test: ['TEST_DATABASE_URL', 'JWT_SECRET'],
     staging: [
       'DATABASE_URL',
       'JWT_SECRET',
       'GOOGLE_CLIENT_ID',
-      'GOOGLE_CLIENT_SECRET' /*, "OPENAI_API_KEY"*/,
+      'GOOGLE_CLIENT_SECRET', // 필요 시 'OPENAI_API_KEY' 추가
     ],
     production: [
       'DATABASE_URL',
       'JWT_SECRET',
       'GOOGLE_CLIENT_ID',
       'GOOGLE_CLIENT_SECRET',
-      'REDIS_URL',
-      /* "OPENAI_API_KEY" */
+      'REDIS_URL', // 필요 시 'OPENAI_API_KEY' 추가
     ],
-  };
-  const required = envRequirements[envName] ?? [];
+  } as const satisfies Record<ConnectWonEnv['NODE_ENV'], readonly string[]>;
+
+  const required = envRequirements[envName];
   const missing = required.filter(k => !process.env[k]);
+
+  // 공통 필수값도 함께 체크
   if (missing.length) {
     throw new Error(`Missing required environment variables for ${envName}: ${missing.join(', ')}`);
-  }
-}
-
-// 초기화 (로드+검증+로그)  ※ 테스트에선 hardExitOnFail=false 권장
-export async function initializeEnv(opts?: { hardExitOnFail?: boolean }): Promise<void> {
-  const hardExit = opts?.hardExitOnFail ?? true;
-  try {
-    validateEnv();
-    validateEnvByEnvironment();
-
-    if (isDevelopment() && isServer) {
-      const os = await import('node:os');
-      // eslint-disable-next-line no-console
-      console.log(`[env] Initialized (${getEnvironment()}) on ${os.hostname()}`);
-    }
-  } catch (err) {
-    // eslint-disable-next-line no-console
-    console.error('[env] Initialization failed:', err);
-    if (hardExit && isServer) process.exit(1);
-    else throw err;
   }
 }

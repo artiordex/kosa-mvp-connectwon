@@ -6,21 +6,6 @@
  */
 
 {
-  // 파일 상단 헤더 주석
-  "File Header Comment": {
-    "scope": "typescript,typescriptreact,javascript,javascriptreact",
-    "prefix": "fileheader",
-    "description": "파일 상단 공통 헤더 블록",
-    "body": [
-      "/**",
-      " * Description : ${TM_FILENAME} - 📌 ${1:설명}",
-      " * Author : ${2:Shiwoo Min}",
-      " * Date : ${CURRENT_YEAR}-${CURRENT_MONTH}-${CURRENT_DATE}",
-      " */",
-      ""
-    ]
-  },
-
   // React 컴포넌트 (Next/TS 친화)
   "React Component": {
     "scope": "typescriptreact,javascriptreact",
@@ -36,8 +21,8 @@
       "  return (",
       "    <div className=\"${5:container}\">${6:content}</div>",
       "  );",
-      "}"
-    ]
+      "}",
+    ],
   },
 
   // 디버깅용 로거(파일/라인 + 태그/페이로드)
@@ -45,9 +30,7 @@
     "scope": "typescript,typescriptreact,javascript,javascriptreact",
     "prefix": "dlog",
     "description": "파일/라인 번호를 포함한 디버그 로그",
-    "body": [
-      "console.log(`[${TM_FILENAME_BASE}:${TM_LINE_NUMBER}] ${1:tag}`, ${2:payload});"
-    ]
+    "body": ["console.log(`[${TM_FILENAME_BASE}:${TM_LINE_NUMBER}] ${1:tag}`, ${2:payload});"],
   },
 
   // ESM 함수 기본 골격
@@ -58,8 +41,8 @@
     "body": [
       "export function ${1:name}(${2:args}: ${3:any}): ${4:void} {",
       "  ${5:// TODO: 구현}",
-      "}"
-    ]
+      "}",
+    ],
   },
 
   // Async + try/catch 패턴
@@ -75,8 +58,8 @@
       "    console.error('[${1:run}] failed:', err);",
       "    throw err;",
       "  }",
-      "}"
-    ]
+      "}",
+    ],
   },
 
   // Class 기본 골격
@@ -93,8 +76,8 @@
       "  public ${4:method}(${5:param}: ${6:any}): ${7:void} {",
       "    ${8:// 구현}",
       "  }",
-      "}"
-    ]
+      "}",
+    ],
   },
 
   // Node ESM 스크립트(Top-Level Await)
@@ -109,8 +92,8 @@
       "(async () => {",
       "  ${1:// TODO: 비동기 로직}",
       "  console.log('done');",
-      "})();"
-    ]
+      "})();",
+    ],
   },
 
   // Playwright 기본 테스트
@@ -126,8 +109,8 @@
       "    await page.goto('${3:http://localhost:3000}');",
       "    await expect(page).toHaveTitle(/${4:Home}/);",
       "  });",
-      "});"
-    ]
+      "});",
+    ],
   },
 
   // Playwright: 스크린샷 비교(비주얼 리그레션)
@@ -144,8 +127,8 @@
       "    fullPage: true,",
       "    animations: 'disabled'",
       "  });",
-      "});"
-    ]
+      "});",
+    ],
   },
 
   // Vitest 기본 테스트
@@ -160,8 +143,8 @@
       "  it('${2:works}', () => {",
       "    expect(${3:1 + 1}).toBe(${4:2});",
       "  });",
-      "});"
-    ]
+      "});",
+    ],
   },
 
   // Vitest 모킹(vi.mock)
@@ -180,8 +163,8 @@
       "  it('should mock', () => {",
       "    expect(${2:fn}()).toBe(${3:'mocked'});",
       "  });",
-      "});"
-    ]
+      "});",
+    ],
   },
 
   // 환경변수 안전 접근(기본값 포함)
@@ -193,8 +176,8 @@
       "const ${1:VAL} = process.env['${2:KEY}'] ?? '${3:default}';",
       "if (!${1:VAL}) {",
       "  throw new Error('Missing env: ${2:KEY}');",
-      "}"
-    ]
+      "}",
+    ],
   },
 
   // AbortController가 포함된 fetch 래퍼
@@ -213,8 +196,8 @@
       "  } finally {",
       "    clearTimeout(id);",
       "  }",
-      "}"
-    ]
+      "}",
+    ],
   },
 
   // Promise.allSettled 패턴
@@ -229,7 +212,7 @@
       "  .map(r => r.value);",
       "const ${4:rejected} = ${1:results}",
       "  .filter((r): r is PromiseRejectedResult => r.status === 'rejected')",
-      "  .map(r => r.reason);"
-    ]
-  }
+      "  .map(r => r.reason);",
+    ],
+  },
 }

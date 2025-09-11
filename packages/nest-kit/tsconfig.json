@@ -1,0 +1,33 @@
+/**
+ * Description : tsconfig.json - 📌 api 의 tsconfig.json 최소유지
+ * Author : Shiwoo Min
+ * Date : 2025-09-11
+ */
+{
+  // 루트의 tsconfig.base.json 상속
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "noEmit": false,
+
+    // Nest/Express 공통 추천
+    "strict": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "useDefineForClassFields": false,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "sourceMap": true,
+    "skipLibCheck": true,
+    "jsx": "react-jsx",
+    "jsxImportSource": "react",
+    "types": ["node", "react"]
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "**/*.test.*", "**/*.spec.*"]
+}

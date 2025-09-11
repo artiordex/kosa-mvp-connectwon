@@ -1,3 +1,7 @@
+# Description : .gitignore - 📌 Git 추적 제외 파일 목록
+# Author : Shiwoo Min
+# Date : 2025-09-09
+
 # Logs
 logs
 *.log
@@ -75,6 +79,9 @@ web_modules/
 .env
 .env.*
 !.env.example
+
+# secrets files
+.secrets
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache
