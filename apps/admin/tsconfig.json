@@ -1,23 +1,32 @@
-  /**
-   * Description : tsconfig.json - 📌 admin 의 tsconfig.json 최소유지
-   * Author : Shiwoo Min
-   * Date : 2025-09-05
-   */
+/**
+ * Description : tsconfig.json - 📌 Admin 앱 TypeScript 설정
+ * Author : Shiwoo Min
+ * Date : 2025-09-11
+ */
 {
-  // 루트의 tsconfig.json 상속
-  "extends": "../../tsconfig.json",
+  // 루트의 tsconfig.base.json 상속
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     // Next.js가 빌드 처리
     "noEmit": true,
     // Next.js JSX 처리
     "jsx": "preserve",
-    "plugins": [{ "name": "next" }]
+    "plugins": [{ "name": "next" }],
+
+    // Path mapping for packages
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@ui/*": ["../../packages/ui/src/*"],
+      "@shared/*": ["../../packages/shared/src/*"],
+      "@api-contract/*": ["../../packages/api-contract/src/*"],
+      "@logger/*": ["../../packages/logger/src/*"]
+    },
+
+    // Next.js specific
+    "incremental": true,
+    "types": ["node", "next", "next/types/global"]
   },
-  "include": [
-    "next-env.d.ts",
-    "src/**/*",
-    ".next/types/**/*.ts",
-    "**/*.ts",
-    "**/*.tsx"
-  ]
+  "include": ["next-env.d.ts", "src/**/*", ".next/types/**/*.ts"],
+  "exclude": ["node_modules", ".next", "out", "dist"]
 }

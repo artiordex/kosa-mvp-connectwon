@@ -252,7 +252,8 @@
     "KAKAO",
     "APIV",
     "networkidle",
-    "domcontentloaded"
+    "domcontentloaded",
+    "Pretendard"
   ],
 
   // Nx Console AI 규칙 사용
