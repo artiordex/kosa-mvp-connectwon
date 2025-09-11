@@ -26,6 +26,6 @@
   },
 
   // Next 자동 생성 타입 파일 포함
-  "include": ["src", "next-env.d.ts"],
+  "include": ["src", "next-env.d.ts", "ui.ts"],
   "exclude": ["node_modules", "dist"]
 }
