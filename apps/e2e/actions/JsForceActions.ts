@@ -13,7 +13,7 @@ export class JsForceActions {
 
   // 요소를 화면 중앙으로 스크롤
   async scrollIntoView(selector: string): Promise<void> {
-    await this.page.evaluate((sel) => {
+    await this.page.evaluate(sel => {
       const el = document.querySelector(sel);
       if (!el) throw new Error(`scrollIntoView: not found: ${sel}`);
       (el as HTMLElement).scrollIntoView({ block: 'center', inline: 'center' });
@@ -22,7 +22,7 @@ export class JsForceActions {
 
   // 강제 클릭 (표준 클릭이 실패할 때)
   async forceClick(selector: string): Promise<void> {
-    await this.page.evaluate((sel) => {
+    await this.page.evaluate(sel => {
       const el = document.querySelector(sel) as HTMLElement | null;
       if (!el) throw new Error(`forceClick: not found: ${sel}`);
       el.click();
@@ -31,12 +31,15 @@ export class JsForceActions {
 
   // 강제 입력 (value 직접 세팅 + 이벤트 발생)
   async forceType(selector: string, text: string): Promise<void> {
-    await this.page.evaluate(({ sel, text }) => {
-      const el = document.querySelector(sel) as HTMLInputElement | HTMLTextAreaElement | null;
-      if (!el) throw new Error(`forceType: not found: ${sel}`);
-      (el as any).value = text;
-      el.dispatchEvent(new Event('input', { bubbles: true }));
-      el.dispatchEvent(new Event('change', { bubbles: true }));
-    }, { sel: selector, text });
+    await this.page.evaluate(
+      ({ sel, text }) => {
+        const el = document.querySelector(sel) as HTMLInputElement | HTMLTextAreaElement | null;
+        if (!el) throw new Error(`forceType: not found: ${sel}`);
+        (el as HTMLInputElement | HTMLTextAreaElement).value = text;
+        el.dispatchEvent(new Event('input', { bubbles: true }));
+        el.dispatchEvent(new Event('change', { bubbles: true }));
+      },
+      { sel: selector, text },
+    );
   }
 }

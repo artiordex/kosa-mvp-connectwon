@@ -1,31 +1,53 @@
 /**
  * Description : globalSetup.ts - 📌 Playwright 테스트 실행 초기화 작업
- * Author : Shiwoo Min
- * Date : 2025-09-07
+ * Author      : Shiwoo Min
+ * Date        : 2025-09-07
  */
-import 'tsconfig-paths/register.js';
-import path, { dirname } from 'path';
-import { fileURLToPath } from 'url';
-import os from 'os';
-import * as fs from 'fs/promises';
 import dotenv from 'dotenv';
-import { logger } from '../../packages/logger/customLogger.js';
+import * as fs from 'fs/promises';
+import os from 'os';
+import path, { dirname } from 'path';
+import 'tsconfig-paths/register.js';
+import { fileURLToPath } from 'url';
 
-const __filename = fileURLToPath(import.meta.url); // ESM용 __filename
-const __dirname = dirname(__filename); // ESM용 __dirname
+import { logger } from '../../packages/logger/src/logger.js';
 
-dotenv.config({ path: path.resolve(__dirname, '.env') }); // e2e/.env 로드(없어도 무시)
+// ESM __dirname
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
-// 아티팩트 루트(리포트/스크린샷/비디오 등 저장 위치)
-const ARTIFACT_ROOT = process.env.E2E_ARTIFACTS_DIR || path.resolve(process.cwd(), 'e2e-artifacts');
+// .env 로더 (e2e/.env 고정 로드)
+function loadEnvFromE2E() {
+  const envPath = path.resolve(__dirname, '.env');
+  dotenv.config({ path: envPath });
+  logger.info(`[GlobalSetup] .env loaded from: ${envPath}`);
+}
+loadEnvFromE2E();
 
-// 디렉터리 생성 보장
-async function ensureDir(dir: string): Promise<void> {
+// 상수/유틸
+const ARTIFACT_ROOT =
+  process.env['E2E_ARTIFACTS_DIR'] || path.resolve(process.cwd(), 'e2e-artifacts');
+
+const getEnvConfig = () => ({
+  nodeEnv: process.env['NODE_ENV'] || 'test',
+  ci: process.env['CI'] === 'true',
+  headless: process.env['HEADLESS'] === 'true',
+  baseUrl: process.env['BASE_URL'] || 'http://localhost:3000',
+  apiUrl: process.env['API_URL'] || 'http://localhost:8000',
+  actionTimeout: parseInt(process.env['ACTION_TIMEOUT'] || '30', 10) * 1000,
+  navigationTimeout: parseInt(process.env['NAVIGATION_TIMEOUT'] || '60', 10) * 1000,
+  slowMo: parseInt(process.env['SLOW_MO'] || '100', 10),
+  browserLaunchTimeout: parseInt(process.env['BROWSER_LAUNCH_TIMEOUT'] || '60000', 10),
+  startWebServer: process.env['START_WEB_SERVER'] === 'true',
+  webCommand: process.env['WEB_COMMAND'] || 'pnpm dev',
+  buildNumber: process.env['BUILD_NUMBER'] || 'local',
+  commitSha: process.env['COMMIT_SHA'] || 'local',
+});
+
+async function ensureDir(dir: string) {
   await fs.mkdir(dir, { recursive: true });
 }
-
-// 디렉터리 비우기(옵션)
-async function emptyDir(dir: string): Promise<void> {
+async function emptyDir(dir: string) {
   try {
     const items = await fs.readdir(dir);
     await Promise.all(
@@ -37,39 +59,55 @@ async function emptyDir(dir: string): Promise<void> {
       }),
     );
   } catch {
-    // 폴더가 없으면 무시
+    // ignore
   }
 }
 
-// BASE_URL 형식 간단 검증
-function validateBaseUrl(): void {
-  const base = process.env.BASE_URL ?? 'http://localhost:3000';
+function validateUrls() {
+  const { baseUrl, apiUrl } = getEnvConfig();
   try {
-    new URL(base);
+    new URL(baseUrl);
   } catch {
-    throw new Error(`[GlobalSetup] BASE_URL 형식이 올바르지 않습니다: ${base}`);
+    throw new Error(`[GlobalSetup] BASE_URL 형식이 올바르지 않습니다: ${baseUrl}`);
+  }
+  try {
+    new URL(apiUrl);
+  } catch {
+    throw new Error(`[GlobalSetup] API_URL 형식이 올바르지 않습니다: ${apiUrl}`);
   }
 }
 
-// 환경 요약 로그
-function printEnvSummary(): void {
-  const headless = process.env.HEADLESS ?? '(unset)';
-  const baseUrl = process.env.BASE_URL ?? 'http://localhost:3000';
-  const slowMo = process.env.SLOW_MO ?? '0';
-  const workers = process.env.CI ? 1 : Math.max(1, Math.floor(os.cpus().length * 0.75));
+function validateRequiredEnvVars() {
+  const required = ['BASE_URL', 'API_URL', 'TEST_USER_EMAIL', 'TEST_USER_PASSWORD'];
+  const missing = required.filter(k => !process.env[k]);
+  if (missing.length) {
+    throw new Error(`[GlobalSetup] 필수 환경 변수가 누락: ${missing.join(', ')}`);
+  }
+}
+
+function printEnvSummary() {
+  const cfg = getEnvConfig();
+  const workers = cfg.ci ? 1 : Math.max(1, Math.floor(os.cpus().length * 0.75));
 
   logger.info('────────────────────────────────────────');
-  logger.info('[GlobalSetup] Playwright MVP 초기화 시작');
-  logger.info(`[GlobalSetup] BASE_URL        : ${baseUrl}`);
-  logger.info(`[GlobalSetup] HEADLESS        : ${headless}`);
-  logger.info(`[GlobalSetup] SLOW_MO         : ${slowMo}ms`);
-  logger.info(`[GlobalSetup] WORKERS(target) : ${workers}`);
-  logger.info(`[GlobalSetup] ARTIFACT_ROOT   : ${ARTIFACT_ROOT}`);
+  logger.info('[GlobalSetup] Playwright E2E 초기화 시작');
+  logger.info(`NODE_ENV           : ${cfg.nodeEnv}`);
+  logger.info(`CI                 : ${cfg.ci}`);
+  logger.info(`HEADLESS           : ${cfg.headless}`);
+  logger.info(`BASE_URL           : ${cfg.baseUrl}`);
+  logger.info(`API_URL            : ${cfg.apiUrl}`);
+  logger.info(`ACTION_TIMEOUT     : ${cfg.actionTimeout}ms`);
+  logger.info(`NAVIGATION_TIMEOUT : ${cfg.navigationTimeout}ms`);
+  logger.info(`SLOW_MO            : ${cfg.slowMo}ms`);
+  logger.info(`WORKERS(target)    : ${workers}`);
+  logger.info(`ARTIFACT_ROOT      : ${ARTIFACT_ROOT}`);
+  logger.info(`BUILD_NUMBER       : ${cfg.buildNumber}`);
+  logger.info(`COMMIT_SHA         : ${cfg.commitSha}`);
+  if (cfg.startWebServer) logger.info(`WEB_COMMAND        : ${cfg.webCommand}`);
   logger.info('────────────────────────────────────────');
 }
 
-// 아티팩트 디렉터리 설정
-async function setupArtifactDirectories(): Promise<void> {
+async function setupArtifactDirectories() {
   const dirs = [
     ARTIFACT_ROOT,
     path.join(ARTIFACT_ROOT, 'results'),
@@ -78,11 +116,9 @@ async function setupArtifactDirectories(): Promise<void> {
     path.join(ARTIFACT_ROOT, 'traces'),
     path.join(ARTIFACT_ROOT, 'videos'),
   ];
-
-  await Promise.all(dirs.map(ensureDir)); // 아티팩트 폴더 보장
+  await Promise.all(dirs.map(ensureDir));
 
   if (process.env['CLEAR_ARTIFACTS'] === 'true') {
-    // 이전 실행 산출물 정리(선택)
     await Promise.all(
       ['results', 'logs', 'screenshots', 'traces', 'videos'].map(d =>
         emptyDir(path.join(ARTIFACT_ROOT, d)),
@@ -92,19 +128,71 @@ async function setupArtifactDirectories(): Promise<void> {
   }
 }
 
-// 타임존 설정
-function setupTimezone(): void {
-  if (process.env.TZ && process.env.TZ.length > 0) {
-    // 타임존 강제(옵션)
-    logger.info(`[GlobalSetup] TZ 적용: ${process.env.TZ}`);
+function setupTimezone() {
+  if (process.env['TZ']) {
+    logger.info(`[GlobalSetup] TZ 적용: ${process.env['TZ']}`);
   }
 }
 
-export default async function globalSetup(): Promise<void> {
-  printEnvSummary(); // 환경 요약
-  validateBaseUrl(); // BASE_URL 검증
-  await setupArtifactDirectories(); // 아티팩트 폴더 설정
-  setupTimezone(); // 타임존 설정
+async function createTestConfig() {
+  const cfg = getEnvConfig();
+  const testConfig = {
+    environment: {
+      nodeEnv: cfg.nodeEnv,
+      ci: cfg.ci,
+      baseUrl: cfg.baseUrl,
+      apiUrl: cfg.apiUrl,
+    },
+    timeouts: {
+      action: cfg.actionTimeout,
+      navigation: cfg.navigationTimeout,
+      browserLaunch: cfg.browserLaunchTimeout,
+    },
+    performance: { slowMo: cfg.slowMo },
+    testAccounts: {
+      user: {
+        email: process.env['TEST_USER_EMAIL'],
+        password: process.env['TEST_USER_PASSWORD'],
+      },
+      admin: {
+        email: process.env['TEST_ADMIN_EMAIL'],
+        password: process.env['TEST_ADMIN_PASSWORD'],
+      },
+    },
+    oauth: {
+      google: {
+        clientId: process.env['GOOGLE_CLIENT_ID'],
+        clientSecret: process.env['GOOGLE_CLIENT_SECRET'],
+        redirectUri: process.env['GOOGLE_REDIRECT_URI'],
+      },
+    },
+    database: { testUrl: process.env['TEST_DATABASE_URL'] },
+    notifications: {
+      slack: { webhookUrl: process.env['SLACK_WEBHOOK_URL_TEST'] },
+      email: {
+        enabled: process.env['EMAIL_NOTIFICATION'] === 'true',
+        recipients: process.env['EMAIL_RECIPIENTS'],
+      },
+    },
+    meta: { buildNumber: cfg.buildNumber, commitSha: cfg.commitSha },
+  };
 
-  logger.info('[GlobalSetup] 초기화 완료');
+  const configPath = path.join(ARTIFACT_ROOT, 'test-config.json');
+  await fs.writeFile(configPath, JSON.stringify(testConfig, null, 2));
+  logger.info(`[GlobalSetup] 테스트 설정 파일 생성: ${configPath}`);
+}
+
+export default async function globalSetup(): Promise<void> {
+  try {
+    printEnvSummary();
+    validateRequiredEnvVars();
+    validateUrls();
+    await setupArtifactDirectories();
+    await createTestConfig();
+    setupTimezone();
+    logger.info('[GlobalSetup] 초기화 완료');
+  } catch (error) {
+    logger.error(`[GlobalSetup] 초기화 실패: ${error}`);
+    throw error;
+  }
 }

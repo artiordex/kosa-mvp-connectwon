@@ -250,7 +250,10 @@
     "TSTZRANGE",
     "plpgsql",
     "KAKAO",
-    "APIV"
+    "APIV",
+    "networkidle",
+    "domcontentloaded",
+    "Pretendard"
   ],
 
   // Nx Console AI 규칙 사용

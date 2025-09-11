@@ -3,9 +3,10 @@
  * Author : Shiwoo Min
  * Date : 2025-04-07
  */
-import { expect, type Locator, type Page } from '@playwright/test';
-import { BaseActions } from './BaseActions';
-import { JsForceActions } from './JsForceActions';
+import { expect, type Page } from '@playwright/test';
+
+import { BaseActions } from './BaseActions.js';
+import { JsForceActions } from './JsForceActions.js';
 
 export class WebActions extends BaseActions {
   // JsForceActions 조합
@@ -34,16 +35,22 @@ export class WebActions extends BaseActions {
   }
 
   // 로딩 스피너가 사라질 때까지 대기
-  async waitForSpinnerToDisappear(spinnerSelector = '[data-testid="loading"], .spinner'): Promise<void> {
+  async waitForSpinnerToDisappear(
+    spinnerSelector = '[data-testid="loading"], .spinner',
+    timeout = this.defaultTimeout,
+  ): Promise<void> {
     const loc = this.page.locator(spinnerSelector);
-    if (await loc.count()) {
-      await loc.first().waitFor({ state: 'hidden', timeout: 10_000 }).catch(() => {});
+    if ((await loc.count()) > 0) {
+      await loc
+        .first()
+        .waitFor({ state: 'hidden', timeout })
+        .catch(() => {});
     }
   }
 
   // 토스트 메시지 내용 확인
   async assertToast(message: string | RegExp): Promise<void> {
     const toast = this.page.locator('[role="alert"], [data-testid="toast"]');
-    await expect(toast).toContainText(message as any);
+    await expect(toast).toContainText(message);
   }
 }
