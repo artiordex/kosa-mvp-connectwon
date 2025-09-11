@@ -280,7 +280,11 @@
     "vuepress",
     "wscript",
     "jscoverage",
-    "rediss"
+    "rediss",
+    "autorestart",
+    "redisinsight",
+    "postgresdb",
+    "esac"
   ],
 
   // Nx Console AI 규칙 사용

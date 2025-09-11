@@ -1,0 +1,29 @@
+# Description : Dockerfile.worker - 📌 worker docker build
+# Author      : Shiwoo Min
+# Date        : 2025-09-12
+
+# Background worker
+FROM node:20-alpine AS base
+RUN corepack enable && apk add --no-cache libc6-compat
+WORKDIR /repo
+
+#  Dependencies 설치
+FROM base AS deps
+COPY pnpm-lock.yaml package.json pnpm-workspace.yaml nx.json ./
+COPY packages ./packages
+COPY apps/worker/package.json ./apps/worker/package.json
+RUN pnpm install --frozen-lockfile
+
+# Build
+FROM deps AS build
+COPY . .
+RUN pnpm nx build worker
+
+# Production image
+FROM node:20-alpine AS runtime
+ENV NODE_ENV=production
+WORKDIR /app
+COPY --from=deps /repo/node_modules ./node_modules
+COPY --from=build /repo/dist/apps/worker ./dist
+EXPOSE 3003
+CMD ["node", "dist/main.js"]

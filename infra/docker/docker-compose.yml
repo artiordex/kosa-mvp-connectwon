@@ -75,6 +75,27 @@ services:
       timeout: 3s
       retries: 10
 
+  # BullMQ Worker (백그라운드 작업자)
+  worker:
+    build:
+      context: ../../
+      dockerfile: infra/docker/Dockerfile.worker
+    container_name: worker
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=${NODE_ENV:-production}
+      # 큐/캐시/DB 연결(패키지 @connectwon/* 가 사용하는 표준 키)
+      - QUEUE_REDIS_URL=${QUEUE_REDIS_URL}
+      - REDIS_URL=${REDIS_URL}
+      - DATABASE_URL=${DATABASE_URL}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
   # Nginx 리버스 프록시
   nginx:
     image: nginx:1.27-alpine
