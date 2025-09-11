@@ -13,6 +13,10 @@
     "./schemas/*": {
       "types": "./dist/schemas/*.d.ts",
       "import": "./dist/schemas/*.js"
+    },
+    "./openapi/*": {
+      "types": "./dist/openapi/*.d.ts",
+      "import": "./dist/openapi/*.js"
     }
   },
   "scripts": {
@@ -21,9 +25,11 @@
     "clean": "rimraf dist"
   },
   "dependencies": {
+    "@ts-rest/core": "^3.52.1",
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@connectwon/configs": "workspace:*"
+    "@connectwon/configs": "workspace:*",
+    "openapi-types": "^12.1.3"
   }
 }

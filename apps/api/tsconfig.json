@@ -27,7 +27,7 @@
 
   "include": [
     "src/**/*"
-  ],
+, "database.ts"  ],
 
   "exclude": [
     "node_modules",

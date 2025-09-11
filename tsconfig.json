@@ -64,7 +64,7 @@
       "@connectwon/configs/*": ["packages/configs/*"],
 
       // 핵심 기능
-      "@connectwon/core": ["packages/core/src/domain/index.ts"],
+      "@connectwon/core": ["packages/core/src/infrastructure/index.ts"],
       "@connectwon/core/*": ["packages/core/src/*"],
 
       // 데이터베이스

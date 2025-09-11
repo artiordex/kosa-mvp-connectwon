@@ -1,5 +1,5 @@
 /**
- * Description : GlobalSetup.ts - 📌 Playwright 테스트 실행 초기화 작업
+ * Description : globalSetup.ts - 📌 Playwright 테스트 실행 초기화 작업
  * Author : Shiwoo Min
  * Date : 2025-09-07
  */
@@ -20,12 +20,12 @@ dotenv.config({ path: path.resolve(__dirname, '.env') }); // e2e/.env 로드(없
 const ARTIFACT_ROOT = process.env.E2E_ARTIFACTS_DIR || path.resolve(process.cwd(), 'e2e-artifacts');
 
 // 디렉터리 생성 보장
-async function ensureDir(dir: string) {
+async function ensureDir(dir: string): Promise<void> {
   await fs.mkdir(dir, { recursive: true });
 }
 
 // 디렉터리 비우기(옵션)
-async function emptyDir(dir: string) {
+async function emptyDir(dir: string): Promise<void> {
   try {
     const items = await fs.readdir(dir);
     await Promise.all(
@@ -42,7 +42,7 @@ async function emptyDir(dir: string) {
 }
 
 // BASE_URL 형식 간단 검증
-function validateBaseUrl() {
+function validateBaseUrl(): void {
   const base = process.env.BASE_URL ?? 'http://localhost:3000';
   try {
     new URL(base);
@@ -52,7 +52,7 @@ function validateBaseUrl() {
 }
 
 // 환경 요약 로그
-function printEnvSummary() {
+function printEnvSummary(): void {
   const headless = process.env.HEADLESS ?? '(unset)';
   const baseUrl = process.env.BASE_URL ?? 'http://localhost:3000';
   const slowMo = process.env.SLOW_MO ?? '0';
@@ -68,11 +68,8 @@ function printEnvSummary() {
   logger.info('────────────────────────────────────────');
 }
 
-export default async function globalSetup(): Promise<void> {
-  printEnvSummary(); // 환경 요약
-  validateBaseUrl(); // BASE_URL 검증
-
-  // 아티팩트 기본 폴더 구성
+// 아티팩트 디렉터리 설정
+async function setupArtifactDirectories(): Promise<void> {
   const dirs = [
     ARTIFACT_ROOT,
     path.join(ARTIFACT_ROOT, 'results'),
@@ -84,7 +81,7 @@ export default async function globalSetup(): Promise<void> {
 
   await Promise.all(dirs.map(ensureDir)); // 아티팩트 폴더 보장
 
-  if (process.env.CLEAR_ARTIFACTS === 'true') {
+  if (process.env['CLEAR_ARTIFACTS'] === 'true') {
     // 이전 실행 산출물 정리(선택)
     await Promise.all(
       ['results', 'logs', 'screenshots', 'traces', 'videos'].map(d =>
@@ -93,11 +90,21 @@ export default async function globalSetup(): Promise<void> {
     );
     logger.warn('[GlobalSetup] 이전 아티팩트 정리 완료 (CLEAR_ARTIFACTS=true)');
   }
+}
 
+// 타임존 설정
+function setupTimezone(): void {
   if (process.env.TZ && process.env.TZ.length > 0) {
     // 타임존 강제(옵션)
     logger.info(`[GlobalSetup] TZ 적용: ${process.env.TZ}`);
   }
+}
+
+export default async function globalSetup(): Promise<void> {
+  printEnvSummary(); // 환경 요약
+  validateBaseUrl(); // BASE_URL 검증
+  await setupArtifactDirectories(); // 아티팩트 폴더 설정
+  setupTimezone(); // 타임존 설정
 
   logger.info('[GlobalSetup] 초기화 완료');
 }
