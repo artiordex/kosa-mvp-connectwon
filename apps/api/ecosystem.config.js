@@ -1,3 +1,9 @@
+/**
+ * Description : ecosystem.config.js - 📌 PM2 프로세스 매니저 설정 파일
+ * Author : Shiwoo Min
+ * Date : 2025-09-12
+ */
+
 module.exports = {
   apps: [
     {
@@ -19,31 +25,28 @@ module.exports = {
         NODE_ENV: 'development',
         PORT: 8080,
         LOG_LEVEL: 'debug',
-        ENABLE_LOGS: 'true'
+        ENABLE_LOGS: 'true',
       },
 
+      // 프로덕션 환경 변수
       env_production: {
         NODE_ENV: 'production',
         PORT: 8080,
         LOG_LEVEL: 'info',
-        ENABLE_LOGS: 'false'
+        ENABLE_LOGS: 'false',
       },
 
+      // 스테이징 환경 변수
       env_staging: {
         NODE_ENV: 'staging',
         PORT: 8080,
         LOG_LEVEL: 'info',
-        ENABLE_LOGS: 'true'
+        ENABLE_LOGS: 'true',
       },
 
       // 자동 재시작 설정
       watch: false,
-      ignore_watch: [
-        'node_modules',
-        'logs',
-        'dist',
-        '*.log'
-      ],
+      ignore_watch: ['node_modules', 'logs', 'dist', '*.log'],
 
       // 메모리/CPU 제한
       max_memory_restart: '1G',
@@ -70,10 +73,7 @@ module.exports = {
       disable_source_map_support: false,
 
       // 프로덕션 최적화
-      node_args: [
-        '--max-old-space-size=1024',
-        '--optimize-for-size'
-      ],
+      node_args: ['--max-old-space-size=1024', '--optimize-for-size'],
 
       // 자동 재시작 조건
       autorestart: true,
@@ -89,8 +89,8 @@ module.exports = {
         ENABLE_LOGS: 'true',
         // 개발용 데이터베이스
         DATABASE_URL: 'postgresql://user:password@localhost:5432/connectwon_dev',
-        REDIS_URL: 'redis://localhost:6379'
-      }
+        REDIS_URL: 'redis://localhost:6379',
+      },
     },
 
     // 개발 모드용 별도 설정 (선택사항)
@@ -107,19 +107,13 @@ module.exports = {
       // 파일 변경 감지
       watch: true,
       watch_delay: 1000,
-      ignore_watch: [
-        'node_modules',
-        'dist',
-        'logs',
-        '*.log',
-        'prisma/migrations'
-      ],
+      ignore_watch: ['node_modules', 'dist', 'logs', '*.log', 'prisma/migrations'],
 
       env: {
         NODE_ENV: 'development',
         PORT: 8080,
         LOG_LEVEL: 'debug',
-        ENABLE_LOGS: 'true'
+        ENABLE_LOGS: 'true',
       },
 
       // 개발용 로그 설정
@@ -130,8 +124,8 @@ module.exports = {
       // 빠른 재시작
       min_uptime: '3s',
       max_restarts: 5,
-      max_memory_restart: '500M'
-    }
+      max_memory_restart: '500M',
+    },
   ],
 
   // 배포 설정
@@ -142,8 +136,9 @@ module.exports = {
       ref: 'origin/main',
       repo: 'git@github.com:your-username/connectwon.git',
       path: '/var/www/connectwon',
-      'post-deploy': 'pnpm install && pnpm run build && pm2 reload ecosystem.config.js --env production',
-      'pre-setup': 'apt update && apt install git -y'
+      'post-deploy':
+        'pnpm install && pnpm run build && pm2 reload ecosystem.config.js --env production',
+      'pre-setup': 'apt update && apt install git -y',
     },
 
     staging: {
@@ -152,7 +147,8 @@ module.exports = {
       ref: 'origin/develop',
       repo: 'git@github.com:your-username/connectwon.git',
       path: '/var/www/connectwon-staging',
-      'post-deploy': 'pnpm install && pnpm run build && pm2 reload ecosystem.config.js --env staging'
-    }
-  }
-}
+      'post-deploy':
+        'pnpm install && pnpm run build && pm2 reload ecosystem.config.js --env staging',
+    },
+  },
+};

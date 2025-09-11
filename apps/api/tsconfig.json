@@ -25,9 +25,7 @@
     "types": ["node"]
   },
 
-  "include": [
-    "src/**/*"
-, "database.ts"  ],
+  "include": ["src/**/*"],
 
   "exclude": [
     "node_modules",

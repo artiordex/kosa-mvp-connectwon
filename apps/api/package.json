@@ -2,6 +2,7 @@
   "name": "@connectwon/api",
   "version": "1.0.0",
   "private": true,
+  "description": "ConnectWon REST-API 기반 백엔드",
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/app.ts",
@@ -14,12 +15,18 @@
   },
   "dependencies": {
     "@connectwon/database": "workspace:*",
+    "@nestjs/bullmq": "^11.0.3",
+    "@nestjs/common": "^11.1.6",
+    "@nestjs/config": "^4.0.2",
+    "@nestjs/core": "^11.1.6",
+    "@nestjs/swagger": "^11.2.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "helmet": "^7.1.0",
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
+    "swagger-ui-express": "^5.0.1",
     "zod": "^3.23.8"
   },
   "devDependencies": {
@@ -30,10 +37,12 @@
     "@types/express-session": "^1.18.2",
     "@types/jsonwebtoken": "^9.0.7",
     "@types/morgan": "^1.9.10",
+    "@types/node": "^24.3.1",
     "@types/passport": "^1.0.17",
     "@types/passport-google-oauth20": "^2.0.16",
     "@types/passport-jwt": "^4.0.1",
     "@types/passport-local": "^1.0.38",
+    "@types/swagger-ui-express": "^4.1.8",
     "tsx": "^4.19.3"
   }
 }
