@@ -18,6 +18,12 @@
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
 
+    // CommonJS 호환성 설정
+    "esModuleInterop": true,
+
+    // 기본 내보내기 호환성 설정
+    "allowSyntheticDefaultImports": true,
+
     // JS 파일 생성 여부 (false면 tsc --noEmit 처럼 작동)
     "noEmit": false,
 

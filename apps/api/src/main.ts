@@ -7,8 +7,10 @@ import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import type { Request, Response } from 'express';
+import 'reflect-metadata';
 
-import { AppModule } from './src/app.module.js';
+import { AppModule } from './app.module.js';
 
 // 부트스트랩 함수 정의
 async function bootstrap() {
@@ -78,11 +80,11 @@ async function bootstrap() {
       },
     });
 
-    console.log('📚 Swagger UI: http://localhost:8000/api/docs');
+    console.log('Swagger UI: http://localhost:8000/api/docs');
   }
 
   // 헬스체크 엔드포인트
-  app.use('/health', (req, res) => {
+  app.use('/health', (_req: Request, res: Response) => {
     res.status(200).json({
       status: 'ok',
       timestamp: new Date().toISOString(),

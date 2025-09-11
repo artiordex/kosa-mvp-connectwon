@@ -284,7 +284,19 @@
     "autorestart",
     "redisinsight",
     "postgresdb",
-    "esac"
+    "esac",
+    "shadcn",
+    "Shareit",
+    "MOSF",
+    "supabase",
+    "pgdata",
+    "isready",
+    "maxmemory",
+    "appendonly",
+    "everysec",
+    "requirepass",
+    "allkeys",
+    "appendfsync"
   ],
 
   // Nx Console AI 규칙 사용

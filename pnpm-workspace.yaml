@@ -3,6 +3,9 @@
 # Date : 2025-09-12
 
 packages:
+  - 'apps/*'
+  - 'packages/*'
+  - 'infra/*'
   # Applications
   - 'apps/admin' # 관리자 대시보드 (Admin Dashboard)
   - 'apps/api' # REST API 서버 (Backend API Server)

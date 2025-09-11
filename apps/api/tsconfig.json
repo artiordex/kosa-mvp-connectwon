@@ -18,6 +18,22 @@
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
 
+    // CommonJS 호환성 설정
+    "esModuleInterop": true,
+
+    // 기본 내보내기 호환성 설정
+    "allowSyntheticDefaultImports": true,
+
+    // 데코레이터 필수
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+
+    // TS5 + 데코레이터/클래스필드 안전장치
+    "useDefineForClassFields": false,
+
+    // 엄격한 타입 검사 설정
+    "strictPropertyInitialization": false,
+
     // JS 파일 생성 여부 (false면 tsc --noEmit 처럼 작동)
     "noEmit": false,
 

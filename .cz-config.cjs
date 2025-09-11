@@ -2,8 +2,9 @@
  * Description : .cz-config.cjs - 📌 Commitizen 커밋 메시지 규칙 정의 파일
  * Author : Shiwoo Min
  * Date : 2025-09-05
- * ESM 프로젝트에서도 이 파일만 CommonJS(.cjs)를 사용
- * commitizen은 내부적으로 CommonJS 방식으로 구성되어 있어 ESM을 지원하지 않음
+ * 09-12 : 커밋 메시지 규칙 세분화
+ * Note : ESM 프로젝트에서도 이 파일만 CommonJS(.cjs)를 사용
+ *        (commitizen은 내부적으로 CommonJS 방식으로 구성되어 있어 ESM을 지원하지 않음)
  */
 
 module.exports = {
@@ -19,13 +20,22 @@ module.exports = {
   ],
   // 작업 범위(scope) 선택 항목
   scopes: [
-    { name: 'e2e' },
-    { name: 'app' },
-    { name: 'api' },
-    { name: 'web' },
-    { name: 'admin' },
-    { name: 'infra' },
-    { name: 'packages' },
+    // Apps
+    { name: 'apps/admin' },
+    { name: 'apps/api' },
+    { name: 'apps/web' },
+    { name: 'apps/e2e' },
+    { name: 'apps/worker' },
+    // Packages
+    { name: 'packages/api-contract' },
+    { name: 'packages/configs' },
+    { name: 'packages/core' },
+    { name: 'packages/database' },
+    { name: 'packages/logger' },
+    { name: 'packages/nest-kit' },
+    { name: 'packages/sdk' },
+    { name: 'packages/ui' },
+    // Root
     { name: 'setting' },
   ],
   // 커스텀 범위 직접 입력 허용
