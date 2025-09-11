@@ -279,7 +279,8 @@
     "dotenv",
     "vuepress",
     "wscript",
-    "jscoverage"
+    "jscoverage",
+    "rediss"
   ],
 
   // Nx Console AI 규칙 사용

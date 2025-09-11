@@ -1,0 +1,38 @@
+/**
+ * Description : tsconfig.json - 📌 api 의 tsconfig.json 최소유지 (Express API)
+ * Author : Shiwoo Min
+ * Date : 2025-09-06
+ */
+{
+  // 루트의 tsconfig.base.json 상속
+  "extends": "../../tsconfig.base.json",
+
+  "compilerOptions": {
+    // API 소스 루트
+    "rootDir": "./src",
+
+    // 빌드 결과 위치
+    "outDir": "./dist",
+
+    // 모듈 시스템 설정 (Nest, Express 등 Node 환경)
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+
+    // JS 파일 생성 여부 (false면 tsc --noEmit 처럼 작동)
+    "noEmit": false,
+
+    // DOM 타입 제거, node 전용 타입만 포함
+    "types": ["node"]
+  },
+
+  "include": ["src/**/*.ts"],
+
+  "exclude": [
+    "node_modules",
+    "dist",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.spec.ts",
+    "**/*.spec.tsx"
+  ]
+}

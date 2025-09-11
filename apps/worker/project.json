@@ -1,0 +1,36 @@
+{
+  "name": "@connectwon/worker",
+  "sourceRoot": "apps/worker/src",
+  "projectType": "application",
+  "tags": ["type:app", "layer:app"],
+  "targets": {
+    "build": {
+      "executor": "@nx/node:build",
+      "options": {
+        "main": "apps/worker/src/main.ts",
+        "outputPath": "dist/apps/worker",
+        "tsConfig": "apps/worker/tsconfig.json",
+        "assets": []
+      }
+    },
+    "serve": {
+      "executor": "@nx/node:node",
+      "options": {
+        "buildTarget": "worker:build"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "options": {
+        "lintFilePatterns": ["apps/worker/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "options": {
+        "passWithNoTests": true
+      }
+    }
+  },
+  "implicitDependencies": []
+}

@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      bullmq:
+        specifier: ^5.58.5
+        version: 5.58.5
       compression:
         specifier: ^1.8.1
         version: 1.8.1
@@ -70,7 +73,7 @@ importers:
         specifier: ^5.2.2
         version: 5.2.2(prettier@3.6.2)
       '@types/node':
-        specifier: ^24.3.0
+        specifier: ^24.3.1
         version: 24.3.1
       '@types/react':
         specifier: ^18.3.7
@@ -337,6 +340,19 @@ importers:
         specifier: ^5.0.0
         version: 5.9.2
 
+  apps/worker:
+    dependencies:
+      '@connectwon/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      bullmq:
+        specifier: ^5.58.5
+        version: 5.58.5
+    devDependencies:
+      '@types/node':
+        specifier: ^20.19.13
+        version: 20.19.13
+
   packages/api-contract:
     dependencies:
       '@ts-rest/core':
@@ -509,12 +525,18 @@ importers:
       '@tanstack/react-query':
         specifier: ^5.87.4
         version: 5.87.4(react@18.3.1)
+      next:
+        specifier: '>=14'
+        version: 14.2.32(@babel/core@7.28.4)(@playwright/test@1.55.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       nodemailer:
         specifier: ^7.0.6
         version: 7.0.6
       react:
         specifier: '>=18'
         version: 18.3.1
+      react-dom:
+        specifier: '>=18'
+        version: 18.3.1(react@18.3.1)
       rxjs:
         specifier: ^7.8.2
         version: 7.8.2
@@ -9252,7 +9274,7 @@ snapshots:
   '@types/body-parser@1.19.6':
     dependencies:
       '@types/connect': 3.4.38
-      '@types/node': 24.3.1
+      '@types/node': 20.19.13
 
   '@types/chai@5.2.2':
     dependencies:
@@ -9261,22 +9283,22 @@ snapshots:
   '@types/compression@1.8.1':
     dependencies:
       '@types/express': 4.17.23
-      '@types/node': 24.3.1
+      '@types/node': 20.19.13
 
   '@types/connect@3.4.38':
     dependencies:
-      '@types/node': 24.3.1
+      '@types/node': 20.19.13
 
   '@types/conventional-commits-parser@5.0.1':
     dependencies:
-      '@types/node': 24.3.1
+      '@types/node': 20.19.13
     optional: true
 
   '@types/cookie@0.6.0': {}
 
   '@types/cors@2.8.19':
     dependencies:
-      '@types/node': 24.3.1
+      '@types/node': 20.19.13
 
   '@types/d3-array@3.2.1': {}
 
@@ -9312,7 +9334,7 @@ snapshots:
 
   '@types/express-serve-static-core@4.19.6':
     dependencies:
-      '@types/node': 24.3.1
+      '@types/node': 20.19.13
       '@types/qs': 6.14.0
       '@types/range-parser': 1.2.7
       '@types/send': 0.17.5
@@ -9345,13 +9367,13 @@ snapshots:
   '@types/jsonwebtoken@9.0.10':
     dependencies:
       '@types/ms': 2.1.0
-      '@types/node': 24.3.1
+      '@types/node': 20.19.13
 
   '@types/mime@1.3.5': {}
 
   '@types/morgan@1.9.10':
     dependencies:
-      '@types/node': 24.3.1
+      '@types/node': 20.19.13
 
   '@types/ms@2.1.0': {}
 
@@ -9368,13 +9390,13 @@ snapshots:
   '@types/nodemailer@7.0.1':
     dependencies:
       '@aws-sdk/client-sesv2': 3.883.0
-      '@types/node': 24.3.1
+      '@types/node': 20.19.13
     transitivePeerDependencies:
       - aws-crt
 
   '@types/oauth@0.9.6':
     dependencies:
-      '@types/node': 24.3.1
+      '@types/node': 20.19.13
 
   '@types/parse-json@4.0.2': {}
 
@@ -9447,12 +9469,12 @@ snapshots:
   '@types/send@0.17.5':
     dependencies:
       '@types/mime': 1.3.5
-      '@types/node': 24.3.1
+      '@types/node': 20.19.13
 
   '@types/serve-static@1.15.8':
     dependencies:
       '@types/http-errors': 2.0.5
-      '@types/node': 24.3.1
+      '@types/node': 20.19.13
       '@types/send': 0.17.5
 
   '@types/statuses@2.0.6': {}
