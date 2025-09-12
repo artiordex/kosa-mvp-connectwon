@@ -1,14 +1,15 @@
 {
   "name": "@connectwon/web",
   "version": "1.0.0",
+  "description": "ConnectWon 사용자 웹 애플리케이션",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "type-check": "tsc --noEmit",
-    "clean": "rimraf .next dist"
+    "type-check": "pnpm -w exec tsc --noEmit -p tsconfig.json",
+    "clean": "pnpm -w exec rimraf .next dist"
   },
   "dependencies": {
     "next": "^14.2.5",
@@ -21,15 +22,15 @@
     "clsx": "^2.0.0"
   },
   "devDependencies": {
-    "@types/react": "^18.3.0",
-    "@types/react-dom": "^18.3.0",
-    "@types/node": "^20.0.0",
-    "typescript": "^5.0.0",
-    "eslint": "^8.0.0",
+    "eslint": "^8.57.0",
     "eslint-config-next": "^14.2.5",
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.13",
-    "rimraf": "^5.0.0"
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0"
+  },
+  "engines": {
+    "node": ">=20.11"
   }
 }

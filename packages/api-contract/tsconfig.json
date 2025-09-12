@@ -1,22 +1,45 @@
 /**
-  * Description : tsconfig.json - 📌 api-contract 의 tsconfig.json 최소유지
-  * Author : Shiwoo Min
-  * Date : 2025-09-05
-  */
+ * Description : tsconfig.json - 📌 API 계약 패키지 (TypeScript 설정)
+ * Author      : Shiwoo Min
+ * Date        : 2025-09-05
+ * 09-12 : ESNext/Bundler 해석, d.ts/소스맵/증분빌드, Node 타입 차단(types: [])
+ */
 
 {
   // 루트의 tsconfig.json 상속
   "extends": "../../tsconfig.base.json",
+
   "compilerOptions": {
-    "composite": true,
-    "declaration": true,
+    // 라이브러리 산출물
     "outDir": "dist",
     "rootDir": "src",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+
+    // 번들러/Node 모두 수월한 isomorphic 설정
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
     "verbatimModuleSyntax": true,
-    "stripInternal": true
+
+    // 선언 파일/소스맵 + 증분 빌드
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "composite": true,
+    "incremental": true,
+    "tsBuildInfoFile": "dist/.tsbuildinfo",
+
+    // 브라우저/서버 공통을 위해 Node 전역타입 유입 차단
+    "lib": ["ES2022"],
+    "types": [],
+
+    // 품질/편의
+    "exactOptionalPropertyTypes": true,
+    "resolveJsonModule": true,
+    "stripInternal": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
   },
+
   "include": ["src/**/*"],
   "exclude": ["dist", "node_modules"]
 }

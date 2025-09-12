@@ -1,5 +1,5 @@
 /**
- * Description : tsconfig.base.json - 📌 루트 TypeScript 공통 설정(호이스팅 적용)
+ * Description : tsconfig.base.json - 📌 루트 TypeScript 공통 설정 (호이스팅 적용)
  * Author : Shiwoo Min
  * Date : 2025-09-06
  */
@@ -9,7 +9,7 @@
     // 절대경로 import를 위한 기준 디렉터리
     "baseUrl": ".",
 
-    // 런타임 타겟/라이브러리 (Node.js 18+)
+    // 런타임 타깃/라이브러리 (Node.js 18+)
     "target": "ES2022",
 
     // 서버/라이브러리 기본값 (ESM/Node.js)
@@ -19,10 +19,12 @@
     "moduleResolution": "NodeNext",
 
     // 서버/라이브러리 공통은 ES 표준
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    // 기존: "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "lib": ["ES2022"],
 
     // 전역 타입 정의
-    "types": ["node"],
+    // (웹과 충돌 방지 위해 공통에선 고정하지 않음. Node 패키지에서만 추가)
+    // "types": ["node"],
 
     // 타입 검사 관련
     "strict": true,

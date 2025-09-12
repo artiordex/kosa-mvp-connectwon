@@ -1,14 +1,14 @@
 {
   "name": "@connectwon/api",
   "version": "1.0.0",
-  "private": true,
   "description": "ConnectWon REST-API 기반 백엔드",
+  "private": true,
   "type": "module",
   "scripts": {
-    "dev": "tsx watch src/app.ts",
-    "build": "tsc",
-    "start": "node dist/app.js",
-    "clean": "rimraf dist",
+    "dev": "pnpm -w exec tsx watch src/main.ts",
+    "build": "pnpm -w exec tsc -p tsconfig.json",
+    "start": "node dist/main.js",
+    "clean": "pnpm -w exec rimraf dist",
     "db:generate": "pnpm --filter=@connectwon/database generate",
     "db:migrate": "pnpm --filter=@connectwon/database migrate",
     "db:studio": "pnpm --filter=@connectwon/database studio"
@@ -19,8 +19,10 @@
     "@nestjs/common": "^11.1.6",
     "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.1.6",
+    "@nestjs/platform-express": "^11.1.6",
     "@nestjs/swagger": "^11.2.0",
     "bcryptjs": "^2.4.3",
+    "bullmq": "^5.58.5",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.2",
     "cors": "^2.8.5",
@@ -29,25 +31,21 @@
     "ioredis": "^5.7.0",
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
-    "reflect-metadata": "^0.2.2",
+    "reflect-metadata": "^0.1.14",
     "swagger-ui-express": "^5.0.1",
     "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
-    "@types/compression": "^1.8.1",
     "@types/cors": "^2.8.19",
     "@types/express": "^4.17.21",
-    "@types/express-session": "^1.18.2",
     "@types/ioredis": "^5.0.0",
     "@types/jsonwebtoken": "^9.0.7",
     "@types/morgan": "^1.9.10",
     "@types/node": "^24.3.1",
-    "@types/passport": "^1.0.17",
-    "@types/passport-google-oauth20": "^2.0.16",
-    "@types/passport-jwt": "^4.0.1",
-    "@types/passport-local": "^1.0.38",
-    "@types/swagger-ui-express": "^4.1.8",
-    "tsx": "^4.19.3"
+    "@types/swagger-ui-express": "^4.1.8"
+  },
+  "engines": {
+    "node": ">=20.11"
   }
 }

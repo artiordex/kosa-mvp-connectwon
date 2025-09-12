@@ -1,44 +1,52 @@
 /**
- * Description : tsconfig.json - 📌 api 의 tsconfig.json 최소유지 (Express API)
- * Author : Shiwoo Min
- * Date : 2025-09-06
+ * Description : tsconfig.json - 📌 BullMQ 기반 Worker (TypeScript 설정)
+ * Author      : Shiwoo Min
+ * Date        : 2025-09-06
+ * 09-12 : NodeNext/ES2022, d.ts/소스맵/증분빌드, 서버전용 lib로 정리
  */
 {
   // 루트의 tsconfig.base.json 상속
   "extends": "../../tsconfig.base.json",
 
   "compilerOptions": {
-    // API 소스 루트
+    // 입력/출력 경로
     "rootDir": "./src",
 
     // 빌드 결과 위치
     "outDir": "./dist",
 
-    // 모듈 시스템 설정 (Nest, Express 등 Node 환경)
+    // 워커는 순수 Node 런타임
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "types": ["node"],
+
+    // ESM 해석(NodeNext)
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
 
-    // CommonJS 호환성 설정
+    // 산출물 및 디버깅
+    "noEmit": false,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+
+    // 모노레포 증분 빌드
+    "composite": true,
+    "incremental": true,
+    "tsBuildInfoFile": "./dist/.tsbuildinfo",
+
+    // 상호운용/편의
     "esModuleInterop": true,
 
     // 기본 내보내기 호환성 설정
     "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "exactOptionalPropertyTypes": true
 
-    // JS 파일 생성 여부 (false면 tsc --noEmit 처럼 작동)
-    "noEmit": false,
-
-    // DOM 타입 제거, node 전용 타입만 포함
-    "types": ["node"]
+    // 이벤트 핸들러에서 미사용 매개변수 경고가 거슬리면 아래 중 하나를 고려
+    // "noUnusedParameters": false
   },
 
-  "include": ["src/**/*.ts"],
-
-  "exclude": [
-    "node_modules",
-    "dist",
-    "**/*.test.ts",
-    "**/*.test.tsx",
-    "**/*.spec.ts",
-    "**/*.spec.tsx"
-  ]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "**/*.test.*", "**/*.spec.*"]
 }

@@ -296,7 +296,8 @@
     "everysec",
     "requirepass",
     "allkeys",
-    "appendfsync"
+    "appendfsync",
+    "vitest"
   ],
 
   // Nx Console AI 규칙 사용

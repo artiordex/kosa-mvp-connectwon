@@ -1,19 +1,25 @@
 {
   "name": "@connectwon/e2e",
   "version": "1.0.0",
+  "description": "ConnectWon E2E 테스트",
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "playwright test",
-    "test:ui": "playwright test --ui",
-    "test:report": "playwright show-report",
-    "test:debug": "playwright test --debug"
+    "test": "pnpm -w exec playwright test",
+    "test:ui": "pnpm -w exec playwright test --ui",
+    "test:report": "pnpm -w exec playwright show-report",
+    "test:debug": "pnpm -w exec playwright test --debug",
+    "install:browsers": "pnpm -w exec playwright install --with-deps",
+    "clean": "pnpm -w exec rimraf playwright-report test-results"
   },
   "devDependencies": {
     "@connectwon/api-contract": "workspace:*",
     "@connectwon/logger": "workspace:*",
-    "@playwright/test": "^1.40.0",
+    "@playwright/test": "^1.51.1",
     "@types/dotenv": "^8.2.3",
     "dotenv": "^17.2.2"
+  },
+  "engines": {
+    "node": ">=20.11"
   }
 }

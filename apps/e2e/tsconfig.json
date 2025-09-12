@@ -1,26 +1,58 @@
 /**
- * Description : tsconfig.json - 📌 Playwright 설정 관련 타입정의
+ * Description : tsconfig.json - 📌 Playwright 기반 E2E 모듈 (TypeScript 설정)
  * Author : Shiwoo Min
  * Date : 2025-09-07
+ * 09-12 : include 범위 축소(교차 패키지 소스 제외), DOM 타입 유지, noEmit 확정
  */
 {
+  // 루트 공통 규칙 상속
   "extends": "../../tsconfig.base.json",
+
   "compilerOptions": {
+    // Node 런타임에서의 ESM 해석
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
-    "target": "es2022",
-    "lib": ["es2022", "DOM", "DOM.Iterable"],
+
+    // 테스트 러너는 Node, 브라우저는 자동화 대상 → ES2022 + DOM 타입 병행
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+
+    // 상호운용/편의
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
+
+    // JS 기반 유틸/헬퍼를 허용하려면 true 유지 (JS 파일 없으면 false로 바꿔도 됨)
     "allowJs": true,
+
+    // 엄격 모드 + 타입 전용(산출물은 없음)
     "strict": true,
     "noEmit": true,
+
+    // Playwright/Node 타입 명시
     "types": ["node", "@playwright/test"],
+
+    // 자잘한 성능/안전
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "isolatedModules": true
   },
-  "include": ["**/*.ts", "**/*.js", "../../packages/logger/**/*.ts", "../../packages/configs/testing/playwright.ts"],
-  "exclude": ["node_modules", "test-results", "playwright-report"]
+
+  // e2e 프로젝트 내부만 포함
+  "include": [
+    "playwright.config.ts",
+    "e2e-types.ts",
+    "GlobalSetup.ts",
+    "GlobalTeardown.ts",
+    "actions/**/*.ts",
+    "locators/**/*.ts",
+    "tests/**/*.ts",
+    // JS 헬퍼를 쓰면 아래 라인 유지
+    "actions/**/*.js",
+    "locators/**/*.js",
+    "tests/**/*.js"
+  ],
+
+  // 산출물/리포트/노드모듈 제외
+  "exclude": ["node_modules", "dist", "test-results", "playwright-report"]
 }

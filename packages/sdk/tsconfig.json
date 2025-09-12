@@ -1,26 +1,47 @@
 /**
- * Description : tsconfig.json - 📌 types 의 tsconfig.json 최소유지
+ * Description : tsconfig.json - 📌 SDK 패키지 (TypeScript 설정)
  * Author : Shiwoo Min
- * Date : 2025-09-09
+ * Date : 2025-09-12
  */
 {
-  // 루트 tsconfig를 상속
+  // 루트의 tsconfig.base.json 상속
   "extends": "../../tsconfig.base.json",
+
   "compilerOptions": {
     "target": "ES2022",
     "module": "ESNext",
-    "moduleResolution": "bundler",
+    // 번들러 소비(Next/Vite/Webpack) 기준 해석
+    "moduleResolution": "Bundler",
+
+    // d.ts 생성 (루트 base에도 있지만 명시 유지)
     "declaration": true,
+
+    // 출력/입력 경로
     "outDir": "./dist",
     "rootDir": ".",
+
+    // 엄격 모드 및 성능
     "strict": true,
     "skipLibCheck": true,
     "exactOptionalPropertyTypes": true,
     "resolveJsonModule": true,
-    "lib": ["ES2022", "DOM"],
-    "composite": true
+
+    // 브라우저 타깃 (Iterable API 사용 시 DOM.Iterable 포함)
+    // 기존: ["ES2022", "DOM"]
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+
+    // 프로젝트 레퍼런스 활성화
+    "composite": true,
+
+    // Node 전역 타입 유입 방지 (isomorphic 충돌 예방)
+    "types": []
   },
+
+  // 루트에 배치한 타입 파일 포함
   "include": ["src/**/*", "sdk-types.ts"],
-  "exclude": ["dist", "node_modules", "../../tools/**/*", "../../tests/**/*"],
+
+  "exclude": ["dist", "node_modules", "../../tools/**/*", "../../tests/**/*", "**/*.test.*"],
+
+  // 의존 패키지 참조
   "references": [{ "path": "../api-contract" }, { "path": "../logger" }]
 }

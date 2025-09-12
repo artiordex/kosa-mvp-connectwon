@@ -1,19 +1,21 @@
 {
   "name": "@connectwon/worker",
+  "version": "1.0.0",
+  "description": "ConnectWon 백그라운드 워커 서비스 (BullMQ 기반)",
   "private": true,
-  "version": "0.0.0",
-  "description": "Connectwon 백그라운드 워커 서비스 (BullMQ 기반)",
   "type": "module",
   "scripts": {
     "dev": "nx serve worker",
     "build": "nx build worker",
-    "start": "node dist/apps/worker/main.js"
+    "start": "node dist/apps/worker/main.js",
+    "clean": "pnpm -w exec rimraf dist"
   },
   "dependencies": {
     "@connectwon/core": "workspace:*",
     "bullmq": "^5.58.5"
   },
-  "devDependencies": {
-    "@types/node": "^20.19.13"
+  "devDependencies": {},
+  "engines": {
+    "node": ">=20.11"
   }
 }

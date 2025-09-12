@@ -2,6 +2,7 @@
   "name": "@connectwon/core",
   "version": "1.0.0",
   "private": true,
+
   "type": "module",
   "sideEffects": false,
   "main": "./dist/index.js",
@@ -32,12 +33,13 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc -b",
-    "dev": "tsc -b -w",
-    "clean": "rimraf dist"
+    "build": "pnpm -w exec tsc -b",
+    "dev": "pnpm -w exec tsc -b -w",
+    "clean": "pnpm -w exec rimraf dist",
+    "prepublishOnly": "pnpm run build"
   },
   "engines": {
-    "node": ">=20.10"
+    "node": ">=20.11"
   },
   "dependencies": {
     "@connectwon/logger": "workspace:*",
@@ -68,13 +70,6 @@
     }
   },
   "devDependencies": {
-    "@connectwon/configs": "workspace:*",
-    "@types/bcryptjs": "^2.4.6",
-    "@types/ioredis": "^5.0.0",
-    "@types/jsonwebtoken": "^9.0.7",
-    "@types/nodemailer": "^7.0.1",
-    "@types/js-yaml": "^4.0.9",
-    "rimraf": "^6.0.1",
-    "typescript": "^5.5.4"
+    "@connectwon/configs": "workspace:*"
   }
 }

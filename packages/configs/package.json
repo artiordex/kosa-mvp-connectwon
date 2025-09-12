@@ -1,10 +1,10 @@
 {
   "name": "@connectwon/configs",
   "version": "1.0.0",
+  "description": "ConnectWon 공통 설정 Config",
   "private": true,
   "type": "module",
   "sideEffects": false,
-  "description": "ConnectWon 모노레포 프로젝트 공통 설정 파일들을 관리하는 패키지",
   "author": "Shiwoo Min <artiordex@gmail.com>",
   "files": [
     "eslint/*",

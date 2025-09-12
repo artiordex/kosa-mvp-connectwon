@@ -1,8 +1,8 @@
 {
   "name": "connectwon",
-  "private": true,
   "version": "1.0.0",
   "description": "ConnectWon - 도전자들을 위한 예약 기반 생활 서비스",
+  "private": true,
   "type": "module",
   "author": "Shiwoo Min",
   "license": "MIT",
@@ -32,21 +32,7 @@
     "lint:fix": "eslint --ext .ts,.tsx . --fix",
     "commit": "cz"
   },
-  "dependencies": {
-    "bullmq": "^5.58.5",
-    "compression": "^1.8.1",
-    "connect-redis": "^9.0.0",
-    "express-rate-limit": "^8.1.0",
-    "express-session": "^1.18.2",
-    "nx": "^21.4.1",
-    "passport": "^0.7.0",
-    "passport-google-oauth20": "^2.0.0",
-    "passport-jwt": "^4.0.1",
-    "passport-local": "^1.0.0",
-    "redis": "^5.8.2",
-    "winston": "^3.17.0",
-    "winston-daily-rotate-file": "^5.0.0"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@changesets/cli": "^2.29.6",
     "@eslint/js": "^9",
@@ -102,6 +88,16 @@
     },
     "cz-customizable": {
       "config": "./.cz-config.cjs"
+    }
+  },
+  "pnpm": {
+    "overrides": {
+      "@nestjs/swagger": "^11.2.0",
+      "bullmq": "^5.58.5",
+      "ioredis": "^5.7.0",
+      "winston": "^3.17.0",
+      "@types/node": "^24.3.1",
+      "typescript": "^5.9.2"
     }
   }
 }
