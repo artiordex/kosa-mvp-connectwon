@@ -1,31 +1,37 @@
 /**
- * Description : tsconfig.json - 📌 web 의 tsconfig.json 최소유지
+ * Description : tsconfig.json - 📌 Next.js 기반 Web 애플리케이션 (TypeScript 설정)
  * Author : Shiwoo Min
  * Date : 2025-09-06
+ * 09-12 : 브라우저 번들러 해석(ESNext/Bundler), noEmit/Next 플러그인 추가, include 정리
  */
 {
   // 루트 공통 규칙 상속
   "extends": "../../tsconfig.base.json",
 
   "compilerOptions": {
-    // React/Next.js에 필요한 추가 설정
-    "jsx": "react-jsx",
+    // 브라우저 번들러 기준 해석 (NodeNext를 덮어써서 충돌 방지)
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
 
-    // 타입 로딩 명시
-    "types": ["node", "react", "react-dom", "tailwindcss"],
+    // Next는 자체 트랜스폼을 하므로 preserve가 가장 무난
+    "jsx": "preserve",
 
-    // JS도 import 허용
+    // 타입 로딩 (Next가 대부분 자동 주입하므로 최소화)
+    "types": ["node"],
+
+    // 산출물은 Next가 담당 → TS는 타입체크 전용
+    "noEmit": true,
+
+    // JS/JSON import 허용
     "allowJs": true,
+    "resolveJsonModule": true,
 
-    // JSON import 허용
-    "resolveJsonModule": true
-
-    // 아래 항목들은 Next.js에서 직접 tsc로 빌드하지 않기 때문에 생략 가능
-    // "outDir": "dist",
-    // "rootDir": "src"
+    // Next.js 전용 TS 플러그인(경고/권장 설정 안내)
+    "plugins": [{ "name": "next" }]
   },
 
-  // Next 자동 생성 타입 파일 포함
-  "include": ["src", "next-env.d.ts", "ui.ts"],
+  // Next가 생성하는 타입 선언 포함 필수
+  "include": ["next-env.d.ts", "src", "ui.ts"],
   "exclude": ["node_modules", "dist"]
 }

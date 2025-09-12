@@ -1,32 +1,40 @@
 /**
- * Description : tsconfig.json - 📌 Admin 앱 TypeScript 설정
+ * Description : tsconfig.json - 📌 Next.js 기반 Admin 앱 (TypeScript 설정)
  * Author : Shiwoo Min
  * Date : 2025-09-11
+ * 09-12 : 브라우저 번들러 해석(ESNext/Bundler), noEmit, 경로매핑 정리
  */
 {
   // 루트의 tsconfig.base.json 상속
   "extends": "../../tsconfig.base.json",
+
   "compilerOptions": {
-    // Next.js가 빌드 처리
+    // Next.js가 빌드/트랜스파일 처리 → TS는 타입체크 전용
     "noEmit": true,
-    // Next.js JSX 처리
+
+    // 브라우저 번들러 기준 해석 (NodeNext를 덮어써 충돌 방지)
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+
+    // Next가 JSX 변환 담당 → preserve
     "jsx": "preserve",
     "plugins": [{ "name": "next" }],
 
-    // Path mapping for packages
+    // 로컬 소스 별칭만 유지, 패키지는 워크스페이스 패키지명(@connectwon/*)으로 임포트
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"],
-      "@ui/*": ["../../packages/ui/src/*"],
-      "@shared/*": ["../../packages/shared/src/*"],
-      "@api-contract/*": ["../../packages/api-contract/src/*"],
-      "@logger/*": ["../../packages/logger/src/*"]
+      "@/*": ["./src/*"]
     },
 
-    // Next.js specific
-    "incremental": true,
-    "types": ["node", "next", "next/types/global"]
+    // 타입 로딩 최소화 (Next 자체 타입 주입 충분)
+    "types": ["node"],
+
+    // 편의: 에디터 캐시 활용
+    "incremental": true
   },
+
+  // Next 자동 생성 타입 선언 포함
   "include": ["next-env.d.ts", "src/**/*", ".next/types/**/*.ts"],
   "exclude": ["node_modules", ".next", "out", "dist"]
 }

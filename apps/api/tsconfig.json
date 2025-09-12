@@ -1,7 +1,8 @@
 /**
- * Description : tsconfig.json - 📌 api 의 tsconfig.json 최소유지 (Express API)
+ * Description : tsconfig.json - 📌 Nest/Express API 모듈  (TypeScript 설정)
  * Author : Shiwoo Min
  * Date : 2025-09-06
+ * 09-12 : 소스맵/증분빌드/tsbuildinfo 추가, 라이브러리 스킵체크 활성화
  */
 {
   // 루트의 tsconfig.base.json 상속
@@ -24,18 +25,27 @@
     // 기본 내보내기 호환성 설정
     "allowSyntheticDefaultImports": true,
 
-    // 데코레이터 필수
+    // 데코레이터 필수 (class-validator / class-transformer)
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
 
     // TS5 + 데코레이터/클래스필드 안전장치
     "useDefineForClassFields": false,
 
-    // 엄격한 타입 검사 설정
+    // 엄격한 타입 검사 설정(루트가 strict이므로 필요한 것만 오버라이드)
     "strictPropertyInitialization": false,
 
-    // JS 파일 생성 여부 (false면 tsc --noEmit 처럼 작동)
+    // 산출물/디버깅
     "noEmit": false,
+    "sourceMap": true,
+
+    // 모노레포 증분 빌드(속도 ↑)
+    "composite": true,
+    "incremental": true,
+    "tsBuildInfoFile": "./dist/.tsbuildinfo",
+
+    // 외부 d.ts 검사는 스킵(속도/잡음 ↓)
+    "skipLibCheck": true,
 
     // DOM 타입 제거, node 전용 타입만 포함
     "types": ["node"]

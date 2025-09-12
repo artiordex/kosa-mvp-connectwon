@@ -1,6 +1,7 @@
 {
   "name": "@connectwon/database",
   "version": "1.0.0",
+  "description": "ConnectWon 데이터베이스 모듈 (Prisma 기반)",
   "private": true,
   "type": "module",
   "main": "./dist/index.js",
@@ -23,19 +24,20 @@
     "studio": "prisma studio",
     "push": "prisma db push",
     "introspect": "prisma db pull",
-    "build": "tsc -p tsconfig.json",
-    "clean": "rimraf dist"
+    "build": "pnpm -w exec tsc -p tsconfig.json",
+    "clean": "pnpm -w exec rimraf dist",
+    "prepublishOnly": "pnpm run build"
   },
   "dependencies": {
     "@connectwon/core": "workspace:*",
     "@connectwon/logger": "workspace:*",
+    "@prisma/client": "^6.15.0",
     "dotenv": "^17.2.2"
   },
   "devDependencies": {
-    "@prisma/client": "^6.15.0",
-    "prisma": "^6.15.0",
-    "rimraf": "^6.0.0",
-    "tsx": "^4.19.3",
-    "typescript": "^5.5.0"
+    "prisma": "^6.15.0"
+  },
+  "engines": {
+    "node": ">=20.11"
   }
 }

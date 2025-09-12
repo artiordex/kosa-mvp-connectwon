@@ -7,8 +7,8 @@ import {
   IsEnum,
   IsInt,
   IsNotEmpty,
-  IsNumber,
   IsObject,
+  
   IsOptional,
   IsPositive,
   IsString,

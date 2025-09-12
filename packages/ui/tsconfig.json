@@ -1,18 +1,36 @@
 /**
- * Description : tsconfig.json - 📌 types 의 tsconfig.json 최소유지
+ * Description : tsconfig.json - 📌 UI 패키지 (TypeScript 설정)
  * Author : Shiwoo Min
- * Date : 2025-09-05
+ * Date : 2025-09-12
  */
 
 {
   // 루트의 tsconfig.json 상속
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
+    // dist 출력
     "outDir": "./dist",
+
+    // UI 패키지는 루트( . ) 기준으로 컴파일
+    "rootDir": ".",
+
+    // 프로젝트 레퍼런스 대상
     "composite": true,
+
+    // React 17+ JSX 트랜스폼
     "jsx": "react-jsx",
-    "lib": ["ES2022", "DOM", "DOM.Iterable"]
+
+    // 번들러 친화 ESM 해석 (Next/webpack/vite 등 소비자 기준)
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+
+    // 브라우저 타깃
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+
+    // Node 전역 타입 유입 방지 (웹 라이브러리는 비우는 게 안전)
+    "types": []
   },
+  // 루트에 있는 타입 파일도 포함
   "include": ["src/**/*", "src/**/index.ts", "ui-types.ts", "hook-types.ts", "component-types.ts"],
   "exclude": ["dist", "node_modules"],
   "references": []

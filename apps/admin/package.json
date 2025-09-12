@@ -1,13 +1,15 @@
 {
   "name": "@connectwon/admin",
   "version": "1.0.0",
+  "description": "ConnectWon Admin 및 대시보드 페이지",
   "private": true,
   "scripts": {
     "dev": "next dev --port 3001",
     "build": "next build",
     "start": "next start --port 3001",
     "lint": "next lint",
-    "clean": "rimraf .next dist"
+    "type-check": "pnpm -w exec tsc --noEmit -p tsconfig.json",
+    "clean": "pnpm -w exec rimraf .next dist"
   },
   "dependencies": {
     "next": "^14.2.5",
@@ -15,11 +17,15 @@
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
-    "@types/react": "^18.3.0",
-    "@types/react-dom": "^18.3.0",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "^14.2.5",
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.13",
-    "eslint-config-next": "^14.2.5"
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0"
+  },
+  "engines": {
+    "node": ">=20.11"
   }
 }

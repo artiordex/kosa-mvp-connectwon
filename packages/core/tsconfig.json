@@ -1,19 +1,52 @@
 /**
- * Description : tsconfig.json - 📌 core 의 tsconfig.json 최소유지
- * Author : Shiwoo Min
- * Date : 2025-09-10
+ * Description : tsconfig.json - 📌 Core 패키지 (TypeScript 설정)
+ * Author      : Shiwoo Min
+ * Date        : 2025-09-10
+ * 09-10 : core 패키지의 domain/authz 참조 추가
+ * 09-12 : 선언파일/소스맵/증분빌드/레퍼런스 정리
  */
 
 {
   // 루트의 tsconfig.json 상속
   "extends": "../../tsconfig.base.json",
+
   "compilerOptions": {
+    // 출력/입력 경로
     "outDir": "./dist",
     "rootDir": ".",
+
+    // 서버 전용 타깃 (브라우저 타입 유입 방지)
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "types": ["node"],
+
+    // Node ESM 해석
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+
+    // 선언 파일 및 디버깅
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+
+    // 모노레포 증분 빌드
     "composite": true,
-    "lib": ["ES2022"]
+    "incremental": true,
+    "tsBuildInfoFile": "./dist/.tsbuildinfo",
+
+    // 상호운용/편의
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "exactOptionalPropertyTypes": true
   },
-  "include": ["src/**/*.ts", "src/**/**/*.ts", "core-types.ts"],
-  "exclude": ["dist", "node_modules"],
-  "references": [{ "path": "../logger" }, { "path": "../database" }, { "path": "../api-contract" }]
+
+  // 루트에 존재하는 core-types.ts 포함
+  "include": ["src/**/*", "core-types.ts"],
+  "exclude": ["dist", "node_modules", "**/*.test.*", "**/*.spec.*"],
+
+  // 순환 참조 방지: database → core 를 참조할 수 있으므로 core 에서 database 참조는 제거
+  "references": [{ "path": "../logger" }, { "path": "../api-contract" }]
 }

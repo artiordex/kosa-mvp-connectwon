@@ -1,26 +1,35 @@
 {
   "name": "@connectwon/logger",
+  "version": "1.0.0",
+  "description": "ConnectWon 로거 모듈 (Winston 기반)",
+  "private": true,
   "type": "module",
+  "sideEffects": false,
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
-    }
+    },
+    "./package.json": "./package.json"
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "build": "tsc -p tsconfig.json",
-    "dev": "tsc --watch -p tsconfig.json",
-    "clean": "rimraf dist"
+    "build": "pnpm -w exec tsc -p tsconfig.json",
+    "dev": "pnpm -w exec tsc --watch -p tsconfig.json",
+    "clean": "pnpm -w exec rimraf dist",
+    "prepublishOnly": "pnpm run build"
   },
   "dependencies": {
     "logform": "^2.7.0",
-    "winston": "^3.13.0",
-    "winston-daily-rotate-file": "^4.7.1"
+    "winston": "^3.17.0",
+    "winston-daily-rotate-file": "^5.0.0"
   },
-  "devDependencies": {
-    "rimraf": "^6.0.0",
-    "typescript": "^5.5.0"
+  "devDependencies": {},
+  "engines": {
+    "node": ">=20.11"
   }
 }

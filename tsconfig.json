@@ -13,7 +13,8 @@
     "baseUrl": ".",
 
     // 타입 정의 파일 경로 지정
-    "typeRoots": ["./node_modules/@types"],
+    // (모노레포에선 기본 탐색이 더 안전하므로 비활성화)
+    // "typeRoots": ["./node_modules/@types"],
 
     // 타입 선언 파일(.d.ts) 관련
     // "declarationMap": true,
@@ -48,13 +49,18 @@
 
     // 런타임 타깃/라이브러리
     "target": "ES2022",
-    "lib": ["ES2022", "DOM"],
+    // 루트는 DOM 타입 유입을 막기 위해 ES 전용으로 축소
+    // 기존: "lib": ["ES2022", "DOM"],
+    "lib": ["ES2022"],
 
     // 경로 별칭은 tsconfig.base.json에서 통합 관리
     // "paths": { ... },
 
     // 엄격 모드 설정
-    "strict": true
+    "strict": true,
+
+    // TS5 ESM 감지 강화 (권장)
+    "moduleDetection": "force"
   },
 
   // 루트 프로젝트는 빈 파일 배열 - references로만 관리

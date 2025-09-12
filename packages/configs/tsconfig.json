@@ -1,33 +1,43 @@
 /**
- * Description : configs/tsconfig.json - 📌 configs 공통 설정 파일 관리
- * Author : Shiwoo Min
- * Date : 2025-09-05
+ * Description : tsconfig.json - 📌 Config 패키지 (TypeScript 설정)
+ * Author      : Shiwoo Min
+ * Date        : 2025-09-05
  * 09-09 : noEmit=true, include 범위 축소, JS 제외(TS 전용)
+ * 09-12 : NodeNext 해석/JSON 모듈/Node 타입 추가
  */
-
 {
   // 루트의 tsconfig.base.json 상속
   "extends": "../../tsconfig.base.json",
 
   "compilerOptions": {
-    // composite 비활성
-    "composite": false,
-
     // 설정/팩토리 코드만 제공하므로 실제 출력물 생성 안 함
     "noEmit": true,
 
-    // configs는 TS 전용으로 운용
-    "allowJs": false
+    // composite 비활성(프로젝트 레퍼런스 타깃 아님)
+    "composite": false,
 
-    // 필요 시 출력물 생성 위치 지정
-    // "outDir": "./dist"
+    // Node ESM 해석 (config TS 파일 import 시 일관성↑)
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "target": "ES2022",
+    "lib": ["ES2022"],
+
+    // configs는 TS 전용으로 운용
+    "allowJs": false,
+
+    // JSON 설정을 TS에서 참조할 수 있게
+    "resolveJsonModule": true,
+
+    // 일부 툴이 Node 전역타입을 기대할 수 있어 명시
+    "types": ["node"],
+
+    // 편의/안전
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
   },
 
   // 포함 범위를 정확히 지정(탐색/타입체크 성능↑)
-  "include": [
-    "eslint/**/*.ts",
-    "tailwind/**/*.ts",
-    "testing/**/*.ts",
-    "typescript/**/*.json"
-  ]
+  "include": ["eslint/**/*.ts", "tailwind/**/*.ts", "testing/**/*.ts", "typescript/**/*.json"],
+
+  "exclude": ["dist", "node_modules"]
 }
