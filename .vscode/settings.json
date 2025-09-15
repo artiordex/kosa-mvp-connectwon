@@ -334,7 +334,8 @@
     "ngalert",
     "nodata",
     "nullvalue",
-    "xact"
+    "xact",
+    "chainguard"
   ],
 
   // Nx Console AI 규칙 사용

@@ -5,7 +5,7 @@
 # 09-15 - apk upgrade --no-cache 추가 → Alpine 기본 패키지 보안 패치 적용
 
 # Background worker - Base stage
-FROM node:20.12.0-alpine3.20 AS base
+FROM node:22-alpine3.22 AS base
 # corepack 활성화 + libc6-compat 설치 + Alpine 보안 패키지 최신화
 RUN corepack enable \
   && apk add --no-cache libc6-compat \
@@ -25,7 +25,7 @@ COPY . .
 RUN pnpm nx build worker
 
 # 프로덕션 런타임 - Distroless 이미지 사용
-FROM gcr.io/distroless/nodejs20-debian12:nonroot AS runtime
+FROM gcr.io/distroless/nodejs22-debian12:nonroot AS runtime
 ENV NODE_ENV=production
 WORKDIR /app
 
