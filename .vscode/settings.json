@@ -335,6 +335,11 @@
     "nodata",
     "nullvalue",
     "xact",
+    "chainguard",
+    "netcat",
+    "pwuser",
+    "applypatch",
+    "testkit"
     "chainguard"
   ],
 

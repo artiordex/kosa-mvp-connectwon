@@ -1,36 +1,32 @@
-# Description : Dockerfile.worker - 📌 worker docker build
+# Description : Dockerfile.worker - 📌 ConnectWon Worker (Background Jobs)
 # Author : Shiwoo Min
-# Date : 2025-09-12
-# 09-14 - 버전 고정(corepack prepare pnpm@...) 제거 → package.json의 packageManager(10.7.0) 준수
-# 09-15 - apk upgrade --no-cache 추가 → Alpine 기본 패키지 보안 패치 적용
+# Date : 2025-09-15
+# 09-16 - CI에서 Nx 플러그인(@nx/node) 미탐색 이슈 → 패키지 스크립트 빌드로 단순화
 
-# Background worker - Base stage
+# 1. 공통 베이스
 FROM node:22-alpine3.22 AS base
-# corepack 활성화 + libc6-compat 설치 + Alpine 보안 패키지 최신화
-RUN corepack enable \
-  && apk add --no-cache libc6-compat \
-  && apk upgrade --no-cache
 WORKDIR /repo
+RUN corepack enable && apk add --no-cache libc6-compat && apk upgrade --no-cache
 
-# Dependencies 설치
+# 2. 의존성 설치
 FROM base AS deps
 COPY pnpm-lock.yaml package.json pnpm-workspace.yaml nx.json ./
 COPY packages ./packages
 COPY apps/worker/package.json ./apps/worker/package.json
+# worker만 설치
 RUN pnpm install --frozen-lockfile --filter=@connectwon/worker
 
-# Build stage
+# 3. 빌드 (Nx → 패키지 스크립트)
 FROM deps AS build
 COPY . .
-RUN pnpm nx build worker
+# package.json에 "build": "tsc -p apps/worker/tsconfig.json" 형태가 있어야 함
+RUN pnpm --filter @connectwon/worker build
 
-# 프로덕션 런타임 - Distroless 이미지 사용
+# 4. 런타임 (Distroless)
 FROM gcr.io/distroless/nodejs22-debian12:nonroot AS runtime
-ENV NODE_ENV=production
 WORKDIR /app
-
-COPY --from=deps /repo/node_modules ./node_modules
-COPY --from=build /repo/dist/apps/worker ./dist
-
-EXPOSE 3003
-CMD ["dist/main.js"]
+ENV NODE_ENV=production
+COPY --from=deps  /repo/node_modules ./node_modules
+COPY --from=build /repo/apps/worker   ./apps/worker
+# 엔트리 경로
+CMD ["apps/worker/dist/main.js"]

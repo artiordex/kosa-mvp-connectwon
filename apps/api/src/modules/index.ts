@@ -1,5 +1,5 @@
 /**
- * Description : index.ts - 📌 도메인 모듈 
+ * Description : index.ts - 📌 도메인 모듈
  * Author : Shiwoo Min
  * Date : 2025-09-12
  */
@@ -7,7 +7,7 @@ import { AiModule } from './ai/module.js';
 import { AuthModule } from './auth/module.js';
 import { PaymentsModule } from './payments/module.js';
 import { ProgramsModule } from './programs/module.js';
-import { ReservationModule } from './reservation/module.js';
+import { ReservationModule } from './reservations/module.js';
 import { UsersModule } from './users/module.js';
 import { VenuesModule } from './venues/module.js';
 
