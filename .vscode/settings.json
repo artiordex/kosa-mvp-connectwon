@@ -340,6 +340,7 @@
     "pwuser",
     "applypatch",
     "testkit"
+    "chainguard"
   ],
 
   // Nx Console AI 규칙 사용
