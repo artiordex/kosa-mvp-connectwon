@@ -1,25 +1,32 @@
 # Description : Dockerfile.api - 📌 api docker build (디버깅용)
-# Author : Shiwoo Min
-# Date : 2025-09-06
+# Author      : Shiwoo Min
+# Date        : 2025-09-06
+# 09-14 - 버전 고정(corepack prepare pnpm@...) 제거 → package.json의 packageManager(10.7.0) 준수
+# 09-15 - production 스테이지 slim → alpine3.20 으로 변경
 
-FROM node:20-slim AS build
+FROM node:20.11.1-alpine3.20 AS build
 
 WORKDIR /app
 
 # pnpm 활성화
-RUN corepack enable && corepack prepare pnpm@10.15.1 --activate
+RUN corepack enable
 
-# 모든 파일을 복사 (나중에 최적화)
-COPY . .
+# 의존성 캐시 최적화
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY apps/api/package.json ./apps/api/package.json
+COPY packages ./packages
 
-# 의존성 설치
-RUN pnpm install --frozen-lockfile
+# API 관련 의존성만 설치
+RUN pnpm install --frozen-lockfile --filter=@connectwon/api
+
+# 소스코드 복사
+COPY apps/api ./apps/api
 
 # 빌드
 RUN pnpm --filter @connectwon/api build
 
 # 프로덕션 단계
-FROM node:20-slim AS production
+FROM node:20.11.1-alpine3.20 AS production
 
 WORKDIR /app
 ENV NODE_ENV=production

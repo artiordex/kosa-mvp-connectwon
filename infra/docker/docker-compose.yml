@@ -30,9 +30,13 @@ services:
       - NODE_ENV=${NODE_ENV:-production}
       - PORT=${WEB_PORT:-3000}
     expose:
-      - "3000"
+      - '3000'
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/"]
+      test:
+        [
+          'CMD-SHELL',
+          'node -e "require(''http'').get(''http://localhost:3000'',r=>process.exit(r.statusCode===200?0:1)).on(''error'',()=>process.exit(1))"',
+        ]
       interval: 10s
       timeout: 3s
       retries: 10
@@ -49,9 +53,13 @@ services:
       - NODE_ENV=${NODE_ENV:-production}
       - PORT=${API_PORT:-8000}
     expose:
-      - "8000"
+      - '8000'
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8000/health"]
+      test:
+        [
+          'CMD-SHELL',
+          'node -e "require(''http'').get(''http://localhost:8000/health'',r=>process.exit(r.statusCode===200?0:1)).on(''error'',()=>process.exit(1))"',
+        ]
       interval: 10s
       timeout: 3s
       retries: 10
@@ -68,9 +76,13 @@ services:
       - NODE_ENV=${NODE_ENV:-production}
       - PORT=${ADMIN_PORT:-3001}
     expose:
-      - "3001"
+      - '3001'
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3001/"]
+      test:
+        [
+          'CMD-SHELL',
+          'node -e "require(''http'').get(''http://localhost:3001'',r=>process.exit(r.statusCode===200?0:1)).on(''error'',()=>process.exit(1))"',
+        ]
       interval: 10s
       timeout: 3s
       retries: 10
@@ -87,9 +99,9 @@ services:
     environment:
       - NODE_ENV=${NODE_ENV:-production}
       # 큐/캐시/DB 연결(패키지 @connectwon/* 가 사용하는 표준 키)
-      - QUEUE_REDIS_URL=${QUEUE_REDIS_URL}
-      - REDIS_URL=${REDIS_URL}
-      - DATABASE_URL=${DATABASE_URL}
+      - QUEUE_REDIS_URL=${QUEUE_REDIS_URL:?QUEUE_REDIS_URL is required}
+      - REDIS_URL=${REDIS_URL:?REDIS_URL is required}
+      - DATABASE_URL=${DATABASE_URL:?DATABASE_URL is required}
     depends_on:
       postgres:
         condition: service_healthy
@@ -101,7 +113,7 @@ services:
     image: nginx:1.27-alpine
     container_name: nginx
     ports:
-      - "80:80"
+      - '${NGINX_PORT:-80}:80'
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
     depends_on:
@@ -136,7 +148,7 @@ services:
       # 데이터 디렉토리 경로 (볼륨 안에서 하위 폴더 사용 → lost+found 충돌 방지)
       - PGDATA=/var/lib/postgresql/data/pgdata
     ports:
-      - "5432:5432"
+      - '5432:5432'
     volumes:
       # 데이터 영속화
       # Postgres 실제 데이터 파일이 저장될 볼륨
@@ -155,10 +167,10 @@ services:
     healthcheck:
       # 초기엔 connectwon_db가 없을 수 있어 항상 존재하는 'postgres' DB로 체크
       # test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
-      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d postgres -h 127.0.0.1 -p 5432"]
+      test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER} -d postgres -h 127.0.0.1 -p 5432']
       interval: 5s
       timeout: 5s
-      retries: 10
+      retries: 20
 
   # Redis (캐시/세션 스토어)
   redis:
@@ -167,7 +179,7 @@ services:
     env_file:
       - .env
     ports:
-      - "6379:6379"
+      - '6379:6379'
     environment:
       # Redis 접속 비밀번호 (필수)
       - REDIS_PASSWORD=${REDIS_PASSWORD:?REDIS_PASSWORD is required}
@@ -185,7 +197,7 @@ services:
     volumes:
       - redis_data:/data
     healthcheck:
-      test: ["CMD-SHELL", "redis-cli -a $${REDIS_PASSWORD} ping | grep PONG"]
+      test: ['CMD-SHELL', 'redis-cli -a $${REDIS_PASSWORD} ping | grep PONG']
       interval: 5s
       timeout: 3s
       retries: 10
@@ -195,7 +207,7 @@ services:
     image: redis/redisinsight:latest
     container_name: redisinsight
     ports:
-      - "5540:5540"
+      - '5540:5540'
     depends_on:
       redis:
         condition: service_healthy
@@ -246,7 +258,7 @@ services:
       - N8N_DEFAULT_BINARY_DATA_MODE=filesystem
       - N8N_BINARY_DATA_STORAGE_PATH=/home/node/.n8n/binaryData
     ports:
-      - "${N8N_PORT:-5678}:5678"
+      - '${N8N_PORT:-5678}:5678'
     volumes:
       - n8n_data:/home/node/.n8n
     depends_on:
@@ -255,7 +267,7 @@ services:
       redis:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:5678/"]
+      test: ['CMD', 'wget', '--no-verbose', '--tries=1', '--spider', 'http://localhost:5678/']
       interval: 10s
       timeout: 5s
       retries: 10
