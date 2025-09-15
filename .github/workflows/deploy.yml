@@ -1,7 +1,7 @@
 # Description : deploy.yml - 📌 변경된 앱 도커 빌드·푸시
 # Author : Shiwoo Min
 # Date : 2025-09-11
-# 09-15 - 이미지 네임스페이스 구조 개선, 캐시 scope 분리, arm64 지원
+# 09-15 - 이미지 네임스페이스 구조 개선, 캐시 scope 분리, arm64 지원, QEMU 추가로 멀티아키 안정화, GHCR 권한 명시, fail-fast 비활성화
 
 name: Deploy
 
@@ -14,10 +14,17 @@ env:
   REGISTRY: ghcr.io
   IMAGE_NS: artiordex/kosa-mvp-connectwon
 
+# GHCR 푸시 권한을 워크플로 수준에서 명시
+permissions:
+  contents: read
+  packages: write
+
 jobs:
   build_and_push:
     runs-on: ubuntu-latest
+    # 한 서비스 실패해도 나머지 계속 진행
     strategy:
+      fail-fast: false
       matrix:
         service: [api, admin, web, worker]
 
@@ -55,6 +62,11 @@ jobs:
             echo "skip=true" >> $GITHUB_OUTPUT
           fi
 
+      # 멀티아키 빌드용 QEMU (linux/amd64, linux/arm64)
+      - name: Setup QEMU
+        if: steps.gate.outputs.skip != 'true'
+        uses: docker/setup-qemu-action@v3
+
       - name: Setup Buildx
         if: steps.gate.outputs.skip != 'true'
         uses: docker/setup-buildx-action@v3
@@ -90,4 +102,23 @@ jobs:
           # 서비스별 scope로 캐시 분리
           cache-from: type=gha,scope=${{ matrix.service }}
           cache-to: type=gha,scope=${{ matrix.service }},mode=max
+          # 멀티아키 빌드
           platforms: linux/amd64,linux/arm64
+
+      # 보안 스캔 비활성화 추가
+      - name: Build & Push
+        if: steps.gate.outputs.skip != 'true'
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: infra/docker/Dockerfile.${{ matrix.service }}
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          # 서비스별 scope로 캐시 분리
+          cache-from: type=gha,scope=${{ matrix.service }}
+          cache-to: type=gha,scope=${{ matrix.service }},mode=max
+          # 멀티아키 빌드
+          platforms: linux/amd64,linux/arm64
+          provenance: false
+          sbom: false

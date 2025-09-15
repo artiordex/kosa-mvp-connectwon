@@ -1,0 +1,88 @@
+# Description : prometheus.yml - 📌 ConnectWon MVP 메트릭 수집 설정
+# Author : Shiwoo Min
+# Date : 2025-09-15
+# 참고:
+#  - 스크래핑 간격: API 10s, Frontend 30s, 시스템 15s
+#  - 메트릭 경로: 기본은 /metrics (커스텀 라우트 사용 시 /api/metrics 로 교체)
+#  - Docker Compose 내부 네트워크 사용: 컨테이너명:포트 로 타깃 지정
+
+# 전역 설정
+global:
+  # 기본 메트릭 수집 주기
+  scrape_interval: 15s
+  # 알림 규칙 평가 주기
+  evaluation_interval: 15s
+
+# 알림 규칙 파일
+rule_files:
+  - 'alerts.yml'
+
+# 알림 매니저 설정
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: [] # 예: ['alertmanager:9093']
+
+# 메트릭 수집 대상 정의
+scrape_configs:
+  # Prometheus 자체 모니터링
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # 시스템 메트릭 (CPU, 메모리, 디스크) - node_exporter 컨테이너 필요
+  - job_name: 'node-exporter'
+    scrape_interval: 15s
+    scrape_timeout: 10s
+    static_configs:
+      - targets: ['node-exporter:9100']
+
+  # ConnectWon API 서버 (NestJS/Express)
+  - job_name: 'connectwon-api'
+    scrape_interval: 10s
+    scrape_timeout: 5s
+    # 기본: /metrics  (만약 /api/metrics 라우트를 만들었으면 아래 라인을 켜고 /metrics는 지워줘)
+    metrics_path: /metrics
+    # metrics_path: /api/metrics
+    static_configs:
+      - targets: ['api:8000']
+
+  # ConnectWon 웹 앱 (Next.js 사용자 사이트)
+  - job_name: 'connectwon-web'
+    scrape_interval: 30s
+    scrape_timeout: 10s
+    metrics_path: /metrics
+    # metrics_path: /api/metrics
+    static_configs:
+      - targets: ['web:3000']
+
+  # ConnectWon 관리자 앱 (Next.js 어드민)
+  - job_name: 'connectwon-admin'
+    scrape_interval: 30s
+    scrape_timeout: 10s
+    metrics_path: /metrics
+    # metrics_path: /api/metrics
+    static_configs:
+      - targets: ['admin:3001']
+
+  # Worker 백그라운드 프로세스 (큐, 작업 처리)
+  - job_name: 'connectwon-worker'
+    scrape_interval: 15s
+    scrape_timeout: 10s
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['worker:3003']
+
+  # PostgreSQL 데이터베이스 (postgres_exporter 컨테이너 필요)
+  - job_name: 'postgresql'
+    scrape_interval: 30s
+    scrape_timeout: 10s
+    static_configs:
+      - targets: ['postgres-exporter:9187']
+
+  # Redis 캐시 (redis_exporter 컨테이너 필요)
+  - job_name: 'redis'
+    scrape_interval: 30s
+    scrape_timeout: 10s
+    static_configs:
+      - targets: ['redis-exporter:9121']

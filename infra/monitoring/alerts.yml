@@ -1,0 +1,178 @@
+# Description : alerts.yml - 📌 ConnectWon MVP Alert 룰
+# Author : Shiwoo Min
+# Date : 2025-09-15
+
+groups:
+  # API (Nest/Express)
+  - name: connectwon-api-alerts
+    rules:
+      # API 서버 다운
+      - alert: ConnectWonAPIDown
+        expr: up{job="connectwon-api"} == 0
+        for: 30s
+        labels:
+          severity: critical
+          service: api
+          team: backend
+        annotations:
+          summary: 'ConnectWon API 서버가 다운되었습니다'
+          description: 'API 서버에 30초 이상 연결할 수 없습니다. 즉시 확인이 필요합니다.'
+          runbook_url: 'https://docs.connectwon.com/runbooks/api-down'
+
+      # API 응답 시간 (p95 > 2s)
+      - alert: ConnectWonAPIHighLatency
+        expr: |
+          histogram_quantile(
+            0.95,
+            sum by (le) (rate(http_request_duration_seconds_bucket{job="connectwon-api"}[5m]))
+          ) > 2
+        for: 3m
+        labels:
+          severity: warning
+          service: api
+          team: backend
+        annotations:
+          summary: 'API 응답 시간이 증가했습니다 (p95 > 2s)'
+          description: 'API 95퍼센타일 응답 시간이 2초를 초과했습니다. 현재: {{ $value }}s'
+
+      # API 에러율 (5xx 비율 > 5%)
+      - alert: ConnectWonAPIHighErrorRate
+        expr: |
+          (
+            sum(rate(http_requests_total{job="connectwon-api", code=~"5.."}[5m]))
+            or
+            sum(rate(http_requests_total{job="connectwon-api", status_code=~"5.."}[5m]))
+          )
+          /
+          sum(rate(http_requests_total{job="connectwon-api"}[5m])) * 100 > 5
+        for: 2m
+        labels:
+          severity: critical
+          service: api
+          team: backend
+        annotations:
+          summary: 'API 에러율이 급증했습니다 (>5%)'
+          description: 'API 5xx 에러율이 5%를 초과했습니다. 현재: {{ $value | humanizePercentage }}'
+
+      # API 트래픽 급증 (RPS > 100)
+      - alert: ConnectWonAPITrafficSpike
+        expr: sum(rate(http_requests_total{job="connectwon-api"}[5m])) > 100
+        for: 5m
+        labels:
+          severity: warning
+          service: api
+          team: backend
+        annotations:
+          summary: 'API 트래픽이 급증했습니다'
+          description: '분당 API 요청이 평소보다 크게 증가했습니다. 현재: {{ $value }} RPS'
+
+  # 시스템 (node_exporter)
+  - name: connectwon-system-alerts
+    rules:
+      # 높은 CPU 사용률
+      - alert: ConnectWonHighCPUUsage
+        expr: 100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
+        for: 5m
+        labels:
+          severity: warning
+          service: system
+          team: infrastructure
+        annotations:
+          summary: '서버 CPU 사용률이 높습니다'
+          description: 'CPU 사용률이 80%를 5분간 초과했습니다. 현재: {{ $value }}%'
+
+      # 높은 메모리 사용률
+      - alert: ConnectWonHighMemoryUsage
+        expr: (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100 > 85
+        for: 5m
+        labels:
+          severity: warning
+          service: system
+          team: infrastructure
+        annotations:
+          summary: '서버 메모리 사용률이 높습니다'
+          description: '메모리 사용률이 85%를 5분간 초과했습니다. 현재: {{ $value }}%'
+
+      # 디스크 공간 부족 (tmpfs/overlay 제외)
+      - alert: ConnectWonLowDiskSpace
+        expr: (1 - (node_filesystem_avail_bytes{fstype!~"tmpfs|overlay"} / node_filesystem_size_bytes{fstype!~"tmpfs|overlay"})) * 100 > 80
+        for: 5m
+        labels:
+          severity: warning
+          service: system
+          team: infrastructure
+        annotations:
+          summary: '디스크 공간이 부족합니다'
+          description: '디스크 사용률이 80%를 초과했습니다. 경로: {{ $labels.mountpoint }}, 현재: {{ $value }}%'
+
+      # 시스템 로드 평균 높음 (노드 수/코어 대비 튜닝 권장)
+      - alert: ConnectWonHighSystemLoad
+        expr: node_load15 > 4
+        for: 10m
+        labels:
+          severity: warning
+          service: system
+          team: infrastructure
+        annotations:
+          summary: '시스템 로드 평균이 높습니다'
+          description: '15분 평균 로드가 4를 10분간 초과했습니다. 현재: {{ $value }}'
+
+  # 데이터베이스 (postgres_exporter)
+  - name: connectwon-database-alerts
+    rules:
+      # DB 다운 (postgres_exporter 기본 지표)
+      - alert: ConnectWonDatabaseDown
+        expr: pg_up == 0
+        for: 1m
+        labels:
+          severity: critical
+          service: database
+          team: backend
+        annotations:
+          summary: 'PostgreSQL 데이터베이스가 다운되었습니다'
+          description: '데이터베이스에 1분 이상 연결할 수 없습니다. 긴급 대응이 필요합니다.'
+
+      # 연결 수 과다 (exporter 설정/버전에 따라 메트릭명이 다름)
+      - alert: ConnectWonDatabaseHighConnections
+        expr: |
+          sum(pg_stat_activity_count) > 80
+          or
+          sum(pg_stat_database_numbackends) > 80
+        for: 5m
+        labels:
+          severity: warning
+          service: database
+          team: backend
+        annotations:
+          summary: '데이터베이스 연결 수가 과다합니다'
+          description: '활성/총 연결이 80개를 초과했습니다. 커넥션 풀 설정을 확인해주세요. 현재: {{ $value }}개'
+
+  # Worker (커스텀/BullMQ 지표 필요)
+  - name: connectwon-worker-alerts
+    rules:
+      # Worker 프로세스 다운 (스크레이프 job 이름은 prometheus.yml과 일치해야 함)
+      - alert: ConnectWonWorkerDown
+        expr: up{job="connectwon-worker"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          service: worker
+          team: backend
+        annotations:
+          summary: 'Worker 프로세스가 다운되었습니다'
+          description: '백그라운드 작업 처리가 중단되었습니다. 알림, 결제 처리 등에 영향 가능.'
+
+  # Frontend (Next.js 커스텀 지표 필요)
+  - name: connectwon-frontend-alerts
+    rules:
+      # Frontend 앱 다운 (web/admin 각각 스크레이프)
+      - alert: ConnectWonWebAppDown
+        expr: (up{job="connectwon-web"} == 0) or (up{job="connectwon-admin"} == 0)
+        for: 2m
+        labels:
+          severity: critical
+          service: frontend
+          team: frontend
+        annotations:
+          summary: 'Frontend 애플리케이션이 다운되었습니다'
+          description: 'web 또는 admin 서비스에 2분 이상 연결할 수 없습니다.'
