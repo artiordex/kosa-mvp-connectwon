@@ -1,6 +1,6 @@
 # Description : docker-compose.yml - 📌 도커 컴포즈 설정 파일
-# Author      : Shiwoo Min
-# Date        : 2025-09-06
+# Author : Shiwoo Min
+# Date : 2025-09-06
 
 version: '3.8'
 
@@ -271,6 +271,37 @@ services:
       interval: 10s
       timeout: 5s
       retries: 10
+
+  # Prometheus (모니터링 및 알림)
+  prometheus:
+    image: prom/prometheus:v2.54.1
+    container_name: prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    volumes:
+      # infra/docker 기준 → ../monitoring 폴더의 설정을 마운트
+      - ../monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ../monitoring/alerts.yml:/etc/prometheus/alerts.yml:ro
+    ports:
+      - '9090:9090'
+    restart: unless-stopped
+    # web, api, worker가 먼저 올라가 있지 않아도 scrape는 재시도되므로 depends_on 생략 가능
+
+  # Grafana (모니터링 대시보드)
+  grafana:
+    image: grafana/grafana:10.4.5
+    container_name: grafana
+    ports:
+      - '3005:3000'
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - ../monitoring/grafana.ini:/etc/grafana/grafana.ini:ro
+      - ../monitoring/dashboards.json:/var/lib/grafana/dashboards/dashboards.json:ro
+    restart: unless-stopped
+    depends_on:
+      prometheus:
+        condition: service_started
 
 volumes:
   pg_data:

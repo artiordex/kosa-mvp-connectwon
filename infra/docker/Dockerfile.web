@@ -4,7 +4,7 @@
 # 09-15 - 버전 고정(corepack prepare pnpm@...) 제거 → package.json의 packageManager(10.7.0) 준수
 
 # Next.js 기반 React 웹 애플리케이션
-FROM node:20.11.1-alpine3.20 AS build
+FROM node:20.12.0-alpine3.20 AS build
 
 # 작업 디렉토리 설정
 WORKDIR /app
@@ -34,7 +34,7 @@ COPY apps/web ./apps/web
 RUN pnpm --filter @connectwon/web build
 
 # Next.js standalone 모드 실행용 최소 이미지
-FROM node:20.11.1-alpine3.20 AS production
+FROM node:20.12.0-alpine3.20 AS production
 
 # 작업 디렉토리 설정
 WORKDIR /app

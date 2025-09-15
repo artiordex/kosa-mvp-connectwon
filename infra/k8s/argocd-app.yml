@@ -1,0 +1,190 @@
+# Description : argocd-app.yml - 📌 Argo CD Project & Applications & Notifications 구성
+# Author : Shiwoo Min
+# Date : 2025-09-15
+
+# Project: 배포 허용 소스/대상/권한 경계를 정의
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: connectwon
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: connectwon
+spec:
+  description: ConnectWon MVP Platform
+  # 이 프로젝트가 읽을 수 있는 Git 소스 레포 목록
+  sourceRepos:
+    - 'https://github.com/artiordex/kosa-mvp-connectwon'
+  # 배포 가능한 대상
+  destinations:
+    - namespace: connectwon
+      server: https://kubernetes.default.svc
+    - namespace: connectwon-staging
+      server: https://kubernetes.default.svc
+    - namespace: connectwon-dev
+      server: https://kubernetes.default.svc
+  # 클러스터 레벨 리소스 중 허용할 종류
+  clusterResourceWhitelist:
+    - group: ''
+      kind: Namespace
+    - group: 'networking.k8s.io'
+      kind: Ingress
+  # 네임스페이스 스코프 리소스 중 허용할 종류
+  namespaceResourceWhitelist:
+    - group: ''
+      kind: ConfigMap
+    - group: ''
+      kind: Secret
+    - group: ''
+      kind: Service
+    - group: ''
+      kind: PersistentVolumeClaim
+    - group: 'apps'
+      kind: Deployment
+    - group: 'apps'
+      kind: ReplicaSet
+  # 프로젝트 RBAC(선택)
+  roles:
+    - name: readonly
+      description: Read-only access
+      policies:
+        # 프로젝트 내 모든 앱을 조회 가능
+        - p, proj:connectwon:readonly, applications, get, connectwon/*, allow
+      groups:
+        - connectwon:developers
+    - name: admin
+      description: Full admin access
+      policies:
+        # 프로젝트 내 앱/레포에 대한 풀 권한
+        - p, proj:connectwon:admin, applications, *, connectwon/*, allow
+        - p, proj:connectwon:admin, repositories, *, *, allow
+      groups:
+        - connectwon:admins
+
+# Production Application: main 브랜치 → connectwon 네임스페이스
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: connectwon-prod
+  namespace: argocd
+  labels:
+    app.kubernetes.io/part-of: connectwon
+  finalizers:
+    # ArgoCD가 생성한 리소스들 정리 후 App 삭제
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: connectwon
+  source:
+    repoURL: https://github.com/artiordex/kosa-mvp-connectwon
+    targetRevision: main
+    # 여기 폴더 아래에 app.yml 등 K8s 매니페스트 존재
+    path: infra/k8s
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: connectwon
+  syncPolicy:
+    automated:
+      # Git에서 제거된 리소스를 클러스터에서도 삭제
+      prune: true
+      # 드리프트 자동 복구
+      selfHeal: true
+      # 빈 디렉토리/리소스 없음 → 실패로 처리
+      allowEmpty: false
+    syncOptions:
+      # 대상 네임스페이스가 없으면 자동 생성
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+  revisionHistoryLimit: 10
+  info:
+    - name: 'Description'
+      value: 'ConnectWon Production Environment'
+    - name: 'Owner'
+      value: 'DevOps Team'
+
+# Staging Application: develop 브랜치 → connectwon-staging 네임스페이스
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: connectwon-staging
+  namespace: argocd
+  labels:
+    app.kubernetes.io/part-of: connectwon
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: connectwon
+  source:
+    repoURL: https://github.com/artiordex/kosa-mvp-connectwon
+    targetRevision: develop
+    path: infra/k8s
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: connectwon-staging
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+    retry:
+      limit: 3
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 1m
+  revisionHistoryLimit: 5
+  info:
+    - name: 'Description'
+      value: 'ConnectWon Staging Environment'
+    - name: 'Owner'
+      value: 'Development Team'
+
+# Development Application: develop 브랜치 → 수동 Sync (기본값)
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: connectwon-dev
+  namespace: argocd
+  labels:
+    app.kubernetes.io/part-of: connectwon
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: connectwon
+  source:
+    repoURL: https://github.com/artiordex/kosa-mvp-connectwon
+    targetRevision: develop
+    path: infra/k8s
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: connectwon-dev
+  # syncPolicy 미지정 → 기본 Manual Sync. 필요 시 UI에서 Enable Auto-Sync 가능.
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+    retry:
+      limit: 2
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 30s
+  revisionHistoryLimit: 3
+  info:
+    - name: 'Description'
+      value: 'ConnectWon Development Environment (Manual Sync)'
+    - name: 'Owner'
+      value: 'Developers'
