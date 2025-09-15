@@ -334,7 +334,12 @@
     "ngalert",
     "nodata",
     "nullvalue",
-    "xact"
+    "xact",
+    "chainguard",
+    "netcat",
+    "pwuser",
+    "applypatch",
+    "testkit"
   ],
 
   // Nx Console AI 규칙 사용

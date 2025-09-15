@@ -30,7 +30,7 @@
 
     // 브라우저/서버 공통을 위해 Node 전역타입 유입 차단
     "lib": ["ES2022"],
-    "types": [],
+    "types": ["node"],
 
     // 품질/편의
     "exactOptionalPropertyTypes": true,

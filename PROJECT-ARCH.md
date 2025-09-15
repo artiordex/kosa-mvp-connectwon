@@ -29,6 +29,7 @@ kosa-mvp-connectwon
 │  │  ├─ next.config.mjs
 │  │  ├─ package.json
 │  │  ├─ project.json
+│  │  ├─ server.ts
 │  │  ├─ src
 │  │  │  └─ app
 │  │  │     ├─ (auth)
@@ -69,44 +70,37 @@ kosa-mvp-connectwon
 │  │  │  └─ modules
 │  │  │     ├─ ai
 │  │  │     │  ├─ controller.ts
-│  │  │     │  ├─ dto.ts
 │  │  │     │  ├─ module.ts
 │  │  │     │  ├─ processor.ts
 │  │  │     │  └─ service.ts
 │  │  │     ├─ auth
 │  │  │     │  ├─ controller.ts
-│  │  │     │  ├─ dto.ts
 │  │  │     │  ├─ module.ts
 │  │  │     │  ├─ processor.ts
 │  │  │     │  └─ service.ts
 │  │  │     ├─ index.ts
 │  │  │     ├─ payments
 │  │  │     │  ├─ controller.ts
-│  │  │     │  ├─ dto.ts
 │  │  │     │  ├─ module.ts
 │  │  │     │  ├─ processor.ts
 │  │  │     │  └─ service.ts
 │  │  │     ├─ programs
 │  │  │     │  ├─ controller.ts
-│  │  │     │  ├─ dto.ts
 │  │  │     │  ├─ module.ts
 │  │  │     │  ├─ processor.ts
 │  │  │     │  └─ service.ts
-│  │  │     ├─ reservation
+│  │  │     ├─ reservations
 │  │  │     │  ├─ controller.ts
-│  │  │     │  ├─ dto.ts
 │  │  │     │  ├─ module.ts
 │  │  │     │  ├─ processor.ts
 │  │  │     │  └─ service.ts
 │  │  │     ├─ users
 │  │  │     │  ├─ controller.ts
-│  │  │     │  ├─ dto.ts
 │  │  │     │  ├─ module.ts
 │  │  │     │  ├─ processor.ts
 │  │  │     │  └─ service.ts
 │  │  │     └─ venues
 │  │  │        ├─ controller.ts
-│  │  │        ├─ dto.ts
 │  │  │        ├─ module.ts
 │  │  │        ├─ processor.ts
 │  │  │        └─ service.ts
@@ -138,6 +132,7 @@ kosa-mvp-connectwon
 │  │  ├─ next.config.mjs
 │  │  ├─ package.json
 │  │  ├─ project.json
+│  │  ├─ server.ts
 │  │  ├─ src
 │  │  │  └─ app
 │  │  │     ├─ (auth)
@@ -230,10 +225,19 @@ kosa-mvp-connectwon
 │  │  ├─ Dockerfile.admin
 │  │  ├─ Dockerfile.api
 │  │  ├─ Dockerfile.db
+│  │  ├─ Dockerfile.e2e
 │  │  ├─ Dockerfile.web
 │  │  ├─ Dockerfile.worker
 │  │  └─ nginx.conf
 │  ├─ infra-types.ts
+│  ├─ k8s
+│  │  ├─ app.yml
+│  │  └─ argocd-app.yml
+│  ├─ monitoring
+│  │  ├─ alerts.yml
+│  │  ├─ dashboards.json
+│  │  ├─ grafana.ini
+│  │  └─ prometheus.yml
 │  └─ n8n
 │     ├─ package.json
 │     ├─ project.json
@@ -272,13 +276,14 @@ kosa-mvp-connectwon
 │  │  │  │  ├─ registry.ts
 │  │  │  │  └─ setup.ts
 │  │  │  └─ schemas
+│  │  │     ├─ ai.ts
 │  │  │     ├─ api.ts
 │  │  │     ├─ auth.ts
-│  │  │     ├─ bookings.ts
 │  │  │     ├─ common.ts
 │  │  │     ├─ index.ts
 │  │  │     ├─ payments.ts
 │  │  │     ├─ programs.ts
+│  │  │     ├─ reservations.ts
 │  │  │     ├─ session.ts
 │  │  │     ├─ users.ts
 │  │  │     └─ venues.ts

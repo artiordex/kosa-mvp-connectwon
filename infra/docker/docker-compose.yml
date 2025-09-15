@@ -108,6 +108,17 @@ services:
       redis:
         condition: service_healthy
 
+  # Playwright (E2E 테스트)
+  e2e:
+    build:
+      context: ../../
+      dockerfile: infra/docker/Dockerfile.e2e
+    volumes:
+      - ./test-results:/app/test-results
+    environment:
+      - BASE_URL=http://web:3000
+      - API_URL=http://api:8000
+
   # Nginx 리버스 프록시
   nginx:
     image: nginx:1.27-alpine
