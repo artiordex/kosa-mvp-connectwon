@@ -1,15 +1,18 @@
 # Description : deploy.yml - 📌 변경된 앱 도커 빌드·푸시
-# Author      : Shiwoo Min
-# Date        : 2025-09-11
+# Author : Shiwoo Min
+# Date : 2025-09-11
+# 09-15 - 이미지 네임스페이스 구조 개선, 캐시 scope 분리, arm64 지원
+
 name: Deploy
 
 on:
   push:
     branches: [main]
 
+# github.repository 대신 명시적 네임스페이스
 env:
   REGISTRY: ghcr.io
-  IMAGE_NS: ${{ github.repository }}
+  IMAGE_NS: artiordex/kosa-mvp-connectwon
 
 jobs:
   build_and_push:
@@ -69,7 +72,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NS }}-${{ matrix.service }}
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NS }}/${{ matrix.service }}
           tags: |
             type=ref,event=branch
             type=sha,prefix={{branch}}-
@@ -84,6 +87,7 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-          platforms: linux/amd64
+          # 서비스별 scope로 캐시 분리
+          cache-from: type=gha,scope=${{ matrix.service }}
+          cache-to: type=gha,scope=${{ matrix.service }},mode=max
+          platforms: linux/amd64,linux/arm64

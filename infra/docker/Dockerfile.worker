@@ -1,29 +1,36 @@
 # Description : Dockerfile.worker - 📌 worker docker build
 # Author      : Shiwoo Min
 # Date        : 2025-09-12
+# 09-14 - 버전 고정(corepack prepare pnpm@...) 제거 → package.json의 packageManager(10.7.0) 준수
+# 09-15 - apk upgrade --no-cache 추가 → Alpine 기본 패키지 보안 패치 적용
 
-# Background worker
-FROM node:20-alpine AS base
-RUN corepack enable && apk add --no-cache libc6-compat
+# Background worker - Base stage
+FROM node:20.11.1-alpine3.20 AS base
+# corepack 활성화 + libc6-compat 설치 + Alpine 보안 패키지 최신화
+RUN corepack enable \
+  && apk add --no-cache libc6-compat \
+  && apk upgrade --no-cache
 WORKDIR /repo
 
-#  Dependencies 설치
+# Dependencies 설치
 FROM base AS deps
 COPY pnpm-lock.yaml package.json pnpm-workspace.yaml nx.json ./
 COPY packages ./packages
 COPY apps/worker/package.json ./apps/worker/package.json
-RUN pnpm install --frozen-lockfile
+RUN pnpm install --frozen-lockfile --filter=@connectwon/worker
 
-# Build
+# Build stage
 FROM deps AS build
 COPY . .
 RUN pnpm nx build worker
 
-# Production image
-FROM node:20-alpine AS runtime
+# 프로덕션 런타임 - Distroless 이미지 사용
+FROM gcr.io/distroless/nodejs20-debian12:nonroot AS runtime
 ENV NODE_ENV=production
 WORKDIR /app
+
 COPY --from=deps /repo/node_modules ./node_modules
 COPY --from=build /repo/dist/apps/worker ./dist
+
 EXPOSE 3003
-CMD ["node", "dist/main.js"]
+CMD ["dist/main.js"]

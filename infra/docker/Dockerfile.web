@@ -1,18 +1,20 @@
-# Description : Dockerfile.web - 📌 web docker build
-# Author      : Shiwoo Min
-# Date        : 2025-09-06
+# Description : Dockerfile.web - 📌 웹 프론트엔드용 Docker 이미지 빌드 파일
+# Author : Shiwoo Min
+# Date : 2025-09-06
+# 09-15 - 버전 고정(corepack prepare pnpm@...) 제거 → package.json의 packageManager(10.7.0) 준수
 
-# 웹 프론트엔드용 Docker 이미지 빌드 파일
 # Next.js 기반 React 웹 애플리케이션
-
-# Next.js 애플리케이션 빌드
-FROM node:20-slim AS build
+FROM node:20.11.1-alpine3.20 AS build
 
 # 작업 디렉토리 설정
 WORKDIR /app
 
 # pnpm 패키지 매니저 활성화
-RUN corepack enable && corepack prepare pnpm@10.15.1 --activate
+RUN corepack enable
+WORKDIR /app
+
+# pnpm 패키지 매니저 활성화
+RUN corepack enable
 
 # 의존성 파일들을 먼저 복사
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
@@ -20,16 +22,19 @@ COPY tsconfig.json tsconfig.base.json ./
 
 # packages와 apps 디렉토리 전체 복사 (의존성 해결을 위해)
 COPY packages ./packages
-COPY apps ./apps
+COPY apps/web/package.json ./apps/web/package.json
 
 # 의존성 설치 (lockfile 기반)
-RUN pnpm install --frozen-lockfile
+RUN pnpm install --frozen-lockfile --filter=@connectwon/web
+
+# 소스는 마지막에 복사
+COPY apps/web ./apps/web
 
 # Next.js 웹 애플리케이션 빌드 (정적 파일 생성)
 RUN pnpm --filter @connectwon/web build
 
 # Next.js standalone 모드 실행용 최소 이미지
-FROM node:20-slim AS production
+FROM node:20.11.1-alpine3.20 AS production
 
 # 작업 디렉토리 설정
 WORKDIR /app

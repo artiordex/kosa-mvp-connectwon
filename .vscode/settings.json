@@ -297,7 +297,19 @@
     "requirepass",
     "allkeys",
     "appendfsync",
-    "vitest"
+    "vitest",
+    "addgroup",
+    "adduser",
+    "nextjs",
+    "libc",
+    "sendfile",
+    "nopush",
+    "keepalive",
+    "nodelay",
+    "nosniff",
+    "geolocation",
+    "distroless",
+    "nonroot"
   ],
 
   // Nx Console AI 규칙 사용
