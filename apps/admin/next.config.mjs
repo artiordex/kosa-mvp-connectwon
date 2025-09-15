@@ -2,16 +2,20 @@
  * Description : next.config.mjs - 📌 Admin 앱 Next.js 설정
  * Author : Shiwoo Min
  * Date : 2025-09-11
+ * 09-16 - packages 컴포넌트 추가
  */
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // 모노레포 packages의 컴포넌트 사용을 위한 설정
   transpilePackages: [
-    '@ui', // UI 컴포넌트 패키지
-    '@shared', // 공통 로직 패키지
-    '@api-contract', // API 타입 패키지
-    '@logger', // 로거 패키지
+    '@connectwon/ui',
+    '@connectwon/api-contract',
+    '@connectwon/database',
+    '@connectwon/core',
+    '@connectwon/logger',
+    '@connectwon/nest-kit',
+    '@connectwon/sdk',
   ],
 
   // React Strict Mode (개발 환경에서 버그 감지)
@@ -156,4 +160,4 @@ const nextConfig = {
   },
 };
 
-module.exports = nextConfig;
+export default nextConfig;
