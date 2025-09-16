@@ -1,7 +1,7 @@
 /**
  * Description : tsconfig.json - 📌 Config 패키지 (TypeScript 설정)
- * Author      : Shiwoo Min
- * Date        : 2025-09-05
+ * Author : Shiwoo Min
+ * Date : 2025-09-05
  * 09-09 : noEmit=true, include 범위 축소, JS 제외(TS 전용)
  * 09-12 : NodeNext 해석/JSON 모듈/Node 타입 추가
  */
@@ -38,6 +38,5 @@
 
   // 포함 범위를 정확히 지정(탐색/타입체크 성능↑)
   "include": ["eslint/**/*.ts", "tailwind/**/*.ts", "testing/**/*.ts", "typescript/**/*.json"],
-
   "exclude": ["dist", "node_modules"]
 }

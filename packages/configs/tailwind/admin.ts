@@ -1,7 +1,7 @@
 /**
  * Description : admin.ts - 📌 Tailwind CSS 설정 (관리자 대시보드 전용)
  * Author : Shiwoo Min
- * Date   : 2025-09-09
+ * Date : 2025-09-09
  */
 
 import type { Config } from 'tailwindcss';

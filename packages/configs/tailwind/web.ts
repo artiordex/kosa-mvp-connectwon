@@ -7,9 +7,11 @@
 import type { Config } from 'tailwindcss';
 import base from './base.js';
 
+// Tailwind 확장 타입
 type TWExtend = NonNullable<NonNullable<Config['theme']>['extend']>;
 const extendBase = (base.theme?.extend ?? {}) as TWExtend;
 
+// 웹 전용 Tailwind 설정
 const web: Partial<Config> = {
   ...base,
   theme: {

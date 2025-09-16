@@ -7,8 +7,10 @@
 import { defineConfig, type UserConfigExport } from 'vitest/config';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
+// vitest 환경 프리셋 타입
 export type EnvPreset = 'node' | 'jsdom';
 
+// vitest 설정 생성 함수
 export function createVitestConfig(
   env: EnvPreset = 'node',
   overrides: UserConfigExport = {},
@@ -16,9 +18,7 @@ export function createVitestConfig(
   return defineConfig({
     plugins: [tsconfigPaths()],
     test: {
-      // 공통 설정
       globals: true,
-      // 테스트 환경: 'node' | 'jsdom'
       environment: env,
       include: ['src/**/*.{test,spec}.{ts,tsx}'],
       reporters: process.env['CI'] ? ['default', 'junit'] : ['default'],
@@ -26,7 +26,6 @@ export function createVitestConfig(
         reporter: process.env['CI'] ? ['text', 'lcov'] : ['text'],
         reportsDirectory: 'coverage',
       },
-      // 디버깅 시 launch.json에서 --no-threads 권장(브레이크포인트 안정)
     },
     ...overrides,
   });

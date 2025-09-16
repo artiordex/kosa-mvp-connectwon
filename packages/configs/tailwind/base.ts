@@ -6,11 +6,10 @@
 
 import type { Config } from 'tailwindcss';
 
-// ⚠️ content는 소비자 쪽에서 채울 것이므로 Partial<Config>로 선언
+// 기본 Tailwind 설정
 const base = {
   // 명시적 다크모드(class) 채택
   darkMode: ['class'],
-
   theme: {
     // 반응형 브레이크포인트
     screens: {
@@ -21,7 +20,7 @@ const base = {
       xl: '1280px',
       '2xl': '1536px',
     },
-
+    // 테마 확장
     extend: {
       // CSS 변수 기반 색상 팔레트
       colors: {

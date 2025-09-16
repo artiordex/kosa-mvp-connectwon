@@ -1,48 +1,49 @@
 /**
- * Description : playwright.ts - 📌 Playwright 공통 설정 팩토리 (exactOptionalPropertyTypes 호환)
- * Author      : Shiwoo Min
- * Date        : 2025-09-11
+ * Description : playwright.ts - 📌 Playwright 공통 설정 팩토리
+ * Author : Shiwoo Min
+ * Date : 2025-09-11
+ * 09-11 - exactOptionalPropertyTypes 호환
  */
 import { defineConfig, devices, type PlaywrightTestConfig } from '@playwright/test';
 
+// Playwright 프리셋 타입
 export type PWPreset = 'web-desktop' | 'web-mobile' | 'api-only';
 
+// Playwright 환경 옵션 타입
 export interface PWEnvOptions {
   baseURL?: string;
   apiBaseURL?: string;
   storageStatePath?: string;
   headless?: boolean;
   trace?: 'on' | 'off' | 'retain-on-failure';
-  workers?: number; // number만
+  workers?: number;
   retries?: number;
 }
 
+// Playwright 설정 생성 함수
 export function createPlaywrightConfig(
   preset: PWPreset = 'web-desktop',
   overrides: Partial<PlaywrightTestConfig> = {},
   env: PWEnvOptions = {},
 ) {
+  // CI 감지
   const isCI = process.env['CI'] === 'true';
-
+  // 기본 URL (환경 변수 우선)
   const baseURL =
     env.baseURL ||
     process.env['E2E_WEB_BASE_URL'] ||
     process.env['BASE_URL'] ||
     'http://localhost:3001';
-
+  // API 테스트용
   const storageState = env.storageStatePath || process.env['STORAGE_STATE'] || '.auth/state.json';
-
   const headless = env.headless ?? (process.env['HEADLESS'] === 'true' || isCI);
-
   const trace =
     env.trace ||
     (process.env['E2E_TRACE'] as 'on' | 'off' | 'retain-on-failure') ||
     'retain-on-failure';
-
   const envWorkers = process.env['WORKERS'];
   const workersFromEnv = envWorkers ? Number(envWorkers) : undefined;
   const baseWorkers: number | undefined = env.workers ?? workersFromEnv;
-
   const retries =
     env.retries ?? (process.env['RETRY_COUNT'] ? Number(process.env['RETRY_COUNT']) : isCI ? 2 : 0);
 
@@ -104,11 +105,11 @@ export function createPlaywrightConfig(
     use?: PlaywrightTestConfig['use'];
   };
 
-  // reporter 확정 (undefined 금지)
+  // reporter 확정
   const resolvedReporter: NonNullable<PlaywrightTestConfig['reporter']> = (overrideReporter ??
     baseConfig.reporter)!;
 
-  // projects 확정 (undefined 금지)
+  // projects 확정
   const resolvedProjects: NonNullable<PlaywrightTestConfig['projects']> = (overrideProjects ??
     baseConfig.projects)!;
 
