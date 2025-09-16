@@ -113,11 +113,19 @@ services:
     build:
       context: ../../
       dockerfile: infra/docker/Dockerfile.e2e
-    volumes:
-      - ./test-results:/app/test-results
+    container_name: e2e
+    networks:
+      - connectwon-network
     environment:
       - BASE_URL=http://web:3000
       - API_URL=http://api:8000
+    depends_on:
+      web:
+        condition: service_healthy
+      api:
+        condition: service_healthy
+    volumes:
+      - ../../apps/e2e/test-results:/app/apps/e2e/test-results
 
   # Nginx 리버스 프록시
   nginx:

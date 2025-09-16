@@ -1,0 +1,105 @@
+# Description : e2e.yml - 📌 Docker Compose 기반 Playwright E2E 테스트 파이프라인
+# Author : Shiwoo Min
+# Date : 2025-09-16
+
+name: E2E
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: e2e-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    env:
+      COMPOSE_FILE: infra/docker/docker-compose.yml
+      HOST_RESULTS_DIR: apps/e2e/test-results
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Prepare results dir
+        run: mkdir -p "${{ env.HOST_RESULTS_DIR }}"
+      - name: Prepare compose .env (use root .env or generate)
+        env:
+          POSTGRES_PASSWORD: ${{ env.POSTGRES_PASSWORD }}
+          REDIS_PASSWORD: ${{ env.REDIS_PASSWORD }}
+        shell: bash
+        run: |
+          mkdir -p infra/docker
+          if [ -f ".env" ]; then
+            echo "Using root .env"
+            cp .env infra/docker/.env
+          else
+            echo "Root .env not found, generating from secrets"
+            echo "::add-mask::$POSTGRES_PASSWORD"
+            echo "::add-mask::$REDIS_PASSWORD"
+            {
+              printf 'POSTGRES_PASSWORD=%s\n' "$POSTGRES_PASSWORD"
+              printf 'REDIS_PASSWORD=%s\n' "$REDIS_PASSWORD"
+              echo 'NODE_ENV=production'
+              echo 'WEB_PORT=3000'
+              echo 'API_PORT=8000'
+              echo 'ADMIN_PORT=3001'
+              printf 'QUEUE_REDIS_URL=redis://:%s@redis:6379/0\n' "$REDIS_PASSWORD"
+              printf 'REDIS_URL=redis://:%s@redis:6379/0\n' "$REDIS_PASSWORD"
+              printf 'DATABASE_URL=postgresql://postgres:%s@postgres:5432/connectwon_db\n' "$POSTGRES_PASSWORD"
+            } > infra/docker/.env
+          fi
+
+      - name: Build images
+        run: docker compose -f "${COMPOSE_FILE}" build postgres redis api web admin worker e2e
+
+      - name: Up infra
+        run: docker compose -f "${COMPOSE_FILE}" up -d postgres redis
+
+      - name: Wait infra healthy
+        shell: bash
+        run: |
+          set -e
+          for s in postgres redis; do
+            for i in {1..60}; do
+              [[ "$(docker inspect -f '{{.State.Health.Status}}' "$s" 2>/dev/null || echo unknown)" == "healthy" ]] && break
+              (( i==60 )) && { docker compose -f "${COMPOSE_FILE}" logs "$s" || true; exit 1; }
+              sleep 2
+            done
+          done
+
+      - name: Up apps
+        run: docker compose -f "${COMPOSE_FILE}" up -d api web admin worker
+
+      - name: Wait apps healthy
+        shell: bash
+        run: |
+          set -e
+          for s in api web admin; do
+            for i in {1..90}; do
+              [[ "$(docker inspect -f '{{.State.Health.Status}}' "$s" 2>/dev/null || echo unknown)" == "healthy" ]] && break
+              (( i==90 )) && { docker compose -f "${COMPOSE_FILE}" logs "$s" || true; exit 1; }
+              sleep 2
+            done
+          done
+
+      - name: Run E2E
+        run: docker compose -f "${COMPOSE_FILE}" run --rm e2e
+
+      - name: Upload E2E HTML
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-html-report
+          path: ${{ env.HOST_RESULTS_DIR }}/html-report
+
+      - name: Upload E2E JUnit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-junit
+          path: ${{ env.HOST_RESULTS_DIR }}/junit.xml
+
+      - name: Teardown
+        if: always()
+        run: docker compose -f "${COMPOSE_FILE}" down -v

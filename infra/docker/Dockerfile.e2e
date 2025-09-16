@@ -4,69 +4,34 @@
 # 09-16 - Playwright 공식 이미지 + pnpm + 네트워크 격리 환경에서 실행 가능하도록 설계
 
 # 1. Playwright 공식 베이스 이미지
-FROM mcr.microsoft.com/playwright:v1.40.0-focal AS base
+FROM mcr.microsoft.com/playwright:v1.44.0-focal AS base
 WORKDIR /app
 
-# 2. 패키지 매니저 및 시스템 설정
-FROM base AS setup
+# pnpm 설치
+RUN npm install -g pnpm@latest
 
-# pnpm 최신 버전 설치
-RUN npm install -g pnpm@10.7.0
-
-# 보안 패치
-RUN apt-get update \
-  && apt-get upgrade -y \
-  && apt-get clean \
-  && rm -rf /var/lib/apt/lists/*
-
-# 3. 의존성 설치 단계 (캐시 최적화)
-FROM setup AS deps
-
-# 워크스페이스 메타 파일들 복사
+# 1. 워크스페이스 설정 먼저
+COPY pnpm-workspace.yaml package.json pnpm-lock.yaml ./
+COPY packages ./packages
 COPY apps/e2e/package.json ./apps/e2e/package.json
-RUN pnpm install --frozen-lockfile --filter @connectwon/e2e
 
-# E2E 테스트 설정 파일들 복사
-COPY playwright.config.ts ./
+# 2. 의존성 설치
+RUN pnpm install --frozen-lockfile --filter=@connectwon/e2e
 
-# 의존성 설치 (테스트 환경 전용)
-RUN pnpm install --frozen-lockfile
-
-# Playwright 브라우저 바이너리 확인 및 재설치
-RUN npx playwright install --with-deps
-
-# 4. 테스트 실행 환경 구성 (네트워크 격리 대응)
-FROM deps AS runtime
-
-# e2e 소스/설정 일괄 복사 (playwright.config.ts, tests/, tsconfig 등 포함)
+# 3. E2E 소스 복사
 COPY apps/e2e ./apps/e2e
 
-# 결과물 디렉토리 생성 + 퍼미션
-RUN mkdir -p ./apps/e2e/test-results ./apps/e2e/artifacts \
-  && chmod -R 777 ./apps/e2e/test-results ./apps/e2e/artifacts
+# 4. Playwright 브라우저 설치
+RUN npx playwright install --with-deps
 
-# 네트워크 대기 유틸 (curl/nc) 설치
-RUN apt-get update \
-  && apt-get install -y --no-install-recommends curl netcat-openbsd \
-  && apt-get clean \
-  && rm -rf /var/lib/apt/lists/*
-
-  # 환경 변수 설정
+# 환경 변수
 ENV CI=true \
-    PLAYWRIGHT_BROWSERS_PATH=/ms-playwright \
-    BASE_URL=http://web:3000 \
-    API_URL=http://api:8000 \
-    PLAYWRIGHT_HTML_REPORT=apps/e2e/test-results/html-report \
-    PLAYWRIGHT_JUNIT_OUTPUT_NAME=apps/e2e/test-results/junit.xml
+    PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
 
-# playwright 공식 이미지의 non-root 사용자 (pwuser) 사용
-RUN chown -R pwuser:pwuser /app
-USER pwuser
+# 결과 디렉토리
+RUN mkdir -p ./apps/e2e/test-results && chmod 777 ./apps/e2e/test-results
 
-# 헬스체크
-HEALTHCHECK --interval=10s --timeout=5s --start-period=30s --retries=3 \
-  CMD curl -fsSL "$BASE_URL" >/dev/null || exit 1
+# 헬스체크 제거 (E2E는 일회성 실행)
+# HEALTHCHECK 삭제
 
-# 5. Entrypoint / CMD
-WORKDIR /app
-CMD ["pnpm", "--filter", "@connectwon/e2e", "test:e2e"]
+CMD ["pnpm", "--filter", "@connectwon/e2e", "test"]

@@ -92,29 +92,3 @@ jobs:
           name: dist
           path: dist/
           retention-days: 1
-
-  # E2E 테스트
-  e2e:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Docker login (GHCR)
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build e2e image + run compose
-        run: |
-          docker compose -f infra/docker/compose.e2e.yml build e2e
-          docker compose -f infra/docker/compose.e2e.yml up --abort-on-container-exit --exit-code-from e2e
-
-      - name: Upload Playwright report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: playwright-report
-          path: apps/e2e/test-results/
-          retention-days: 3
