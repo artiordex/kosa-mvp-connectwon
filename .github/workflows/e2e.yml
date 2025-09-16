@@ -1,15 +1,25 @@
 # Description : e2e.yml - 📌 Docker Compose 기반 Playwright E2E 테스트 파이프라인
-# Author : Shiwoo Min
-# Date : 2025-09-16
+# Author      : Shiwoo Min
+# Date        : 2025-09-16
 
 name: E2E
 
 on:
+  # 수동 실행
   workflow_dispatch:
+  # main, develop 브랜치로 push될 때 실행
+  push:
+    branches: [main, develop]
+  # main, develop 브랜치로 PR 생성 시 실행
+  pull_request:
+    branches: [main, develop]
 
 concurrency:
   group: e2e-${{ github.ref }}
   cancel-in-progress: true
+
+permissions:
+  contents: read
 
 jobs:
   e2e:
@@ -17,24 +27,30 @@ jobs:
     env:
       COMPOSE_FILE: infra/docker/docker-compose.yml
       HOST_RESULTS_DIR: apps/e2e/test-results
+      # 프로젝트 이름을 러닝ID로 고유화(컨테이너 충돌 방지)
+      COMPOSE_PROJECT_NAME: e2e-${{ github.run_id }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
       - name: Prepare results dir
         run: mkdir -p "${{ env.HOST_RESULTS_DIR }}"
-      - name: Prepare compose .env (use root .env or generate)
+
+      - name: Prepare compose .env (use root .env or generate from secrets)
         env:
           POSTGRES_PASSWORD: ${{ env.POSTGRES_PASSWORD }}
           REDIS_PASSWORD: ${{ env.REDIS_PASSWORD }}
         shell: bash
         run: |
+          set -euo pipefail
           mkdir -p infra/docker
           if [ -f ".env" ]; then
             echo "Using root .env"
             cp .env infra/docker/.env
           else
             echo "Root .env not found, generating from secrets"
+            # mask secrets in logs
             echo "::add-mask::$POSTGRES_PASSWORD"
             echo "::add-mask::$REDIS_PASSWORD"
             {
@@ -49,6 +65,8 @@ jobs:
               printf 'DATABASE_URL=postgresql://postgres:%s@postgres:5432/connectwon_db\n' "$POSTGRES_PASSWORD"
             } > infra/docker/.env
           fi
+          echo "==== compose .env ===="
+          grep -E '^(NODE_ENV|WEB_PORT|API_PORT|ADMIN_PORT)=' infra/docker/.env || true
 
       - name: Build images
         run: docker compose -f "${COMPOSE_FILE}" build postgres redis api web admin worker e2e
@@ -62,8 +80,16 @@ jobs:
           set -e
           for s in postgres redis; do
             for i in {1..60}; do
-              [[ "$(docker inspect -f '{{.State.Health.Status}}' "$s" 2>/dev/null || echo unknown)" == "healthy" ]] && break
-              (( i==60 )) && { docker compose -f "${COMPOSE_FILE}" logs "$s" || true; exit 1; }
+              status="$(docker inspect -f '{{.State.Health.Status}}' "$s" 2>/dev/null || echo unknown)"
+              if [ "$status" = "healthy" ]; then
+                echo "$s is healthy"
+                break
+              fi
+              if [ $i -eq 60 ]; then
+                echo "$s not healthy in time"
+                docker compose -f "${COMPOSE_FILE}" logs "$s" || true
+                exit 1
+              fi
               sleep 2
             done
           done
@@ -77,8 +103,16 @@ jobs:
           set -e
           for s in api web admin; do
             for i in {1..90}; do
-              [[ "$(docker inspect -f '{{.State.Health.Status}}' "$s" 2>/dev/null || echo unknown)" == "healthy" ]] && break
-              (( i==90 )) && { docker compose -f "${COMPOSE_FILE}" logs "$s" || true; exit 1; }
+              status="$(docker inspect -f '{{.State.Health.Status}}' "$s" 2>/dev/null || echo unknown)"
+              if [ "$status" = "healthy" ]; then
+                echo "$s is healthy"
+                break
+              fi
+              if [ $i -eq 90 ]; then
+                echo "$s not healthy in time"
+                docker compose -f "${COMPOSE_FILE}" logs "$s" || true
+                exit 1
+              fi
               sleep 2
             done
           done
@@ -92,6 +126,7 @@ jobs:
         with:
           name: e2e-html-report
           path: ${{ env.HOST_RESULTS_DIR }}/html-report
+          if-no-files-found: warn
 
       - name: Upload E2E JUnit
         if: always()
@@ -99,6 +134,11 @@ jobs:
         with:
           name: e2e-junit
           path: ${{ env.HOST_RESULTS_DIR }}/junit.xml
+          if-no-files-found: warn
+
+      - name: Dump compose ps (on failure)
+        if: failure()
+        run: docker compose -f "${COMPOSE_FILE}" ps && docker compose -f "${COMPOSE_FILE}" logs --no-color || true
 
       - name: Teardown
         if: always()

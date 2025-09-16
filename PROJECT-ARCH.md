@@ -118,6 +118,7 @@ kosa-mvp-connectwon
 │  │  ├─ package.json
 │  │  ├─ playwright.config.ts
 │  │  ├─ project.json
+│  │  ├─ test-results
 │  │  ├─ tests
 │  │  │  ├─ admin
 │  │  │  │  └─ dashboard.spec.ts
@@ -439,17 +440,27 @@ kosa-mvp-connectwon
 │  │  │  └─ tracing.ts
 │  │  └─ tsconfig.json
 │  └─ ui
-│     ├─ component-types.ts
-│     ├─ hook-types.ts
 │     ├─ package.json
 │     ├─ project.json
 │     ├─ public
-│     │  ├─ animations
 │     │  ├─ favicon
+│     │  │  ├─ android-chrome-192x192.png
+│     │  │  ├─ android-chrome-512x512.png
+│     │  │  ├─ apple-touch-icon.png
+│     │  │  ├─ favicon-16x16.png
+│     │  │  ├─ favicon-32x32.png
+│     │  │  ├─ favicon.ico
+│     │  │  └─ site.webmanifest
 │     │  ├─ fonts
 │     │  ├─ icons
 │     │  └─ images
+│     │     ├─ arti.png
+│     │     └─ artiordex.png
 │     ├─ src
+│     │  ├─ animations
+│     │  │  ├─ Animation.tsx
+│     │  │  ├─ index.ts
+│     │  │  └─ tailwind-animations.ts
 │     │  ├─ charts
 │     │  │  ├─ AreaChart.tsx
 │     │  │  ├─ BarChart.tsx
@@ -501,6 +512,7 @@ kosa-mvp-connectwon
 │     │  │  ├─ icons
 │     │  │  └─ images
 │     │  ├─ styles
+│     │  │  ├─ animations.css
 │     │  │  └─ customs.css
 │     │  └─ templates
 │     │     ├─ error.tsx
