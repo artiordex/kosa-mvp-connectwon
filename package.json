@@ -13,12 +13,17 @@
   "engineStrict": true,
   "packageManager": "pnpm@10.7.0",
   "scripts": {
-    "prepare": "husky install",
+    "prepare": "node -e \"process.exit(require('fs').existsSync('.git')?0:0)\" && husky install",
     "nx": "nx",
     "graph": "nx graph",
     "build": "nx run-many -t build",
     "dev": "nx run-many -t dev --parallel",
     "lint": "nx run-many -t lint --parallel",
+    "build:tsc": "tsc -b -v tsconfig.build.json",
+    "build:packages": "pnpm -r --filter \"./packages/*\" run build",
+    "build:api": "pnpm --filter @connectwon/api run build",
+    "prisma:generate": "pnpm --filter @connectwon/database run prisma:generate",
+    "postinstall": "pnpm prisma:generate || true",
     "test:unit": "nx run-many -t test --parallel",
     "test:e2e": "nx run e2e:test",
     "test": "pnpm test:unit && pnpm test:e2e",
@@ -97,7 +102,9 @@
       "ioredis": "^5.7.0",
       "winston": "^3.17.0",
       "@types/node": "^24.3.1",
-      "typescript": "^5.9.2"
+      "typescript": "^5.9.2",
+      "@types/react": "18.3.7",
+      "@types/react-dom": "18.3.0"
     }
   }
 }

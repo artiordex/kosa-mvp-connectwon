@@ -339,6 +339,10 @@
     "netcat",
     "pwuser",
     "applypatch",
+    "testkit",
+    "checkmark",
+    "crossmark",
+    "googleusercontent"
     "testkit"
     "chainguard"
   ],

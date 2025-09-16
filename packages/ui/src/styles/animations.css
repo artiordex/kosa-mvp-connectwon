@@ -1,0 +1,702 @@
+/**
+ * Description : animations.css - 📌 ConnectWon UI 애니메이션 라이브러리 (통합본)
+ * Author      : Shiwoo Min
+ * Date        : 2025-09-16
+ * Usage       : import './animations/animations.css'
+ */
+
+/* =================== 로딩 애니메이션 =================== */
+
+/* 기본 로딩 스피너 - CSS 변수 지원 */
+.loading-spinner {
+  width: var(--spinner-size, 40px);
+  height: var(--spinner-size, 40px);
+  border: var(--spinner-thickness, 4px) solid #f3f3f3;
+  border-top: var(--spinner-thickness, 4px) solid var(--spinner-color, #3498db);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.loading-spinner--small {
+  width: 24px;
+  height: 24px;
+  border-width: 3px;
+}
+.loading-spinner--large {
+  width: 56px;
+  height: 56px;
+  border-width: 5px;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* 펄스 로더 - CSS 변수 지원 */
+.pulse-loader {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.pulse-loader .pulse-dot {
+  width: var(--dot-size, 12px);
+  height: var(--dot-size, 12px);
+  background: var(--dot-color, #3498db);
+  border-radius: 50%;
+  animation: pulse 1.4s ease-in-out infinite both;
+}
+.pulse-loader .pulse-dot:nth-child(1) {
+  animation-delay: -0.32s;
+}
+.pulse-loader .pulse-dot:nth-child(2) {
+  animation-delay: -0.16s;
+}
+.pulse-loader .pulse-dot:nth-child(3) {
+  animation-delay: 0s;
+}
+
+@keyframes pulse {
+  0%,
+  80%,
+  100% {
+    transform: scale(0);
+    opacity: 0.5;
+  }
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* 스켈레톤 로더 - CSS 변수 지원 */
+.skeleton-loader {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: skeleton 1.5s infinite;
+  border-radius: 4px;
+  width: var(--skeleton-width, 200px);
+  height: var(--skeleton-height, 20px);
+}
+.skeleton-loader--text {
+  height: 16px;
+  margin: 4px 0;
+}
+.skeleton-loader--title {
+  height: 24px;
+  margin: 8px 0;
+}
+.skeleton-loader--avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+@keyframes skeleton {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* =================== 상태 피드백 애니메이션 =================== */
+
+/* 성공 체크마크 - CSS 변수 지원 */
+.success-check {
+  width: var(--check-size, 60px);
+  height: var(--check-size, 60px);
+  border-radius: 50%;
+  background: var(--check-color, #2ecc71);
+  position: relative;
+  animation: successScale 0.6s ease-out;
+}
+.success-check::after {
+  content: '';
+  position: absolute;
+  left: calc(var(--check-size, 60px) / 3);
+  top: calc(var(--check-size, 60px) * 0.47);
+  width: calc(var(--check-size, 60px) * 0.13);
+  height: calc(var(--check-size, 60px) * 0.27);
+  border: solid #fff;
+  border-width: 0 3px 3px 0;
+  transform: rotate(45deg);
+  animation: checkmark 0.4s ease-out 0.2s both;
+}
+.success-check--small {
+  --check-size: 40px;
+}
+.success-check--small::after {
+  border-width: 0 2px 2px 0;
+}
+
+@keyframes successScale {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes checkmark {
+  0% {
+    height: 0;
+  }
+  100% {
+    height: 16px;
+  }
+}
+
+/* 에러 X 마크 - CSS 변수 지원 (단일 정의) */
+.error-cross {
+  width: var(--cross-size, 60px);
+  height: var(--cross-size, 60px);
+  border-radius: 50%;
+  background: var(--cross-color, #e74c3c);
+  position: relative;
+  animation: successScale 0.6s ease-out;
+}
+.error-cross::before,
+.error-cross::after {
+  content: '';
+  position: absolute;
+  left: calc(var(--cross-size, 60px) / 2 - 2px);
+  top: calc(var(--cross-size, 60px) / 4);
+  width: 4px;
+  height: calc(var(--cross-size, 60px) / 2);
+  background: #fff;
+  border-radius: 2px;
+  animation: crossmark 0.4s ease-out 0.2s both;
+}
+.error-cross::before {
+  transform: rotate(45deg);
+}
+.error-cross::after {
+  transform: rotate(-45deg);
+}
+
+@keyframes crossmark {
+  0% {
+    height: 0;
+  }
+  100% {
+    height: 30px;
+  }
+}
+
+/* =================== 알림 애니메이션 =================== */
+
+.floating-notification {
+  background: #2ecc71;
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 8px;
+  animation:
+    floatIn 0.5s ease-out,
+    floatOut 0.5s ease-in 2.5s forwards;
+  box-shadow: 0 4px 12px rgba(46, 204, 113, 0.3);
+}
+
+.floating-notification--success {
+  background: #2ecc71;
+  box-shadow: 0 4px 12px rgba(46, 204, 113, 0.3);
+}
+.floating-notification--error {
+  background: #e74c3c;
+  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+}
+.floating-notification--warning {
+  background: #f39c12;
+  box-shadow: 0 4px 12px rgba(243, 156, 18, 0.3);
+}
+.floating-notification--info {
+  background: #3498db;
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+}
+
+@keyframes floatIn {
+  0% {
+    opacity: 0;
+    transform: translateX(100px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+@keyframes floatOut {
+  0% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-100px);
+  }
+}
+
+/* =================== 페이지 전환 애니메이션 =================== */
+
+.fade-in-up {
+  animation: fadeInUp 0.8s ease-out;
+}
+.fade-in-down {
+  animation: fadeInDown 0.8s ease-out;
+}
+.fade-in-left {
+  animation: fadeInLeft 0.8s ease-out;
+}
+.fade-in-right {
+  animation: fadeInRight 0.8s ease-out;
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes fadeInDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes fadeInLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+@keyframes fadeInRight {
+  0% {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* 리스트 아이템 순차 애니메이션 */
+.list-item-animate {
+  opacity: 0;
+  animation: slideInList 0.5s ease-out forwards;
+}
+.list-item-animate:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.list-item-animate:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.list-item-animate:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.list-item-animate:nth-child(4) {
+  animation-delay: 0.4s;
+}
+.list-item-animate:nth-child(5) {
+  animation-delay: 0.5s;
+}
+.list-item-animate:nth-child(6) {
+  animation-delay: 0.6s;
+}
+.list-item-animate:nth-child(7) {
+  animation-delay: 0.7s;
+}
+.list-item-animate:nth-child(8) {
+  animation-delay: 0.8s;
+}
+
+@keyframes slideInList {
+  0% {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* =================== 인터랙션 애니메이션 =================== */
+
+.hover-button {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+.hover-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s ease;
+}
+.hover-button:hover::before {
+  left: 100%;
+}
+.hover-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(52, 152, 219, 0.3);
+}
+
+/* 하트비트 */
+.heartbeat {
+  animation: heartbeat 1.5s ease-in-out infinite;
+}
+.heartbeat-fast {
+  animation: heartbeatFast 0.8s ease-in-out infinite;
+}
+
+@keyframes heartbeat {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  25%,
+  75% {
+    transform: scale(1.1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}
+@keyframes heartbeatFast {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.3);
+  }
+}
+
+/* 클릭 리플 */
+.ripple {
+  position: relative;
+  overflow: hidden;
+}
+.ripple::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  transform: translate(-50%, -50%);
+  transition:
+    width 0.6s,
+    height 0.6s;
+}
+.ripple:active::after {
+  width: 300px;
+  height: 300px;
+}
+
+/* =================== 모달 & 오버레이 =================== */
+
+.modal-backdrop {
+  animation: modalBackdrop 0.3s ease-out;
+}
+.modal-backdrop.closing {
+  animation: modalBackdropOut 0.3s ease-out;
+}
+.modal-content {
+  animation: modalSlide 0.4s ease-out;
+}
+.modal-content.closing {
+  animation: modalSlideOut 0.3s ease-out;
+}
+
+@keyframes modalBackdrop {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes modalBackdropOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes modalSlide {
+  0% {
+    transform: scale(0.7) translateY(-20px);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+@keyframes modalSlideOut {
+  0% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.7) translateY(-20px);
+    opacity: 0;
+  }
+}
+
+/* =================== 진행 표시 =================== */
+
+/* 진행 바 - CSS 변수 지원 (단일 정의) */
+.progress-container {
+  width: 100%;
+  height: var(--progress-height, 8px);
+  background: var(--progress-bg, #ecf0f1);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.progress-bar {
+  height: 100%;
+  background: var(--progress-color, linear-gradient(90deg, #3498db, #2ecc71));
+  width: var(--progress-width, 0%);
+  transition: width 0.3s ease;
+  border-radius: 4px;
+}
+.progress-bar.animate {
+  animation: progressFill 3s ease-out;
+}
+
+@keyframes progressFill {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+/* 원형 진행 바 */
+.circular-progress {
+  transform: rotate(-90deg);
+}
+.circular-progress circle {
+  fill: none;
+  stroke-width: 4;
+  stroke-linecap: round;
+  transition: stroke-dasharray 0.3s ease;
+}
+.circular-progress .track {
+  stroke: #ecf0f1;
+}
+.circular-progress .progress {
+  stroke: #3498db;
+  animation: circularProgress 1s ease-out;
+}
+@keyframes circularProgress {
+  0% {
+    stroke-dasharray: 0 251.2;
+  }
+}
+
+/* =================== 타이핑 & 채팅 =================== */
+
+.typing-indicator {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  padding: 12px 16px;
+}
+
+/* typing-dot (변수 지원, 단일 정의) */
+.typing-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--dot-color, #95a5a6);
+  animation: typing 1.4s infinite ease-in-out;
+}
+.typing-dot:nth-child(1) {
+  animation-delay: 0s;
+}
+.typing-dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.typing-dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes typing {
+  0%,
+  60%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.4;
+  }
+  30% {
+    transform: translateY(-10px);
+    opacity: 1;
+  }
+}
+
+/* =================== 레이아웃 유틸(모달 기본 스타일) =================== */
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.modal-content {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 24px;
+  max-width: 90vw;
+  max-height: 90vh;
+  overflow: auto;
+}
+
+/* =================== 유틸리티 클래스 =================== */
+
+/* 색상 토큰 */
+.is-primary {
+  --spinner-color: #3498db;
+  --dot-color: #3498db;
+  --progress-color: #3498db;
+}
+.is-success {
+  --spinner-color: #2ecc71;
+  --dot-color: #2ecc71;
+  --progress-color: #2ecc71;
+}
+.is-danger {
+  --spinner-color: #e74c3c;
+  --dot-color: #e74c3c;
+  --progress-color: #e74c3c;
+}
+.is-warning {
+  --spinner-color: #f39c12;
+  --dot-color: #f39c12;
+  --progress-color: #f39c12;
+}
+
+/* 스피너 두께 프리셋 */
+.loading-spinner--thin {
+  --spinner-thickness: 3px;
+}
+.loading-spinner--thick {
+  --spinner-thickness: 5px;
+}
+
+/* 플로팅 알림 포지션 유틸 */
+.pos-top-right {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+}
+.pos-top-left {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1000;
+}
+.pos-bottom-right {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+}
+.pos-bottom-left {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  z-index: 1000;
+}
+
+/* 애니메이션 지연 */
+.delay-100 {
+  animation-delay: 0.1s;
+}
+.delay-200 {
+  animation-delay: 0.2s;
+}
+.delay-300 {
+  animation-delay: 0.3s;
+}
+.delay-500 {
+  animation-delay: 0.5s;
+}
+.delay-700 {
+  animation-delay: 0.7s;
+}
+.delay-1000 {
+  animation-delay: 1s;
+}
+
+/* 애니메이션 속도 */
+.duration-fast {
+  animation-duration: 0.3s;
+}
+.duration-normal {
+  animation-duration: 0.5s;
+}
+.duration-slow {
+  animation-duration: 0.8s;
+}
+.duration-slower {
+  animation-duration: 1.2s;
+}
+
+/* 애니메이션 반복 */
+.repeat-infinite {
+  animation-iteration-count: infinite;
+}
+.repeat-once {
+  animation-iteration-count: 1;
+}
+.repeat-twice {
+  animation-iteration-count: 2;
+}
+
+/* 접근성: 모션 줄이기 설정 존중 */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
