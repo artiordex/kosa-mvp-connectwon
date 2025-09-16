@@ -339,7 +339,10 @@
     "netcat",
     "pwuser",
     "applypatch",
-    "testkit"
+    "testkit",
+    "checkmark",
+    "crossmark",
+    "googleusercontent"
   ],
 
   // Nx Console AI 규칙 사용

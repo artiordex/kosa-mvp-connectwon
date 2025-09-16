@@ -7,46 +7,27 @@
 {
   // 루트의 tsconfig.base.json 상속
   "extends": "../../tsconfig.base.json",
-
   "compilerOptions": {
-    // 입력/출력 경로
+    // 입/출력
     "rootDir": "./src",
-
-    // 빌드 결과 위치
     "outDir": "./dist",
 
-    // 워커는 순수 Node 런타임
-    "target": "ES2022",
+    // 순수 Node 런타임
     "lib": ["ES2022"],
     "types": ["node"],
 
-    // ESM 해석(NodeNext)
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-
-    // 산출물 및 디버깅
-    "noEmit": false,
-    "declaration": true,
-    "declarationMap": true,
+    // 디버깅/증분
     "sourceMap": true,
-
-    // 모노레포 증분 빌드
-    "composite": true,
     "incremental": true,
     "tsBuildInfoFile": "./dist/.tsbuildinfo",
 
-    // 상호운용/편의
-    "esModuleInterop": true,
+    // 워커는 앱이므로 d.ts 불필요
+    "declaration": false,
+    "declarationMap": false,
 
-    // 기본 내보내기 호환성 설정
-    "allowSyntheticDefaultImports": true,
-    "resolveJsonModule": true,
-    "exactOptionalPropertyTypes": true
-
-    // 이벤트 핸들러에서 미사용 매개변수 경고가 거슬리면 아래 중 하나를 고려
-    // "noUnusedParameters": false
+    // 프로젝트 레퍼런스 비사용
+    "composite": false
   },
-
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", "**/*.test.*", "**/*.spec.*"]
 }

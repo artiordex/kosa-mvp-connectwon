@@ -11,10 +11,10 @@ const nextConfig = {
   transpilePackages: [
     '@connectwon/ui',
     '@connectwon/api-contract',
-    '@connectwon/database',
+    // '@connectwon/database',
     '@connectwon/core',
-    '@connectwon/logger',
-    '@connectwon/nest-kit',
+    // '@connectwon/logger',
+    // '@connectwon/nest-kit',
     '@connectwon/sdk',
   ],
 
@@ -27,6 +27,7 @@ const nextConfig = {
     optimizePackageImports: ['lucide-react', 'date-fns'],
     // 타입 체크 최적화
     typedRoutes: true,
+    outputFileTracingRoot: '../../',
   },
 
   // 이미지 최적화 설정

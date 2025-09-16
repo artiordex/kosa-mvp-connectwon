@@ -1,0 +1,23 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "paths": {
+      "@connectwon/core": ["packages/core/src/index.ts"],
+      "@connectwon/core/*": ["packages/core/src/*"],
+      "@connectwon/api-contract": ["packages/api-contract/src/schemas/index.ts"],
+      "@connectwon/api-contract/*": ["packages/api-contract/src/*"],
+      "@connectwon/configs": ["packages/configs/index.ts"],
+      "@connectwon/configs/*": ["packages/configs/*"],
+      "@connectwon/database": ["packages/database/src/index.ts"],
+      "@connectwon/database/*": ["packages/database/src/*"],
+      "@connectwon/logger": ["packages/logger/src/index.ts"],
+      "@connectwon/logger/*": ["packages/logger/src/*"],
+      "@connectwon/sdk": ["packages/sdk/src/index.ts"],
+      "@connectwon/sdk/*": ["packages/sdk/src/*"],
+      "@connectwon/nest-kit": ["packages/nest-kit/src/index.ts"],
+      "@connectwon/nest-kit/*": ["packages/nest-kit/src/*"],
+      "@connectwon/ui": ["packages/ui/src/index.ts"],
+      "@connectwon/ui/*": ["packages/ui/src/*"]
+    }
+  }
+}

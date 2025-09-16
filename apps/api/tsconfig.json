@@ -1,57 +1,45 @@
-/**
- * Description : tsconfig.json - 📌 Nest/Express API 모듈  (TypeScript 설정)
- * Author : Shiwoo Min
- * Date : 2025-09-06
- * 09-12 : 소스맵/증분빌드/tsbuildinfo 추가, 라이브러리 스킵체크 활성화
- */
 {
+  /**
+   * Description : tsconfig.json - 📌 Nest/Express API 모듈 (TypeScript 설정)
+   * Author : Shiwoo Min
+   * Date : 2025-09-06
+   * 09-12 : 소스맵/증분빌드/tsbuildinfo 추가, 라이브러리 스킵체크 활성화
+   * 09-16 : Project References 추가, base 설정 상속으로 중복 제거
+   */
+
   // 루트의 tsconfig.base.json 상속
   "extends": "../../tsconfig.base.json",
 
   "compilerOptions": {
-    // API 소스 루트
-    "rootDir": "./src",
-
-    // 빌드 결과 위치
+    // API 전용 출력 설정
     "outDir": "./dist",
-
-    // 모듈 시스템 설정 (Nest, Express 등 Node 환경)
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-
-    // CommonJS 호환성 설정
-    "esModuleInterop": true,
-
-    // 기본 내보내기 호환성 설정
-    "allowSyntheticDefaultImports": true,
-
-    // 데코레이터 필수 (class-validator / class-transformer)
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-
-    // TS5 + 데코레이터/클래스필드 안전장치
-    "useDefineForClassFields": false,
-
-    // 엄격한 타입 검사 설정(루트가 strict이므로 필요한 것만 오버라이드)
-    "strictPropertyInitialization": false,
-
-    // 산출물/디버깅
-    "noEmit": false,
-    "sourceMap": true,
-
-    // 모노레포 증분 빌드(속도 ↑)
-    "composite": true,
-    "incremental": true,
+    "rootDir": "./src",
     "tsBuildInfoFile": "./dist/.tsbuildinfo",
 
-    // 외부 d.ts 검사는 스킵(속도/잡음 ↓)
-    "skipLibCheck": true,
+    // NestJS 데코레이터 필수 설정 (base에서 오버라이드)
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "useDefineForClassFields": false,
 
-    // DOM 타입 제거, node 전용 타입만 포함
+    // NestJS/Express 특화 설정
+    "strictPropertyInitialization": false,
+
+    // Node.js 환경 타입만 포함
     "types": ["node"]
   },
 
+  // API 소스 파일만 포함
   "include": ["src/**/*"],
+
+  // 모노레포 workspace 패키지 참조 (빌드 순서 보장)
+  "references": [
+    { "path": "../../packages/core" },
+    { "path": "../../packages/database" },
+    { "path": "../../packages/logger" },
+    { "path": "../../packages/nest-kit" },
+    { "path": "../../packages/api-contract" },
+    { "path": "../../packages/sdk" }
+  ],
 
   "exclude": [
     "node_modules",

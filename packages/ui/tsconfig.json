@@ -31,7 +31,7 @@
     "types": []
   },
   // 루트에 있는 타입 파일도 포함
-  "include": ["src/**/*", "src/**/index.ts", "ui-types.ts", "hook-types.ts", "component-types.ts"],
+  "include": ["src/**/*", "src/**/index.ts", "ui-types.ts"],
   "exclude": ["dist", "node_modules"],
   "references": []
 }
