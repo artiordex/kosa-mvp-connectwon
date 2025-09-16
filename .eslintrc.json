@@ -2,6 +2,8 @@
   // 루트 고정
   "root": true,
 
+  // 플러그인 설정
+  "plugins": ["@nx", "@typescript-eslint", "import", "playwright"],
   "env": {
     "es2022": true,
     "node": true
@@ -22,31 +24,17 @@
 
   "parserOptions": {
     // 모노레포: 각 앱/패키지 tsconfig를 한 번에 인식
-    "project": [
-      "./tsconfig.json",
-      "./apps/*/tsconfig.json",
-      "./packages/*/tsconfig.json"
-    ],
+    "project": ["./tsconfig.json", "./apps/*/tsconfig.json", "./packages/*/tsconfig.json"],
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
-
-  // 플러그인 설정
-  "plugins": [
-    "@typescript-eslint",
-    "playwright"
-  ],
 
   // import 경로 해석 설정
   "settings": {
     "import/resolver": {
       // TS 경로 별칭/프로젝트 해석
       "typescript": {
-        "project": [
-          "./tsconfig.json",
-          "./apps/*/tsconfig.json",
-          "./packages/*/tsconfig.json"
-        ],
+        "project": ["./tsconfig.json", "./apps/*/tsconfig.json", "./packages/*/tsconfig.json"],
         "alwaysTryTypes": true
       },
       // ESM/Node 해석도 병행(.mjs/.js/.ts)
@@ -68,6 +56,17 @@
   ],
 
   "rules": {
+    "@nx/enforce-module-boundaries": [
+      "error",
+      {
+        "enforceBuildableLibDependency": true,
+        "allow": [],
+        "depConstraints": [
+          { "sourceTag": "type:app", "onlyDependOnLibsWithTags": ["type:lib", "scope:shared"] },
+          { "sourceTag": "scope:api", "onlyDependOnLibsWithTags": ["scope:shared"] }
+        ]
+      }
+    ],
     // 팀 스타일
     "semi": ["error", "always"],
     "quotes": "off",
@@ -89,33 +88,49 @@
     "no-await-in-loop": "off",
 
     // 의존성 안전: 테스트/툴링에선 devDeps 허용
-    "import/no-extraneous-dependencies": ["error", {
-      "peerDependencies": true,
-      "optionalDependencies": true,
-      "devDependencies": false
-    }],
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "peerDependencies": true,
+        "optionalDependencies": true,
+        "devDependencies": false
+      }
+    ],
 
     // 가독성/중복 임포트 방지
-    "import/order": ["warn", {
-      "groups": ["builtin", "external", "internal", "parent", "sibling", "index", "object", "type"],
-      "pathGroups": [
-        { "pattern": "@connectwon/**", "group": "internal", "position": "after" }
-      ],
-      "pathGroupsExcludedImportTypes": ["builtin"],
-      "newlines-between": "always",
-      "alphabetize": { "order": "asc", "caseInsensitive": true }
-    }],
+    "import/order": [
+      "warn",
+      {
+        "groups": [
+          "builtin",
+          "external",
+          "internal",
+          "parent",
+          "sibling",
+          "index",
+          "object",
+          "type"
+        ],
+        "pathGroups": [{ "pattern": "@connectwon/**", "group": "internal", "position": "after" }],
+        "pathGroupsExcludedImportTypes": ["builtin"],
+        "newlines-between": "always",
+        "alphabetize": { "order": "asc", "caseInsensitive": true }
+      }
+    ],
     "import/no-duplicates": "warn",
     "import/newline-after-import": ["warn", { "count": 1 }],
 
     // 줄 길이 완화
-    "max-len": ["warn", {
-      "code": 120,
-      "ignoreComments": true,
-      "ignoreTrailingComments": true,
-      "ignoreTemplateLiterals": true,
-      "ignoreUrls": true
-    }],
+    "max-len": [
+      "warn",
+      {
+        "code": 120,
+        "ignoreComments": true,
+        "ignoreTrailingComments": true,
+        "ignoreTemplateLiterals": true,
+        "ignoreUrls": true
+      }
+    ],
 
     // Playwright
     "playwright/no-focused-test": "error",
@@ -136,14 +151,21 @@
         "**/playwright.config.*",
         "**/vitest.config.*",
         "**/*.config.*",
-        "scripts/**"
+        "scripts/**",
+        "**/*.ts",
+        "**/*.tsx",
+        "**/*.js",
+        "**/*.jsx"
       ],
       "rules": {
-        "import/no-extraneous-dependencies": ["error", {
-          "devDependencies": true,
-          "peerDependencies": true,
-          "optionalDependencies": true
-        }]
+        "import/no-extraneous-dependencies": [
+          "error",
+          {
+            "devDependencies": true,
+            "peerDependencies": true,
+            "optionalDependencies": true
+          }
+        ]
       }
     },
     // JS/Config 파일에서는 TS 전용 룰 일부 비활성화

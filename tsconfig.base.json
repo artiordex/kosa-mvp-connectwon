@@ -2,6 +2,7 @@
  * Description : tsconfig.base.json - 📌 루트 TypeScript 공통 설정 (호이스팅 적용)
  * Author : Shiwoo Min
  * Date : 2025-09-06
+ * 09-17- paths에 apps, packages 전체 추가
  */
 {
   // 공통 타겟 및 모듈 시스템
@@ -82,6 +83,7 @@
   },
   "baseUrl": ".",
   "paths": {
+    // packages
     "@connectwon/core": ["packages/core/src/index.ts"],
     "@connectwon/core/*": ["packages/core/src/*"],
     "@connectwon/api-contract": ["packages/api-contract/src/schemas/index.ts"],
@@ -97,6 +99,12 @@
     "@connectwon/nest-kit": ["packages/nest-kit/src/index.ts"],
     "@connectwon/nest-kit/*": ["packages/nest-kit/src/*"],
     "@connectwon/ui": ["packages/ui/src/index.ts"],
-    "@connectwon/ui/*": ["packages/ui/src/*"]
+    "@connectwon/ui/*": ["packages/ui/src/*"],
+    // apps
+    "@connectwon/web/*": ["apps/web/src/*"],
+    "@connectwon/admin/*": ["apps/admin/src/*"],
+    "@connectwon/api/*": ["apps/api/src/*"],
+    "@connectwon/worker/*": ["apps/worker/src/*"],
+    "@connectwon/e2e/*": ["apps/e2e/src/*"]
   }
 }

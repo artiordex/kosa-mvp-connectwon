@@ -15,7 +15,7 @@ global:
 
 # 알림 규칙 파일
 rule_files:
-  - 'alerts.yml'
+  - /etc/prometheus/alerts.yml
 
 # 알림 매니저 설정
 alerting:

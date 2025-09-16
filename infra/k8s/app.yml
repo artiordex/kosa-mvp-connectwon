@@ -1,6 +1,7 @@
 # Description : app.yml - 📌 K8s ArgoCD 매니페스트
 # Author : Shiwoo Min
 # Date : 2025-09-15
+# 09-16 - 보안 강화(SecurityContext, NetworkPolicy), 고가용성(HPA, PDB), 운영 안정성 추가
 # 참고 :
 # - 이미지 레포: ghcr.io/artiordex/kosa-mvp-connectwon/<service>:latest
 
@@ -25,6 +26,61 @@ data:
   NODE_ENV: 'production'
 
 ---
+# NetworkPolicy로 트래픽 제한
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: deny-all-default
+  namespace: connectwon
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+    - Egress
+  egress:
+    # DNS 허용
+    - to: []
+      ports:
+        - protocol: UDP
+          port: 53
+    # 내부 서비스 간 통신 허용
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              name: connectwon
+
+---
+# Web NetworkPolicy - 특정 트래픽만 허용
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: web-netpol
+  namespace: connectwon
+spec:
+  podSelector:
+    matchLabels:
+      app: web
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: nginx-ingress
+      ports:
+        - protocol: TCP
+          port: 3000
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              app: api
+      ports:
+        - protocol: TCP
+          port: 8000
+
+---
 # Web(Next.js 사용자 앱)
 apiVersion: apps/v1
 kind: Deployment
@@ -46,10 +102,21 @@ spec:
     spec:
       imagePullSecrets:
         - name: ghcr-pull-secret
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        runAsGroup: 1001
+        fsGroup: 1001
       containers:
         - name: web
           image: ghcr.io/artiordex/kosa-mvp-connectwon/web:latest
           ports: [{ containerPort: 3000 }]
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
           envFrom:
             - configMapRef: { name: connectwon-config }
             - secretRef: { name: connectwon-secrets } # 필요 시 사용
@@ -69,6 +136,28 @@ spec:
           resources:
             requests: { cpu: '100m', memory: '256Mi' }
             limits: { cpu: '500m', memory: '512Mi' }
+          volumeMounts:
+            - name: tmp-volume
+              mountPath: /tmp
+            - name: next-cache
+              mountPath: /app/.next/cache
+      volumes:
+        - name: tmp-volume
+          emptyDir: {}
+        - name: next-cache
+          emptyDir: {}
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values: ['web']
+                topologyKey: kubernetes.io/hostname
+
 ---
 apiVersion: v1
 kind: Service
@@ -83,6 +172,47 @@ spec:
     - name: http
       port: 80
       targetPort: 3000
+
+---
+# Web HPA (Horizontal Pod Autoscaler)
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: web-hpa
+  namespace: connectwon
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: web
+  minReplicas: 2
+  maxReplicas: 10
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 80
+
+---
+# Web PDB (Pod Disruption Budget)
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: web-pdb
+  namespace: connectwon
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: web
 
 ---
 # Admin(Next.js 관리자 대시보드)
@@ -105,10 +235,21 @@ spec:
     spec:
       imagePullSecrets:
         - name: ghcr-pull-secret
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        runAsGroup: 1001
+        fsGroup: 1001
       containers:
         - name: admin
           image: ghcr.io/artiordex/kosa-mvp-connectwon/admin:latest
           ports: [{ containerPort: 3001 }]
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
           envFrom:
             - configMapRef: { name: connectwon-config }
             - secretRef: { name: connectwon-secrets }
@@ -123,6 +264,17 @@ spec:
           resources:
             requests: { cpu: '100m', memory: '256Mi' }
             limits: { cpu: '500m', memory: '512Mi' }
+          volumeMounts:
+            - name: tmp-volume
+              mountPath: /tmp
+            - name: next-cache
+              mountPath: /app/.next/cache
+      volumes:
+        - name: tmp-volume
+          emptyDir: {}
+        - name: next-cache
+          emptyDir: {}
+
 ---
 apiVersion: v1
 kind: Service
@@ -160,6 +312,27 @@ spec:
     spec:
       imagePullSecrets:
         - name: ghcr-pull-secret
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        runAsGroup: 1001
+        fsGroup: 1001
+      initContainers:
+        - name: migration
+          image: ghcr.io/artiordex/kosa-mvp-connectwon/api:latest
+          command: ['npm', 'run', 'db:migrate']
+          envFrom:
+            - configMapRef: { name: connectwon-config }
+            - secretRef: { name: connectwon-secrets }
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          volumeMounts:
+            - name: tmp-volume
+              mountPath: /tmp
       containers:
         - name: api
           image: ghcr.io/artiordex/kosa-mvp-connectwon/api:latest
@@ -167,6 +340,12 @@ spec:
           env:
             - name: PORT
               value: '8000'
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
           envFrom:
             - configMapRef: { name: connectwon-config }
             - secretRef: { name: connectwon-secrets } # DATABASE_URL / REDIS_URL / JWT_SECRET 등
@@ -183,6 +362,24 @@ spec:
           resources:
             requests: { cpu: '200m', memory: '384Mi' }
             limits: { cpu: '1000m', memory: '1Gi' }
+          volumeMounts:
+            - name: tmp-volume
+              mountPath: /tmp
+      volumes:
+        - name: tmp-volume
+          emptyDir: {}
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values: ['api']
+                topologyKey: kubernetes.io/hostname
+
 ---
 apiVersion: v1
 kind: Service
@@ -197,6 +394,47 @@ spec:
     - name: http
       port: 80
       targetPort: 8000
+
+---
+# API HPA (Horizontal Pod Autoscaler)
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: api-hpa
+  namespace: connectwon
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: api
+  minReplicas: 2
+  maxReplicas: 15
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 80
+
+---
+# API PDB (Pod Disruption Budget)
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: api-pdb
+  namespace: connectwon
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: api
 
 ---
 # Worker(BullMQ 등 백그라운드 작업자) – HTTP 트래픽은 없지만 /metrics를 열 경우 수집용 Service를 둘 수 있음
@@ -219,11 +457,22 @@ spec:
     spec:
       imagePullSecrets:
         - name: ghcr-pull-secret
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        runAsGroup: 1001
+        fsGroup: 1001
       containers:
         - name: worker
           image: ghcr.io/artiordex/kosa-mvp-connectwon/worker:latest
           # metrics만 있다면 containerPort 생략 가능. 노출 시 아래 주석 해제:
           # ports: [{ containerPort: 3003 }]
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
           envFrom:
             - configMapRef: { name: connectwon-config }
             - secretRef: { name: connectwon-secrets } # QUEUE_REDIS_URL / REDIS_URL / DATABASE_URL 등
@@ -235,6 +484,40 @@ spec:
           resources:
             requests: { cpu: '50m', memory: '128Mi' }
             limits: { cpu: '500m', memory: '512Mi' }
+          volumeMounts:
+            - name: tmp-volume
+              mountPath: /tmp
+      volumes:
+        - name: tmp-volume
+          emptyDir: {}
+
+---
+# Worker HPA (큐 길이 기반 스케일링 고려)
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: worker-hpa
+  namespace: connectwon
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: worker
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 80
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 85
 
 ---
 # (선택) Worker 메트릭 수집용 Service – 위에서 ports 열면 사용

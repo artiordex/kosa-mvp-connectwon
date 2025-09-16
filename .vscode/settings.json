@@ -342,9 +342,10 @@
     "testkit",
     "checkmark",
     "crossmark",
-    "googleusercontent"
-    "testkit"
-    "chainguard"
+    "googleusercontent",
+    "testkit",
+    "chainguard",
+    "NEXTAUTH"
   ],
 
   // Nx Console AI 규칙 사용

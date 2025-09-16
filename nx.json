@@ -1,5 +1,6 @@
 {
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
+  "description": "Nx 워크스페이스 설정",
   "extends": "nx/presets/npm.json",
   "defaultBase": "main",
 
@@ -24,7 +25,12 @@
       "!{projectRoot}/generated/**"
     ],
 
-    "env": ["{workspaceRoot}/.env*", "{workspaceRoot}/infra/docker/.env", "{projectRoot}/.env*"]
+    "env": [
+      "{workspaceRoot}/.env*",
+      "{workspaceRoot}/infra/docker/.env",
+      "{workspaceRoot}/secrets/**",
+      "{projectRoot}/.env*"
+    ]
   },
 
   "targetDefaults": {
@@ -50,19 +56,29 @@
       "inputs": ["default", "^production"],
       "cache": false
     },
-
     "gen:openapi": {
       "inputs": ["production", "^production"],
       "outputs": ["{projectRoot}/openapi.json"],
       "cache": true
     },
-
     "prisma:generate": {
       "inputs": ["default", "^default", "env"],
       "cache": false
     },
     "db:generate": {
       "inputs": ["default", "^default", "env"],
+      "cache": false
+    },
+    "type-check": {
+      "inputs": ["default", "^default"],
+      "cache": true
+    },
+    "format": {
+      "inputs": ["default"],
+      "cache": false
+    },
+    "ci": {
+      "inputs": ["production", "^production", "env"],
       "cache": false
     }
   },

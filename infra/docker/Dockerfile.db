@@ -4,8 +4,7 @@
 # Date : 2025-09-06
 # 09-06 - 도커 빌드 테스트: docker compose -f infra/docker/docker-compose.yml build postgres
 # 09-07 - init 스크립트 수동적용
-# docker compose -f docker-compose.yml exec postgres \
-# bash -lc 'ls -al /docker-entrypoint-initdb.d'
+# 09-16 - chainguard 이미지에서 apk 명령어 제거
 
 # Postgres 이미지
 FROM cgr.dev/chainguard/postgres:latest AS db
@@ -13,12 +12,12 @@ FROM cgr.dev/chainguard/postgres:latest AS db
 # 타임존 설정
 ENV TZ=Asia/Seoul
 
-# Alpine 기본 패키지 최신화
-RUN apk update && apk upgrade --no-cache
+# Alpine 기본 패키지 최신화 - chainguard 이미지에서 제거
+# RUN apk update && apk upgrade --no-cache
 
 # 설정 파일 복사
 COPY infra/database/conf/postgresql.conf /etc/postgresql/postgresql.conf
 COPY infra/database/conf/pg_hba.conf     /etc/postgresql/pg_hba.conf
 
 # 초기화 스크립트 복사
-# COPY infra/database/init/ /docker-entrypoint-initdb.d/
+COPY infra/database/init/ /docker-entrypoint-initdb.d/

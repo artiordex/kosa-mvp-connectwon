@@ -16,7 +16,7 @@ COPY packages ./packages
 COPY apps/e2e/package.json ./apps/e2e/package.json
 
 # 2. 의존성 설치
-RUN pnpm install --frozen-lockfile --filter=@connectwon/e2e
+RUN pnpm install --frozen-lockfile
 
 # 3. E2E 소스 복사
 COPY apps/e2e ./apps/e2e
