@@ -1,11 +1,11 @@
 /**
- * Description : auth.ts - 📌 인증 관련 API 계약
+ * Description : auth.ts - 📌 인증 관련 API 계약 및 스키마 정의
  * Author : Shiwoo Min
  * Date : 2025-09-11
  */
 import { z } from 'zod';
 
-//  일반 로그인 요청 스키마
+// 일반 로그인 요청 스키마
 export const LoginRequestSchema = z.object({
   email: z.string().email('유효한 이메일을 입력해주세요'),
   password: z.string().min(6, '비밀번호는 최소 6자 이상이어야 합니다'),
@@ -34,8 +34,9 @@ export const LoginResponseSchema = z.object({
   }),
   expiresAt: z.string().datetime(),
 });
-
 export const SocialLoginResponseSchema = LoginResponseSchema;
+
+// 소셜 로그인 콜백 쿼리 파라미터 스키마
 export const SocialCallbackQuerySchema = z.object({
   code: z.string(),
   state: z.string().optional(),
@@ -43,6 +44,7 @@ export const SocialCallbackQuerySchema = z.object({
   error_description: z.string().optional(),
 });
 
+// 타입 추출
 export type SocialLoginRequest = z.infer<typeof SocialLoginRequestSchema>;
 export type SocialLoginResponse = z.infer<typeof SocialLoginResponseSchema>;
 export type SocialCallbackQuery = z.infer<typeof SocialCallbackQuerySchema>;
@@ -185,19 +187,23 @@ export const EmailVerificationRequestSchema = z.object({
   token: z.string(),
 });
 
+// 이메일 인증 응답
 export const EmailVerificationResponseSchema = z.object({
   message: z.string(),
   verified: z.boolean(),
 });
 
+// 재전송 이메일 인증
 export const ResendVerificationEmailRequestSchema = z.object({
   email: z.string().email('유효한 이메일을 입력해주세요'),
 });
 
+// 재전송 이메일 인증 응답
 export const ResendVerificationEmailResponseSchema = z.object({
   message: z.string(),
 });
 
+// 타입 추출
 export type EmailVerificationRequest = z.infer<typeof EmailVerificationRequestSchema>;
 export type EmailVerificationResponse = z.infer<typeof EmailVerificationResponseSchema>;
 export type ResendVerificationEmailRequest = z.infer<typeof ResendVerificationEmailRequestSchema>;
@@ -207,7 +213,6 @@ export type ResendVerificationEmailResponse = z.infer<typeof ResendVerificationE
 export const LogoutResponseSchema = z.object({
   message: z.string(),
 });
-
 export type LogoutResponse = z.infer<typeof LogoutResponseSchema>;
 
 // 현재 사용자 정보
@@ -230,5 +235,4 @@ export const CurrentUserResponseSchema = z.object({
   createdAt: z.string().datetime(),
   lastLoginAt: z.string().datetime().optional(),
 });
-
 export type CurrentUserResponse = z.infer<typeof CurrentUserResponseSchema>;

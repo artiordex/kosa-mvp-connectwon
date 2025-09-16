@@ -5,6 +5,7 @@
  */
 import { OpenAPIV3 } from 'openapi-types';
 
+// OpenAPI 문서 객체
 export const document: OpenAPIV3.Document = {
   openapi: '3.0.3',
   info: { title: 'Connectwon API', version: '1.0.0' },
@@ -13,8 +14,9 @@ export const document: OpenAPIV3.Document = {
   tags: [],
 };
 
+// OpenAPI 경로 객체
 export const paths: OpenAPIV3.PathsObject = {
-  // ================ SYSTEM ENDPOINTS =================
+  // 시스템 헬스체크 엔드포인트
   '/health': {
     get: {
       tags: ['System'],
@@ -43,7 +45,7 @@ export const paths: OpenAPIV3.PathsObject = {
     },
   },
 
-  // ================ AUTHENTICATION ENDPOINTS =================
+  // 사용자 로그인 및 인증 관련 엔드포인트
   '/auth/login': {
     post: {
       tags: ['Authentication'],
@@ -91,6 +93,7 @@ export const paths: OpenAPIV3.PathsObject = {
     },
   },
 
+  // 토큰 리프레시
   '/auth/refresh': {
     post: {
       tags: ['Authentication'],
@@ -121,6 +124,7 @@ export const paths: OpenAPIV3.PathsObject = {
     },
   },
 
+  // 사용자 로그아웃
   '/auth/logout': {
     post: {
       tags: ['Authentication'],
@@ -146,6 +150,7 @@ export const paths: OpenAPIV3.PathsObject = {
     },
   },
 
+  // 사용자 프로필 조회
   '/auth/profile': {
     get: {
       tags: ['Authentication'],
@@ -172,7 +177,7 @@ export const paths: OpenAPIV3.PathsObject = {
     },
   },
 
-  // ================ USER ENDPOINTS =================
+  // 사용자 관리 관련 엔드포인트
   '/users': {
     get: {
       tags: ['Users'],
@@ -255,6 +260,7 @@ export const paths: OpenAPIV3.PathsObject = {
     },
   },
 
+  // 사용자 개별 관리 엔드포인트
   '/users/{id}': {
     parameters: [
       {
@@ -340,7 +346,7 @@ export const paths: OpenAPIV3.PathsObject = {
     },
   },
 
-  // ================ PROGRAM ENDPOINTS =================
+  // 프로그램 관리 관련 엔드포인트
   '/programs': {
     get: {
       tags: ['Programs'],
@@ -433,6 +439,7 @@ export const paths: OpenAPIV3.PathsObject = {
     },
   },
 
+  // 개별 프로그램 관리 엔드포인트
   '/programs/{id}': {
     parameters: [
       {
@@ -516,6 +523,7 @@ export const paths: OpenAPIV3.PathsObject = {
     },
   },
 
+  // 프로그램 내 세션 관리 엔드포인트
   '/programs/{id}/sessions': {
     parameters: [
       {
@@ -556,7 +564,7 @@ export const paths: OpenAPIV3.PathsObject = {
     },
   },
 
-  // ================ SESSION ENDPOINTS =================
+  // 세션 관리 관련 엔드포인트
   '/sessions': {
     get: {
       tags: ['Sessions'],
@@ -648,6 +656,7 @@ export const paths: OpenAPIV3.PathsObject = {
     },
   },
 
+  // 개별 세션 관리 엔드포인트
   '/sessions/{id}': {
     parameters: [
       {
@@ -732,6 +741,7 @@ export const paths: OpenAPIV3.PathsObject = {
     },
   },
 
+  // 세션 참가자 관리 엔드포인트
   '/sessions/{id}/participants': {
     parameters: [
       {
@@ -778,7 +788,7 @@ export const paths: OpenAPIV3.PathsObject = {
     },
   },
 
-  // ================ VENUE ENDPOINTS =================
+  // 장소 관리 관련 엔드포인트
   '/venues': {
     get: {
       tags: ['Venues'],
@@ -851,6 +861,7 @@ export const paths: OpenAPIV3.PathsObject = {
     },
   },
 
+  // 개별 장소 관리 엔드포인트
   '/venues/{id}': {
     parameters: [
       {
@@ -934,6 +945,7 @@ export const paths: OpenAPIV3.PathsObject = {
     },
   },
 
+  // 장소 내 방 관리 엔드포인트
   '/venues/{id}/rooms': {
     parameters: [
       {
@@ -1015,7 +1027,7 @@ export const paths: OpenAPIV3.PathsObject = {
     },
   },
 
-  // ================ ROOM ENDPOINTS =================
+  // 방 개별 관리 엔드포인트
   '/rooms/{id}': {
     parameters: [
       {
@@ -1100,6 +1112,7 @@ export const paths: OpenAPIV3.PathsObject = {
     },
   },
 
+  // 방 개별 관리 엔드포인트
   '/rooms/{id}/availability': {
     parameters: [
       {
@@ -1147,7 +1160,7 @@ export const paths: OpenAPIV3.PathsObject = {
     },
   },
 
-  // ================ RESERVATION ENDPOINTS =================
+  // 예약 관리 관련 엔드포인트
   '/reservations': {
     get: {
       tags: ['Reservations'],
@@ -1245,6 +1258,7 @@ export const paths: OpenAPIV3.PathsObject = {
     },
   },
 
+  // 개별 예약 관리 엔드포인트
   '/reservations/{id}': {
     parameters: [
       {
@@ -1342,7 +1356,7 @@ export const paths: OpenAPIV3.PathsObject = {
     },
   },
 
-  // ================ PARTICIPANT ENDPOINTS =================
+  // 참가 관리 관련 엔드포인트
   '/participants': {
     get: {
       tags: ['Participants'],
@@ -1427,6 +1441,7 @@ export const paths: OpenAPIV3.PathsObject = {
     },
   },
 
+  // 개별 참가자 관리 엔드포인트
   '/participants/{id}': {
     parameters: [
       {
@@ -1509,7 +1524,7 @@ export const paths: OpenAPIV3.PathsObject = {
     },
   },
 
-  // ================ PAYMENT ENDPOINTS =================
+  // 결제 관리 관련 엔드포인트
   '/payments': {
     get: {
       tags: ['Payments'],
@@ -1595,6 +1610,7 @@ export const paths: OpenAPIV3.PathsObject = {
     },
   },
 
+  // 개별 결제 관리 엔드포인트
   '/payments/{id}': {
     parameters: [
       {
@@ -1666,7 +1682,7 @@ export const paths: OpenAPIV3.PathsObject = {
     },
   },
 
-  // ================ AI INTERACTION ENDPOINTS =================
+  // AI 상호작용 관리 엔드포인트
   '/ai-interactions': {
     get: {
       tags: ['AI Interactions'],
@@ -1753,6 +1769,7 @@ export const paths: OpenAPIV3.PathsObject = {
     },
   },
 
+  // 개별 AI 상호작용 관리 엔드포인트
   '/ai-interactions/{id}': {
     parameters: [
       {

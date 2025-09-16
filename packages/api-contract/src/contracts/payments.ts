@@ -3,9 +3,13 @@
  * Author : Shiwoo Min
  * Date : 2025-09-11
  */
+// 결제 상태 타입 정의
 export type PaymentStatus = 'PENDING' | 'COMPLETED' | 'FAILED' | 'REFUNDED' | 'CANCELLED';
+
+// 결제 수단 타입 정의
 export type PaymentMethod = 'CREDIT_CARD' | 'BANK_TRANSFER' | 'CASH' | 'FREE';
 
+// 결제 인터페이스 정의
 export interface Payment {
   id: string;
   session_id: string;
@@ -24,6 +28,7 @@ export interface Payment {
   updated_at: string;
 }
 
+// 결제 생성 요청 및 응답 인터페이스
 export interface CreatePaymentRequest {
   session_id: string;
   user_id: string;
@@ -34,6 +39,7 @@ export interface CreatePaymentRequest {
   payment_provider_data?: Record<string, any>;
 }
 
+// 결제 수정 요청 인터페이스
 export interface UpdatePaymentRequest {
   status?: PaymentStatus;
   payment_provider_id?: string;
@@ -43,6 +49,7 @@ export interface UpdatePaymentRequest {
   refund_reason?: string;
 }
 
+// 결제 목록 조회 쿼리 파라미터 인터페이스
 export interface PaymentListQuery {
   page?: number;
   limit?: number;
@@ -57,18 +64,21 @@ export interface PaymentListQuery {
   paid_before?: string;
 }
 
+// 결제 처리 요청 인터페이스
 export interface ProcessPaymentRequest {
   payment_id: string;
   payment_token?: string;
   payment_method_details?: Record<string, any>;
 }
 
+// 결제 환불 요청 인터페이스
 export interface RefundPaymentRequest {
   payment_id: string;
   refund_amount?: number;
   refund_reason: string;
 }
 
+// 결제 요약 통계 인터페이스
 export interface PaymentSummary {
   total_amount: number;
   currency: string;
@@ -89,11 +99,13 @@ export interface PaymentSummary {
   >;
 }
 
+// API 응답 인터페이스
 export interface PaymentResponse {
   data: Payment;
   message?: string;
 }
 
+// 결제 목록 응답 인터페이스
 export interface PaymentsListResponse {
   data: Payment[];
   pagination: {
@@ -104,6 +116,7 @@ export interface PaymentsListResponse {
   };
 }
 
+// 결제 처리 응답 인터페이스
 export interface ProcessPaymentResponse {
   success: boolean;
   payment: Payment;
@@ -111,6 +124,7 @@ export interface ProcessPaymentResponse {
   message?: string;
 }
 
+// 결제 환불 응답 인터페이스
 export interface RefundPaymentResponse {
   success: boolean;
   payment: Payment;
@@ -119,6 +133,7 @@ export interface RefundPaymentResponse {
   message?: string;
 }
 
+// 결제 요약 응답 인터페이스
 export interface PaymentSummaryResponse {
   data: PaymentSummary;
   period: {

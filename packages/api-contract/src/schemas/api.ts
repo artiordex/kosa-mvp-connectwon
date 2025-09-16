@@ -1,11 +1,10 @@
 /**
- * Description : api.ts - 📌 API 관련 타입정의
+ * Description : api.ts - 📌 API 관련 스키마
  * Author : Shiwoo Min
  * Date : 2025-09-07
  */
-import { z } from 'zod';
-
 import * as schemas from '../schemas/index.js';
+import { z } from 'zod';
 
 // 기본 타입
 export type IdParam = z.infer<typeof schemas.IdParamSchema>;
@@ -71,6 +70,7 @@ export type ListResponse<T> = {
   pagination: CursorPagination;
 };
 
+// 오프셋 기반 리스트 응답 타입
 export type PagedListResponse<T> = {
   items: T[];
   pagination: OffsetPagination;
@@ -83,63 +83,71 @@ export type RoomListResponse = ListResponse<Room>;
 export type SessionListResponse = ListResponse<Session>;
 export type PaymentListResponse = ListResponse<Payment>;
 
-// 확장된 타입 (관계 포함)
+// 유저 역할 타입
 export type UserWithRoles = User & {
   roles: UserRole[];
 };
 
+// 프로그램 상세 정보 타입
 export type SessionWithDetails = Session & {
   program: Program;
   room?: Room;
   venue?: Venue;
 };
 
+// 예약 상세 정보 타입
 export type ReservationWithDetails = ReservationResponse & {
   room: Room;
   venue: Venue;
   session?: Session;
 };
 
-// 요청/응답 페어 타입
+// 요청/응답 페어 인터페이스
 export interface CreateUserFlow {
   request: UpdateUserRequest;
   response: ApiResponse<User>;
 }
 
+// 장소 생성 요청/응답 페어 인터페이스
 export interface CreateVenueFlow {
   request: CreateVenueRequest;
   response: ApiResponse<Venue>;
 }
 
+// 방 생성 요청/응답 페어 인터페이스
 export interface CreateProgramFlow {
   request: CreateProgramRequest;
   response: ApiResponse<Program>;
 }
 
+// 세션 생성 요청/응답 페어 인터페이스
 export interface CreateSessionFlow {
   request: CreateSessionRequest;
   response: ApiResponse<Session>;
 }
 
+// 예약 생성 요청/응답 페어 인터페이스
 export interface CreateReservationFlow {
   request: CreateReservationRequest;
   response: ApiResponse<ReservationResponse>;
 }
 
+// 결제 생성 요청/응답 페어 인터페이스
 export interface CreatePaymentFlow {
   request: CreatePaymentRequest;
   response: ApiResponse<PaymentIntentResponse>;
 }
 
-// 유틸리티 타입
+// 공통 유틸리티 타입 및 함수
 export type EntityId = string | bigint;
 export type Timestamp = Date | string;
 
-// ID 변환을 위한 타입 가드
+// ID 변환을 위한 타입 가드 (string)
 export function isStringId(id: EntityId): id is string {
   return typeof id === 'string';
 }
 
+// ID 변환을 위한 타입 가드 (bigint)
 export function isBigIntId(id: EntityId): id is bigint {
   return typeof id === 'bigint';
 }
@@ -149,6 +157,7 @@ export type PartialUpdate<T> = {
   [P in keyof T]?: T[P];
 };
 
+// 특정 필드를 필수로 만드는 유틸리티 타입
 export type RequiredFields<T, K extends keyof T> = T & Required<Pick<T, K>>;
 
 // 에러 타입 확장
@@ -160,14 +169,17 @@ export interface ValidationError extends BaseErrorResponse {
   }[];
 }
 
+// 인증 및 권한 에러 타입
 export interface AuthenticationError extends BaseErrorResponse {
   code: 'AUTHENTICATION_ERROR';
 }
 
+// 권한 없음 에러 타입
 export interface AuthorizationError extends BaseErrorResponse {
   code: 'AUTHORIZATION_ERROR';
 }
 
+// 리소스 없음 에러 타입
 export interface NotFoundError extends BaseErrorResponse {
   code: 'NOT_FOUND';
   details: {
@@ -176,6 +188,7 @@ export interface NotFoundError extends BaseErrorResponse {
   };
 }
 
+// 충돌 에러 타입
 export interface ConflictError extends BaseErrorResponse {
   code: 'CONFLICT';
   details: {
@@ -187,6 +200,7 @@ export interface ConflictError extends BaseErrorResponse {
 // API 엔드포인트 타입
 export type ApiEndpoint = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 
+// API 라우트 정의 인터페이스
 export interface ApiRoute {
   method: ApiEndpoint;
   path: string;
@@ -200,11 +214,13 @@ export interface BaseFilters {
   sortOrder?: 'asc' | 'desc';
 }
 
+// 특화된 필터 인터페이스
 export interface UserFilters extends BaseFilters {
   role?: UserRole;
   isActive?: boolean;
 }
 
+// 장소 필터 인터페이스
 export interface SessionFilters extends BaseFilters {
   status?: SessionStatus;
   programId?: bigint;
@@ -213,6 +229,7 @@ export interface SessionFilters extends BaseFilters {
   endDate?: Date;
 }
 
+// 방 필터 인터페이스
 export interface ReservationFilters extends BaseFilters {
   status?: ReservationStatus;
   roomId?: bigint;

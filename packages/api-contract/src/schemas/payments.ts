@@ -5,8 +5,8 @@
  */
 import { z } from 'zod';
 
-// Enums
-export const PaymentProvider = z.enum(['STRIPE', 'TOSS', 'KAKAO_PAY', 'NAVER_PAY']);
+// 결제 관련 열거형 및 타입
+export const PaymentProvider = z.enum(['STRIPE']);
 export const PaymentMethod = z.enum([
   'CARD',
   'BANK_TRANSFER',

@@ -3,8 +3,10 @@
  * Author : Shiwoo Min
  * Date : 2025-09-11
  */
+// 세션 상태 타입
 export type SessionStatus = 'SCHEDULED' | 'CONFIRMED' | 'CANCELLED' | 'COMPLETED';
 
+// 세션 인터페이스
 export interface Session {
   id: string;
   program_id: string;
@@ -19,6 +21,7 @@ export interface Session {
   updated_at: string;
 }
 
+// 세션 생성 요청 및 응답 인터페이스
 export interface CreateSessionRequest {
   program_id: string;
   starts_at: string;
@@ -30,6 +33,7 @@ export interface CreateSessionRequest {
   location_text?: string;
 }
 
+// 세션 수정 요청 인터페이스
 export interface UpdateSessionRequest {
   starts_at?: string;
   ends_at?: string;
@@ -40,6 +44,7 @@ export interface UpdateSessionRequest {
   location_text?: string;
 }
 
+// 세션 목록 조회 쿼리 파라미터 인터페이스
 export interface SessionListQuery {
   page?: number;
   limit?: number;
@@ -50,11 +55,13 @@ export interface SessionListQuery {
   location_text?: string;
 }
 
+// API 응답 인터페이스
 export interface SessionResponse {
   data: Session;
   message?: string;
 }
 
+// 세션 목록 응답 인터페이스
 export interface SessionsListResponse {
   data: Session[];
   pagination: {

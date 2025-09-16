@@ -1,19 +1,21 @@
 /**
  * Description : setup.ts - 📌 OpenAPI Setup
- * Author      : Shiwoo Min
- * Date        : 2025-09-11
+ * Author : Shiwoo Min
+ * Date : 2025-09-11
  */
 import type { OpenAPIV3 } from 'openapi-types';
 
-/**
- * 안전 보조 유틸
- */
+// 객체가 없으면 팩토리로 생성하는 유틸
 function ensure<T extends object>(obj: T | undefined, factory: () => T): T {
   return obj ?? factory();
 }
+
+// 배열에 중복 없이 아이템 추가하는 유틸
 function pushUnique<T>(arr: T[], pred: (x: T) => boolean, item: T) {
   if (!arr.some(pred)) arr.push(item);
 }
+
+// 객체에서 undefined 값인 키를 제거하는 유틸
 function defined<T extends object>(obj: T): Partial<T> {
   // exactOptionalPropertyTypes 대응: undefined 값 키는 제거
   const out: Record<string, unknown> = {};
@@ -23,55 +25,63 @@ function defined<T extends object>(obj: T): Partial<T> {
   return out as Partial<T>;
 }
 
-/**
- * 메인 설정(네가 제공한 내용 반영)
- */
+// OpenAPI 기본 설정 객체
 export const openApiConfig: OpenAPIV3.Document = {
   openapi: '3.0.3',
   info: {
-    title: 'Program Management API',
+    title: 'ConnectWon OpenAPI API 문서',
     description: `
-# Program Management API
+# 커넥트원 API
 
-A comprehensive API for managing educational programs, sessions, venues, and reservations.
+프로그램, 세션, 장소, 예약 등을 관리하는 API입니다.
 
-## Features
-- **User Management**: Google OAuth integration with role-based access
-- **Program Management**: Create and manage educational programs
-- **Session Management**: Schedule and manage program sessions
-- **Venue & Room Management**: Manage venues and room reservations
-- **Participant Management**: Handle program enrollments and attendance
-- **Payment Processing**: Manage session fees and payments
-- **AI Integration**: Track AI interactions and analytics
+## 주요 기능
+- 사용자 관리: Google OAuth 기반의 역할별 접근 제어
+- 프로그램 관리: 교육 프로그램 생성 및 관리
+- 세션 관리: 프로그램 세션 일정 관리
+- 장소 및 공간 관리: 시설 예약 관리
+- 참가자 관리: 등록 및 참석 처리
+- 결제 처리: 수수료 및 결제 관리
+- AI 통합: AI 사용 기록 및 분석
 
-## Authentication
-This API uses JWT Bearer tokens for authentication. Most endpoints require authentication.
-Google OAuth 2.0 is also supported for user authentication.
-
-## Rate Limiting
-API requests are rate-limited per user. Check response headers for current limits.
-
-## Error Handling
-All errors follow RFC 7807 Problem Details format with consistent structure.
+## API 규약
+- 인증: JWT Bearer 토큰 및 Google OAuth 2.0 지원
+- 오류: RFC 7807 표준 Problem Details 형식 준수
+- 요청 제한: 사용자별 요청 제한 (응답 헤더에서 확인)
     `.trim(),
-    version: '1.0.0',
+    version: '1.0.0', // API 버전
+    // 연락처 정보
     contact: {
-      name: 'API Support Team',
-      email: 'api-support@example.com',
-      url: 'https://example.com/support',
+      name: process.env['CONTACT_NAME'] || 'API Support',
+      email: process.env['CONTACT_EMAIL'] || 'api-support@example.com',
+      url: process.env['CONTACT_URL'] || 'https://example.com/support',
     },
+    // 라이선스 정보
     license: {
       name: 'MIT License',
       url: 'https://opensource.org/licenses/MIT',
     },
+    // 서비스 약관
     termsOfService: 'https://example.com/terms',
   },
+  // 서버 정보
   servers: [
-    { url: 'http://localhost:3000/api/v1', description: 'Development server' },
-    { url: 'https://api-staging.example.com/v1', description: 'Staging server' },
-    { url: 'https://api.example.com/v1', description: 'Production server' },
+    {
+      url: process.env['DEV_SERVER_URL'] || 'http://localhost:3000/api/v1',
+      description: 'Development server',
+    },
+    {
+      url: process.env['STAGING_SERVER_URL'] || 'https://api-staging.example.com/v1',
+      description: 'Staging server',
+    },
+    {
+      url: process.env['PROD_SERVER_URL'] || 'https://api.example.com/v1',
+      description: 'Production server',
+    },
   ],
+  // 공통 컴포넌트
   components: {
+    // 보안 스키마
     securitySchemes: {
       bearerAuth: {
         type: 'http',
@@ -79,6 +89,7 @@ All errors follow RFC 7807 Problem Details format with consistent structure.
         bearerFormat: 'JWT',
         description: 'JWT Bearer token for API authentication',
       },
+      // Google OAuth 2.0
       googleOAuth: {
         type: 'oauth2',
         description: 'Google OAuth 2.0 for user authentication',
@@ -95,47 +106,54 @@ All errors follow RFC 7807 Problem Details format with consistent structure.
         },
       },
     },
+    // 공통 파라미터
     parameters: {
-      // Pagination
+      // 페이지네이션
       page: {
         name: 'page',
         in: 'query',
         description: 'Page number for pagination (1-based indexing)',
         schema: { type: 'integer', minimum: 1, default: 1, example: 1 },
       },
+      // 페이지당 항목 수
       limit: {
         name: 'limit',
         in: 'query',
         description: 'Maximum number of items per page',
         schema: { type: 'integer', minimum: 1, maximum: 100, default: 20, example: 20 },
       },
+      // 정렬
       sortBy: {
         name: 'sort_by',
         in: 'query',
         description: 'Field name to sort results by',
         schema: { type: 'string', example: 'created_at' },
       },
+      // 정렬 방향
       sortOrder: {
         name: 'sort_order',
         in: 'query',
         description: 'Sort direction for results',
         schema: { type: 'string', enum: ['asc', 'desc'], default: 'desc', example: 'desc' },
       },
-      // Time-range
-      createdAfter: {
-        name: 'created_after',
-        in: 'query',
-        description: 'Filter items created after this timestamp',
-        schema: { type: 'string', format: 'date-time', example: '2024-01-01T00:00:00Z' },
-      },
+      // 생성일 필터 (이전)
       createdBefore: {
         name: 'created_before',
         in: 'query',
         description: 'Filter items created before this timestamp',
         schema: { type: 'string', format: 'date-time', example: '2024-12-31T23:59:59Z' },
       },
+      // 생성일 필터 (이후)
+      createdAfter: {
+        name: 'created_after',
+        in: 'query',
+        description: 'Filter items created after this timestamp',
+        schema: { type: 'string', format: 'date-time', example: '2024-01-01T00:00:00Z' },
+      },
     },
+    // 공통 응답
     responses: {
+      // 400 Bad Request
       BadRequest: {
         description: 'Bad request - invalid input parameters',
         content: {
@@ -151,6 +169,7 @@ All errors follow RFC 7807 Problem Details format with consistent structure.
           },
         },
       },
+      // 401 Unauthorized
       Unauthorized: {
         description: 'Unauthorized - authentication required',
         content: {
@@ -165,6 +184,7 @@ All errors follow RFC 7807 Problem Details format with consistent structure.
           },
         },
       },
+      // 403 Forbidden
       Forbidden: {
         description: 'Forbidden - insufficient permissions',
         content: {
@@ -179,6 +199,7 @@ All errors follow RFC 7807 Problem Details format with consistent structure.
           },
         },
       },
+      // 404 Not Found
       NotFound: {
         description: 'Resource not found',
         content: {
@@ -193,6 +214,7 @@ All errors follow RFC 7807 Problem Details format with consistent structure.
           },
         },
       },
+      // 409 Conflict
       Conflict: {
         description: 'Conflict - resource already exists or constraint violation',
         content: {
@@ -208,6 +230,7 @@ All errors follow RFC 7807 Problem Details format with consistent structure.
           },
         },
       },
+      // 422 Unprocessable Entity
       UnprocessableEntity: {
         description: 'Unprocessable entity - validation error',
         content: {
@@ -225,6 +248,7 @@ All errors follow RFC 7807 Problem Details format with consistent structure.
           },
         },
       },
+      // 429 Too Many Requests
       TooManyRequests: {
         description: 'Too many requests - rate limit exceeded',
         headers: {
@@ -237,6 +261,7 @@ All errors follow RFC 7807 Problem Details format with consistent structure.
             schema: { type: 'integer', format: 'int64' },
           },
         },
+        // 응답 바디
         content: {
           'application/json': {
             schema: { $ref: '#/components/schemas/ApiError' },
@@ -249,6 +274,7 @@ All errors follow RFC 7807 Problem Details format with consistent structure.
           },
         },
       },
+      // 500 Internal Server Error
       InternalServerError: {
         description: 'Internal server error',
         content: {
@@ -264,19 +290,24 @@ All errors follow RFC 7807 Problem Details format with consistent structure.
         },
       },
     },
+    // 공통 헤더
     headers: {
+      // 커스텀 헤더 예시
       'X-API-Version': {
         description: 'API version used for this request',
         schema: { type: 'string', example: '1.0.0' },
       },
+      // 요청 ID 헤더
       'X-Request-ID': {
         description: 'Unique identifier for this request',
         schema: { type: 'string', format: 'uuid', example: '550e8400-e29b-41d4-a716-446655440000' },
       },
+      // 요청 제한 헤더
       'X-Rate-Limit-Remaining': {
         description: 'Number of requests remaining in current rate limit window',
         schema: { type: 'integer', example: 99 },
       },
+      // 요청 제한 해제 헤더
       'X-Rate-Limit-Reset': {
         description: 'Unix timestamp when the rate limit window resets',
         schema: { type: 'integer', format: 'int64', example: 1640995200 },
@@ -284,6 +315,7 @@ All errors follow RFC 7807 Problem Details format with consistent structure.
     },
     // 참고: 여기서 schemas.ApiError 등 추가 정의가 필요하다면 이 파일이나 document에서 보강 가능
   },
+  // 전역 보안 설정 (Bearer 토큰 사용)
   security: [{ bearerAuth: [] }],
   paths: {},
   tags: [
@@ -301,67 +333,12 @@ All errors follow RFC 7807 Problem Details format with consistent structure.
   ],
 };
 
-/**
- * 공통 헤더/예시 (필요 시 응답/요청에 재사용)
- */
-export const commonHeaders: Record<string, OpenAPIV3.HeaderObject> = {
-  'X-API-Version': {
-    description: 'API version used for this request',
-    schema: { type: 'string', example: '1.0.0' },
-  },
-  'X-Request-ID': {
-    description: 'Unique request identifier for debugging',
-    schema: { type: 'string', format: 'uuid' },
-  },
-  'X-Rate-Limit-Remaining': {
-    description: 'Number of requests remaining in current window',
-    schema: { type: 'integer' },
-  },
-  'X-Rate-Limit-Reset': {
-    description: 'Time when the rate limit window resets',
-    schema: { type: 'integer', format: 'int64' },
-  },
-};
-
-export const exampleResponses = {
-  userExample: {
-    id: '12345',
-    email: 'user@example.com',
-    name: 'John Doe',
-    google_sub: 'google_sub_12345',
-    last_login_at: '2024-01-01T12:00:00Z',
-    role_flags: 1,
-    preferences: { theme: 'dark', notifications: true },
-    created_at: '2024-01-01T10:00:00Z',
-    updated_at: '2024-01-01T12:00:00Z',
-  },
-  programExample: {
-    id: '67890',
-    created_by_user_id: '12345',
-    type: 'seminar',
-    title: 'Introduction to Machine Learning',
-    description: 'A comprehensive course on ML fundamentals',
-    ai_summary_tags: ['machine-learning', 'beginner', 'python'],
-    is_active: true,
-    created_at: '2024-01-01T10:00:00Z',
-    updated_at: '2024-01-01T12:00:00Z',
-  },
-};
-
-/**
- * 기존 document에 openApiConfig를 "덮어쓰지 않고" 병합 적용
- * 사용법:
- *   import { document } from './document.js';
- *   import { applyOpenApiSetup } from './setup.js';
- *   applyOpenApiSetup(document);
- */
+// OpenAPI 문서에 기본 설정을 적용하는 함수
 export function applyOpenApiSetup(
   doc: OpenAPIV3.Document,
   cfg: OpenAPIV3.Document = openApiConfig,
 ) {
-  // info: 부족한 필드만 보강
   doc.info = { ...(doc.info ?? {}), ...defined(cfg.info ?? ({} as OpenAPIV3.InfoObject)) };
-
   // servers
   if (cfg.servers?.length) {
     doc.servers = ensure(doc.servers, () => []);
@@ -369,7 +346,6 @@ export function applyOpenApiSetup(
       pushUnique(doc.servers, x => x.url === s.url, s);
     }
   }
-
   // tags
   if (cfg.tags?.length) {
     doc.tags = ensure(doc.tags, () => []);
@@ -379,11 +355,10 @@ export function applyOpenApiSetup(
     }
   }
 
-  // security (전역)
+  // security
   if (cfg.security?.length) {
     doc.security = ensure(doc.security, () => []);
     for (const s of cfg.security) {
-      // 단순 푸시(보통 중복되지 않음)
       doc.security.push(s);
     }
   }
@@ -391,7 +366,6 @@ export function applyOpenApiSetup(
   // components
   if (cfg.components) {
     doc.components = ensure(doc.components, () => ({}));
-
     // securitySchemes
     if (cfg.components.securitySchemes) {
       doc.components.securitySchemes = ensure(doc.components.securitySchemes, () => ({}));
@@ -419,7 +393,7 @@ export function applyOpenApiSetup(
     }
   }
 
-  // paths (여기선 비워뒀지만, cfg.paths에 초기 경로가 있으면 병합)
+  // paths - cfg.paths가 있으면 doc.paths에 병합
   if (cfg.paths && Object.keys(cfg.paths).length > 0) {
     doc.paths = ensure(doc.paths, () => ({}));
     for (const [p, item] of Object.entries(cfg.paths)) {

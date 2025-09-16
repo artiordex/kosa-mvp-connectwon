@@ -1,12 +1,11 @@
 /**
  * Description : api-contract-types.ts - 📌 공통 API 타입 정의 (DB DDL 기반)
- * Author      : Shiwoo Min
- * Date        : 2025-09-10
+ * Author: Shiwoo Min
+ * Date: 2025-09-10
  */
-
 import { z } from 'zod';
 
-// API 계층 BIGINT를 문자열로 노출(정확도 보장)
+// API 계층 BIGINT를 문자열로 노출 (정확도 보장)
 export const IdSchema = z.string().regex(/^\d+$/).brand<'Id'>();
 export type Id = z.infer<typeof IdSchema>;
 
@@ -27,6 +26,7 @@ export const CursorPaginationQuerySchema = z.object({
 });
 export type CursorPaginationQuery = z.infer<typeof CursorPaginationQuerySchema>;
 
+// 커서 기반 페이지네이션 응답
 export const CursorPaginationResponseSchema = z.object({
   next_cursor: z.string().nullable(),
   has_more: z.boolean(),
@@ -46,6 +46,7 @@ export const CursorPaginatedResponseSchema = <T extends z.ZodTypeAny>(itemSchema
     timestamp: TimestampSchema,
   });
 
+// 커서 기반 페이지네이션 응답 타입 정의
 export type CursorPaginatedResponse<T> = {
   success: true;
   data: {
@@ -91,9 +92,9 @@ export type ApiResponse<T> = {
 // USERS
 export const UserSchema = z.object({
   id: IdSchema,
-  email: z.string().email().nullable(),                 // CITEXT UNIQUE
+  email: z.string().email().nullable(), // CITEXT UNIQUE
   name: z.string().nullable(),
-  google_sub: z.string().nullable(),                    // TEXT UNIQUE
+  google_sub: z.string().nullable(), // TEXT UNIQUE
   last_login_at: TimestampSchema.nullable(),
   role_flags: z.number().int().default(0),
   // 선택 필드 + 기본값 의도면 optional+default 권장
@@ -226,8 +227,9 @@ export type UpdateSession = Partial<CreateSession>;
 export type UpdateVenue = Partial<CreateVenue>;
 export type UpdateRoom = Partial<CreateRoom>;
 export type UpdateRoomReservation = Partial<CreateRoomReservation>;
-export type UpdateProgramParticipant = Partial<Omit<CreateProgramParticipant, 'session_id' | 'user_id'>>;
-
+export type UpdateProgramParticipant = Partial<
+  Omit<CreateProgramParticipant, 'session_id' | 'user_id'>
+>;
 
 // 조회용 조인 타입
 export type SessionWithProgram = Session & { program: Program };
@@ -296,8 +298,5 @@ export type AIUsageStats = {
   total_interactions: number;
   total_tokens: number;
   total_cost: number;
-  by_provider: Record<
-    string,
-    { interactions: number; tokens: number; cost: number }
-  >;
+  by_provider: Record<string, { interactions: number; tokens: number; cost: number }>;
 };

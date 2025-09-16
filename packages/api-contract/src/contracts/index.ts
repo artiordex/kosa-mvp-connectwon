@@ -1,5 +1,5 @@
 /**
- * Description : index.ts - 📌 Contracts 관련 타입정의
+ * Description : index.ts - 📌 Contracts 관련 타입 정의
  * Author : Shiwoo Min
  * Date : 2025-09-11
  */
@@ -13,7 +13,7 @@ export * from './participants.js';
 export * from './ai.js';
 export * from './payments.js';
 
-// Common types and utilities
+// 공통 에러 응답 인터페이스
 export interface ApiError {
   error: string;
   message: string;
@@ -22,6 +22,7 @@ export interface ApiError {
   timestamp: string;
 }
 
+// 공통 API 응답 인터페이스
 export interface ApiResponse<T = any> {
   data?: T;
   message?: string;
@@ -29,6 +30,7 @@ export interface ApiResponse<T = any> {
   timestamp: string;
 }
 
+// 페이지네이션 쿼리 인터페이스
 export interface PaginationQuery {
   page?: number;
   limit?: number;
@@ -36,6 +38,7 @@ export interface PaginationQuery {
   sort_order?: 'asc' | 'desc';
 }
 
+// 페이지네이션 메타데이터 인터페이스
 export interface PaginationMeta {
   page: number;
   limit: number;
@@ -45,13 +48,14 @@ export interface PaginationMeta {
   hasPrev: boolean;
 }
 
+// 페이지네이션 응답 인터페이스
 export interface PaginatedResponse<T = any> {
   data: T[];
   pagination: PaginationMeta;
   message?: string;
 }
 
-// Health check and system status
+// 시스템 상태 체크 응답 인터페이스
 export interface HealthCheckResponse {
   status: 'ok' | 'error';
   timestamp: string;
@@ -69,7 +73,7 @@ export interface HealthCheckResponse {
   >;
 }
 
-// Batch operations
+// 배치 작업 요청 인터페이스
 export interface BatchRequest<T = any> {
   items: T[];
   options?: {
@@ -78,6 +82,7 @@ export interface BatchRequest<T = any> {
   };
 }
 
+// 배치 작업 요청 인터페이스
 export interface BatchResponse<T = any> {
   success_count: number;
   error_count: number;
@@ -89,7 +94,7 @@ export interface BatchResponse<T = any> {
   }[];
 }
 
-// Search and filtering
+// 검색 쿼리 인터페이스
 export interface SearchQuery {
   q?: string;
   filters?: Record<string, any>;
@@ -97,6 +102,7 @@ export interface SearchQuery {
   highlight?: boolean;
 }
 
+// 검색 응답 인터페이스
 export interface SearchResponse<T = any> {
   data: T[];
   total: number;
@@ -111,7 +117,7 @@ export interface SearchResponse<T = any> {
   pagination?: PaginationMeta;
 }
 
-// File upload
+// 파일 업로드 요청 인터페이스
 export interface FileUploadRequest {
   file: File | Buffer;
   filename?: string;
@@ -119,6 +125,7 @@ export interface FileUploadRequest {
   metadata?: Record<string, any>;
 }
 
+// 파일 업로드 응답 인터페이스
 export interface FileUploadResponse {
   file_id: string;
   filename: string;
@@ -129,7 +136,7 @@ export interface FileUploadResponse {
   created_at: string;
 }
 
-// Webhook contracts
+// 웹훅 이벤트 인터페이스
 export interface WebhookEvent {
   id: string;
   type: string;
@@ -138,6 +145,7 @@ export interface WebhookEvent {
   source: string;
 }
 
+// 웹훅 구독 인터페이스
 export interface WebhookSubscription {
   id: string;
   url: string;
@@ -148,11 +156,10 @@ export interface WebhookSubscription {
   updated_at: string;
 }
 
-// Export validation schemas (if using a validation library like Zod)
+// 공통 상수
 export const DEFAULT_PAGE_SIZE = 20;
 export const MAX_PAGE_SIZE = 100;
 export const DEFAULT_SORT_ORDER = 'desc';
-
 export const COMMON_DATE_FORMATS = {
   ISO: 'YYYY-MM-DDTHH:mm:ss.sssZ',
   DATE_ONLY: 'YYYY-MM-DD',

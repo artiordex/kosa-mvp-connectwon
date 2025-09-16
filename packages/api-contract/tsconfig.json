@@ -4,7 +4,6 @@
  * Date        : 2025-09-05
  * 09-12 : ESNext/Bundler 해석, d.ts/소스맵/증분빌드, Node 타입 차단(types: [])
  */
-
 {
   // 루트의 tsconfig.json 상속
   "extends": "../../tsconfig.base.json",

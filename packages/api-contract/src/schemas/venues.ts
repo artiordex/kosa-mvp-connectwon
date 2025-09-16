@@ -5,22 +5,25 @@
  */
 import { z } from 'zod';
 
-// Enums
+// 룸 상태 정의
 export const RoomStatus = z.enum(['ACTIVE', 'INACTIVE', 'MAINTENANCE']);
+
+// 요일 정의
 export const DayOfWeek = z.enum([
-  'monday',
-  'tuesday',
-  'wednesday',
-  'thursday',
-  'friday',
-  'saturday',
-  'sunday',
+  '월요일',
+  '화요일',
+  '수요일',
+  '목요일',
+  '금요일',
+  '토요일',
+  '일요일',
 ]);
 
+// 타입 추출
 export type RoomStatus = z.infer<typeof RoomStatus>;
 export type DayOfWeek = z.infer<typeof DayOfWeek>;
 
-// Base Schemas
+// 운영 시간 및 휴무일 정의
 export const OpeningHoursSchema = z.record(
   DayOfWeek,
   z.union([
@@ -34,8 +37,9 @@ export const OpeningHoursSchema = z.record(
   ]),
 );
 
+// 휴무일 및 특별 이벤트 정의
 export const BlackoutRulesSchema = z.object({
-  holidays: z.array(z.string().regex(/^\d{4}-\d{2}-\d{2}$/)).optional(), // YYYY-MM-DD
+  holidays: z.array(z.string().regex(/^\d{4}-\d{2}-\d{2}$/)).optional(),
   maintenance_days: z.array(z.string().regex(/^\d{4}-\d{2}-\d{2}$/)).optional(),
   special_events: z
     .array(
@@ -47,6 +51,7 @@ export const BlackoutRulesSchema = z.object({
     .optional(),
 });
 
+// 장소 스키마
 export const VenueSchema = z.object({
   id: z.string(),
   name: z.string(),
@@ -60,6 +65,7 @@ export const VenueSchema = z.object({
   updated_at: z.date(),
 });
 
+// 방 스키마
 export const RoomSchema = z.object({
   id: z.string(),
   venue_id: z.string(),
@@ -73,7 +79,7 @@ export const RoomSchema = z.object({
   updated_at: z.date(),
 });
 
-// CRUD Schemas
+// 장소 생성 스키마
 export const CreateVenueSchema = z.object({
   name: z.string().min(1),
   description: z.string().optional(),
@@ -83,6 +89,7 @@ export const CreateVenueSchema = z.object({
   image_url: z.string().url().optional(),
 });
 
+// 장소 수정 스키마
 export const UpdateVenueSchema = z.object({
   name: z.string().min(1).optional(),
   description: z.string().optional(),
@@ -92,6 +99,7 @@ export const UpdateVenueSchema = z.object({
   image_url: z.string().url().optional(),
 });
 
+// 방 생성 스키마
 export const CreateRoomSchema = z.object({
   venue_id: z.string(),
   name: z.string().min(1),
@@ -102,6 +110,7 @@ export const CreateRoomSchema = z.object({
   image_urls: z.array(z.string().url()).optional(),
 });
 
+// 방 수정 스키마
 export const UpdateRoomSchema = z.object({
   name: z.string().min(1).optional(),
   capacity: z.number().min(1).optional(),
@@ -111,7 +120,7 @@ export const UpdateRoomSchema = z.object({
   image_urls: z.array(z.string().url()).optional(),
 });
 
-// Query Schemas
+// 장소 쿼리 스키마
 export const VenueQuerySchema = z.object({
   name: z.string().optional(),
   address: z.string().optional(),
@@ -124,6 +133,7 @@ export const VenueQuerySchema = z.object({
   limit: z.coerce.number().int().min(1).max(100).default(20),
 });
 
+// 방 쿼리 스키마
 export const RoomQuerySchema = z.object({
   venue_id: z.string().optional(),
   name: z.string().optional(),
@@ -136,12 +146,13 @@ export const RoomQuerySchema = z.object({
   limit: z.coerce.number().int().min(1).max(100).default(20),
 });
 
-// Operating Hours Schemas
+// 운영 시간 체크 스키마
 export const CheckVenueOperatingHoursSchema = z.object({
   venue_id: z.string(),
   datetime: z.string().datetime(),
 });
 
+// 운영 시간 응답 스키마
 export const OperatingHoursResponseSchema = z.object({
   is_open: z.boolean(),
   open_time: z.string().optional(),
@@ -151,6 +162,7 @@ export const OperatingHoursResponseSchema = z.object({
   day_of_week: DayOfWeek,
 });
 
+// 운영 시간 업데이트 스키마
 export const UpdateOperatingHoursSchema = z.object({
   day: DayOfWeek,
   open_time: z
@@ -164,7 +176,7 @@ export const UpdateOperatingHoursSchema = z.object({
   is_closed: z.boolean().optional(),
 });
 
-// Response Schemas
+// 페이지네이션 스키마
 export const PaginationSchema = z.object({
   page: z.number().int().min(1),
   limit: z.number().int().min(1),
@@ -172,17 +184,19 @@ export const PaginationSchema = z.object({
   pages: z.number().int().min(0),
 });
 
+// 장소 목록 응답 스키마
 export const VenueListResponseSchema = z.object({
   venues: z.array(VenueSchema),
   pagination: PaginationSchema,
 });
 
+// 방 목록 응답 스키마
 export const RoomListResponseSchema = z.object({
   rooms: z.array(RoomSchema),
   pagination: PaginationSchema,
 });
 
-// Extended Response Schemas
+// 장소에 소속된 방 목록을 포함하는 스키마
 export const VenueWithRoomsSchema = VenueSchema.extend({
   rooms: z.array(RoomSchema),
   total_rooms: z.number().int().min(0),
@@ -190,6 +204,7 @@ export const VenueWithRoomsSchema = VenueSchema.extend({
   total_capacity: z.number().int().min(0),
 });
 
+// 방이 소속된 장소 정보를 포함하는 스키마
 export const RoomWithVenueSchema = RoomSchema.extend({
   venue: z.object({
     id: z.string(),
@@ -199,7 +214,7 @@ export const RoomWithVenueSchema = RoomSchema.extend({
   }),
 });
 
-// Stats Schemas
+// 장소 통계 스키마
 export const VenueStatsSchema = z.object({
   venue_id: z.string(),
   period: z.string(), // YYYY-MM
@@ -220,6 +235,7 @@ export const VenueStatsSchema = z.object({
   ),
 });
 
+// 방 통계 스키마
 export const RoomStatsSchema = z.object({
   room_id: z.string(),
   period: z.string(),
@@ -233,7 +249,7 @@ export const RoomStatsSchema = z.object({
   average_rating: z.number().min(0).max(5).optional(),
 });
 
-// Type Exports
+// 타입 추출
 export type Venue = z.infer<typeof VenueSchema>;
 export type Room = z.infer<typeof RoomSchema>;
 export type OpeningHours = z.infer<typeof OpeningHoursSchema>;
@@ -255,55 +271,54 @@ export type VenueStats = z.infer<typeof VenueStatsSchema>;
 export type RoomStats = z.infer<typeof RoomStatsSchema>;
 export type Pagination = z.infer<typeof PaginationSchema>;
 
-// Helper Functions
+// 장소 시작일 체크
 export function isVenueOpen(venue: Venue, datetime: Date): boolean {
   if (!venue.opening_hours) return true;
 
   const dayNames: DayOfWeek[] = [
-    'sunday',
-    'monday',
-    'tuesday',
-    'wednesday',
-    'thursday',
-    'friday',
-    'saturday',
+    '일요일',
+    '월요일',
+    '화요일',
+    '수요일',
+    '목요일',
+    '금요일',
+    '토요일',
   ];
   const dayIndex = datetime.getDay();
   const dayName = dayNames[dayIndex];
-
-  if (!dayName) return false; // 안전 가드
-
+  if (!dayName) return false;
   const dayHours = venue.opening_hours[dayName];
-
   if (!dayHours || 'closed' in dayHours) return false;
-
   const currentTime = datetime.toTimeString().substring(0, 5); // HH:mm
   return currentTime >= dayHours.open && currentTime <= dayHours.close;
 }
 
+// 방 사용 가능 여부 체크
 export function isRoomAvailable(room: Room): boolean {
   return room.status === 'ACTIVE';
 }
 
+// 방 요금 계산
 export function calculateRoomRevenue(room: Room, hoursUsed: number): number {
   return (room.hourly_rate || 0) * hoursUsed;
 }
 
+// 방 장비 목록 추출
 export function getRoomEquipment(room: Room): string[] {
   if (!room.amenities || typeof room.amenities !== 'object') return [];
   return (room.amenities['equipment'] as string[]) || [];
 }
 
+// 운영 시간 포맷팅
 export function formatOperatingHours(hours: OpeningHours[DayOfWeek]): string {
   if (!hours || 'closed' in hours) return '휴무';
   return `${hours.open} - ${hours.close}`;
 }
 
+// 휴무일 체크
 export function isBlackoutDate(venue: Venue, date: string): boolean {
   if (!venue.blackout_rules) return false;
-
   const { holidays, maintenance_days, special_events } = venue.blackout_rules;
-
   return !!(
     holidays?.includes(date) ||
     maintenance_days?.includes(date) ||
@@ -311,34 +326,38 @@ export function isBlackoutDate(venue: Venue, date: string): boolean {
   );
 }
 
-// Validation Helpers
+// 장소 유효성 검사 헬퍼
 export function validateCreateVenue(data: unknown) {
   return CreateVenueSchema.safeParse(data);
 }
 
+// 방 유효성 검사 헬퍼
 export function validateCreateRoom(data: unknown) {
   return CreateRoomSchema.safeParse(data);
 }
 
+// 장소 쿼리 유효성 검사 헬퍼
 export function validateVenueQuery(data: unknown) {
   return VenueQuerySchema.safeParse(data);
 }
 
+// 방 쿼리 유효성 검사 헬퍼
 export function validateRoomQuery(data: unknown) {
   return RoomQuerySchema.safeParse(data);
 }
 
-// Constants
+// 오프닝 시간 업데이트 유효성 검사 헬퍼
 export const DEFAULT_OPENING_HOURS: OpeningHours = {
-  monday: { open: '09:00', close: '18:00' },
-  tuesday: { open: '09:00', close: '18:00' },
-  wednesday: { open: '09:00', close: '18:00' },
-  thursday: { open: '09:00', close: '18:00' },
-  friday: { open: '09:00', close: '18:00' },
-  saturday: { open: '10:00', close: '16:00' },
-  sunday: { closed: true },
+  월요일: { open: '09:00', close: '18:00' },
+  화요일: { open: '09:00', close: '18:00' },
+  수요일: { open: '09:00', close: '18:00' },
+  목요일: { open: '09:00', close: '18:00' },
+  금요일: { open: '09:00', close: '18:00' },
+  토요일: { open: '10:00', close: '16:00' },
+  일요일: { closed: true },
 };
 
+// 방 편의시설 기본값
 export const DEFAULT_ROOM_AMENITIES = {
   equipment: ['Wi-Fi'],
   facilities: ['에어컨', '난방'],

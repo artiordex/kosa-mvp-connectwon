@@ -3,6 +3,7 @@
  * Author : Shiwoo Min
  * Date : 2025-09-11
  */
+// 프로그램 인터페이스 정의
 export interface Program {
   id: string;
   created_by_user_id: string;
@@ -15,6 +16,7 @@ export interface Program {
   updated_at: string;
 }
 
+// 프로그램 생성 요청 및 응답 인터페이스
 export interface CreateProgramRequest {
   type?: string;
   title: string;
@@ -23,6 +25,7 @@ export interface CreateProgramRequest {
   is_active?: boolean;
 }
 
+// 프로그램 수정 요청 인터페이스
 export interface UpdateProgramRequest {
   type?: string;
   title?: string;
@@ -31,6 +34,7 @@ export interface UpdateProgramRequest {
   is_active?: boolean;
 }
 
+// 프로그램 목록 조회 쿼리 파라미터 인터페이스
 export interface ProgramListQuery {
   page?: number;
   limit?: number;
@@ -42,11 +46,13 @@ export interface ProgramListQuery {
   created_before?: string;
 }
 
+// API 응답 인터페이스
 export interface ProgramResponse {
   data: Program;
   message?: string;
 }
 
+// 프로그램 목록 응답 인터페이스
 export interface ProgramsListResponse {
   data: Program[];
   pagination: {

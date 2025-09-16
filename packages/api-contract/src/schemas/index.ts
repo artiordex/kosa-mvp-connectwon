@@ -13,7 +13,7 @@ export const IdParamSchema = z.object({
 export const BigIntIdSchema = z.bigint();
 
 // Enum 스키마
-export const UserRoleSchema = z.enum(['USER', 'PROGRAM_CREATOR', 'ADMIN']);
+export const UserRoleSchema = z.enum(['USER', 'CREATOR', 'ADMIN']);
 export const SessionStatusSchema = z.enum(['SCHEDULED', 'CONFIRMED', 'CANCELLED', 'COMPLETED']);
 export const RoomStatusSchema = z.enum(['ACTIVE', 'INACTIVE', 'MAINTENANCE']);
 export const ReservationStatusSchema = z.enum(['PENDING', 'CONFIRMED', 'CANCELLED', 'COMPLETED']);
@@ -29,6 +29,7 @@ export const BaseErrorResponseSchema = z.object({
   details: z.record(z.any()).optional(),
 });
 
+// 성공 응답 스키마
 export const BaseSuccessResponseSchema = z.object({
   success: z.literal(true),
   message: z.string().optional(),
@@ -41,12 +42,12 @@ export const SimpleErrorResponseSchema = z.object({
   details: z.unknown().optional(),
 });
 
+// 간단한 성공 응답 스키마
 export const SimpleSuccessResponseSchema = z.object({
   message: z.string(),
   data: z.unknown().optional(),
 });
 
-// Pagination 스키마
 // 커서 기반 페이지네이션 (무한 스크롤용)
 export const CursorPaginationSchema = z.object({
   hasNext: z.boolean(),
@@ -84,6 +85,7 @@ export const UserSchema = z.object({
   updatedAt: z.date(),
 });
 
+// 사용자 업데이트용 스키마
 export const UpdateUserSchema = z.object({
   name: z.string().min(1).optional(),
   preferences: z.record(z.any()).optional(),
@@ -97,6 +99,7 @@ export const GoogleCallbackResponseSchema = z.object({
   picture: z.string().url().optional(),
 });
 
+// 인증 에러 스키마
 export const AuthErrorSchema = z.object({
   error: z.string(),
   message: z.string(),
@@ -114,6 +117,7 @@ export const VenueSchema = z.object({
   updatedAt: z.date(),
 });
 
+// 지점 생성용 스키마
 export const CreateVenueSchema = z.object({
   name: z.string().min(1, '지점명은 필수입니다'),
   address: z.string().optional(),
@@ -121,6 +125,7 @@ export const CreateVenueSchema = z.object({
   blackoutRules: z.record(z.any()).optional(),
 });
 
+// 방 관련 스키마
 export const RoomSchema = z.object({
   id: z.bigint(),
   venueId: z.bigint(),
@@ -144,6 +149,7 @@ export const ProgramSchema = z.object({
   updatedAt: z.date(),
 });
 
+// 프로그램 생성용 스키마
 export const CreateProgramSchema = z.object({
   type: z.string().optional(),
   title: z.string().min(1, '프로그램 제목은 필수입니다'),
@@ -151,6 +157,7 @@ export const CreateProgramSchema = z.object({
   aiSummaryTags: z.array(z.string()).optional(),
 });
 
+// 프로그램 리스트 응답 스키마
 export const ProgramListResponseSchema = z.object({
   programs: z.array(ProgramSchema),
   pagination: CursorPaginationSchema,
@@ -171,6 +178,7 @@ export const SessionSchema = z.object({
   updatedAt: z.date(),
 });
 
+// 세션 생성용 스키마
 export const CreateSessionSchema = z
   .object({
     programId: z.bigint(),
@@ -198,6 +206,7 @@ export const CreateReservationSchema = z
     path: ['endsAt'],
   });
 
+// 예약 응답 스키마
 export const ReservationResponseSchema = z.object({
   id: z.bigint(),
   roomId: z.bigint(),
@@ -222,6 +231,7 @@ export const PaymentStatusSchema = z.enum([
   'CANCELLED',
 ]);
 
+// 결제 스키마
 export const PaymentSchema = z.object({
   id: z.bigint(),
   userId: z.bigint(),
@@ -234,11 +244,13 @@ export const PaymentSchema = z.object({
   updatedAt: z.date(),
 });
 
+// 결제 생성용 스키마
 export const CreatePaymentSchema = z.object({
   amount: z.number().int().positive(),
   method: PaymentMethodSchema,
 });
 
+// 결제 인텐트 응답 스키마
 export const PaymentIntentResponseSchema = z.object({
   id: z.string(),
   clientSecret: z.string(),
@@ -254,6 +266,7 @@ export const ListResponseSchema = <T extends z.ZodType>(itemSchema: T) =>
     pagination: CursorPaginationSchema,
   });
 
+  // 페이징 리스트 응답 스키마
 export const PagedListResponseSchema = <T extends z.ZodType>(itemSchema: T) =>
   z.object({
     items: z.array(itemSchema),
@@ -266,26 +279,31 @@ export const UserListResponseSchema = z.object({
   pagination: CursorPaginationSchema,
 });
 
+// 지점 리스트 응답 스키마
 export const VenueListResponseSchema = z.object({
   items: z.array(VenueSchema),
   pagination: CursorPaginationSchema,
 });
 
+// 방 리스트 응답 스키마
 export const RoomListResponseSchema = z.object({
   items: z.array(RoomSchema),
   pagination: CursorPaginationSchema,
 });
 
+// 세션 리스트 응답 스키마
 export const SessionListResponseSchema = z.object({
   items: z.array(SessionSchema),
   pagination: CursorPaginationSchema,
 });
 
+// 결제 리스트 응답 스키마
 export const PaymentListResponseSchema = z.object({
   items: z.array(PaymentSchema),
   pagination: CursorPaginationSchema,
 });
 
+// 예약 리스트 응답 스키마
 export const ReservationListResponseSchema = z.object({
   items: z.array(ReservationResponseSchema),
   pagination: CursorPaginationSchema,
@@ -295,11 +313,12 @@ export const ReservationListResponseSchema = z.object({
 export const ApiResponseSchema = <T extends z.ZodType>(dataSchema: T) =>
   z.union([BaseSuccessResponseSchema.extend({ data: dataSchema }), BaseErrorResponseSchema]);
 
-// 유틸리티 함수
+// 리퀘스트 검증 유틸리티
 export function validateRequest<T extends z.ZodType>(schema: T, data: unknown): z.infer<T> {
   return schema.parse(data);
 }
 
+// 선택적 리퀘스트 검증 유틸리티
 export function validateOptionalRequest<T extends z.ZodType>(
   schema: T,
   data: unknown,
@@ -316,6 +335,7 @@ export function stringToBigInt(value: string): bigint {
   return BigInt(value);
 }
 
+// ID 파라미터 검증 헬퍼
 export function bigIntToString(value: bigint): string {
   return value.toString();
 }
@@ -372,14 +392,16 @@ export type ListResponse<T> = {
   pagination: CursorPagination;
 };
 
+// 페이징 리스트 응답 타입
 export type PagedListResponse<T> = {
   items: T[];
   pagination: OffsetPagination;
 };
 
+// API 응답 타입
 export type ApiResponse<T> = (BaseSuccessResponse & { data: T }) | BaseErrorResponse;
 
-// 특화된 리스트 응답 타입
+// 타입 내보내기
 export type UserListResponse = z.infer<typeof UserListResponseSchema>;
 export type VenueListResponse = z.infer<typeof VenueListResponseSchema>;
 export type RoomListResponse = z.infer<typeof RoomListResponseSchema>;

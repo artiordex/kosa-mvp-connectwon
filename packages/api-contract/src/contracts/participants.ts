@@ -3,9 +3,13 @@
  * Author : Shiwoo Min
  * Date : 2025-09-11
  */
+// 프로그램 참가자 역할 및 상태 타입
 export type ParticipantRole = 'HOST' | 'ATTENDEE';
+
+// 프로그램 참가자 상태 타입
 export type ParticipantStatus = 'APPLIED' | 'CONFIRMED' | 'CANCELLED' | 'NO_SHOW';
 
+// 프로그램 참가자 인터페이스
 export interface ProgramParticipant {
   id: string;
   session_id: string;
@@ -15,6 +19,7 @@ export interface ProgramParticipant {
   joined_at: string;
 }
 
+// 프로그램 참가자 생성 요청 및 응답 인터페이스
 export interface CreateParticipantRequest {
   session_id: string;
   user_id: string;
@@ -22,11 +27,13 @@ export interface CreateParticipantRequest {
   status?: ParticipantStatus;
 }
 
+// 프로그램 참가자 수정 요청 인터페이스
 export interface UpdateParticipantRequest {
   role?: ParticipantRole;
   status?: ParticipantStatus;
 }
 
+// 프로그램 참가자 목록 조회 쿼리 파라미터 인터페이스
 export interface ParticipantListQuery {
   page?: number;
   limit?: number;
@@ -38,16 +45,19 @@ export interface ParticipantListQuery {
   joined_before?: string;
 }
 
+// 프로그램 참가자 일괄 수정 요청 인터페이스
 export interface ParticipantBulkUpdateRequest {
   participant_ids: string[];
   status: ParticipantStatus;
 }
 
+// API 응답 인터페이스
 export interface ParticipantResponse {
   data: ProgramParticipant;
   message?: string;
 }
 
+// 프로그램 참가자 목록 응답 인터페이스
 export interface ParticipantsListResponse {
   data: ProgramParticipant[];
   pagination: {
@@ -58,6 +68,7 @@ export interface ParticipantsListResponse {
   };
 }
 
+// 프로그램 참가자 일괄 수정 응답 인터페이스
 export interface ParticipantBulkUpdateResponse {
   updated_count: number;
   failed_updates?: {
@@ -67,7 +78,7 @@ export interface ParticipantBulkUpdateResponse {
   message?: string;
 }
 
-// Extended participant info with user and session details
+// 프로그램 참가자 상세 정보 인터페이스
 export interface ParticipantWithDetails extends ProgramParticipant {
   user: {
     id: string;
@@ -82,6 +93,7 @@ export interface ParticipantWithDetails extends ProgramParticipant {
   };
 }
 
+// 프로그램 참가자 상세 정보 응답 인터페이스
 export interface ParticipantsWithDetailsResponse {
   data: ParticipantWithDetails[];
   pagination: {

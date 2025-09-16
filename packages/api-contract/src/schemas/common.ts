@@ -52,8 +52,7 @@ export const BigIntIdParamSchema = z.object({
     }),
 });
 
-// 쿼리 스키마
-// 원시 쿼리 파라미터 (모든 값이 string으로 들어옴)
+// 원시 쿼리 파라미터 스키마 (실제 사용 전)
 export const RawSearchQuerySchema = z.object({
   search: z.string().optional(),
   page: z.string().optional(),
@@ -92,7 +91,6 @@ export const SearchQuerySchema = z.object({
 });
 
 // 필터링 스키마
-// 날짜 범위 필터
 export const DateRangeSchema = z
   .object({
     startDate: z
@@ -135,7 +133,6 @@ export const BaseFilterSchema = z.intersection(
   DateRangeSchema,
 );
 
-// 유틸리티 스키마
 // 문자열을 숫자로 변환하는 스키마
 export const StringToNumberSchema = z.string().transform(val => {
   const num = parseFloat(val);
@@ -175,10 +172,12 @@ export function parseSearchQuery(query: Record<string, string | undefined>) {
   return SearchQuerySchema.parse(query);
 }
 
+// ID 파라미터 검증 헬퍼
 export function parseIdParam(params: Record<string, string>) {
   return IdParamSchema.parse(params);
 }
 
+// BigInt ID 파라미터 검증 헬퍼
 export function parseBigIntIdParam(params: Record<string, string>) {
   return BigIntIdParamSchema.parse(params);
 }
@@ -203,7 +202,6 @@ export const DEFAULT_SORT_ORDER = 'desc' as const;
 // 페이지네이션 헬퍼
 export function createPaginationInfo(page: number, limit: number, total: number): Pagination {
   const pages = Math.ceil(total / limit);
-
   return {
     page,
     limit,
@@ -212,6 +210,7 @@ export function createPaginationInfo(page: number, limit: number, total: number)
   };
 }
 
+// 커서 페이지네이션 헬퍼
 export function createCursorPagination(
   hasNext: boolean,
   nextCursor?: string,
@@ -227,7 +226,6 @@ export function createCursorPagination(
 // API 응답 헬퍼
 export function createSuccessResponse(): { message: string };
 export function createSuccessResponse<T>(data: T, message?: string): { message: string; data: T };
-
 export function createSuccessResponse<T>(data?: T, message = '성공') {
   const base = { message };
   if (data === undefined) return base;
@@ -246,6 +244,7 @@ export class ValidationError extends Error {
   }
 }
 
+// 파싱 에러 클래스
 export class ParseError extends Error {
   constructor(
     message: string,

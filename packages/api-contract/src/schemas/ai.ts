@@ -1,21 +1,19 @@
 /**
- * Description : ai.ts - 📌 AI 스키마(요청/응답 + 로깅) - OpenAI / Anthropic / Hugging Face
+ * Description : ai.ts - 📌 AI 스키마 - OpenAI / Anthropic / Hugging Face
  * Author : Shiwoo Min
  * Date : 2025-09-16
  */
 import { z } from 'zod';
 
-// Enums (DDL 반영)
-
-// 사용 가능한 AI Provider (DDL: provider TEXT)
+// 사용 가능한 AI Provider
 export const AiProviderSchema = z.enum(['openai', 'anthropic', 'huggingface']);
 export type AiProvider = z.infer<typeof AiProviderSchema>;
 
-// 상호작용 종류 (DDL: kind TEXT)
+// 상호작용 종류
 export const AiKindSchema = z.enum(['chat', 'prompt', 'embedding', 'recommendation']);
 export type AiKind = z.infer<typeof AiKindSchema>;
 
-// 상호작용 상태 (DDL: status TEXT CHECK ('OK','ERROR'))
+// 상호작용 상태
 export const AiStatusSchema = z.enum(['OK', 'ERROR']);
 export type AiStatus = z.infer<typeof AiStatusSchema>;
 
@@ -23,20 +21,19 @@ export type AiStatus = z.infer<typeof AiStatusSchema>;
 export const ChatRoleSchema = z.enum(['system', 'user', 'assistant', 'tool']);
 export type ChatRole = z.infer<typeof ChatRoleSchema>;
 
-// 모델 선택 (운영 환경에 맞게 확장 가능)
+// OpenAI 모델
 export const OpenAIModelSchema = z.enum([
-  // Chat / Text
   'gpt-4o',
   'gpt-4o-mini',
   'gpt-4.1',
   'gpt-4.1-mini',
   'gpt-3.5-turbo',
-  // Embedding
   'text-embedding-3-large',
   'text-embedding-3-small',
 ]);
 export type OpenAIModel = z.infer<typeof OpenAIModelSchema>;
 
+// Anthropic 모델
 export const AnthropicModelSchema = z.enum([
   'claude-3-5-sonnet',
   'claude-3-5-haiku',
@@ -46,13 +43,14 @@ export const AnthropicModelSchema = z.enum([
 ]);
 export type AnthropicModel = z.infer<typeof AnthropicModelSchema>;
 
+// Hugging Face 모델
 export const HFModelSchema = z.enum([
   'meta-llama/Llama-3.1-8B-Instruct',
   'mistralai/Mixtral-8x7B-Instruct-v0.1',
 ]);
 export type HFModel = z.infer<typeof HFModelSchema>;
 
-// provider별 모델 또는 custom 문자열
+// AI 모델 선택자
 export const AiModelSelectorSchema = z
   .object({
     provider: AiProviderSchema,
@@ -80,6 +78,7 @@ export const GenerationOptionsSchema = z.object({
 });
 export type GenerationOptions = z.infer<typeof GenerationOptionsSchema>;
 
+// Chat 메시지 및 툴 호출
 export const ToolCallSchema = z.object({
   id: z.string(),
   type: z.literal('function'),
@@ -90,6 +89,7 @@ export const ToolCallSchema = z.object({
 });
 export type ToolCall = z.infer<typeof ToolCallSchema>;
 
+// Chat 메시지
 export const ChatMessageSchema = z.object({
   role: ChatRoleSchema,
   content: z.string().min(1),
@@ -99,6 +99,7 @@ export const ChatMessageSchema = z.object({
 });
 export type ChatMessage = z.infer<typeof ChatMessageSchema>;
 
+// 사용량 (Usage)
 export const UsageSchema = z.object({
   prompt_tokens: z.number().int().nonnegative(),
   completion_tokens: z.number().int().nonnegative(),
@@ -106,7 +107,7 @@ export const UsageSchema = z.object({
 });
 export type Usage = z.infer<typeof UsageSchema>;
 
-// Prompt (단일 프롬프트)
+// Prompt
 export const PromptRequestSchema = z.object({
   model: AiModelSelectorSchema,
   prompt: z.string().min(1),
@@ -115,6 +116,7 @@ export const PromptRequestSchema = z.object({
 });
 export type PromptRequest = z.infer<typeof PromptRequestSchema>;
 
+// Prompt 응답
 export const PromptResponseSchema = z.object({
   id: z.string(),
   created: z.number().int().positive(),
@@ -129,7 +131,7 @@ export const PromptResponseSchema = z.object({
 });
 export type PromptResponse = z.infer<typeof PromptResponseSchema>;
 
-// Chat
+// Chat 요청
 export const ChatRequestSchema = z.object({
   model: AiModelSelectorSchema,
   messages: z.array(ChatMessageSchema).min(1),
@@ -151,6 +153,7 @@ export const ChatRequestSchema = z.object({
 });
 export type ChatRequest = z.infer<typeof ChatRequestSchema>;
 
+// Chat 응답
 export const ChatResponseSchema = z.object({
   id: z.string(),
   created: z.number().int().positive(),
@@ -162,7 +165,7 @@ export const ChatResponseSchema = z.object({
 });
 export type ChatResponse = z.infer<typeof ChatResponseSchema>;
 
-// Embedding
+// Embedding 요청
 export const EmbeddingRequestSchema = z.object({
   provider: AiProviderSchema.default('openai').optional(),
   model: z
@@ -179,6 +182,7 @@ export const EmbeddingRequestSchema = z.object({
 });
 export type EmbeddingRequest = z.infer<typeof EmbeddingRequestSchema>;
 
+// Embedding 벡터
 export const EmbeddingVectorSchema = z.object({
   object: z.literal('embedding').default('embedding'),
   embedding: z.array(z.number()),
@@ -186,6 +190,7 @@ export const EmbeddingVectorSchema = z.object({
 });
 export type EmbeddingVector = z.infer<typeof EmbeddingVectorSchema>;
 
+// Embedding 응답
 export const EmbeddingResponseSchema = z.object({
   provider: AiProviderSchema.optional(),
   model: z.string(),
@@ -199,7 +204,7 @@ export const EmbeddingResponseSchema = z.object({
 });
 export type EmbeddingResponse = z.infer<typeof EmbeddingResponseSchema>;
 
-// ai_interactions (DDL 기반 로깅 스키마)
+// AI 상호작용 생성 요청 인터페이스
 export const AiInteractionCreateSchema = z.object({
   user_id: z.number().int().optional().nullable(),
   program_id: z.number().int().optional().nullable(),
@@ -216,14 +221,14 @@ export const AiInteractionCreateSchema = z.object({
 });
 export type AiInteractionCreate = z.infer<typeof AiInteractionCreateSchema>;
 
-// SELECT 결과용(DDL의 실제 컬럼 전체)
+// SELECT 결과용
 export const AiInteractionRowSchema = AiInteractionCreateSchema.extend({
   id: z.number().int().positive(),
   created_at: z.string(), // ISO string (TIMESTAMPTZ)
 });
 export type AiInteractionRow = z.infer<typeof AiInteractionRowSchema>;
 
-// 조회 필터용 (created_at, provider, kind 등)
+// 조회 필터용
 export const AiInteractionQuerySchema = z.object({
   user_id: z.number().int().optional(),
   program_id: z.number().int().optional(),
@@ -239,7 +244,7 @@ export const AiInteractionQuerySchema = z.object({
 });
 export type AiInteractionQuery = z.infer<typeof AiInteractionQuerySchema>;
 
-// Export bundle
+// 내보내기
 export const AiSchemas = {
   AiProviderSchema,
   AiKindSchema,

@@ -6,7 +6,7 @@
 import { initContract } from '@ts-rest/core';
 import { z } from 'zod';
 
-// Reservation 스키마 정의
+// 예약 스키마 정의
 const ReservationSchema = z.object({
   id: z.string(),
   userId: z.string(),
@@ -19,6 +19,7 @@ const ReservationSchema = z.object({
   updatedAt: z.string().datetime(),
 });
 
+// 예약 생성 요청 스키마
 const CreateReservationSchema = z.object({
   userId: z.string(),
   serviceId: z.string(),
@@ -27,6 +28,7 @@ const CreateReservationSchema = z.object({
   notes: z.string().optional(),
 });
 
+// 예약 수정 요청 스키마
 const UpdateReservationSchema = z.object({
   startTime: z.string().datetime().optional(),
   endTime: z.string().datetime().optional(),
@@ -34,6 +36,7 @@ const UpdateReservationSchema = z.object({
   notes: z.string().optional(),
 });
 
+// 예약 목록 조회 쿼리 파라미터 스키마
 const ReservationQuerySchema = z.object({
   userId: z.string().optional(),
   serviceId: z.string().optional(),
@@ -44,8 +47,10 @@ const ReservationQuerySchema = z.object({
   limit: z.coerce.number().min(1).max(100).default(10),
 });
 
+// ts-rest 컨트랙트 초기화
 const c = initContract();
 
+// 예약 관련 API 컨트랙트 정의
 export const reservationContract = c.router({
   // 예약 생성
   createReservation: {
