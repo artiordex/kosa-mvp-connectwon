@@ -2,21 +2,21 @@
 # Author : Shiwoo Min
 # Date : 2025-09-06
 # 09-16 - ports 추가, network 설정 추가, healthcheck 수정
+# 09-17 - Grafana 자격증명/포트/ROOT_URL 하드코딩 제거 → 루트 .env 사용
 
 version: '3.8'
 
 # 컨테이너 올리기: docker compose up -d
 # 빌드 캐시 정리: docker compose build --no-cache
 # 초기빌드: docker compose build --no-cache --progress=plain
-# 루트에서 빌드: docker compose -f infra/docker/docker-compose.yml build --no-cache
+# 루트에서 빌드: docker compose --env-file .env -f infra/docker/docker-compose.yml up -d
 # Docker 빌드 캐시 완전 제거: docker builder prune -af
 # Compose 파일 경로 명시하여 컨테이너 실행: docker compose -f infra/docker/docker-compose.yml up
 # infra/docker 디렉토리에서 직접 실행: cd infra/docker && docker compose up -d
-# 환경변수 파일: .env.docker (Docker 컨테이너 전용 설정)
+# 환경변수 파일: .env (루트)
 # Docker 컨테이너 로그 확인: docker compose logs -f --tail=100
 # Docker 컨테이너 중지: docker compose down
 # Docker 일부 서비스만 올리기: docker compose up -d postgres redis
-# n8n만 올리기: docker compose up -d n8n
 
 services:
   # Next.js (웹 프론트엔드)
@@ -114,9 +114,11 @@ services:
       - ../../.env
     environment:
       - NODE_ENV=${NODE_ENV:-production}
-      # 큐/캐시/DB 연결(패키지 @connectwon/* 가 사용하는 표준 키)
-      - QUEUE_REDIS_URL=${QUEUE_REDIS_URL:?QUEUE_REDIS_URL is required}
-      - REDIS_URL=${REDIS_URL:?REDIS_URL is required}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - QUEUE_REDIS_HOST=${QUEUE_REDIS_HOST}
+      - QUEUE_REDIS_PORT=${QUEUE_REDIS_PORT}
+      - QUEUE_REDIS_DB=${QUEUE_REDIS_DB}
+      - QUEUE_REDIS_URL=redis://:${REDIS_PASSWORD}@${QUEUE_REDIS_HOST}:${QUEUE_REDIS_PORT}/${QUEUE_REDIS_DB}
       - DATABASE_URL=${DATABASE_URL:?DATABASE_URL is required}
     depends_on:
       postgres:
@@ -172,42 +174,27 @@ services:
       dockerfile: infra/docker/Dockerfile.db
     image: connectwon-postgres:17-local
     container_name: postgres
-    # restart: always, if-failed, unless-stopped, no
     restart: unless-stopped
     env_file:
       - ../../.env
     environment:
-      # 기본값/검증 처리
-      # Postgres 기본 계정명 (없으면 postgres로 fallback)
-      - POSTGRES_USER=${POSTGRES_USER:-postgres}
-      # 초기 생성할 데이터베이스 이름 (없으면 connectwon_db로 fallback)
-      - POSTGRES_DB=${POSTGRES_DB:-connectwon_db}
-      # 슈퍼유저 암호 (필수, 없으면 에러)
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
-      # 컨테이너 내부 타임존 (기본값 Asia/Seoul)
-      - TZ=${TZ:-Asia/Seoul}
-      # 데이터 디렉토리 경로 (볼륨 안에서 하위 폴더 사용 → lost+found 충돌 방지)
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - TZ=${TZ}
       - PGDATA=/var/lib/postgresql/data/pgdata
     ports:
       - '0.0.0.0:${POSTGRES_EXTERNAL_PORT:-5432}:5432'
     volumes:
-      # 데이터 영속화
-      # Postgres 실제 데이터 파일이 저장될 볼륨
       - pg_data:/var/lib/postgresql/data
-      # 커스텀 postgresql.conf를 컨테이너 설정 파일로 마운트 (읽기 전용)
       - ../database/conf/postgresql.conf:/etc/postgresql/postgresql.conf:ro
-      # 인증/접속 정책을 담은 pg_hba.conf 마운트 (읽기 전용)
       - ../database/conf/pg_hba.conf:/etc/postgresql/pg_hba.conf:ro
-      # 초기 스키마/시드 스크립트가 있는 디렉터리 (init/*.sql 자동 실행)
       - ../database/init:/docker-entrypoint-initdb.d:ro
-    # conf 경로를 명시적으로 지정
     command: >
       postgres
       -c config_file=/etc/postgresql/postgresql.conf
       -c hba_file=/etc/postgresql/pg_hba.conf
     healthcheck:
-      # 초기엔 connectwon_db가 없을 수 있어 항상 존재하는 'postgres' DB로 체크
-      # test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
       test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER} -d postgres -h 127.0.0.1 -p 5432']
       interval: 5s
       timeout: 5s
@@ -224,11 +211,8 @@ services:
     ports:
       - '0.0.0.0:${REDIS_EXTERNAL_PORT:-6379}:6379'
     environment:
-      # Redis 접속 비밀번호 (필수)
       - REDIS_PASSWORD=${REDIS_PASSWORD:?REDIS_PASSWORD is required}
-      # Redis 메모리 제한 (기본 512MB)
       - REDIS_MAXMEMORY=${REDIS_MAXMEMORY:-512mb}
-      # 메모리 초과 시 제거 정책 (LRU: 사용 빈도 적은 키 제거)
       - REDIS_EVICTION=${REDIS_EVICTION:-allkeys-lru}
     command: >
       sh -c 'exec redis-server
@@ -269,39 +253,31 @@ services:
     env_file:
       - ../../.env
     environment:
-      # 기본 설정
       - N8N_HOST=localhost
-      - N8N_PORT=5678
+      - N8N_PORT=${N8N_PORT:-5678}
       - N8N_PROTOCOL=http
       - NODE_ENV=production
       - WEBHOOK_URL=${N8N_WEBHOOK_URL:-http://localhost:5678/}
       - GENERIC_TIMEZONE=${TZ:-Asia/Seoul}
-      # 기존 PostgreSQL 사용
       - DB_TYPE=postgresdb
       - DB_POSTGRESDB_HOST=postgres
       - DB_POSTGRESDB_PORT=5432
       - DB_POSTGRESDB_DATABASE=${N8N_DB_NAME:-n8n}
       - DB_POSTGRESDB_USER=${POSTGRES_USER:-postgres}
       - DB_POSTGRESDB_PASSWORD=${POSTGRES_PASSWORD}
-      # 인증 설정
       - N8N_BASIC_AUTH_ACTIVE=${N8N_BASIC_AUTH_ACTIVE:-true}
       - N8N_BASIC_AUTH_USER=${N8N_BASIC_AUTH_USER:-admin}
       - N8N_BASIC_AUTH_PASSWORD=${N8N_BASIC_AUTH_PASSWORD:?N8N_BASIC_AUTH_PASSWORD is required}
-      # 보안 설정
       - N8N_ENCRYPTION_KEY=${N8N_ENCRYPTION_KEY:?N8N_ENCRYPTION_KEY is required}
-      # 실행 설정
       - EXECUTIONS_PROCESS=own
       - EXECUTIONS_MODE=regular
       - EXECUTIONS_TIMEOUT=${N8N_EXECUTIONS_TIMEOUT:-3600}
       - EXECUTIONS_MAX_TIMEOUT=${N8N_EXECUTIONS_MAX_TIMEOUT:-14400}
-      # 로그 설정
       - N8N_LOG_LEVEL=${N8N_LOG_LEVEL:-info}
       - N8N_LOG_OUTPUT=console
-      # Redis 큐 설정 (선택사항)
       - QUEUE_BULL_REDIS_HOST=redis
       - QUEUE_BULL_REDIS_PORT=6379
       - QUEUE_BULL_REDIS_PASSWORD=${REDIS_PASSWORD}
-      # 파일 업로드 설정
       - N8N_DEFAULT_BINARY_DATA_MODE=filesystem
       - N8N_BINARY_DATA_STORAGE_PATH=/home/node/.n8n/binaryData
     ports:
@@ -328,13 +304,11 @@ services:
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
     volumes:
-      # infra/docker 기준 → ../monitoring 폴더의 설정을 마운트
       - ../monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - ../monitoring/alerts.yml:/etc/prometheus/alerts.yml:ro
     ports:
       - '0.0.0.0:9090:9090'
     restart: unless-stopped
-    # web, api, worker가 먼저 올라가 있지 않아도 scrape는 재시도되므로 depends_on 생략 가능
     networks:
       - connectwon-network
 
@@ -344,8 +318,14 @@ services:
     container_name: grafana
     ports:
       - '0.0.0.0:3005:3000'
+    env_file:
+      - ../../.env
     environment:
-      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_SECURITY_ADMIN_USER=${GF_SECURITY_ADMIN_USER:-admin}
+      - GF_SECURITY_ADMIN_PASSWORD=${GF_SECURITY_ADMIN_PASSWORD:?set_in_.env}
+      - GF_SECURITY_SECRET_KEY=${GF_SECURITY_SECRET_KEY}
+      - GF_SERVER_HTTP_PORT=${GF_SERVER_HTTP_PORT:-3030}
+      - GF_SERVER_ROOT_URL=${GF_SERVER_ROOT_URL:-http://localhost:3030}
     volumes:
       - ../monitoring/grafana.ini:/etc/grafana/grafana.ini:ro
       - ../monitoring/dashboards.json:/var/lib/grafana/dashboards/dashboards.json:ro

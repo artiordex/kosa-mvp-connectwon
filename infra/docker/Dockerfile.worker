@@ -5,36 +5,27 @@
 
 # 1. 공통 베이스
 FROM node:22-alpine3.22 AS base
-WORKDIR /repo
+WORKDIR /app
 RUN corepack enable && apk add --no-cache libc6-compat && apk upgrade --no-cache
 
 # 2. 의존성 설치 - 전체 워크스페이스
 FROM base AS deps
 COPY pnpm-lock.yaml package.json pnpm-workspace.yaml nx.json ./
 COPY packages ./packages
-COPY apps/worker/package.json ./apps/worker/package.json
-COPY apps/web/package.json ./apps/web/package.json
-COPY apps/admin/package.json ./apps/admin/package.json
-COPY apps/api/package.json ./apps/api/package.json
-COPY apps/e2e/package.json ./apps/e2e/package.json
-# 전체 의존성 설치 (TypeScript 포함)
+# 모든 앱의 package.json을 한 번에 복사
+COPY apps/*/package.json ./apps/
 RUN pnpm install --frozen-lockfile
 
 # 3. 빌드
 FROM deps AS build
 COPY . .
-# 중복 설치 제거 (이미 deps에서 설치됨)
-# RUN pnpm install --frozen-lockfile
-# Worker 빌드 (전체 워크스페이스에서 TypeScript 사용 가능)
 RUN pnpm --filter @connectwon/worker build
 
 # 4. 런타임 (Distroless)
 FROM gcr.io/distroless/nodejs22-debian12:nonroot AS runtime
 WORKDIR /app
-COPY --from=deps  /repo/node_modules ./node_modules
-COPY --from=build /repo/packages ./packages
-COPY --from=build /repo/apps/worker/dist ./apps/worker/dist
-COPY --from=build /repo/apps/worker/package.json ./apps/worker/package.json
-COPY --from=build /repo/package.json ./package.json
-
+ENV NODE_ENV=production
+COPY --from=deps  /app/node_modules ./node_modules
+COPY --from=build /app/apps/worker/dist ./apps/worker/dist
+COPY --from=build /app/apps/worker/package.json ./apps/worker/package.json
 CMD ["apps/worker/dist/main.js"]

@@ -12,9 +12,6 @@ FROM cgr.dev/chainguard/postgres:latest AS db
 # 타임존 설정
 ENV TZ=Asia/Seoul
 
-# Alpine 기본 패키지 최신화 - chainguard 이미지에서 제거
-# RUN apk update && apk upgrade --no-cache
-
 # 설정 파일 복사
 COPY infra/database/conf/postgresql.conf /etc/postgresql/postgresql.conf
 COPY infra/database/conf/pg_hba.conf     /etc/postgresql/pg_hba.conf

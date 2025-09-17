@@ -4,24 +4,28 @@
 # 09-16 - Playwright 공식 이미지 + pnpm + 네트워크 격리 환경에서 실행 가능하도록 설계
 
 # 1. Playwright 공식 베이스 이미지
-FROM mcr.microsoft.com/playwright:v1.44.0-focal AS base
+FROM mcr.microsoft.com/playwright:v1.51.1-jammy
 WORKDIR /app
-
-# pnpm 설치
-RUN npm install -g pnpm@latest
 
 # 1. 워크스페이스 설정 먼저
 COPY pnpm-workspace.yaml package.json pnpm-lock.yaml ./
 COPY packages ./packages
 COPY apps/e2e/package.json ./apps/e2e/package.json
 
-# 2. 의존성 설치
+# 2. 워크스페이스 설정 (pnpm 기반)
+COPY pnpm-workspace.yaml package.json pnpm-lock.yaml ./
+COPY packages ./packages
+# 모든 앱의 package.json을 한 번에 복사
+COPY apps/*/package.json ./apps/
 RUN pnpm install --frozen-lockfile
 
-# 3. E2E 소스 복사
+# 3. 의존성 설치
+RUN corepack enable && pnpm install --frozen-lockfile
+
+# 4. E2E 소스 복사
 COPY apps/e2e ./apps/e2e
 
-# 4. Playwright 브라우저 설치
+# 5. Playwright 브라우저 설치 (테스트 런 환경에 꼭 필요)
 RUN npx playwright install --with-deps
 
 # 환경 변수
@@ -31,7 +35,5 @@ ENV CI=true \
 # 결과 디렉토리
 RUN mkdir -p ./apps/e2e/test-results && chmod 777 ./apps/e2e/test-results
 
-# 헬스체크 제거 (E2E는 일회성 실행)
-# HEALTHCHECK 삭제
-
+# 헬스체크 제거 (일회성 실행 컨테이너)
 CMD ["pnpm", "--filter", "@connectwon/e2e", "test"]

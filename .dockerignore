@@ -1,0 +1,43 @@
+/**
+ * Description : .dockerignore - 📌 도커 빌드 시 제외할 파일 및 디렉토리
+ * Author : Shiwoo Min
+ * Date : 2025-09-06
+ * 09-06 - Docker 자체 설정 파일 제외 제거
+ * 09-17 - root로 이동
+ */
+
+# Node.js 의존성 디렉토리 제외
+node_modules
+
+# 빌드 결과물이 담긴 폴더 제외
+dist
+build
+
+# Git 버전 관리 관련 제외
+.git
+
+# 로그 파일 제외
+*.log
+
+# 로컬 환경 변수 파일 제외
+.env
+
+# 개발 도구 설정 제외
+.vscode
+.idea
+
+# Docker 설정 파일 제외
+!packages
+!apps
+!infra
+!pnpm-lock.yaml
+!package.json
+!pnpm-workspace.yaml
+!nx.json
+!tsconfig.base.json
+!tsconfig.json
+
+# Windows 시스템 파일 제외
+$RECYCLE.BIN
+System Volume Information
+Thumbs.db
