@@ -5,18 +5,18 @@
  */
 import type { Middleware } from '../sdk-types.js';
 
-// 단순 API 키 (예: x-api-key)
+// API 키 인증 미들웨어
 export function apiKeyAuth(headerName = 'x-api-key', key?: string): Middleware {
   return {
     onRequest(req) {
-      const h = new Headers(req.headers as any);
+      const h = new Headers(req.headers);
       if (key) h.set(headerName, key);
       return { ...req, headers: h };
     },
   };
 }
 
-// Bearer 토큰 (동적 제공자)
+// Bearer 토큰 인증 미들웨어
 export function bearerAuth(
   getToken: () => string | Promise<string>,
   headerName = 'Authorization',
@@ -24,17 +24,17 @@ export function bearerAuth(
   return {
     async onRequest(req) {
       const token = await getToken();
-      const h = new Headers(req.headers as any);
+      const h = new Headers(req.headers);
       if (token) h.set(headerName, `Bearer ${token}`);
       return { ...req, headers: h };
     },
   };
 }
 
-// JSON 기본 헤더 부착
+// JSON 요청/응답 미들웨어
 export const jsonHeaders: Middleware = {
   onRequest(req) {
-    const h = new Headers(req.headers as any);
+    const h = new Headers(req.headers);
     if (!h.has('content-type')) h.set('content-type', 'application/json');
     if (!h.has('accept')) h.set('accept', 'application/json');
     return { ...req, headers: h };

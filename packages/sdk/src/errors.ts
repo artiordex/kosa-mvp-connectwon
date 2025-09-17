@@ -20,7 +20,6 @@ export class ApiError extends Error {
     super(message);
     // Error 상속 시 instanceof/프로토타입 정정
     Object.setPrototypeOf(this, new.target.prototype);
-
     this.status = status;
     // exactOptionalPropertyTypes 대응: 값이 있을 때만 대입
     if (opts.requestId !== undefined) this.requestId = opts.requestId;

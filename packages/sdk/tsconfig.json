@@ -34,7 +34,7 @@
     "composite": true,
 
     // Node 전역 타입 유입 방지 (isomorphic 충돌 예방)
-    "types": []
+    "types": ["node"]
   },
 
   // 루트에 배치한 타입 파일 포함

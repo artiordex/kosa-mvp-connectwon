@@ -1,13 +1,11 @@
 /**
- * Description : pagination.ts - 📌 커서/오프셋 페이징 유틸
+ * Description : pagination.ts - 📌 커서/오프셋 페이징 유틸 (수정 버전)
  * Author : Shiwoo Min
  * Date : 2025-09-09
  */
+import type { OffsetExtractor, PageExtractor } from '../sdk-types.js';
 
-// 커서/오프셋 공용 도우미
-
-type PageExtractor<T, J = any> = (json: J) => { items: T[]; nextCursor?: string | null };
-
+// 커서 기반 페이징 유틸
 export function cursorPager<T, J = any>(
   fetchPage: (cursor?: string | null) => Promise<J>,
   extract: PageExtractor<T, J>,
@@ -32,10 +30,10 @@ export function cursorPager<T, J = any>(
   };
 }
 
-// 간단 오프셋 페이징
+// 오프셋 기반 페이징 유틸
 export function offsetPager<T, J = any>(
   fetchPage: (offset: number, limit: number) => Promise<J>,
-  extract: (json: J) => { items: T[]; total?: number },
+  extract: OffsetExtractor<T, J>,
   limit = 50,
 ) {
   return {

@@ -15,14 +15,11 @@ export function composeMiddlewares(
 ) => Promise<HttpResponse> {
   return async (req, ctx, next) => {
     let i = -1;
-
     const run = async (idx: number, r: HttpRequest): Promise<HttpResponse> => {
       if (idx <= i) throw new Error('next() called multiple times');
       i = idx;
-
       const m = mw[idx];
       if (!m) return next(r);
-
       const r2 = m.onRequest ? await m.onRequest(r, ctx) : r;
       try {
         const res = await run(idx + 1, r2);
@@ -32,7 +29,6 @@ export function composeMiddlewares(
         throw err;
       }
     };
-
     return run(0, req);
   };
 }
