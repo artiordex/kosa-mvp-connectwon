@@ -3,8 +3,7 @@
  * Author : Shiwoo Min
  * Date : 2025-09-09
  */
-
-import type { Config } from 'tailwindcss'
+import type { Config } from 'tailwindcss';
 
 const baseConfig = require('../../configs/tailwind/base')
 
@@ -15,6 +14,10 @@ const config: Config = {
     './layout/**/*.{js,ts,jsx,tsx}',
     './charts/**/*.{js,ts,jsx,tsx}',
     './hooks/**/*.{js,ts,jsx,tsx}',
+    './pages/**/*.{js,ts,jsx,tsx}',
+    './app/**/*.{js,ts,jsx,tsx}',
+    './src/**/*.{js,ts,jsx,tsx}',
+    './lib/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
     ...baseConfig.theme,
@@ -31,7 +34,7 @@ const config: Config = {
           danger: '#ef4444',
           purple: '#8b5cf6',
           cyan: '#06b6d4',
-        }
+        },
       },
       // 차트 관련 애니메이션
       animation: {
@@ -52,6 +55,6 @@ const config: Config = {
       },
     },
   },
-}
+};
 
 export default config

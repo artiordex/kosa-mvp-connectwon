@@ -6,17 +6,17 @@
   "plugins": ["@nx", "@typescript-eslint", "import", "playwright"],
   "env": {
     "es2022": true,
-    "node": true
+    "node": true,
+    "browser": true
   },
 
-  // 기본 확장 설정
+  // 기본 확장 설정 (Next.js 및 호환성 문제 해결)
   "extends": [
     "eslint:recommended",
-    "airbnb-base",
-    "airbnb-typescript/base",
     "plugin:@typescript-eslint/recommended",
     "plugin:import/typescript",
-    "plugin:playwright/playwright-test"
+    "plugin:playwright/playwright-test",
+    "next/core-web-vitals"
   ],
 
   // TypeScript 파서
@@ -26,7 +26,10 @@
     // 모노레포: 각 앱/패키지 tsconfig를 한 번에 인식
     "project": ["./tsconfig.json", "./apps/*/tsconfig.json", "./packages/*/tsconfig.json"],
     "ecmaVersion": "latest",
-    "sourceType": "module"
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
   },
 
   // import 경로 해석 설정
@@ -39,8 +42,11 @@
       },
       // ESM/Node 해석도 병행(.mjs/.js/.ts)
       "node": {
-        "extensions": [".mjs", ".js", ".ts", ".tsx", ".cjs"]
+        "extensions": [".mjs", ".js", ".ts", ".tsx", ".jsx", ".cjs"]
       }
+    },
+    "react": {
+      "version": "detect"
     }
   },
 
@@ -67,6 +73,7 @@
         ]
       }
     ],
+
     // 팀 스타일
     "semi": ["error", "always"],
     "quotes": "off",
@@ -135,7 +142,12 @@
     // Playwright
     "playwright/no-focused-test": "error",
     "playwright/no-skipped-test": "warn",
-    "playwright/no-conditional-in-test": "warn"
+    "playwright/no-conditional-in-test": "warn",
+
+    // Next.js 및 React 관련 추가 규칙
+    "react/react-in-jsx-scope": "off",
+    "react/prop-types": "off",
+    "@next/next/no-html-link-for-pages": "off"
   },
 
   // 테스트/스토리/툴링 파일: devDependencies 허용 오버라이드
@@ -168,11 +180,30 @@
         ]
       }
     },
+
     // JS/Config 파일에서는 TS 전용 룰 일부 비활성화
     {
       "files": ["**/*.js", "**/*.cjs", "**/*.mjs"],
       "rules": {
         "@typescript-eslint/no-var-requires": "off"
+      }
+    },
+
+    // Next.js 페이지/앱 라우터 파일들 특별 처리
+    {
+      "files": [
+        "apps/*/src/app/**/*.tsx",
+        "apps/*/src/pages/**/*.tsx",
+        "apps/*/pages/**/*.tsx",
+        "**/page.tsx",
+        "**/layout.tsx",
+        "**/loading.tsx",
+        "**/error.tsx",
+        "**/not-found.tsx"
+      ],
+      "rules": {
+        "import/no-default-export": "off",
+        "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }]
       }
     }
   ],

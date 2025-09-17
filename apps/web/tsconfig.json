@@ -2,7 +2,8 @@
  * Description : tsconfig.json - 📌 Next.js 기반 Web 애플리케이션 (TypeScript 설정)
  * Author : Shiwoo Min
  * Date : 2025-09-06
- * 09-12 : 브라우저 번들러 해석(ESNext/Bundler), noEmit/Next 플러그인 추가, include 정리
+ * 09-12 - 브라우저 번들러 해석(ESNext/Bundler), noEmit/Next 플러그인 추가, include 정리
+ * 09-17 - TypeScript 컴파일 에러 해결을 위한 설정 추가
  */
 {
   // 루트 공통 규칙 상속
@@ -20,9 +21,25 @@
 
     // Next는 타입만 체크(noEmit)
     "noEmit": true,
-    "types": ["node"],
     "allowJs": true,
     "resolveJsonModule": true,
+
+    // DOM API 타입 정의 포함 (HTMLInputElement, EventTarget 등)
+    "lib": ["dom", "dom.iterable", "ES2022"],
+    "types": ["node"],
+
+    // TypeScript 컴파일 에러 해결을 위한 설정들
+    "verbatimModuleSyntax": false, // type-only import 에러 방지
+    "skipLibCheck": true, // 라이브러리 타입 체크 스킵으로 성능 향상
+    "allowSyntheticDefaultImports": true, // CommonJS 모듈 import 허용
+    "esModuleInterop": true, // ES 모듈과 CommonJS 상호 운용성
+    "forceConsistentCasingInFileNames": true, // 파일명 대소문자 일관성
+    "isolatedModules": true, // 각 파일을 독립적으로 처리
+
+    // Strict 설정들 (필요에 따라 조정)
+    "strict": true,
+    "noUnusedLocals": false, // 사용하지 않는 지역 변수 허용 (개발 중 편의)
+    "noUnusedParameters": false, // 사용하지 않는 매개변수 허용
 
     // CI 속도 ↑
     "incremental": true,

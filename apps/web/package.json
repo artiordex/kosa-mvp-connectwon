@@ -13,20 +13,21 @@
     "clean": "pnpm -w exec rimraf .next dist"
   },
   "dependencies": {
-    "next": "^14.2.32",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "@connectwon/ui": "workspace:*",
     "@connectwon/api-contract": "workspace:*",
     "@connectwon/sdk": "workspace:*",
-    "clsx": "^2.0.0"
+    "@connectwon/ui": "workspace:*",
+    "clsx": "^2.0.0",
+    "next": "^14.2.32",
+    "next-auth": "^4.24.11",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   },
   "devDependencies": {
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0",
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.47",
-    "tailwindcss": "^3.4.13",
-    "@types/react": "^18.3.0",
-    "@types/react-dom": "^18.3.0"
+    "tailwindcss": "^3.4.13"
   },
   "engines": {
     "node": ">=20.11"
