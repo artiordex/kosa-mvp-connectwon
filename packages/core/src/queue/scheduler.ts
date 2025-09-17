@@ -5,6 +5,7 @@
  */
 import type { QueueManager } from './manager.js';
 
+// 큐 스케줄러
 export class QueueScheduler {
   private interval: NodeJS.Timeout | null = null;
 

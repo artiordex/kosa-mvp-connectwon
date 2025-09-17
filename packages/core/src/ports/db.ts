@@ -1,11 +1,10 @@
 /**
- * Description : ports/db.ts - 📌 데이터베이스 시스템 포트 인터페이스
- * Author      : Shiwoo Min
- * Date        : 2025-09-10
+ * Description : db.ts - 📌 데이터베이스 시스템 포트 인터페이스
+ * Author : Shiwoo Min
+ * Date : 2025-09-10
  */
 
-// ============== 데이터베이스 연결 포트 ==============
-
+// 데이터베이스 포트 인터페이스
 export interface DatabaseConnection {
   // 연결 관리
   connect(): Promise<void>;
@@ -25,8 +24,7 @@ export interface DatabaseConnection {
   getPoolStats(): Promise<PoolStats>;
 }
 
-// ============== 트랜잭션 포트 ==============
-
+// 트랜섹션 포트 인터페이스
 export interface Transaction {
   // 쿼리 실행
   query<T = unknown>(sql: string, params?: unknown[]): Promise<T[]>;
@@ -41,8 +39,7 @@ export interface Transaction {
   releaseSavepoint(name: string): Promise<void>;
 }
 
-// ============== 마이그레이션 포트 ==============
-
+// 마이그레이션 포트 인터페이스
 export interface MigrationService {
   // 마이그레이션 실행
   migrate(): Promise<MigrationResult>;
@@ -59,8 +56,7 @@ export interface MigrationService {
   validateMigrations(): Promise<ValidationResult>;
 }
 
-// ============== 스키마 관리 포트 ==============
-
+// 스키마 관리 포트 인터페이스
 export interface SchemaService {
   // 테이블 관리
   createTable(tableName: string, schema: TableSchema): Promise<void>;
@@ -91,7 +87,7 @@ export interface SchemaService {
   getIndexInfo(tableName: string): Promise<IndexInfo[]>;
 }
 
-// ============== 데이터베이스 모니터링 포트 ==============
+// 데이터베이스 모니터링 포트 인터페이스
 
 export interface DatabaseMonitoring {
   // 성능 통계
@@ -112,8 +108,7 @@ export interface DatabaseMonitoring {
   healthCheck(): Promise<HealthStatus>;
 }
 
-// ============== 타입 정의 ==============
-
+// 쿼리 결과 인터페이스
 export interface QueryResult {
   rowCount: number;
   affectedRows?: number;
@@ -121,6 +116,7 @@ export interface QueryResult {
   fields?: string[];
 }
 
+// 풀 상태 인터페이스
 export interface PoolStats {
   totalConnections: number;
   idleConnections: number;
@@ -129,6 +125,7 @@ export interface PoolStats {
   maxConnections: number;
 }
 
+// 마이그레이션 인터페이스
 export interface Migration {
   id: string;
   name: string;
@@ -137,6 +134,7 @@ export interface Migration {
   sql: string;
 }
 
+// 마이그레이션 결과 인터페이스
 export interface MigrationResult {
   success: boolean;
   migrationsApplied: number;
@@ -145,12 +143,14 @@ export interface MigrationResult {
   migrations: Migration[];
 }
 
+// 검증 결과 인터페이스
 export interface ValidationResult {
   isValid: boolean;
   errors: string[];
   warnings: string[];
 }
 
+// 테이블 스키마 및 변경 인터페이스
 export interface TableSchema {
   columns: ColumnDefinition[];
   primaryKey?: string[];
@@ -159,6 +159,7 @@ export interface TableSchema {
   constraints?: ConstraintDefinition[];
 }
 
+// 컬럼 정의 인터페이스
 export interface ColumnDefinition {
   name: string;
   type: string;
@@ -169,6 +170,7 @@ export interface ColumnDefinition {
   comment?: string;
 }
 
+// 외래키 정의 인터페이스
 export interface ForeignKeyDefinition {
   name: string;
   columns: string[];
@@ -178,6 +180,7 @@ export interface ForeignKeyDefinition {
   onDelete?: 'CASCADE' | 'SET NULL' | 'RESTRICT' | 'NO ACTION';
 }
 
+// 인덱스 정의 인터페이스
 export interface IndexDefinition {
   name: string;
   columns: string[];
@@ -186,12 +189,14 @@ export interface IndexDefinition {
   where?: string;
 }
 
+// 제약조건 정의 인터페이스
 export interface ConstraintDefinition {
   name: string;
   type: 'CHECK' | 'UNIQUE' | 'EXCLUDE';
   definition: string;
 }
 
+// 테이블 변경 인터페이스
 export interface TableChange {
   type:
     | 'ADD_COLUMN'
@@ -203,6 +208,7 @@ export interface TableChange {
   details: unknown;
 }
 
+// 테이블 및 컬럼 정보 인터페이스
 export interface TableInfo {
   name: string;
   schema: string;
@@ -212,6 +218,7 @@ export interface TableInfo {
   createdAt?: string;
 }
 
+// 컬럼 정보 인터페이스
 export interface ColumnInfo {
   name: string;
   type: string;
@@ -222,6 +229,7 @@ export interface ColumnInfo {
   comment?: string;
 }
 
+// 인덱스 정보 인터페이스
 export interface IndexInfo {
   name: string;
   columns: string[];
@@ -230,6 +238,7 @@ export interface IndexInfo {
   size: number;
 }
 
+// 쿼리 통계 및 헬스 상태 인터페이스
 export interface QueryStats {
   totalQueries: number;
   averageExecutionTime: number;
@@ -242,6 +251,7 @@ export interface QueryStats {
   }>;
 }
 
+// 연결 통계 인터페이스
 export interface ConnectionStats {
   total: number;
   active: number;
@@ -251,6 +261,7 @@ export interface ConnectionStats {
   maxLifetime: number;
 }
 
+// 테이블 통계 인터페이스
 export interface TableStats {
   tableName: string;
   rowCount: number;
@@ -259,6 +270,7 @@ export interface TableStats {
   lastAnalyzed?: string;
 }
 
+// 느린 쿼리 인터페이스
 export interface SlowQuery {
   sql: string;
   executionTime: number;
@@ -267,6 +279,7 @@ export interface SlowQuery {
   database?: string;
 }
 
+// 활성 쿼리 인터페이스
 export interface ActiveQuery {
   id: string;
   sql: string;
@@ -276,6 +289,7 @@ export interface ActiveQuery {
   state: string;
 }
 
+// 락 정보 인터페이스
 export interface LockInfo {
   lockType: string;
   tableName: string;
@@ -285,6 +299,7 @@ export interface LockInfo {
   query?: string;
 }
 
+// 차단된 쿼리 인터페이스
 export interface BlockedQuery {
   blockedQuery: string;
   blockingQuery: string;
@@ -293,6 +308,7 @@ export interface BlockedQuery {
   blockingUser?: string;
 }
 
+// 헬스 상태 인터페이스
 export interface HealthStatus {
   status: 'healthy' | 'degraded' | 'unhealthy';
   uptime: number;
@@ -314,8 +330,7 @@ export interface HealthStatus {
   issues: string[];
 }
 
-// ============== 쿼리 빌더 포트 ==============
-
+// 쿼리 빌더 인터페이스
 export interface QueryBuilder {
   select(fields?: string[]): QueryBuilder;
   from(table: string): QueryBuilder;

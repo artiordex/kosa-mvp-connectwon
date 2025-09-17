@@ -1,11 +1,10 @@
 /**
  * Description : slack.ts - 📌 Slack 제공자 포트 인터페이스
- * Author      : Shiwoo Min
- * Date        : 2025-09-10
- */
+ * Author : Shiwoo Min
+ * Date : 2025-09-10
+ **/
 
-// ============== Slack 제공자 포트 ==============
-
+// Slack 제공자 포트 인터페이스
 export interface SlackProvider {
   // 제공자 정보
   name: string;
@@ -15,7 +14,7 @@ export interface SlackProvider {
   sendDirectMessage(userId: string, message: string): Promise<SlackMessageResult>;
   sendChannelMessage(channelId: string, message: string): Promise<SlackMessageResult>;
 
-  // 임시 메시지 (사용자에게만 보임)
+  // 임시 메시지
   sendEphemeralMessage(
     channelId: string,
     userId: string,
@@ -51,8 +50,7 @@ export interface SlackProvider {
   getStatus(): Promise<SlackProviderStatus>;
 }
 
-// ============== Slack 메시지 요청 ==============
-
+// Slack 메시지 요청 인터페이스
 export interface SlackMessageRequest {
   channel?: string;
   user?: string;
@@ -70,6 +68,7 @@ export interface SlackMessageRequest {
   username?: string;
 }
 
+// Slack 블록 인터페이스
 export interface SlackBlock {
   type: string;
   text?: {
@@ -85,6 +84,7 @@ export interface SlackBlock {
   }>;
 }
 
+// Slack 첨부파일 인터페이스
 export interface SlackAttachment {
   color?: 'good' | 'warning' | 'danger' | string;
   pretext?: string;
@@ -102,14 +102,14 @@ export interface SlackAttachment {
   ts?: number;
 }
 
+// Slack 첨부파일 필드 인터페이스
 export interface SlackField {
   title: string;
   value: string;
   short?: boolean;
 }
 
-// ============== Slack 메시지 결과 ==============
-
+// Slack 메시지 결과 인터페이스
 export interface SlackMessageResult {
   success: boolean;
   ts?: string;
@@ -125,8 +125,7 @@ export interface SlackMessageResult {
   };
 }
 
-// ============== Slack 파일 업로드 ==============
-
+// Slack 파일 업로드 요청 인터페이스
 export interface SlackFileUploadRequest {
   channels: string;
   content?: Buffer;
@@ -138,6 +137,7 @@ export interface SlackFileUploadRequest {
   threadTs?: string;
 }
 
+// Slack 파일 결과 인터페이스
 export interface SlackFileResult {
   success: boolean;
   file?: {
@@ -155,8 +155,7 @@ export interface SlackFileResult {
   error?: string;
 }
 
-// ============== Slack 사용자 정보 ==============
-
+// Slack 사용자 정보 인터페이스
 export interface SlackUser {
   id: string;
   teamId?: string;
@@ -192,8 +191,7 @@ export interface SlackUser {
   updated?: number;
 }
 
-// ============== Slack 채널 정보 ==============
-
+// Slack 채널 정보 인터페이스
 export interface SlackChannel {
   id: string;
   name: string;
@@ -230,8 +228,7 @@ export interface SlackChannel {
   numMembers?: number;
 }
 
-// ============== 제공자 상태 ==============
-
+// Slack 제공자 상태 인터페이스
 export interface SlackProviderStatus {
   name: string;
   isHealthy: boolean;
@@ -255,8 +252,7 @@ export interface SlackProviderStatus {
   };
 }
 
-// ============== 웹훅 제공자 ==============
-
+// Slack 웹훅 제공자 인터페이스
 export interface SlackWebhookProvider extends SlackProvider {
   name: 'webhook';
 
@@ -268,6 +264,7 @@ export interface SlackWebhookProvider extends SlackProvider {
   sendToWebhook(webhookName: string, message: SlackWebhookMessage): Promise<SlackMessageResult>;
 }
 
+// Slack 웹훅 메시지 인터페이스
 export interface SlackWebhookMessage {
   text: string;
   channel?: string;
@@ -278,8 +275,7 @@ export interface SlackWebhookMessage {
   blocks?: SlackBlock[];
 }
 
-// ============== API 제공자 ==============
-
+// Slack API 제공자 인터페이스
 export interface SlackAPIProvider extends SlackProvider {
   name: 'api';
 
@@ -302,6 +298,7 @@ export interface SlackAPIProvider extends SlackProvider {
   triggerWorkflow(workflowId: string, inputs?: Record<string, unknown>): Promise<boolean>;
 }
 
+// Slack 대화 기록 옵션 인터페이스
 export interface ConversationHistoryOptions {
   cursor?: string;
   latest?: string;
@@ -310,6 +307,7 @@ export interface ConversationHistoryOptions {
   limit?: number;
 }
 
+// Slack 메시지 인터페이스
 export interface SlackMessage {
   type: string;
   subtype?: string;
@@ -330,6 +328,7 @@ export interface SlackMessage {
   }>;
 }
 
+// Slack 앱 정보 인터페이스
 export interface SlackAppInfo {
   id: string;
   name: string;
@@ -349,8 +348,7 @@ export interface SlackAppInfo {
   };
 }
 
-// ============== Slack 제공자 팩토리 ==============
-
+// Slack 제공자 팩토리 인터페이스
 export interface SlackProviderFactory {
   createWebhookProvider(webhookUrl: string): SlackWebhookProvider;
   createAPIProvider(token: string): SlackAPIProvider;
@@ -362,8 +360,7 @@ export interface SlackProviderFactory {
   createHybridProvider(token: string, webhookUrl?: string): SlackProvider;
 }
 
-// ============== n8n 연동 특화 ==============
-
+// n8n 연동 특화 인터페이스
 export interface N8nSlackProvider extends SlackProvider {
   name: 'n8n';
 
@@ -378,6 +375,7 @@ export interface N8nSlackProvider extends SlackProvider {
   processAutomationRules(event: unknown): Promise<void>;
 }
 
+// n8n 워크플로우 페이로드 인터페이스
 export interface N8nWorkflowPayload {
   event_type: string;
   entity_type: string;
@@ -387,6 +385,7 @@ export interface N8nWorkflowPayload {
   source: 'connectwon';
 }
 
+// n8n 워크플로우 결과 인터페이스
 export interface N8nWorkflowResult {
   success: boolean;
   workflowId?: string;
@@ -394,6 +393,7 @@ export interface N8nWorkflowResult {
   error?: string;
 }
 
+// Slack 이벤트 알림 인터페이스
 export interface SlackEventNotification {
   type: 'info' | 'success' | 'warning' | 'error';
   title: string;
@@ -403,6 +403,7 @@ export interface SlackEventNotification {
   actions?: SlackAction[];
 }
 
+// Slack 액션 인터페이스
 export interface SlackAction {
   type: 'button' | 'select' | 'datepicker';
   text: string;
@@ -411,6 +412,7 @@ export interface SlackAction {
   style?: 'primary' | 'danger';
 }
 
+// Slack 자동화 규칙 인터페이스
 export interface SlackAutomationRule {
   id: string;
   name: string;

@@ -1,11 +1,10 @@
 /**
- * Description : ports/email-provider.ts - 📌 이메일 제공자 포트 인터페이스
- * Author      : Shiwoo Min
- * Date        : 2025-09-10
+ * Description : email.ts - 📌 이메일 제공자 포트 인터페이스
+ * Author : Shiwoo Min
+ * Date : 2025-09-10
  */
 
-// ============== 이메일 제공자 포트 ==============
-
+// 이메일 제공자 포트 인터페이스
 export interface EmailProvider {
   // 제공자 정보
   name: string;
@@ -33,8 +32,7 @@ export interface EmailProvider {
   handleWebhook(payload: unknown): Promise<WebhookResult>;
 }
 
-// ============== 이메일 전송 요청 ==============
-
+// 이메일 전송 요청 인터페이스
 export interface EmailSendRequest {
   to: EmailAddress[];
   cc?: EmailAddress[];
@@ -50,6 +48,7 @@ export interface EmailSendRequest {
   metadata?: Record<string, unknown>;
 }
 
+// 템플릿 기반 이메일 전송 요청 인터페이스
 export interface TemplateEmailRequest {
   to: EmailAddress[];
   cc?: EmailAddress[];
@@ -60,11 +59,13 @@ export interface TemplateEmailRequest {
   metadata?: Record<string, unknown>;
 }
 
+// 이메일 주소 인터페이스
 export interface EmailAddress {
   email: string;
   name?: string;
 }
 
+// 이메일 첨부파일 인터페이스
 export interface EmailAttachment {
   filename: string;
   content: Buffer | string;
@@ -73,8 +74,7 @@ export interface EmailAttachment {
   contentId?: string;
 }
 
-// ============== 이메일 전송 결과 ==============
-
+// 이메일 전송 결과 인터페이스
 export interface EmailSendResult {
   success: boolean;
   messageId?: string;
@@ -88,8 +88,7 @@ export interface EmailSendResult {
   metadata?: Record<string, unknown>;
 }
 
-// ============== 제공자 상태 ==============
-
+// 제공자 상태 인터페이스
 export interface ProviderStatus {
   name: string;
   isHealthy: boolean;
@@ -108,8 +107,7 @@ export interface ProviderStatus {
   };
 }
 
-// ============== 사용량 통계 ==============
-
+// 사용량 통계 인터페이스
 export interface UsageStats {
   today: {
     sent: number;
@@ -128,14 +126,14 @@ export interface UsageStats {
   lastUpdated: string;
 }
 
-// ============== 웹훅 처리 ==============
-
+// 웹훅 처리 인터페이스
 export interface WebhookResult {
   processed: boolean;
   events: EmailEvent[];
   error?: string;
 }
 
+// 이메일 이벤트 인터페이스
 export interface EmailEvent {
   messageId: string;
   event: EmailEventType;
@@ -145,6 +143,7 @@ export interface EmailEvent {
   metadata?: Record<string, unknown>;
 }
 
+// 이메일 이벤트 유형
 export type EmailEventType =
   | 'sent'
   | 'delivered'
@@ -156,8 +155,7 @@ export type EmailEventType =
   | 'unsubscribed'
   | 'spam_reported';
 
-// ============== SMTP 제공자 ==============
-
+// SMTP 제공자 인터페이스
 export interface SMTPEmailProvider extends EmailProvider {
   name: 'smtp';
 
@@ -168,6 +166,7 @@ export interface SMTPEmailProvider extends EmailProvider {
   getConnectionPoolStats(): Promise<ConnectionPoolStats>;
 }
 
+// SMTP 설정 인터페이스
 export interface SMTPConfig {
   host: string;
   port: number;
@@ -183,14 +182,14 @@ export interface SMTPConfig {
   rateLimit?: number;
 }
 
+// 연결 통계 인터페이스
 export interface ConnectionPoolStats {
   total: number;
   idle: number;
   active: number;
 }
 
-// ============== SendGrid 제공자 ==============
-
+// SendGrid 제공자 인터페이스
 export interface SendGridEmailProvider extends EmailProvider {
   name: 'sendgrid';
 
@@ -204,6 +203,7 @@ export interface SendGridEmailProvider extends EmailProvider {
   getDetailedStats(startDate: string, endDate: string): Promise<SendGridStats>;
 }
 
+// SendGrid 템플릿 인터페이스
 export interface SendGridTemplate {
   id: string;
   name: string;
@@ -219,15 +219,18 @@ export interface SendGridTemplate {
   }>;
 }
 
+// 템플릿 관리 요청 인터페이스
 export interface CreateTemplateRequest {
   name: string;
   generation: 'legacy' | 'dynamic';
 }
 
+// 템플릿 업데이트 요청 인터페이스
 export interface UpdateTemplateRequest {
   name?: string;
 }
 
+// SendGrid 통계 인터페이스
 export interface SendGridStats {
   date: string;
   stats: Array<{
@@ -252,8 +255,7 @@ export interface SendGridStats {
   }>;
 }
 
-// ============== 이메일 제공자 팩토리 ==============
-
+// 이메일 제공자 팩토리
 export interface EmailProviderFactory {
   createSMTPProvider(config: SMTPConfig): SMTPEmailProvider;
   createSendGridProvider(apiKey: string): SendGridEmailProvider;

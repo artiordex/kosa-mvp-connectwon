@@ -1,12 +1,11 @@
 /**
  * Description : ai.ts - 📌 AI 서비스 포트 인터페이스
- * Author      : Shiwoo Min
- * Date        : 2025-09-10
+ * Author : Shiwoo Min
+ * Date : 2025-09-10
  */
-import type { AIProvider, Id } from '../../core-types.js';
+import type { AIProvider } from '../../core-types.js';
 
-// ============== AI 서비스 포트 ==============
-
+// AI 서비스 포트 인터페이스
 export interface AIService {
   // 텍스트 생성
   generateText(prompt: string, options?: AIGenerationOptions): Promise<AITextResult>;
@@ -71,13 +70,13 @@ export interface AIService {
   setCachedResult(cacheKey: string, result: unknown, ttl?: number): Promise<void>;
 }
 
-// ============== AI 타입 정의 ==============
-
+// AI 메시지 인터페이스
 export interface AIChatMessage {
   role: 'system' | 'user' | 'assistant';
   content: string;
 }
 
+// AI 생성 옵션 인터페이스
 export interface AIGenerationOptions {
   maxTokens?: number;
   temperature?: number;
@@ -86,18 +85,22 @@ export interface AIGenerationOptions {
   provider?: AIProvider;
 }
 
+// AI 채팅 옵션 인터페이스
 export interface AIChatOptions extends AIGenerationOptions {
   systemPrompt?: string;
 }
 
+// 텍스트 요약 옵션 인터페이스
 export interface SummaryOptions {
   maxLength?: number;
   style?: 'bullet' | 'paragraph' | 'key-points';
   language?: string;
 }
 
+// AI 분석 유형
 export type AIAnalysisType = 'sentiment' | 'topics' | 'keywords' | 'category' | 'readability';
 
+// AI 텍스트 결과 인터페이스
 export interface AITextResult {
   success: boolean;
   content: string;
@@ -107,16 +110,19 @@ export interface AITextResult {
   error?: string;
 }
 
+// AI 채팅 결과 인터페이스
 export interface AIChatResult extends AITextResult {
   finishReason?: string;
 }
 
+// AI 요약 결과 인터페이스
 export interface AISummaryResult extends AITextResult {
   originalLength: number;
   summaryLength: number;
   compressionRatio: number;
 }
 
+// AI 분석 결과 인터페이스
 export interface AIAnalysisResult {
   success: boolean;
   analysisType: AIAnalysisType;
@@ -126,6 +132,7 @@ export interface AIAnalysisResult {
   error?: string;
 }
 
+// 감정 분석 결과 인터페이스
 export interface AISentimentResult {
   success: boolean;
   sentiment: 'positive' | 'negative' | 'neutral';
@@ -139,6 +146,7 @@ export interface AISentimentResult {
   error?: string;
 }
 
+// 키워드 추출 결과 인터페이스
 export interface AIKeywordsResult {
   success: boolean;
   keywords: string[];
@@ -147,6 +155,7 @@ export interface AIKeywordsResult {
   error?: string;
 }
 
+// 텍스트 분류 결과 인터페이스
 export interface AIClassificationResult {
   success: boolean;
   category: string;
@@ -159,6 +168,7 @@ export interface AIClassificationResult {
   error?: string;
 }
 
+// 임베딩 결과 인터페이스
 export interface AIEmbeddingResult {
   success: boolean;
   embedding: number[];
@@ -167,24 +177,28 @@ export interface AIEmbeddingResult {
   error?: string;
 }
 
+// 유사도 결과 인터페이스
 export interface AISimilarityResult {
   success: boolean;
   similarity: number;
   error?: string;
 }
 
+// 유사 텍스트 매치 인터페이스
 export interface AISimilarityMatch {
   text: string;
   similarity: number;
   index: number;
 }
 
+// 번역 결과 인터페이스
 export interface AITranslationResult extends AITextResult {
   sourceLanguage?: string;
   targetLanguage: string;
   confidence?: number;
 }
 
+// 텍스트 개선 결과 인터페이스
 export interface AIFeedbackAnalysis {
   success: boolean;
   overallSentiment: 'positive' | 'negative' | 'mixed' | 'neutral';
@@ -200,6 +214,7 @@ export interface AIFeedbackAnalysis {
   error?: string;
 }
 
+// AI 모델 정보 인터페이스
 export interface AIModel {
   provider: AIProvider;
   name: string;
@@ -210,6 +225,7 @@ export interface AIModel {
   isAvailable: boolean;
 }
 
+// AI 기능 유형
 export type AICapability =
   | 'text_generation'
   | 'chat'
@@ -219,6 +235,7 @@ export type AICapability =
   | 'summarization'
   | 'classification';
 
+// AI 사용량 인터페이스
 export interface AIUsage {
   promptTokens: number;
   completionTokens: number;
@@ -226,6 +243,7 @@ export interface AIUsage {
   costUSD?: number;
 }
 
+// AI 사용량 통계 인터페이스
 export interface AIUsageStats {
   totalRequests: number;
   totalTokens: number;
@@ -257,13 +275,13 @@ export interface AIUsageStats {
   timeRange: TimeRange;
 }
 
+// 시간 범위 인터페이스
 export interface TimeRange {
   start: string;
   end: string;
 }
 
-// ============== AI 작업 큐 포트 ==============
-
+// AI 작업 큐 포트 인터페이스
 export interface AIJobQueue {
   // 비동기 AI 작업 추가
   addTextGenerationJob(prompt: string, options?: AIGenerationOptions): Promise<string>;
@@ -279,6 +297,7 @@ export interface AIJobQueue {
   retryJob(jobId: string): Promise<void>;
 }
 
+// 배치 처리 작업 유형
 export type AIBatchOperation =
   | 'generate_tags'
   | 'analyze_sentiment'
@@ -286,6 +305,7 @@ export type AIBatchOperation =
   | 'translate'
   | 'classify';
 
+// AI 작업 상태 인터페이스
 export interface AIJobStatus {
   id: string;
   status: 'pending' | 'processing' | 'completed' | 'failed' | 'cancelled';

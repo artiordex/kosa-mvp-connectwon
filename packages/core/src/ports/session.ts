@@ -1,7 +1,7 @@
 /**
- * Description : ports/session-repository.ts - 📌 세션 저장소 포트 인터페이스
- * Author      : Shiwoo Min
- * Date        : 2025-09-10
+ * Description : session.ts - 📌 세션 저장소 포트 인터페이스
+ * Author : Shiwoo Min
+ * Date : 2025-09-10
  */
 import type {
   CreateSession,
@@ -15,8 +15,7 @@ import type {
   UpdateSession,
 } from '../../core-types.js';
 
-// ============== 세션 저장소 포트 ==============
-
+// 세션 저장소 포트 인터페이스
 export interface SessionRepository {
   // 기본 CRUD 작업
   findById(id: Id): Promise<Session | null>;

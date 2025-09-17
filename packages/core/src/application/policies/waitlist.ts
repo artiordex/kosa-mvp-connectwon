@@ -5,6 +5,7 @@
  */
 import { Injectable } from '@nestjs/common';
 
+// 대기열 정책 옵션 인터페이스
 export interface WaitlistPolicyOptions {
   // 대기열 최대 인원(기본 10명)
   maxWaitlist?: number;
@@ -12,6 +13,7 @@ export interface WaitlistPolicyOptions {
   allowDuplicates?: boolean;
 }
 
+// 대기열 정책 서비스
 @Injectable()
 export class WaitlistPolicyService {
   /**

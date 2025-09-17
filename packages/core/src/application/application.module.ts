@@ -1,11 +1,10 @@
 /**
  * Description : application.module.ts - 📌 애플리케이션 모듈
- * Author      : Shiwoo Min
- * Date        : 2025-09-10
+ * Author : Shiwoo Min
+ * Date : 2025-09-10
  */
 import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
-
 import { RequireRoleGuard } from './guards/require-role.js';
 import { OverbookingPolicyService } from './policies/overbooking.js';
 import { WaitlistPolicyService } from './policies/waitlist.js';
@@ -13,6 +12,7 @@ import { CreateProgramUsecase } from './usecases/program.js';
 import { ReservationUsecase } from './usecases/reservation.js';
 import { ScheduleSessionUsecase } from './usecases/schedule.js';
 
+// 애플리케이션 모듈
 @Module({
   providers: [
     // Policies

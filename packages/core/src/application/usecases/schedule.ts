@@ -7,16 +7,17 @@ import { Injectable } from '@nestjs/common';
 
 import { randomUUID } from 'node:crypto';
 
-// 인메모리 세션 모델
+// 스케줄 세션 인터페이스
 export interface ScheduledSession {
   id: string;
   programId: string;
-  date: string; // ISO string
+  date: string;
   capacity: number;
   participants: string[];
   waitlist: string[];
 }
 
+// 세션 스케줄링 유스케이스
 @Injectable()
 export class ScheduleSessionUsecase {
   execute(programId: string, date: string, capacity: number): ScheduledSession {

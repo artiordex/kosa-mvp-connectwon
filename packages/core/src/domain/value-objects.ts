@@ -1,7 +1,7 @@
 /**
  * Description : value-objects.ts - 📌 값 객체 정의
- * Author      : Shiwoo Min
- * Date        : 2025-09-10
+ * Author : Shiwoo Min
+ * Date : 2025-09-10
  */
 
 // 브랜드드 타입(Branded Type) 유틸
@@ -22,17 +22,19 @@ const assertNonEmpty = (v: string, name: string) => {
   if (!v || v.trim() === '') throw new Error(`${name} must be non-empty`);
 };
 
-// 팩토리 함수
+// 유저 ID 팩토리 함수
 export function UserId(value: string): UserId {
   assertNonEmpty(value, 'UserId');
   return value as UserId;
 }
 
+// 프로그램 ID 팩토리 함수
 export function ProgramId(value: string): ProgramId {
   assertNonEmpty(value, 'ProgramId');
   return value as ProgramId;
 }
 
+// 세션 ID 팩토리 함수
 export function SessionId(value: string): SessionId {
   assertNonEmpty(value, 'SessionId');
   return value as SessionId;
@@ -41,6 +43,7 @@ export function SessionId(value: string): SessionId {
 // Email 정규
 const EMAIL_REGEX = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
 
+// 이메일 값 객체
 export class Email {
   private constructor(private readonly _value: string) {
     Object.freeze(this);

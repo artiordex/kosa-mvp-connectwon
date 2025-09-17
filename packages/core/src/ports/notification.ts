@@ -1,7 +1,7 @@
 /**
- * Description : ports/notification-service.ts - 📌 알림 서비스 포트 인터페이스
- * Author      : Shiwoo Min
- * Date        : 2025-09-10
+ * Description : notification.ts - 📌 알림 서비스 포트 인터페이스
+ * Author : Shiwoo Min
+ * Date : 2025-09-10
  */
 import type {
   EmailResult,
@@ -13,7 +13,7 @@ import type {
   SlackResult,
 } from '../../core-types.js';
 
-// ============== 알림 서비스 포트 ==============
+// 알림 서비스 포트 인터페이스
 
 export interface NotificationService {
   // 이벤트 기반 알림
@@ -48,6 +48,7 @@ export interface NotificationService {
   testSlackConnection(): Promise<boolean>;
 }
 
+// 알림 결과 인터페이스
 export interface NotificationResult {
   success: boolean;
   channel: NotificationChannel;

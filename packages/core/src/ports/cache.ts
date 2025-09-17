@@ -1,13 +1,10 @@
 /**
- * Description : cache.ts - 📌 캐시 시스템 포트(인터페이스)
+ * Description : cache.ts - 📌 캐시 시스템 포트 인터페이스
  * Author : Shiwoo Min
  * Date : 2025-09-10
  */
 
-///////////////////////////////
-// 기본 캐시 포트 (Key/Value) //
-///////////////////////////////
-
+// 캐시 포트 인터페이스
 export interface CacheService {
   // 기본 작업
   get<T = unknown>(key: string): Promise<T | null>;
@@ -70,10 +67,7 @@ export interface CacheService {
   info(): Promise<string>;
 }
 
-/////////////////////////////////////////
-// 세션/레이트리밋/락 등 고수준 포트들 //
-/////////////////////////////////////////
-
+// 세션 캐시 포트 인터페이스
 export interface SessionCache {
   // 사용자 세션
   getUserSession(userId: string): Promise<UserSession | null>;
@@ -111,10 +105,7 @@ export interface SessionCache {
   renewLock(resource: string, lockId: string, ttlSeconds: number): Promise<boolean>;
 }
 
-/////////////////////////
-// 캐시 관련 도메인 타입 //
-/////////////////////////
-
+// 사용자 세션 인터페이스
 export interface UserSession {
   userId: string;
   email: string;
@@ -125,6 +116,7 @@ export interface UserSession {
   userAgent?: string;
 }
 
+// 인증번호 인터페이스
 export interface VerificationCode {
   code: string;
   purpose: string;
@@ -135,6 +127,7 @@ export interface VerificationCode {
   expiresAt: string; // ISO
 }
 
+// 레이트 리미팅 정보 인터페이스
 export interface RateLimitInfo {
   current: number;
   max: number;
@@ -143,6 +136,7 @@ export interface RateLimitInfo {
   blocked: boolean;
 }
 
+// 레이트 리미팅 결과 인터페이스
 export interface RateLimitResult {
   allowed: boolean;
   current: number;
@@ -151,6 +145,7 @@ export interface RateLimitResult {
   retryAfter?: number;
 }
 
+// 캐시 통계 인터페이스
 export interface CacheStats {
   hits: number;
   misses: number;
@@ -163,10 +158,7 @@ export interface CacheStats {
   connections: number;
 }
 
-/////////////////////////
-// 캐시 키 네임스페이스 //
-/////////////////////////
-
+// 캐시 키 생성 유틸리티 클래스
 export class CacheKeys {
   static readonly USER_SESSION = (userId: string) => `session:user:${userId}`;
   static readonly VERIFICATION_CODE = (email: string, purpose: string) =>

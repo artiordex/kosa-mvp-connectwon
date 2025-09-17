@@ -7,6 +7,7 @@
 // 타입 임포트가 필요하면 다음 라인을 열어 사용 (verbatimModuleSyntax 고려)
 // import type { Db } from '@connectwon/core/ports/db';
 
+// PrismaClient 등 ORM/DB 클라이언트 타입 임포트
 export class PrismaDb /* implements Db */ {
   constructor(private readonly client: any) {} // PrismaClient 등
 

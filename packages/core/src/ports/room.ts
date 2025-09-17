@@ -1,7 +1,7 @@
 /**
- * Description : ports/room-repository.ts - 📌 방 저장소 포트 인터페이스
- * Author      : Shiwoo Min
- * Date        : 2025-09-10
+ * Description : room.ts - 📌 방 저장소 포트 인터페이스
+ * Author : Shiwoo Min
+ * Date : 2025-09-10
  */
 import type {
   CreateRoom,
@@ -14,8 +14,7 @@ import type {
   UpdateRoom,
 } from '../../core-types.js';
 
-// ============== 방 저장소 포트 ==============
-
+// 방 저장소 포트 인터페이스
 export interface RoomRepository {
   // 기본 CRUD 작업
   findById(id: Id): Promise<Room | null>;

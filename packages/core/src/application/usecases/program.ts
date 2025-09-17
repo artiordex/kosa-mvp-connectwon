@@ -7,13 +7,15 @@ import { Injectable } from '@nestjs/common';
 
 import { randomUUID } from 'node:crypto';
 
+// 프로그램 도메인 모델 인터페이스
 export interface Program {
   id: string;
   ownerId: string;
   title: string;
-  sessions: string[]; // 세션 ID 목록 (인메모리)
+  sessions: string[];
 }
 
+// 프로그램 생성 요청 유스케이스
 @Injectable()
 export class CreateProgramUsecase {
   execute(ownerId: string, title: string): Program {

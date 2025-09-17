@@ -8,7 +8,7 @@ import { Injectable } from '@nestjs/common';
 import { OverbookingPolicyService } from '../policies/overbooking.js';
 import { WaitlistPolicyService } from '../policies/waitlist.js';
 
-// 도메인 최소 모델 (인메모리용)
+// 세션 도메인 모델 인터페이스
 export interface Session {
   id: string;
   capacity: number;
@@ -16,9 +16,13 @@ export interface Session {
   waitlist: string[];
 }
 
+// 예약상태 타입
 export type BookStatus = 'booked' | 'overbooked' | 'waitlisted' | 'full';
+
+// 예약취소 결과 타입
 export type CancelStatus = 'not_found' | 'cancelled' | 'cancelled_and_promoted';
 
+// 세션 예약취소 유스케이스
 @Injectable()
 export class ReservationUsecase {
   constructor(
@@ -61,19 +65,15 @@ export class ReservationUsecase {
       session.waitlist.push(userId);
       return { status: 'waitlisted', session };
     }
-
     return { status: 'full', session };
   }
 
-  /**
-   * 예약 취소 후, 빈자리가 생기면 대기열에서 1명 승급
-   */
+  // 예약 취소 후, 빈자리가 생기면 대기열에서 1명 승급
   cancel(userId: string, session: Session): { status: CancelStatus; session: Session } {
     const before = session.participants.length;
 
     // 참가자 목록에서 제거
     session.participants = session.participants.filter(id => id !== userId);
-
     if (session.participants.length === before) {
       // 참가자에 없었음
       return { status: 'not_found', session };
@@ -87,7 +87,6 @@ export class ReservationUsecase {
       }
       return { status: 'cancelled_and_promoted', session };
     }
-
     return { status: 'cancelled', session };
   }
 }

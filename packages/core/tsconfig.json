@@ -1,7 +1,7 @@
 /**
  * Description : tsconfig.json - 📌 Core 패키지 (TypeScript 설정)
- * Author      : Shiwoo Min
- * Date        : 2025-09-10
+ * Author : Shiwoo Min
+ * Date : 2025-09-10
  * 09-10 : core 패키지의 domain/authz 참조 추가
  * 09-12 : 선언파일/소스맵/증분빌드/레퍼런스 정리
  */

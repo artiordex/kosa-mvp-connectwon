@@ -1,7 +1,7 @@
 /**
  * Description : adapters/notify.slack.ts - 📌 n8n 연동용 Slack 웹훅
- * Author      : Shiwoo Min
- * Date        : 2025-09-10
+ * Author : Shiwoo Min
+ * Date : 2025-09-10
  */
 import type {
   N8nWebhookPayload,

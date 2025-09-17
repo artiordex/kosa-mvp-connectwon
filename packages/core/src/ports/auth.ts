@@ -1,12 +1,11 @@
 /**
  * Description : auth.ts - 📌 인증 서비스 포트 인터페이스
- * Author      : Shiwoo Min
- * Date        : 2025-09-10
+ * Author : Shiwoo Min
+ * Date : 2025-09-10
  */
 import type { CreateUser, Id, User } from '../../core-types.js';
 
-// ============== 인증 서비스 포트 ==============
-
+// 인증 서비스 포트 인터페이스
 export interface AuthService {
   // Google OAuth 인증
   authenticateWithGoogle(googleToken: string): Promise<AuthResult>;
@@ -43,8 +42,7 @@ export interface AuthService {
   changeUserRole(userId: Id, roleFlags: number): Promise<void>;
 }
 
-// ============== JWT 서비스 포트 ==============
-
+// JWT 서비스 포트 인터페이스
 export interface JWTService {
   // 토큰 생성
   sign(payload: Record<string, unknown>, options?: JWTSignOptions): Promise<string>;
@@ -65,7 +63,7 @@ export interface JWTService {
   isRevoked(token: string): Promise<boolean>;
 }
 
-// ============== 패스워드 서비스 포트 ==============
+// 패스워드 서비스 포트 인터페이스
 
 export interface PasswordService {
   // 해시 생성
@@ -81,8 +79,7 @@ export interface PasswordService {
   generateTemporaryPassword(): string;
 }
 
-// ============== 2FA 서비스 포트 ==============
-
+// 2단계 인증 서비스 포트 인터페이스
 export interface TwoFactorService {
   // TOTP 설정
   generateTOTPSecret(userId: Id): Promise<TOTPSetup>;
@@ -101,8 +98,7 @@ export interface TwoFactorService {
   get2FAStatus(userId: Id): Promise<TwoFactorStatus>;
 }
 
-// ============== 타입 정의 ==============
-
+// 인증 결과 인터페이스
 export interface AuthResult {
   success: boolean;
   user?: User;
@@ -112,6 +108,7 @@ export interface AuthResult {
   requiresVerification?: boolean;
 }
 
+// 사용자 세션 인터페이스
 export interface UserSession {
   id: string;
   userId: Id;
@@ -124,12 +121,14 @@ export interface UserSession {
   userAgent?: string;
 }
 
+// 토큰 쌍 인터페이스
 export interface TokenPair {
   accessToken: string;
   refreshToken: string;
   expiresIn: number;
 }
 
+// JWT 페이로드 인터페이스
 export interface TokenPayload {
   userId: Id;
   email: string;
@@ -139,6 +138,7 @@ export interface TokenPayload {
   sessionId?: string;
 }
 
+// Google 토큰 페이로드 인터페이스
 export interface GoogleTokenPayload {
   sub: string;
   email: string;
@@ -147,8 +147,10 @@ export interface GoogleTokenPayload {
   email_verified: boolean;
 }
 
+// 이메일 인증 목적 타입
 export type VerificationPurpose = 'signup' | 'login' | 'email_change' | 'password_reset';
 
+// 속도 제한 결과 인터페이스
 export interface RateLimitResult {
   allowed: boolean;
   remaining: number;
@@ -156,6 +158,7 @@ export interface RateLimitResult {
   retryAfter?: number;
 }
 
+// 보안 이벤트 인터페이스
 export interface SecurityEvent {
   type: SecurityEventType;
   userId?: Id;
@@ -165,6 +168,7 @@ export interface SecurityEvent {
   timestamp: string;
 }
 
+// 보안 이벤트 유형
 export type SecurityEventType =
   | 'login_success'
   | 'login_failure'
@@ -178,6 +182,7 @@ export type SecurityEventType =
   | '2fa_enabled'
   | '2fa_disabled';
 
+// JWT 서명 옵션 인터페이스
 export interface JWTSignOptions {
   expiresIn?: string | number;
   audience?: string;
@@ -186,6 +191,7 @@ export interface JWTSignOptions {
   algorithm?: string;
 }
 
+// 패스워드 강도 결과 인터페이스
 export interface PasswordStrengthResult {
   isValid: boolean;
   score: number; // 0-4
@@ -199,19 +205,21 @@ export interface PasswordStrengthResult {
   };
 }
 
+// 2단계 인증 설정 인터페이스
 export interface TOTPSetup {
   secret: string;
   qrCodeUrl: string;
   manualEntryKey: string;
 }
 
+// 2단계 인증 상태 인터페이스
 export interface TwoFactorStatus {
   enabled: boolean;
   backupCodesCount: number;
   lastUsed?: string;
 }
 
-// ============== 권한 관리 포트 ==============
+// 권한 관리 포트 인터페이스
 
 export interface PermissionService {
   // 역할 관리
@@ -251,7 +259,7 @@ export interface PermissionService {
   ): Promise<void>;
 }
 
-// ============== 감사 로그 포트 ==============
+// 감사 로그 포트 인터페이스
 
 export interface AuditLogService {
   // 로그 기록
@@ -270,6 +278,7 @@ export interface AuditLogService {
   getAuditStats(timeRange: TimeRange): Promise<AuditStats>;
 }
 
+// 감사 이벤트 인터페이스
 export interface AuditEvent {
   id: string;
   userId?: Id;
@@ -284,6 +293,7 @@ export interface AuditEvent {
   details?: Record<string, unknown>;
 }
 
+// 감사 로그 필터 인터페이스
 export interface AuditLogFilters {
   startDate?: string;
   endDate?: string;
@@ -294,11 +304,13 @@ export interface AuditLogFilters {
   offset?: number;
 }
 
+// 시간 범위 인터페이스
 export interface TimeRange {
   start: string;
   end: string;
 }
 
+// 감사 통계 인터페이스
 export interface AuditStats {
   totalEvents: number;
   eventsByAction: Record<string, number>;

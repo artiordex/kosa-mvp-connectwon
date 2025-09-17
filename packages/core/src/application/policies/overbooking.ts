@@ -1,23 +1,20 @@
 /**
  * Description : overbooking.ts - 📌 초과 예약 정책
- * Author      : Shiwoo Min
- * Date        : 2025-09-10
+ * Author : Shiwoo Min
+ * Date : 2025-09-10
  */
 import { Injectable } from '@nestjs/common';
 
+// 초과 초과 예약 모드
 export type OverbookingMode = 'disallow' | 'percent' | 'fixed';
 
-/**
- * 초과 예약 허용 규칙
- * - disallow : 초과 예약 불가
- * - percent  : 정원의 n%까지 허용 (예: 10 → 10%)
- * - fixed    : 정원 초과로 최대 n명 추가 허용
- */
+// 초과 예약 정책 옵션 인터페이스
 export interface OverbookingPolicyOptions {
   mode: OverbookingMode;
   value?: number; // percent면 0~100, fixed면 0 이상의 정수
 }
 
+// 초과 예약 정책 서비스
 @Injectable()
 export class OverbookingPolicyService {
   /**
@@ -32,7 +29,6 @@ export class OverbookingPolicyService {
     options: OverbookingPolicyOptions = { mode: 'disallow' },
   ): boolean {
     if (capacity <= 0) return false;
-
     switch (options.mode) {
       case 'disallow':
         return false;

@@ -1,7 +1,7 @@
 /**
  * Description : ports/venue.ts - 📌 장소 저장소 포트 인터페이스
- * Author      : Shiwoo Min
- * Date        : 2025-09-10
+ * Author : Shiwoo Min
+ * Date : 2025-09-10
  */
 import type {
   CreateVenue,
@@ -12,8 +12,7 @@ import type {
   Venue,
 } from '../../core-types.js';
 
-// ============== 장소 저장소 포트 ==============
-
+// 장소 저장소 포트 인터페이스
 export interface VenueRepository {
   // 기본 CRUD 작업
   findById(id: Id): Promise<Venue | null>;

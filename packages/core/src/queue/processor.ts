@@ -1,7 +1,7 @@
 /**
  * Description : processor.ts - 📌 BullMQ 프로세서 모음
- * Author      : Shiwoo Min
- * Date        : 2025-09-10
+ * Author : Shiwoo Min
+ * Date : 2025-09-10
  */
 import type { Job as BullJob } from 'bullmq';
 
@@ -15,9 +15,8 @@ import type {
   SlackJob,
 } from '../../core-types.js';
 
-// payload 추론
+// BullMQ Job의 Payload 타입 추출 유틸리티
 type PayloadOf<T> = T extends { data: infer D } ? D : never;
-
 type EmailPayload = PayloadOf<EmailJob>;
 type SlackPayload = PayloadOf<SlackJob>;
 type SessionReminderPayload = PayloadOf<SessionReminderJob>;
@@ -25,6 +24,7 @@ type AIPayload = PayloadOf<AIProcessingJob>;
 type CleanupPayload = PayloadOf<CleanupJob>;
 type ReportPayload = PayloadOf<ReportJob>;
 
+// 각 Job 타입별 프로세서 클래스
 export class EmailJobProcessor {
   constructor(private readonly emailService: any) {}
   async process(data: EmailPayload, _job?: BullJob<EmailPayload>): Promise<JobResult> {
@@ -34,6 +34,7 @@ export class EmailJobProcessor {
   }
 }
 
+// Slack 메시지 전송 프로세서
 export class SlackJobProcessor {
   constructor(private readonly slackService: any) {}
   async process(data: SlackPayload, _job?: BullJob<SlackPayload>): Promise<JobResult> {
@@ -42,6 +43,7 @@ export class SlackJobProcessor {
   }
 }
 
+// 세션 리마인더 전송 프로세서
 export class SessionReminderProcessor {
   constructor(
     private readonly sessionRepo: any,
@@ -59,6 +61,7 @@ export class SessionReminderProcessor {
   }
 }
 
+// AI 작업 처리 프로세서
 export class AIProcessingProcessor {
   constructor(private readonly aiService: any) {}
   async process(data: AIPayload, _job?: BullJob<AIPayload>): Promise<JobResult> {
@@ -67,15 +70,16 @@ export class AIProcessingProcessor {
   }
 }
 
+// 시스템 정리 작업 프로세서
 export class CleanupJobProcessor {
   constructor(private readonly repositories: any) {}
   async process(data: CleanupPayload, _job?: BullJob<CleanupPayload>): Promise<JobResult> {
-    // 예: repositories.session/notification/files 등 정리
-    // await this.repositories.session.cleanup(data);
+    await this.repositories.session.cleanup(data);
     return { success: true };
   }
 }
 
+// 보고서 생성 작업 프로세서
 export class ReportJobProcessor {
   constructor(private readonly reportService: any) {}
   async process(data: ReportPayload, _job?: BullJob<ReportPayload>): Promise<JobResult> {

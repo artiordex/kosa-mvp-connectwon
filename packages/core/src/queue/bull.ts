@@ -1,27 +1,13 @@
 /**
  * Description : bull.ts - 📌 BullMQ 기반 큐 시스템
- * Author      : Shiwoo Min
- * Date        : 2025-09-12
- *
+ * Author : Shiwoo Min
+ * Date : 2025-09-12
  * - ioredis 인스턴스 기반 공유/블로킹 커넥션 단일화
  * - makeQueue / makeWorker / makeQueueEvents 팩토리 제공
  * - BullQueueSystem(고수준 오케스트레이션) 제공
  * - exactOptionalPropertyTypes 안전: 옵션 키는 값이 있을 때만 추가
  */
-import {
-  type Job,
-  type JobsOptions,
-  type Processor,
-  Queue,
-  QueueEvents,
-  Worker,
-  type WorkerOptions,
-} from 'bullmq';
-import type { RedisOptions } from 'ioredis';
-
 import { createRequire } from 'node:module';
-
-// 잡 데이터 타입
 import type {
   AIProcessingJob,
   CleanupJob,
@@ -40,11 +26,20 @@ import {
   SessionReminderProcessor,
   SlackJobProcessor,
 } from './processor.js';
+import {
+  type Job,
+  type JobsOptions,
+  type Processor,
+  Queue,
+  QueueEvents,
+  Worker,
+  type WorkerOptions,
+} from 'bullmq';
+import type { RedisOptions } from 'ioredis';
 
+// ioredis import (CJS/ESM 호환)
 const require = createRequire(import.meta.url);
 const IORedis = require('ioredis') as typeof import('ioredis');
-
-// ioredis CJS/ESM 모두 대응
 const RedisCtor: new (...args: any[]) => any = (IORedis as any).default ?? (IORedis as any);
 
 // 큐 이름 상수
@@ -75,6 +70,7 @@ const redisOptions: RedisOptions = {
   ...(process.env['REDIS_TLS'] ? { tls: {} as Record<string, unknown> } : {}),
 };
 
+// ioredis 인스턴스 (공유/블로킹 용도 분리)
 const sharedConn = new RedisCtor(redisOptions);
 const blockingConn = new RedisCtor(redisOptions);
 
@@ -89,13 +85,15 @@ const defaultJobOptions: JobsOptions = {
       : { type: 'exponential', delay: Number(process.env['JOB_BACKOFF_DELAY'] ?? 5000) },
 };
 
-// 공통 큐/워커 팩토리 (ioredis 인스턴스 재사용, 기본 잡 옵션 주입)
+// 큐 생성 팩토리
 export const makeQueue = (name: QueueName) =>
   new Queue(name, { connection: sharedConn, defaultJobOptions });
 
+// 이벤트 리스너 생성 팩토리
 export const makeQueueEvents = (name: QueueName) =>
   new QueueEvents(name, { connection: sharedConn });
 
+// 워커 생성 팩토리
 export function makeWorker<Data = unknown, Result = unknown>(
   name: QueueName,
   // 동기/비동기 모두 허용 → 내부에서 Promise로 표준화
@@ -108,10 +106,8 @@ export function makeWorker<Data = unknown, Result = unknown>(
     concurrency = process.env['QUEUE_CONCURRENCY'] ? Number(process.env['QUEUE_CONCURRENCY']) : 5,
     ...rest
   } = options ?? {};
-
   const normalized: Processor<Data, Result, string> = async job =>
     await Promise.resolve(processor(job));
-
   return new Worker<Data, Result, string>(name, normalized, {
     connection,
     concurrency,
@@ -119,7 +115,7 @@ export function makeWorker<Data = unknown, Result = unknown>(
   });
 }
 
-// 잡 데이터 타입 추출 유틸리티
+// 타입 추출 유틸리티
 type PayloadOf<T> = T extends { data: infer D } ? D : never;
 type EmailPayload = PayloadOf<EmailJob>;
 type SlackPayload = PayloadOf<SlackJob>;
@@ -127,9 +123,9 @@ type SessionReminderPayload = PayloadOf<SessionReminderJob>;
 type AIPayload = PayloadOf<AIProcessingJob>;
 type CleanupPayload = PayloadOf<CleanupJob>;
 type ReportPayload = PayloadOf<ReportJob>;
-
 type ProcessorFunc<T> = (data: T, job?: Job<T>) => Promise<JobResult>;
 
+// 고수준 큐 시스템 (의존성 주입 기반)
 export interface BullQueueSystemDeps {
   emailService?: any;
   slackService?: any;
@@ -144,10 +140,10 @@ export interface BullQueueSystemDeps {
   };
 }
 
+// 큐 시스템 클래스
 export class BullQueueSystem {
   private readonly queues = new Map<string, Queue>();
   private readonly workers = new Map<string, Worker>();
-
   constructor(
     private readonly config: QueueConfig,
     private readonly deps: BullQueueSystemDeps = {},
@@ -155,7 +151,7 @@ export class BullQueueSystem {
     this.registerProcessors();
   }
 
-  // 공통 Queue/Worker 셋업 (팩토리 재사용)
+  // Queue 셋업 헬퍼
   private setupQueue<T>(name: QueueName, handler: ProcessorFunc<T>) {
     const queue = new Queue<T>(name, {
       connection: sharedConn,
@@ -186,7 +182,6 @@ export class BullQueueSystem {
     worker.on('completed', job => {
       console.debug(`✅ [${name}] job ${job.id} completed`, job.returnvalue);
     });
-
     this.queues.set(name, queue);
     this.workers.set(name, worker);
   }
@@ -262,6 +257,7 @@ export function createBullQueueSystem(config: QueueConfig, deps: BullQueueSystem
 export const redisShared = sharedConn;
 export const redisBlocking = blockingConn;
 
+// 타입 노출
 export type BullQueue<Data = unknown, Result = unknown> = Queue<Data, Result, string>;
 export type BullWorker<Data = unknown, Result = unknown> = Worker<Data, Result, string>;
 export type BullQueueEvents = QueueEvents;

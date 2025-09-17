@@ -1,27 +1,44 @@
 /**
- * Description : core-types.ts - 📌 알림 · AI · Queue 타입 정의 (중복 정리본)
- * Author      : Shiwoo Min
- * Date        : 2025-09-10
+ * Description : core-types.ts - 📌 핵심기능 타입 정의
+ * Author: Shiwoo Min
+ * Date : 2025-09-10
+ * 09-17 : core 패키지의 domain/authz 참조 추가, Repository 임포트 에러 해결
  */
 
-// ================== Common Primitives ==================
+//
 export type Id = string;
 export type ISODateTime = string; // 'YYYY-MM-DDTHH:mm:ss.sssZ'
 export type ISODateOnly = string; // 'YYYY-MM-DD'
 export type JsonObject = Record<string, unknown>;
-export type Role = 'ADMIN' | 'PROGRAM_CREATOR' | 'USER';
+export type Role = 'ADMIN' | 'CREATOR' | 'USER';
 
 export type UserId = Id;
 export type ProgramId = Id;
 export type SessionId = Id;
 export type RoomId = Id;
 export type VenueId = Id;
+export type ParticipantId = Id;
+export type ReservationId = Id;
+export type PaymentId = Id;
+export type AIInteractionId = Id;
 
 export interface Page<T> {
   items: T[];
   total: number;
   page: number; // 1-base
   pageSize: number;
+}
+
+export interface EmailConfig {
+  host: string;
+  port: number;
+  secure: boolean;
+  auth: {
+    user: string;
+    pass: string;
+  };
+  from: EmailAddress;
+  replyTo?: EmailAddress;
 }
 
 export interface CursorPaginationQuery {
@@ -82,6 +99,281 @@ export interface UpdateVenue {
   location?: string;
   timezone?: string;
   openingHours?: Array<{ dayOfWeek: number; opensAt: string; closesAt: string }>;
+}
+
+// ================== 🔧 Repository 임포트 에러 해결을 위한 추가 타입들 ==================
+
+// Programs
+export interface Program {
+  id: ProgramId;
+  title: string;
+  description?: string;
+  type: string;
+  isActive: boolean;
+  createdByUserId: UserId;
+  aiSummary?: string;
+  aiSummaryTags?: string[];
+  createdAt: ISODateTime;
+  updatedAt: ISODateTime;
+}
+export interface CreateProgram {
+  title: string;
+  description?: string;
+  type: string;
+  isActive?: boolean;
+  createdByUserId: UserId;
+}
+export interface UpdateProgram {
+  title?: string;
+  description?: string;
+  type?: string;
+  isActive?: boolean;
+  aiSummary?: string;
+  aiSummaryTags?: string[];
+}
+export interface ProgramWithCreator extends Program {
+  creator: User;
+}
+
+// Sessions
+export type SessionStatus = 'DRAFT' | 'SCHEDULED' | 'ONGOING' | 'COMPLETED' | 'CANCELLED';
+export interface Session {
+  id: SessionId;
+  programId: ProgramId;
+  title: string;
+  description?: string;
+  status: SessionStatus;
+  startsAt: ISODateTime;
+  endsAt: ISODateTime;
+  locationText?: string;
+  roomId?: RoomId;
+  maxParticipants?: number;
+  currentParticipants: number;
+  cost?: number;
+  currency?: string;
+  createdAt: ISODateTime;
+  updatedAt: ISODateTime;
+}
+export interface CreateSession {
+  programId: ProgramId;
+  title: string;
+  description?: string;
+  startsAt: ISODateTime;
+  endsAt: ISODateTime;
+  locationText?: string;
+  roomId?: RoomId;
+  maxParticipants?: number;
+  cost?: number;
+  currency?: string;
+}
+export interface UpdateSession {
+  title?: string;
+  description?: string;
+  status?: SessionStatus;
+  startsAt?: ISODateTime;
+  endsAt?: ISODateTime;
+  locationText?: string;
+  roomId?: RoomId;
+  maxParticipants?: number;
+  cost?: number;
+  currency?: string;
+}
+export interface SessionWithProgram extends Session {
+  program: Program;
+}
+export interface SessionWithParticipants extends Session {
+  participants: ProgramParticipant[];
+}
+export interface SessionWithProgramAndVenue extends Session {
+  program: Program;
+  venue?: Venue;
+  room?: Room;
+}
+
+// Rooms
+export type RoomStatus = 'AVAILABLE' | 'OCCUPIED' | 'MAINTENANCE' | 'CLOSED';
+export interface Room {
+  id: RoomId;
+  venueId: VenueId;
+  name: string;
+  description?: string;
+  capacity: number;
+  status: RoomStatus;
+  equipment?: string[];
+  hourlyRate?: number;
+  currency?: string;
+  createdAt: ISODateTime;
+  updatedAt: ISODateTime;
+}
+export interface CreateRoom {
+  venueId: VenueId;
+  name: string;
+  description?: string;
+  capacity: number;
+  status?: RoomStatus;
+  equipment?: string[];
+  hourlyRate?: number;
+  currency?: string;
+}
+export interface UpdateRoom {
+  name?: string;
+  description?: string;
+  capacity?: number;
+  status?: RoomStatus;
+  equipment?: string[];
+  hourlyRate?: number;
+  currency?: string;
+}
+export interface RoomWithVenue extends Room {
+  venue: Venue;
+}
+
+// Reservations
+export type ReservationStatus = 'PENDING' | 'CONFIRMED' | 'CANCELLED' | 'COMPLETED';
+export interface RoomReservation {
+  id: ReservationId;
+  roomId: RoomId;
+  userId: UserId;
+  sessionId?: SessionId;
+  purpose: string;
+  status: ReservationStatus;
+  startsAt: ISODateTime;
+  endsAt: ISODateTime;
+  totalCost?: number;
+  currency?: string;
+  notes?: string;
+  createdAt: ISODateTime;
+  updatedAt: ISODateTime;
+}
+export interface CreateReservation {
+  roomId: RoomId;
+  sessionId?: SessionId;
+  purpose: string;
+  startsAt: ISODateTime;
+  endsAt: ISODateTime;
+  notes?: string;
+}
+export interface UpdateReservation {
+  purpose?: string;
+  status?: ReservationStatus;
+  startsAt?: ISODateTime;
+  endsAt?: ISODateTime;
+  notes?: string;
+}
+
+// Participants
+export type ParticipantRole = 'INSTRUCTOR' | 'PARTICIPANT' | 'OBSERVER' | 'ASSISTANT';
+export type ParticipantStatus = 'REGISTERED' | 'CONFIRMED' | 'ATTENDED' | 'NO_SHOW' | 'CANCELLED';
+export interface ProgramParticipant {
+  id: ParticipantId;
+  sessionId: SessionId;
+  userId: UserId;
+  role: ParticipantRole;
+  status: ParticipantStatus;
+  registeredAt: ISODateTime;
+  confirmedAt?: ISODateTime;
+  attendedAt?: ISODateTime;
+  notes?: string;
+  createdAt: ISODateTime;
+  updatedAt: ISODateTime;
+}
+export interface CreateParticipant {
+  sessionId: SessionId;
+  userId: UserId;
+  role: ParticipantRole;
+  notes?: string;
+}
+export interface UpdateParticipant {
+  role?: ParticipantRole;
+  status?: ParticipantStatus;
+  confirmedAt?: ISODateTime;
+  attendedAt?: ISODateTime;
+  notes?: string;
+}
+
+// Payments
+export type PaymentStatus =
+  | 'PENDING'
+  | 'PROCESSING'
+  | 'COMPLETED'
+  | 'FAILED'
+  | 'REFUNDED'
+  | 'CANCELLED';
+export type PaymentMethod = 'CREDIT_CARD' | 'BANK_TRANSFER' | 'CASH' | 'DIGITAL_WALLET' | 'OTHER';
+export interface Payment {
+  id: PaymentId;
+  sessionId: SessionId;
+  userId: UserId;
+  amount: number;
+  currency: string;
+  status: PaymentStatus;
+  method: PaymentMethod;
+  transactionId?: string;
+  description?: string;
+  processedAt?: ISODateTime;
+  refundedAt?: ISODateTime;
+  metadata?: JsonObject;
+  createdAt: ISODateTime;
+  updatedAt: ISODateTime;
+}
+export interface CreatePayment {
+  sessionId: SessionId;
+  userId: UserId;
+  amount: number;
+  currency: string;
+  method: PaymentMethod;
+  description?: string;
+  metadata?: JsonObject;
+}
+export interface UpdatePayment {
+  status?: PaymentStatus;
+  transactionId?: string;
+  processedAt?: ISODateTime;
+  refundedAt?: ISODateTime;
+  metadata?: JsonObject;
+}
+
+// AI Interactions
+export type AIInteractionKind =
+  | 'SUMMARIZE'
+  | 'CLASSIFY'
+  | 'EMBEDDINGS'
+  | 'TAGS'
+  | 'CHAT'
+  | 'COMPLETION';
+export type AIInteractionStatus = 'PENDING' | 'PROCESSING' | 'COMPLETED' | 'FAILED';
+export interface AIInteraction {
+  id: AIInteractionId;
+  userId?: UserId;
+  provider: AIProvider;
+  model: string;
+  kind: AIInteractionKind;
+  status: AIInteractionStatus;
+  inputTokens?: number;
+  outputTokens?: number;
+  totalTokens?: number;
+  costUSD?: number;
+  durationMs?: number;
+  errorMessage?: string;
+  metadata?: JsonObject;
+  createdAt: ISODateTime;
+  updatedAt: ISODateTime;
+}
+export interface CreateAIInteraction {
+  provider: AIProvider;
+  model: string;
+  kind: AIInteractionKind;
+  metadata?: JsonObject;
+}
+export interface UpdateAIInteraction {
+  status?: AIInteractionStatus;
+  inputTokens?: number;
+  outputTokens?: number;
+  totalTokens?: number;
+  costUSD?: number;
+  durationMs?: number;
+  errorMessage?: string;
+  metadata?: JsonObject;
 }
 
 // ================== Email / Notifications ==================
