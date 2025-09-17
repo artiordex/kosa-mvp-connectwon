@@ -122,14 +122,12 @@ export interface TestContext {
   };
 }
 
-// 추가 유틸리티 타입들
 // 환경 타입
 export const Environment = {
   DEVELOPMENT: 'development',
   STAGING: 'staging',
   PRODUCTION: 'production',
 } as const;
-
 export type Environment = (typeof Environment)[keyof typeof Environment];
 
 // 테스트 결과 타입

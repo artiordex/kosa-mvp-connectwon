@@ -1,3 +1,14 @@
 {
-  "name": "@connectwon/configs"
+  "name": "@connectwon/configs",
+  "sourceRoot": "packages/configs",
+  "projectType": "library",
+  "tags": ["type:lib", "layer:tooling"],
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "options": {
+        "lintFilePatterns": ["packages/configs/**/*.ts"]
+      }
+    }
+  }
 }

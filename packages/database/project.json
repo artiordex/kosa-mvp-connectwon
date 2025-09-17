@@ -1,3 +1,49 @@
 {
-  "name": "@connectwon/database"
+  "name": "@connectwon/database",
+  "sourceRoot": "packages/database/src",
+  "projectType": "library",
+  "tags": ["type:lib", "layer:backend"],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "options": {
+        "main": "packages/database/src/index.ts",
+        "outputPath": "dist/packages/database",
+        "tsConfig": "packages/database/tsconfig.json"
+      }
+    },
+    "prisma:generate": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "prisma generate",
+        "cwd": "packages/database"
+      }
+    },
+    "prisma:migrate": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "prisma migrate dev",
+        "cwd": "packages/database"
+      }
+    },
+    "prisma:studio": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "prisma studio",
+        "cwd": "packages/database"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "options": {
+        "lintFilePatterns": ["packages/database/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "options": {
+        "passWithNoTests": true
+      }
+    }
+  }
 }

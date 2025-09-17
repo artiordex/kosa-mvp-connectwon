@@ -5,12 +5,12 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "pnpm -w exec playwright test",
-    "test:ui": "pnpm -w exec playwright test --ui",
-    "test:report": "pnpm -w exec playwright show-report",
-    "test:debug": "pnpm -w exec playwright test --debug",
-    "install:browsers": "pnpm -w exec playwright install --with-deps",
-    "clean": "pnpm -w exec rimraf playwright-report test-results"
+    "test": "playwright test",
+    "test:ui": "playwright test --ui",
+    "test:report": "playwright show-report",
+    "test:debug": "playwright test --debug",
+    "install:browsers": "playwright install --with-deps",
+    "clean": "rimraf playwright-report test-results"
   },
   "devDependencies": {
     "@connectwon/api-contract": "workspace:*",

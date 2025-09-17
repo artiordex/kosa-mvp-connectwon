@@ -1,3 +1,41 @@
 {
-  "name": "@connectwon/e2e"
+  "name": "@connectwon/e2e",
+  "sourceRoot": "apps/e2e",
+  "projectType": "application",
+  "tags": ["type:app", "layer:e2e"],
+  "targets": {
+    "test": {
+      "executor": "@nx/playwright:playwright",
+      "options": {
+        "config": "apps/e2e/playwright.config.ts"
+      }
+    },
+    "test:ui": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "playwright test --ui",
+        "cwd": "apps/e2e"
+      }
+    },
+    "test:debug": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "playwright test --debug",
+        "cwd": "apps/e2e"
+      }
+    },
+    "install": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "playwright install --with-deps"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "options": {
+        "lintFilePatterns": ["apps/e2e/**/*.ts"]
+      }
+    }
+  },
+  "implicitDependencies": ["@connectwon/web", "@connectwon/admin", "@connectwon/api"]
 }

@@ -1,3 +1,22 @@
 {
-  "name": "@connectwon/n8n"
+  "name": "@connectwon/n8n",
+  "sourceRoot": "infra/n8n",
+  "projectType": "application",
+  "tags": ["type:infra", "layer:automation"],
+  "targets": {
+    "setup": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "bash scripts/setup.sh",
+        "cwd": "infra/n8n"
+      }
+    },
+    "deploy": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "bash scripts/deploy.sh",
+        "cwd": "infra/n8n"
+      }
+    }
+  }
 }

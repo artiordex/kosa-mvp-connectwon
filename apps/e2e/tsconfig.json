@@ -2,7 +2,7 @@
  * Description : tsconfig.json - 📌 Playwright 기반 E2E 모듈 (TypeScript 설정)
  * Author : Shiwoo Min
  * Date : 2025-09-07
- * 09-12 : include 범위 축소(교차 패키지 소스 제외), DOM 타입 유지, noEmit 확정
+ * 09-12 - include 범위 축소, DOM 타입 유지, noEmit 확정
  */
 {
   // 루트 공통 규칙 상속
@@ -42,15 +42,11 @@
   "include": [
     "playwright.config.ts",
     "e2e-types.ts",
-    "GlobalSetup.ts",
-    "GlobalTeardown.ts",
+    "setup.ts",
+    "teardown.ts",
     "actions/**/*.ts",
     "locators/**/*.ts",
     "tests/**/*.ts",
-    // JS 헬퍼를 쓰면 아래 라인 유지
-    "actions/**/*.js",
-    "locators/**/*.js",
-    "tests/**/*.js"
   ],
 
   // 산출물/리포트/노드모듈 제외

@@ -81,6 +81,8 @@
     { "path": "./packages/database" },
     { "path": "./packages/logger" },
     { "path": "./packages/sdk" },
+    { "path": "./packages/server" },
+    { "path": "./packages/client" },
     { "path": "./packages/ui" }
     // Removed reference to './packages/types' as it does not exist
   ]

@@ -5,7 +5,7 @@
   "tags": ["type:app", "layer:app"],
   "targets": {
     "build": {
-      "executor": "@nx/node:build",
+      "executor": "@nx/js:tsc",
       "options": {
         "main": "apps/worker/src/main.ts",
         "outputPath": "dist/apps/worker",
@@ -14,7 +14,7 @@
       }
     },
     "serve": {
-      "executor": "@nx/node:node",
+      "executor": "@nx/js:node",
       "options": {
         "buildTarget": "worker:build"
       }

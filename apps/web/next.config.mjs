@@ -1,10 +1,12 @@
 /**
- * Description : next.config.mjs - 📌 Next.js 설정 파일
+ * Description : next.config.mjs - 📌 Web 앱 Next.js 설정
  * Author : Shiwoo Min
  * Date : 2025-09-06
+ * 09-16 - packages 컴포넌트 추가, public 폴더 없이 빌드 가능하도록 수정
  */
-import path from 'path';
-import { fileURLToPath } from 'url';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import 'dotenv/config';
 
 // ES modules에서 __dirname 대체
 const __filename = fileURLToPath(import.meta.url);
@@ -17,18 +19,22 @@ const nextConfig = {
 
   // 모노레포 파일 추적 (웹은 루트 기준으로만 추적)
   experimental: {
-    outputFileTracingRoot: path.join(__dirname, '../../'),
-    // 웹에서 서버 전용 패키지 끌 필요 없음
-    // serverComponentsExternalPackages: ['@prisma/client'],
+    outputFileTracingRoot: path.resolve(__dirname, '../../'), // ✅ 절대 경로로 변경
     optimizePackageImports: ['lucide-react', 'date-fns'],
     typedRoutes: true,
   },
 
-  // 클라이언트에서 필요한 패키지만
-  transpilePackages: ['@connectwon/ui', '@connectwon/api-contract', '@connectwon/sdk'],
+  // 클라이언트에서 필요한 패키지
+  transpilePackages: [
+    '@connectwon/ui',
+    '@connectwon/api-contract',
+    '@connectwon/sdk',
+    '@connectwon/client',
+  ],
 
+  // 이미지 최적화 설정 (public 없이 작동)
   images: {
-    // 도메인 배열 대신 remotePatterns 써도 OK. 기존도 문제 없음.
+    unoptimized: true,
     domains: ['localhost', 'your-domain.com'],
     formats: ['image/avif', 'image/webp'],
   },
@@ -38,6 +44,7 @@ const nextConfig = {
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080',
   },
 
+  // Webpack 커스터마이징 (SVG 지원 등)
   webpack: (config, { dev, isServer }) => {
     if (dev && !isServer) {
       config.devtool = 'source-map';
@@ -49,9 +56,10 @@ const nextConfig = {
     });
     return config;
   },
+
+  // 성능 및 안정성 설정
   reactStrictMode: true,
   poweredByHeader: false,
   compress: true,
 };
-
 export default nextConfig;

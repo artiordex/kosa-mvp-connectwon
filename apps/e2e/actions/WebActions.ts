@@ -6,16 +6,12 @@
 import { expect, type Page } from '@playwright/test';
 
 import { BaseActions } from './BaseActions.js';
-import { JsForceActions } from './JsForceActions.js';
 
 export class WebActions extends BaseActions {
-  // JsForceActions 조합
-  readonly js: JsForceActions;
 
   // 생성자
   constructor(page: Page) {
     super(page);
-    this.js = new JsForceActions(page);
   }
 
   // URL 이동 후 네트워크 안정 상태 대기

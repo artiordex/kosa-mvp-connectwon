@@ -1,3 +1,28 @@
 {
-  "name": "@connectwon/ui"
+  "name": "@connectwon/ui",
+  "sourceRoot": "packages/ui/src",
+  "projectType": "library",
+  "tags": ["type:lib", "layer:frontend"],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "options": {
+        "main": "packages/ui/src/index.ts",
+        "outputPath": "dist/packages/ui",
+        "tsConfig": "packages/ui/tsconfig.json"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "options": {
+        "lintFilePatterns": ["packages/ui/**/*.{ts,tsx}"]
+      }
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "options": {
+        "passWithNoTests": true
+      }
+    }
+  }
 }

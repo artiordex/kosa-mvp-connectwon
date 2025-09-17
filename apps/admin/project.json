@@ -1,3 +1,33 @@
 {
-  "name": "@connectwon/admin"
+  "name": "@connectwon/admin",
+  "sourceRoot": "apps/admin/src",
+  "projectType": "application",
+  "tags": ["type:app", "layer:frontend", "platform:nextjs"],
+  "targets": {
+    "build": {
+      "executor": "@nx/next:build",
+      "options": {
+        "outputPath": "dist/apps/admin"
+      }
+    },
+    "serve": {
+      "executor": "@nx/next:dev",
+      "options": {
+        "port": 3001
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "options": {
+        "lintFilePatterns": ["apps/admin/**/*.ts", "apps/admin/**/*.tsx"]
+      }
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "options": {
+        "passWithNoTests": true
+      }
+    }
+  },
+  "implicitDependencies": ["@connectwon/ui", "@connectwon/client"]
 }

@@ -96,8 +96,10 @@
     "@connectwon/logger/*": ["packages/logger/src/*"],
     "@connectwon/sdk": ["packages/sdk/src/index.ts"],
     "@connectwon/sdk/*": ["packages/sdk/src/*"],
-    "@connectwon/nest-kit": ["packages/nest-kit/src/index.ts"],
-    "@connectwon/nest-kit/*": ["packages/nest-kit/src/*"],
+    "@connectwon/client": ["packages/client/src/index.ts"],
+    "@connectwon/client/*": ["packages/client/src/*"],
+    "@connectwon/server": ["packages/server/src/index.ts"],
+    "@connectwon/server/*": ["packages/server/src/*"],
     "@connectwon/ui": ["packages/ui/src/index.ts"],
     "@connectwon/ui/*": ["packages/ui/src/*"],
     // apps

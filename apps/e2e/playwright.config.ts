@@ -2,7 +2,7 @@
  * Description : playwright.config.ts - 📌 Playwright 테스트 실행 환경 정의 파일
  * Author : Shiwoo Min
  * Date : 2025-09-07
- * 09-07 : 최소 설정으로 웹/모바일 웹 E2E 테스트만 진행
+ * 09-07 - 최소 설정으로 웹/모바일 웹 E2E 테스트만 진행
  */
 import { defineConfig, devices } from '@playwright/test';
 import dotenv from 'dotenv';

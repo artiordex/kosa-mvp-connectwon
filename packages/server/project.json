@@ -1,3 +1,29 @@
 {
-  "name": "@connectwon/server"
+  "name": "@connectwon/server",
+  "sourceRoot": "packages/server/src",
+  "projectType": "library",
+  "tags": ["type:lib", "layer:backend"],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "options": {
+        "main": "packages/server/src/index.ts",
+        "outputPath": "dist/packages/server",
+        "tsConfig": "packages/server/tsconfig.json"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "options": {
+        "lintFilePatterns": ["packages/server/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "options": {
+        "passWithNoTests": true
+      }
+    }
+  },
+  "implicitDependencies": ["@connectwon/logger"]
 }

@@ -1,21 +1,21 @@
 {
-  "name": "@connectwon/logger",
-  "sourceRoot": "packages/logger/src",
+  "name": "@connectwon/sdk",
+  "sourceRoot": "packages/sdk/src",
   "projectType": "library",
   "tags": ["type:lib", "layer:shared"],
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
       "options": {
-        "main": "packages/logger/src/index.ts",
-        "outputPath": "dist/packages/logger",
-        "tsConfig": "packages/logger/tsconfig.json"
+        "main": "packages/sdk/src/index.ts",
+        "outputPath": "dist/packages/sdk",
+        "tsConfig": "packages/sdk/tsconfig.json"
       }
     },
     "lint": {
       "executor": "@nx/eslint:lint",
       "options": {
-        "lintFilePatterns": ["packages/logger/**/*.ts"]
+        "lintFilePatterns": ["packages/sdk/**/*.ts"]
       }
     },
     "test": {
@@ -24,5 +24,6 @@
         "passWithNoTests": true
       }
     }
-  }
+  },
+  "implicitDependencies": ["@connectwon/api-contract"]
 }

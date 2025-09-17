@@ -1,3 +1,35 @@
 {
-  "name": "@connectwon/api-contract"
+  "name": "@connectwon/api-contract",
+  "sourceRoot": "packages/api-contract/src",
+  "projectType": "library",
+  "tags": ["type:lib", "layer:shared"],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "options": {
+        "main": "packages/api-contract/src/index.ts",
+        "outputPath": "dist/packages/api-contract",
+        "tsConfig": "packages/api-contract/tsconfig.json"
+      }
+    },
+    "gen:openapi": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsx src/openapi/emit.ts",
+        "cwd": "packages/api-contract"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "options": {
+        "lintFilePatterns": ["packages/api-contract/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "options": {
+        "passWithNoTests": true
+      }
+    }
+  }
 }

@@ -1,3 +1,29 @@
 {
-  "name": "@connectwon/next-server"
+  "name": "@connectwon/client",
+  "sourceRoot": "packages/client/src",
+  "projectType": "library",
+  "tags": ["type:lib", "layer:frontend"],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "options": {
+        "main": "packages/client/src/index.ts",
+        "outputPath": "dist/packages/client",
+        "tsConfig": "packages/client/tsconfig.json"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "options": {
+        "lintFilePatterns": ["packages/client/**/*.{ts,tsx}"]
+      }
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "options": {
+        "passWithNoTests": true
+      }
+    }
+  },
+  "implicitDependencies": ["@connectwon/api-contract"]
 }

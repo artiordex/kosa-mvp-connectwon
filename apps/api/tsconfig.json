@@ -36,7 +36,8 @@
     { "path": "../../packages/core" },
     { "path": "../../packages/database" },
     { "path": "../../packages/logger" },
-    { "path": "../../packages/nest-kit" },
+    { "path": "../../packages/client" },
+    { "path": "../../packages/server" },
     { "path": "../../packages/api-contract" },
     { "path": "../../packages/sdk" }
   ],
