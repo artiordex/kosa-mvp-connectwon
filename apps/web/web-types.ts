@@ -4,11 +4,13 @@
  * Date : 2025-09-07
  */
 
+// 공통 컴포넌트 인터페이스
 export interface ComponentProps {
   className?: string;
   children?: React.ReactNode;
 }
 
+// 버튼, 카드, 폼 필드 등 주요 컴포넌트 인터페이스
 export interface ButtonProps extends ComponentProps {
   variant?: 'default' | 'outline' | 'secondary';
   size?: 'default' | 'sm' | 'lg';
@@ -16,11 +18,13 @@ export interface ButtonProps extends ComponentProps {
   onClick?: () => void;
 }
 
+// 카드 컴포넌트 인터페이스
 export interface CardProps extends ComponentProps {
   title?: string;
   description?: string;
 }
 
+// 폼 필드 컴포넌트 인터페이스
 export interface FormFieldProps extends ComponentProps {
   label: string;
   error?: string;

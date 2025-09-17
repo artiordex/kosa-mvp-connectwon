@@ -6,6 +6,10 @@
 import path from 'path';
 import { fileURLToPath } from 'url';
 
+// ES modules에서 __dirname 대체
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // Docker standalone 모드
@@ -38,11 +42,13 @@ const nextConfig = {
     if (dev && !isServer) {
       config.devtool = 'source-map';
     }
-    // SVG를 React 컴포넌트로 쓰고 싶다면:
-    config.module.rules.push({ test: /\.svg$/i, issuer: /\.[jt]sx?$/, use: ['@svgr/webpack'] });
+    config.module.rules.push({
+      test: /\.svg$/i,
+      issuer: /\.[jt]sx?$/,
+      use: ['@svgr/webpack'],
+    });
     return config;
   },
-
   reactStrictMode: true,
   poweredByHeader: false,
   compress: true,
