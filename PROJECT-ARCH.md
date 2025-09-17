@@ -289,6 +289,18 @@ kosa-mvp-connectwon
 │  │  │     ├─ users.ts
 │  │  │     └─ venues.ts
 │  │  └─ tsconfig.json
+│  ├─ client
+│  │  ├─ client-types.ts
+│  │  ├─ package.json
+│  │  ├─ project.json
+│  │  ├─ src
+│  │  │  ├─ hooks
+│  │  │  │  └─ useAuth.ts
+│  │  │  ├─ index.ts
+│  │  │  └─ providers
+│  │  │     ├─ AuthProvider.tsx
+│  │  │     └─ QueryProvider.tsx
+│  │  └─ tsconfig.json
 │  ├─ configs
 │  │  ├─ eslint
 │  │  │  └─ base.ts
@@ -389,9 +401,22 @@ kosa-mvp-connectwon
 │  │  │     ├─ pretty.ts
 │  │  │     └─ slack.ts
 │  │  └─ tsconfig.json
-│  ├─ nest-server
+│  ├─ sdk
+│  │  ├─ package.json
+│  │  ├─ sdk-types.ts
+│  │  ├─ src
+│  │  │  ├─ auth.ts
+│  │  │  ├─ errors.ts
+│  │  │  ├─ http.ts
+│  │  │  ├─ index.ts
+│  │  │  ├─ middleware.ts
+│  │  │  ├─ pagination.ts
+│  │  │  └─ tracing.ts
+│  │  └─ tsconfig.json
+│  ├─ server
 │  │  ├─ package.json
 │  │  ├─ project.json
+│  │  ├─ server-types.ts
 │  │  ├─ src
 │  │  │  ├─ decorators
 │  │  │  │  ├─ api-response.ts
@@ -405,45 +430,16 @@ kosa-mvp-connectwon
 │  │  │  │  └─ response.interceptor.ts
 │  │  │  ├─ middleware
 │  │  │  │  ├─ auth.ts
+│  │  │  │  ├─ cookies.ts
 │  │  │  │  ├─ error.ts
 │  │  │  │  ├─ index.ts
 │  │  │  │  └─ validation.ts
-│  │  │  ├─ nest-types.ts
 │  │  │  ├─ pipes
 │  │  │  │  └─ validation.pipe.ts
 │  │  │  ├─ plugins
 │  │  │  │  ├─ swagger.ts
 │  │  │  │  └─ validation.ts
-│  │  │  └─ server
-│  │  │     ├─ auth.ts
-│  │  │     ├─ cookies.ts
-│  │  │     ├─ errors.ts
-│  │  │     └─ rsc-cache.ts
-│  │  └─ tsconfig.json
-│  ├─ next-client
-│  │  ├─ next-types.ts
-│  │  ├─ package.json
-│  │  ├─ project.json
-│  │  ├─ src
-│  │  │  └─ client
-│  │  │     ├─ hooks
-│  │  │     │  └─ useAuth.ts
-│  │  │     ├─ index.ts
-│  │  │     └─ providers
-│  │  │        ├─ AuthProvider.tsx
-│  │  │        └─ QueryProvider.tsx
-│  │  └─ tsconfig.json
-│  ├─ sdk
-│  │  ├─ package.json
-│  │  ├─ sdk-types.ts
-│  │  ├─ src
-│  │  │  ├─ auth.ts
-│  │  │  ├─ errors.ts
-│  │  │  ├─ http.ts
-│  │  │  ├─ index.ts
-│  │  │  ├─ middleware.ts
-│  │  │  ├─ pagination.ts
-│  │  │  └─ tracing.ts
+│  │  │  └─ rsc-cache.ts
 │  │  └─ tsconfig.json
 │  └─ ui
 │     ├─ package.json
