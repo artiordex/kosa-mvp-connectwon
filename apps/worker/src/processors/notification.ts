@@ -1,10 +1,11 @@
 /**
  * Description : notification.ts - 📌 알림 처리기
- * Author      : Shiwoo Min
- * Date        : 2025-09-12
+ * Author : Shiwoo Min
+ * Date : 2025-09-12
  */
 import type { Job } from 'bullmq';
 
+// 알림 데이터 타입
 export type NotificationJobData = {
   channel: 'email' | 'slack' | 'sms';
   to: string;
@@ -12,6 +13,7 @@ export type NotificationJobData = {
   payload?: Record<string, unknown>;
 };
 
+// 알림 처리기
 async function notificationProcessor(job: Job<NotificationJobData>) {
   const { channel, to, template } = job.data;
 

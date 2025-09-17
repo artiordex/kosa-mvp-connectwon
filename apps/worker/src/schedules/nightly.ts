@@ -5,6 +5,7 @@
  */
 import type { Queue } from 'bullmq';
 
+// 컨텍스트 타입
 type Ctx = {
   reservationQueue: Queue;
   notificationQueue: Queue;

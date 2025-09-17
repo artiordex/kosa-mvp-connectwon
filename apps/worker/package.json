@@ -5,10 +5,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "node --watch --enable-source-maps ./dist/index.js",
-    "build": "tsc -p apps/worker/tsconfig.json",
-    "start": "node ./dist/index.js",
-    "clean": "pnpm -w exec rimraf dist"
+    "dev": "node --watch --enable-source-maps ./dist/main.js",
+    "build": "tsc -p tsconfig.json",
+    "start": "node ./dist/main.js"
   },
   "dependencies": {
     "@connectwon/core": "workspace:*",

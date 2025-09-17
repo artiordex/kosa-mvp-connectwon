@@ -1,31 +1,27 @@
 /**
  * Description : tsconfig.json - 📌 BullMQ 기반 Worker (TypeScript 설정)
- * Author      : Shiwoo Min
- * Date        : 2025-09-06
+ * Author : Shiwoo Min
+ * Date : 2025-09-06
  * 09-12 : NodeNext/ES2022, d.ts/소스맵/증분빌드, 서버전용 lib로 정리
  */
 {
   // 루트의 tsconfig.base.json 상속
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    // 입/출력
     "rootDir": "./src",
     "outDir": "./dist",
 
-    // 순수 Node 런타임
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "lib": ["ES2022"],
     "types": ["node"],
 
-    // 디버깅/증분
     "sourceMap": true,
     "incremental": true,
     "tsBuildInfoFile": "./dist/.tsbuildinfo",
-
-    // 워커는 앱이므로 d.ts 불필요
     "declaration": false,
     "declarationMap": false,
-
-    // 프로젝트 레퍼런스 비사용
     "composite": false
   },
   "include": ["src/**/*"],
