@@ -389,17 +389,10 @@ kosa-mvp-connectwon
 │  │  │     ├─ pretty.ts
 │  │  │     └─ slack.ts
 │  │  └─ tsconfig.json
-│  ├─ nest-kit
+│  ├─ nest-server
 │  │  ├─ package.json
 │  │  ├─ project.json
 │  │  ├─ src
-│  │  │  ├─ client
-│  │  │  │  ├─ hooks
-│  │  │  │  │  └─ useAuth.ts
-│  │  │  │  ├─ index.ts
-│  │  │  │  └─ providers
-│  │  │  │     ├─ AuthProvider.tsx
-│  │  │  │     └─ QueryProvider.tsx
 │  │  │  ├─ decorators
 │  │  │  │  ├─ api-response.ts
 │  │  │  │  ├─ index.ts
@@ -426,6 +419,19 @@ kosa-mvp-connectwon
 │  │  │     ├─ cookies.ts
 │  │  │     ├─ errors.ts
 │  │  │     └─ rsc-cache.ts
+│  │  └─ tsconfig.json
+│  ├─ next-client
+│  │  ├─ next-types.ts
+│  │  ├─ package.json
+│  │  ├─ project.json
+│  │  ├─ src
+│  │  │  └─ client
+│  │  │     ├─ hooks
+│  │  │     │  └─ useAuth.ts
+│  │  │     ├─ index.ts
+│  │  │     └─ providers
+│  │  │        ├─ AuthProvider.tsx
+│  │  │        └─ QueryProvider.tsx
 │  │  └─ tsconfig.json
 │  ├─ sdk
 │  │  ├─ package.json
@@ -526,6 +532,8 @@ kosa-mvp-connectwon
 ├─ PROJECT-ARCH.md
 ├─ README.md
 ├─ setup-structure.ps1
+├─ test
+│  └─ setup.ts
 ├─ tools
 │  ├─ services
 │  │  └─ webhook-catcher.ts

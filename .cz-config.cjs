@@ -32,7 +32,8 @@ module.exports = {
     { name: 'packages/core' },
     { name: 'packages/database' },
     { name: 'packages/logger' },
-    { name: 'packages/nest-kit' },
+    { name: 'packages/server' },
+    { name: 'packages/client' },
     { name: 'packages/sdk' },
     { name: 'packages/ui' },
     // Root

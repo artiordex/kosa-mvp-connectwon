@@ -1,0 +1,41 @@
+/**
+ * Description : tsconfig.json - 📌 Nest.js 패키지 (TypeScript 설정)
+ * Author : Shiwoo Min
+ * Date : 2025-09-12
+ */
+{
+  // 루트의 tsconfig.base.json 상속
+  "extends": "../../tsconfig.base.json",
+
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+
+    // 입출력 경로
+    "rootDir": ".",
+    "outDir": "./dist",
+    "noEmit": false,
+    // 증분 빌드 캐시
+    "tsBuildInfoFile": "./dist/.tsbuildinfo",
+
+    // Nest/Express 공통 추천
+    "strict": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "useDefineForClassFields": false,
+
+    // ESM/CJS 상호운용
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+
+    "resolveJsonModule": true,
+    "sourceMap": true,
+    "skipLibCheck": true,
+    "lib": ["ES2022"],
+    "types": ["node"]
+  },
+
+  "include": ["src/**/*", "server-types.ts"],
+  "exclude": ["node_modules", "dist", "**/*.test.*", "**/*.spec.*"]
+}

@@ -19,6 +19,7 @@ packages:
   - 'packages/core' # 핵심 비즈니스 로직 (Core Business Logic)
   - 'packages/logger' # 로깅 시스템 (Logging System)
   - 'packages/sdk' # 클라이언트 SDK (Client SDK)
-  - 'packages/nest-kit' # NestJS 공용 유틸 (NestJS Utilities)
+  - 'packages/client' # 클라이언트 유틸리티 (Client Utilities)
+  - 'packages/server' # 서버 유틸리티 (Server Utilities)
   - 'packages/database' # 데이터베이스 ORM (Database & ORM)
   - 'packages/ui' # UI 컴포넌트 라이브러리 (UI Components)
