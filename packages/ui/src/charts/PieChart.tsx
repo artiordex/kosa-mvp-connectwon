@@ -14,6 +14,7 @@ import {
 
 import { CHART_HEIGHTS, DEFAULT_COLORS, type PieChartProps } from '../../ui-types.js';
 
+// 파이 차트 컴포넌트
 export function PieChart({
   data,
   height = CHART_HEIGHTS.MEDIUM,

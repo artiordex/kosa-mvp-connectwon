@@ -3,13 +3,11 @@
  * Author : Shiwoo Min
  * Date : 2025-09-11
  */
-
 'use client';
-
 import { useEffect } from 'react';
-
 import { ErrorPage } from '../components/ErrorPage.js';
 
+// 글로벌 에러 페이지 컴포넌트
 export default function GlobalError({
   error,
   reset,
@@ -34,18 +32,14 @@ export default function GlobalError({
   // HTTP 상태 코드에 따른 에러 타입 결정
   const getErrorType = (error: Error & { statusCode?: number }) => {
     const statusCode = error.statusCode || 500;
-
     if (statusCode === 404) return '404';
     if (statusCode === 403) return '403';
     if (statusCode === 405) return '405';
     if (statusCode >= 500) return '500';
     if (statusCode >= 400) return '400';
-
     return '500'; // 기본값
   };
-
   const errorType = getErrorType(error);
-
   return (
     <html>
       <body>

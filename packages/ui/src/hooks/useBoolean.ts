@@ -5,7 +5,7 @@
  */
 import { useCallback, useState } from 'react';
 
-import type { UseBooleanActions } from '../../hook-types.js';
+import type { UseBooleanActions } from '../../ui-types.js';
 
 // boolean 상태 토글 훅
 export function useBoolean(initial = false): [boolean, UseBooleanActions] {

@@ -5,7 +5,7 @@
  */
 import { useEffect, useRef } from 'react';
 
-import type { TargetLike } from '../../hook-types.js';
+import type { TargetLike } from '../../ui-types.js';
 
 // 대상이 함수일 경우 호출하여 실제 대상을 반환
 function getTarget(target: TargetLike) {

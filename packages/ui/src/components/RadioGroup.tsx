@@ -6,7 +6,7 @@
 import { cva } from 'class-variance-authority';
 import { forwardRef, useState } from 'react';
 
-import { type RadioGroupProps } from '../../component-types.js';
+import { type RadioGroupProps } from '../../ui-types.js';
 
 // 라디오 버튼 variant 스타일 정의
 const radioVariants = cva(

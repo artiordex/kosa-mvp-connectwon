@@ -7,7 +7,7 @@
 import { createPortal } from 'react-dom';
 import { cva } from 'class-variance-authority';
 import { useEffect } from 'react';
-import type { DrawerProps } from '../../component-types.js';
+import type { DrawerProps } from '../../ui-types.js';
 
 // 드로어 variant 스타일 정의
 const drawerVariants = cva(

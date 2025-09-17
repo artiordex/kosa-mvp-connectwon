@@ -6,7 +6,7 @@
 import { cva } from 'class-variance-authority';
 import { forwardRef } from 'react';
 
-import { type CheckboxProps } from '../../component-types.js';
+import { type CheckboxProps } from '../../ui-types.js';
 
 // 체크박스 variant 스타일 정의
 const checkboxVariants = cva(

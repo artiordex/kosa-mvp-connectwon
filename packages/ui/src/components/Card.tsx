@@ -11,7 +11,7 @@ import type {
   CardFooterProps,
   CardProps,
   CardTitleProps,
-} from '../../component-types.js';
+} from '../../ui-types.js';
 
 // Card 컴포넌트
 export const Card = forwardRef<HTMLDivElement, CardProps>(({ className = '', ...props }, ref) => (

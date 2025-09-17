@@ -15,6 +15,7 @@ import {
 
 import { type BarChartProps, CHART_HEIGHTS, DEFAULT_COLORS } from '../../ui-types.js';
 
+// 막대 차트 컴포넌트
 export function BarChart({
   data,
   height = CHART_HEIGHTS.MEDIUM,

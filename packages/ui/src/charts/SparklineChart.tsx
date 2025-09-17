@@ -7,6 +7,7 @@ import { Line, LineChart } from 'recharts';
 
 import { DEFAULT_COLORS, type SparklineChartProps } from '../../ui-types.js';
 
+// 스파크라인 차트 컴포넌트
 export function SparklineChart({
   data,
   width = 120,

@@ -3,17 +3,9 @@
  * Author : Shiwoo Min
  * Date : 2025-09-09
  */
+import { type ErrorPageProps } from '../../ui-types.js';
 
-interface ErrorPageProps {
-  type?: '404' | '403' | '405' | '400' | '500';
-  title?: string;
-  description?: string;
-  error?: Error;
-  onRetry?: () => void;
-  onHome?: () => void;
-  className?: string;
-}
-
+// 범용 에러 페이지 컴포넌트
 export function ErrorPage({
   type = '500',
   title,

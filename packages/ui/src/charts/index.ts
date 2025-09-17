@@ -14,7 +14,7 @@ export { ProgressChart } from './ProgressChart.js';
 export { SparklineChart } from './SparklineChart.js';
 export { WaterfallChart } from './WaterfallChart.js';
 
-// 타입 재수출
+// 타입 내보내기
 export type {
   AreaChartProps,
   BarChartProps,

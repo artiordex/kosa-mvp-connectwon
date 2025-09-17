@@ -6,7 +6,7 @@
 import { cva } from 'class-variance-authority';
 import { forwardRef } from 'react';
 
-import type { SectionProps } from '../../component-types.js';
+import type { SectionProps } from '../../ui-types.js';
 
 // 섹션 variant 스타일 정의
 const sectionVariants = cva('w-full', {

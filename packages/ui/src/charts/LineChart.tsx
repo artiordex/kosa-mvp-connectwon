@@ -15,6 +15,7 @@ import {
 
 import { CHART_HEIGHTS, DEFAULT_COLORS, type LineChartProps } from '../../ui-types.js';
 
+// 선 차트 컴포넌트
 export function LineChart({
   data,
   height = CHART_HEIGHTS.MEDIUM,

@@ -5,6 +5,7 @@
  */
 import { GAUGE_COLORS, type GaugeChartProps } from '../../ui-types.js';
 
+// 게이지 차트 컴포넌트
 export function GaugeChart({
   value,
   max = 100,

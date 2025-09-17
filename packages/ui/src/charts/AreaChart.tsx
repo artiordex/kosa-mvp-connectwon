@@ -3,7 +3,6 @@
  * Author : Shiwoo Min
  * Date : 2025-09-09
  */
-// AreaChart.tsx
 import { useMemo } from 'react';
 import {
   Area,
@@ -14,9 +13,9 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
-
 import { type AreaChartProps, CHART_HEIGHTS, DEFAULT_COLORS } from '../../ui-types.js';
 
+// 영역 차트 컴포넌트
 export function AreaChart({
   data,
   height = CHART_HEIGHTS.MEDIUM,

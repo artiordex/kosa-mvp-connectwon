@@ -22,7 +22,8 @@
     "build": "pnpm -w exec tsc -p tsconfig.json",
     "dev": "pnpm -w exec tsc -w -p tsconfig.json",
     "clean": "pnpm -w exec rimraf dist",
-    "prepublishOnly": "pnpm run build"
+    "prepublishOnly": "pnpm run build",
+    "type-check": "pnpm -w exec tsc --noEmit -p tsconfig.json"
   },
   "sideEffects": [
     "*.css"
@@ -32,8 +33,10 @@
     "@fontsource/poppins": "^5.2.6",
     "@heroicons/react": "^2.2.0",
     "class-variance-authority": "^0.7.1",
+    "clsx": "^2.0.0",
     "lucide-react": "^0.544.0",
-    "react-icons": "^5.5.0"
+    "react-icons": "^5.5.0",
+    "tailwind-merge": "^2.0.0"
   },
   "peerDependencies": {
     "react": "^18.0.0",

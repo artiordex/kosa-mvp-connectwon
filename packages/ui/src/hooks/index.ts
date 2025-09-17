@@ -20,4 +20,4 @@ export type {
   MaybeRef,
   DebouncedCallback,
   ThrottledCallback,
-} from '../../hook-types.js';
+} from '../../ui-types.js';

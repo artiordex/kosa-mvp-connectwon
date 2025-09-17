@@ -5,6 +5,7 @@
  */
 import { GAUGE_COLORS, type ProgressChartProps } from '../../ui-types.js';
 
+// 진행 상황 차트 컴포넌트
 export function ProgressChart({
   value,
   max = 100,

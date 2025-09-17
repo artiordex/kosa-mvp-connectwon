@@ -5,6 +5,7 @@
  */
 import { DEFAULT_COLORS, type FunnelChartProps } from '../../ui-types.js';
 
+// 깔때기 차트 컴포넌트
 export function FunnelChart({
   data,
   colors = DEFAULT_COLORS,

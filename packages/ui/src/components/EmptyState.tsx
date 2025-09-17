@@ -3,19 +3,9 @@
  * Author : Shiwoo Min
  * Date : 2025-09-09
  */
-import React from 'react';
+import { type EmptyStateProps } from '../../ui-types.js';
 
-interface EmptyStateProps {
-  icon?: React.ReactNode;
-  title?: string;
-  description?: string;
-  action?: {
-    label: string;
-    onClick: () => void;
-  };
-  className?: string;
-}
-
+// 빈 상태 페이지 컴포넌트
 export function EmptyState({
   icon,
   title = '데이터가 없습니다',

@@ -6,7 +6,7 @@
 import { cva } from 'class-variance-authority';
 import { forwardRef } from 'react';
 
-import { type InputProps } from '../../component-types.js';
+import { type InputProps } from '../../ui-types.js';
 
 // 입력 필드 variant 스타일 정의
 const inputVariants = cva(

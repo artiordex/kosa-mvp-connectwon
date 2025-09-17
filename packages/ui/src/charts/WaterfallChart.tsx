@@ -5,6 +5,7 @@
  */
 import { type WaterfallChartProps } from '../../ui-types.js';
 
+// 누적 영역 차트 컴포넌트
 export function WaterfallChart({
   data,
   height = 300,

@@ -5,7 +5,7 @@
  */
 import { forwardRef } from 'react';
 
-import { type FormProps } from '../../component-types.js';
+import { type FormProps } from '../../ui-types.js';
 
 // 폼 컴포넌트 정의
 export const Form = forwardRef<HTMLFormElement, FormProps>(

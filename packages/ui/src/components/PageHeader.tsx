@@ -5,7 +5,7 @@
  */
 import { forwardRef } from 'react';
 
-import { type PageHeaderProps } from '../../component-types.js';
+import { type PageHeaderProps } from '../../ui-types.js';
 
 // 페이지 헤더 컴포넌트 정의
 export const PageHeader = forwardRef<HTMLDivElement, PageHeaderProps>(

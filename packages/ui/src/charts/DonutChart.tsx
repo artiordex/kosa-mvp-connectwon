@@ -7,6 +7,7 @@ import { Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recha
 
 import { CHART_HEIGHTS, DEFAULT_COLORS, type DonutChartProps } from '../../ui-types.js';
 
+// 도넛 차트 컴포넌트
 export function DonutChart({
   data,
   height = CHART_HEIGHTS.MEDIUM,

@@ -6,7 +6,7 @@
 import { cva } from 'class-variance-authority';
 import { forwardRef } from 'react';
 
-import type { DividerProps } from '../../component-types.js';
+import type { DividerProps } from '../../ui-types.js';
 
 // 구분선 variant 스타일 정의
 const dividerVariants = cva('border-border', {

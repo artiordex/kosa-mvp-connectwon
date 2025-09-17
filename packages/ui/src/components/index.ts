@@ -3,7 +3,6 @@
  * Author : Shiwoo Min
  * Date : 2025-09-09
  */
-
 export { Button } from './Button.js';
 export { Input } from './Input.js';
 export { Select } from './Select.js';
@@ -47,4 +46,4 @@ export type {
   PageHeaderProps,
   SectionProps,
   ToolbarProps,
-} from '../../component-types.js';
+} from '../../ui-types.js';

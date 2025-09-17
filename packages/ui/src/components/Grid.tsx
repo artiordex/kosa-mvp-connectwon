@@ -6,7 +6,7 @@
 import { cva } from 'class-variance-authority';
 import { forwardRef } from 'react';
 
-import type { GridProps } from '../../component-types.js';
+import type { GridProps } from '../../ui-types.js';
 
 const gridVariants = cva('grid', {
   variants: {

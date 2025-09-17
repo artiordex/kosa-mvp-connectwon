@@ -5,7 +5,7 @@
  */
 import { useCallback, useState } from 'react';
 
-import type { UseDisclosureOptions } from '../../hook-types.js';
+import type { UseDisclosureOptions } from '../../ui-types.js';
 
 // 모달/드롭다운 열림 상태 관리 훅
 export function useDisclosure(opts: UseDisclosureOptions = {}) {

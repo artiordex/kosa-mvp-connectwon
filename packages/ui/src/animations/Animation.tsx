@@ -1,109 +1,27 @@
 /**
- * Description : AnimationComponents.tsx - 📌 ConnectWon UI 애니메이션 React 컴포넌트
+ * Description : Animation.tsx - 📌 ConnectWon UI 애니메이션 React 컴포넌트
  * Author : Shiwoo Min
  * Date : 2025-09-16
  */
 import React, { useCallback, useEffect, useState } from 'react';
 
-// =================== 공통 타입 ===================
+import type {
+  AnimatedListProps,
+  AnimationModalProps,
+  CircularProgressProps,
+  ErrorCrossProps,
+  FadeProps,
+  FloatingNotificationProps,
+  HeartbeatProps,
+  LoadingSpinnerProps,
+  ProgressBarProps,
+  PulseLoaderProps,
+  SkeletonLoaderProps,
+  SuccessCheckProps,
+  TypingIndicatorProps,
+} from '../../ui-types.js';
 
-export interface BaseAnimationProps {
-  className?: string;
-}
-
-export interface LoadingSpinnerProps extends BaseAnimationProps {
-  /** 프리셋만 지원 (숫자 미지원) */
-  size?: 'small' | 'medium' | 'large';
-}
-
-export interface PulseLoaderProps extends BaseAnimationProps {
-  /** 1~3만 권장 (nth-child 딜레이 프리셋과 일치) */
-  count?: 1 | 2 | 3;
-}
-
-export interface SuccessCheckProps extends BaseAnimationProps {
-  size?: 'small' | 'medium' | 'large';
-  onAnimationEnd?: () => void;
-}
-
-export interface ErrorCrossProps extends BaseAnimationProps {
-  size?: 'small' | 'medium' | 'large';
-  onAnimationEnd?: () => void;
-}
-
-export interface SkeletonLoaderProps extends BaseAnimationProps {
-  /** 텍스트/타이틀/아바타/직사각 */
-  variant?: 'text' | 'title' | 'avatar' | 'rectangular';
-  /** 줄 수 (각 줄은 CSS 프리셋 높이/마진 사용) */
-  lines?: number;
-}
-
-export interface FloatingNotificationProps extends BaseAnimationProps {
-  children: React.ReactNode;
-  /** 색상 프리셋 */
-  type?: 'success' | 'error' | 'warning' | 'info';
-  /** 자동 닫힘 ms (0 또는 생략 시 자동 닫힘 안 함) */
-  duration?: number;
-  onClose?: () => void;
-  /** true면 자동 닫힘 */
-  autoClose?: boolean;
-}
-
-export interface AnimatedListProps extends BaseAnimationProps {
-  children: React.ReactNode[];
-  /** CSS에 정의된 nth-child 딜레이(0.1~0.8s) 사용 → 이 값은 무시됨 */
-  stagger?: number;
-  /** 방향 프리셋 */
-  direction?: 'up' | 'down' | 'left' | 'right';
-}
-
-export interface ProgressBarProps extends BaseAnimationProps {
-  /** indeterminate 전용. true면 자동 애니메이션 */
-  animated?: boolean;
-  /** 라벨 표시 여부(고정 텍스트) */
-  showLabel?: boolean;
-  /** 라벨 텍스트(예: "Loading..." ) */
-  labelText?: string;
-}
-
-export interface CircularProgressProps extends BaseAnimationProps {
-  /** indeterminate 전용 */
-  showLabel?: boolean;
-  /** 라벨 텍스트 */
-  labelText?: string;
-}
-
-export interface TypingIndicatorProps extends BaseAnimationProps {
-  /** 점 개수 (1~3 권장) */
-  dotCount?: 1 | 2 | 3;
-}
-
-export interface ModalProps extends BaseAnimationProps {
-  isOpen: boolean;
-  onClose: () => void;
-  children: React.ReactNode;
-  closeOnBackdrop?: boolean;
-  closeOnEscape?: boolean;
-}
-
-export interface FadeProps extends BaseAnimationProps {
-  children: React.ReactNode;
-  direction?: 'up' | 'down' | 'left' | 'right';
-  /** 0 | 100 | 200 | 300 | 500 | 700 | 1000(ms) 중 가장 근접한 프리셋 클래스로 맵핑 */
-  delay?: number;
-  /** fast(0.3s) / normal(0.5s) / slow(0.8s) / slower(1.2s) 프리셋으로 맵핑 */
-  duration?: number;
-  trigger?: boolean;
-}
-
-export interface HeartbeatProps extends BaseAnimationProps {
-  children: React.ReactNode;
-  /** 활성/비활성 (활성 시 .heartbeat 클래스 적용) */
-  active?: boolean;
-}
-
-// =================== 유틸: 프리셋 클래스 맵핑 ===================
-
+// 딜레이 클래스 변환 유틸
 function toDelayClass(ms: number = 0): string {
   const presets = [0, 100, 200, 300, 500, 700, 1000] as const;
   let nearest: (typeof presets)[number] = 0;
@@ -116,6 +34,7 @@ function toDelayClass(ms: number = 0): string {
   return nearest === 0 ? '' : `delay-${nearest}`;
 }
 
+// 지속시간 클래스 변환 유틸
 function toDurationClass(ms = 800): string {
   if (ms <= 300) return 'duration-fast';
   if (ms <= 500) return 'duration-normal';
@@ -123,26 +42,57 @@ function toDurationClass(ms = 800): string {
   return 'duration-slower';
 }
 
-// =================== 로딩 컴포넌트 ===================
+// CSS custom properties 생성 헬퍼
+function createCSSProps(
+  props: Record<string, string | number | undefined>,
+): Record<string, string> {
+  const result: Record<string, string> = {};
+  Object.entries(props).forEach(([key, value]) => {
+    if (value !== undefined) {
+      result[`--${key}` as string] = typeof value === 'number' ? `${value}px` : value;
+    }
+  });
+  return result;
+}
 
+// 로딩 스피너 컴포넌트
 export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   size = 'medium',
+  color,
+  thickness,
   className = '',
   ...props
 }) => {
-  // size 프리셋만 사용 (CSS: .loading-spinner, .loading-spinner--small, .loading-spinner--large)
-  const sizeCls = size !== 'medium' ? `loading-spinner--${size}` : '';
-  return <div className={`loading-spinner ${sizeCls} ${className}`} {...props} />;
+  const sizeCls =
+    typeof size === 'string'
+      ? size === 'small'
+        ? 'w-4 h-4'
+        : size === 'large'
+          ? 'w-12 h-12'
+          : 'w-8 h-8'
+      : 'w-8 h-8';
+
+  const customProps = createCSSProps({
+    'spinner-size': typeof size === 'number' ? size : undefined,
+    'spinner-color': color,
+    'spinner-thickness': thickness,
+  });
+
+  return <div className={`loading-spinner ${sizeCls} ${className}`} {...customProps} {...props} />;
 };
 
+// 펄스 로더 컴포넌트
 export const PulseLoader: React.FC<PulseLoaderProps> = ({
   count = 3,
+  color,
   className = '',
   ...props
 }) => {
   const dots = Math.max(1, Math.min(3, count));
+  const customProps = createCSSProps({ 'dot-color': color });
+
   return (
-    <div className={`pulse-loader ${className}`} {...props}>
+    <div className={`pulse-loader ${className}`} {...customProps} {...props}>
       {Array.from({ length: dots }, (_, i) => (
         <div key={i} className="pulse-dot" />
       ))}
@@ -150,59 +100,92 @@ export const PulseLoader: React.FC<PulseLoaderProps> = ({
   );
 };
 
+// 스켈레톤 로더 컴포넌트
 export const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({
   variant = 'rectangular',
   lines = 1,
+  width,
+  height,
   className = '',
   ...props
 }) => {
   const itemCls = `skeleton-loader skeleton-loader--${variant}`;
+  const customProps = createCSSProps({
+    'skeleton-width': width,
+    'skeleton-height': height,
+  });
+
   if (lines > 1) {
     return (
-      <div className={className} {...props}>
+      <div className={className} {...customProps} {...props}>
         {Array.from({ length: lines }, (_, i) => (
           <div key={i} className={itemCls} />
         ))}
       </div>
     );
   }
-  return <div className={`${itemCls} ${className}`} {...props} />;
+
+  return <div className={`${itemCls} ${className}`} {...customProps} {...props} />;
 };
 
-// =================== 피드백 컴포넌트 ===================
-
+// 성공 체크 컴포넌트
 export const SuccessCheck: React.FC<SuccessCheckProps> = ({
   size = 'medium',
+  color,
   onAnimationEnd,
   className = '',
   ...props
 }) => {
-  const sizeCls = size === 'small' ? 'success-check--small' : '';
+  const sizeCls =
+    typeof size === 'string' ? (size === 'small' ? 'w-6 h-6' : 'w-10 h-10') : 'w-10 h-10';
+
+  const customProps = createCSSProps({
+    'check-size': typeof size === 'number' ? size : undefined,
+    'check-color': color,
+  });
+
   return (
     <div
       className={`success-check ${sizeCls} ${className}`}
       onAnimationEnd={onAnimationEnd}
+      {...customProps}
       {...props}
     />
   );
 };
 
+// 에러 크로스 컴포넌트
 export const ErrorCross: React.FC<ErrorCrossProps> = ({
-  // CSS는 기본(60px) 프리셋만 있으므로 small/large는 시각적 차이 없음
   size = 'medium',
+  color,
   onAnimationEnd,
   className = '',
   ...props
 }) => {
-  return <div className={`error-cross ${className}`} onAnimationEnd={onAnimationEnd} {...props} />;
+  const sizeCls =
+    typeof size === 'string' ? (size === 'small' ? 'w-6 h-6' : 'w-10 h-10') : 'w-10 h-10';
+
+  const customProps = createCSSProps({
+    'cross-size': typeof size === 'number' ? size : undefined,
+    'cross-color': color,
+  });
+
+  return (
+    <div
+      className={`error-cross ${sizeCls} ${className}`}
+      onAnimationEnd={onAnimationEnd}
+      {...customProps}
+      {...props}
+    />
+  );
 };
 
-// =================== 알림 컴포넌트 ===================
-
+// 플로팅 알림 컴포넌트
 export function FloatingNotification({
   children,
   type = 'success',
   duration = 3000,
+  position = 'top-right',
   onClose,
   autoClose = true,
   className = '',
@@ -218,14 +201,16 @@ export function FloatingNotification({
       }, duration);
       return () => clearTimeout(t);
     }
-    // cleanup이 없는 경로도 명시적으로 반환
     return undefined;
   }, [autoClose, duration, onClose]);
 
   if (!isVisible) return null;
 
   return (
-    <div className={`floating-notification floating-notification--${type} ${className}`} {...props}>
+    <div
+      className={`floating-notification floating-notification--${type} floating-notification--${position} ${className}`}
+      {...props}
+    >
       {children}
       {onClose && (
         <button
@@ -243,8 +228,7 @@ export function FloatingNotification({
   );
 }
 
-// =================== 애니메이션 래퍼 ===================
-
+// 애니메이션 래퍼
 export const Fade: React.FC<FadeProps> = ({
   children,
   direction = 'up',
@@ -257,6 +241,7 @@ export const Fade: React.FC<FadeProps> = ({
   const delayCls = toDelayClass(delay);
   const durationCls = toDurationClass(duration);
   const dirCls = trigger ? `fade-in-${direction}` : '';
+
   return (
     <div className={`${dirCls} ${delayCls} ${durationCls} ${className}`} {...props}>
       {children}
@@ -264,14 +249,16 @@ export const Fade: React.FC<FadeProps> = ({
   );
 };
 
+// 애니메이션 리스트 컴포넌트
 export const AnimatedList: React.FC<AnimatedListProps> = ({
   children,
   direction = 'left',
+  stagger,
   className = '',
   ...props
 }) => {
-  // nth-child 딜레이는 CSS에 고정(0.1~0.8s). 방향은 Fade와 독립.
   const dirCls = `fade-in-${direction}`;
+
   return (
     <div className={className} {...props}>
       {React.Children.map(children, child => (
@@ -281,80 +268,109 @@ export const AnimatedList: React.FC<AnimatedListProps> = ({
   );
 };
 
-// =================== 진행 표시 ===================
-
-/**
- * ProgressBar: 인라인 없이 구현 → indeterminate 전용
- * - 막대는 CSS keyframes(progressFill)로 0→100% 애니메이션
- * - 정확한 % 표현이 필요하면 유틸 클래스(w-pct-0~100) 추가 또는 인라인 사용 필요
- */
+// 프로그레스 바 컴포넌트
 export const ProgressBar: React.FC<ProgressBarProps> = ({
+  progress,
   animated = true,
+  color,
+  backgroundColor,
+  height,
   showLabel = false,
-  labelText = 'Loading…',
   className = '',
   ...props
 }) => {
+  const customProps = createCSSProps({
+    'progress-height': height,
+    'progress-bg': backgroundColor,
+    'progress-color': color,
+    'progress-value': progress ? `${progress}%` : undefined,
+  });
+
   return (
-    <div className={className} {...props}>
-      {showLabel && <div className="progress-label">{labelText}</div>}
-      <div className="progress-container">
-        <div className={`progress-bar ${animated ? 'animate' : ''}`} />
+    <div className={className} {...customProps} {...props}>
+      {showLabel && <div className="progress-label">Loading…</div>}
+      <div className="progress-container h-2 bg-gray-200 rounded">
+        <div className={`progress-bar ${animated ? 'animate' : ''} bg-blue-500 h-full rounded`} />
       </div>
     </div>
   );
 };
 
-/**
- * CircularProgress: 인라인 없이 구현 → indeterminate 전용
- * - 원호는 CSS keyframes(circularProgress)로 진행
- */
+// 원형 프로그레스 컴포넌트
 export const CircularProgress: React.FC<CircularProgressProps> = ({
+  progress,
+  size = 60,
+  strokeWidth = 4,
+  color,
+  backgroundColor,
   showLabel = false,
-  labelText = 'Loading…',
   className = '',
   ...props
 }) => {
+  const radius = (size - strokeWidth) / 2;
+  const customProps = createCSSProps({
+    'circle-color': color,
+    'circle-bg': backgroundColor,
+  });
+
   return (
-    <div className={className} {...props}>
+    <div className={className} {...customProps} {...props}>
       <svg
-        width={60}
-        height={60}
+        width={size}
+        height={size}
         className="circular-progress"
         role="progressbar"
-        aria-label={labelText}
+        aria-label={showLabel ? 'Loading…' : undefined}
       >
-        <circle className="track" cx={30} cy={30} r={28} />
-        <circle className="progress" cx={30} cy={30} r={28} />
+        <circle
+          className="track stroke-gray-200"
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          strokeWidth={strokeWidth}
+        />
+        <circle
+          className="progress stroke-blue-500"
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          strokeWidth={strokeWidth}
+        />
       </svg>
-      {showLabel && <div className="circular-progress-label">{labelText}</div>}
+      {showLabel && <div className="circular-progress-label">Loading…</div>}
     </div>
   );
 };
 
-// =================== 인터랙션 ===================
-
+// 하트비트 애니메이션 컴포넌트
 export const Heartbeat: React.FC<HeartbeatProps> = ({
   children,
+  fast = false,
   active = true,
   className = '',
   ...props
 }) => {
+  const heartbeatClass = active ? (fast ? 'heartbeat-fast' : 'heartbeat') : '';
+
   return (
-    <div className={`${active ? 'heartbeat' : ''} ${className}`} {...props}>
+    <div className={`${heartbeatClass} ${className}`} {...props}>
       {children}
     </div>
   );
 };
 
+// 타이핑 인디케이터 컴포넌트
 export const TypingIndicator: React.FC<TypingIndicatorProps> = ({
   dotCount = 3,
+  dotColor,
   className = '',
   ...props
 }) => {
   const dots = Math.max(1, Math.min(3, dotCount));
+  const customProps = createCSSProps({ 'dot-color': dotColor });
+
   return (
-    <div className={`typing-indicator ${className}`} {...props}>
+    <div className={`typing-indicator ${className}`} {...customProps} {...props}>
       {Array.from({ length: dots }, (_, i) => (
         <div key={i} className="typing-dot" />
       ))}
@@ -362,9 +378,8 @@ export const TypingIndicator: React.FC<TypingIndicatorProps> = ({
   );
 };
 
-// =================== 모달 ===================
-
-export const Modal: React.FC<ModalProps> = ({
+// 모달 컴포넌트
+export const Modal: React.FC<AnimationModalProps> = ({
   isOpen,
   onClose,
   children,
@@ -415,8 +430,7 @@ export const Modal: React.FC<ModalProps> = ({
   );
 };
 
-// =================== HOC & 훅 ===================
-
+// HOC & 훅
 export const withAnimation = <P extends object>(
   Component: React.ComponentType<P>,
   animationClass: string,
@@ -436,7 +450,6 @@ export const withAnimation = <P extends object>(
         const t = setTimeout(() => setActive(true), 0);
         return () => clearTimeout(t);
       }
-      // cleanup이 없는 경로도 명시적으로 반환
       return undefined;
     }, [trigger]);
 
@@ -448,6 +461,7 @@ export const withAnimation = <P extends object>(
   });
 };
 
+// 인터섹션 옵저버 훅
 export const useIntersectionAnimation = (options: IntersectionObserverInit = {}) => {
   const [isVisible, setIsVisible] = useState(false);
   const [elementRef, setElementRef] = useState<Element | null>(null);
@@ -477,8 +491,7 @@ export const useIntersectionAnimation = (options: IntersectionObserverInit = {})
   return [ref, isVisible] as const;
 };
 
-// =================== 내보내기 ===================
-
+// 내보내기
 export default {
   LoadingSpinner,
   PulseLoader,

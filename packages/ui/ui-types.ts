@@ -1,38 +1,48 @@
-// ---------------------------------------------------------------------
-// 🧩 UI Controls/Layout 타입
-// ---------------------------------------------------------------------
-import type {
-  ButtonHTMLAttributes,
-  FormHTMLAttributes,
-  HTMLAttributes,
-  InputHTMLAttributes,
-  ReactNode,
-  SelectHTMLAttributes,
-  TextareaHTMLAttributes,
-} from 'react';
-// ---------------------------------------------------------------------
-// ✨ Animations (애니메이션) 타입
-// ---------------------------------------------------------------------
-
+/**
+ * Description : ui-types.ts - 📌 ConnectWon UI 타입 정의
+ * Author : Shiwoo Min
+ * Date : 2025-09-16
+ */
+import type { ButtonHTMLAttributes, FormHTMLAttributes, HTMLAttributes, InputHTMLAttributes, ReactNode, SelectHTMLAttributes, TextareaHTMLAttributes } from 'react';
 import type React from 'react';
 
-/**
- * Description : ui-types.ts - 📌 UI/Chart/Animation 통합 타입 정의
- * Author      : Shiwoo Min
- * Date        : 2025-09-09
- */
 
-// ===== 공통 Primitive & 유틸 =====
+
+
+
+// 빈 상태 Props
+export interface EmptyStateProps {
+  icon?: React.ReactNode;
+  title?: string;
+  description?: string;
+  action?: {
+    label: string;
+    onClick: () => void;
+  };
+  className?: string;
+}
+
+// 에러 페이지 Props
+export interface ErrorPageProps {
+  type?: '404' | '403' | '405' | '400' | '500';
+  title?: string;
+  description?: string;
+  error?: Error;
+  onRetry?: () => void;
+  onHome?: () => void;
+  className?: string;
+}
+
+// 차트 관련 타입
 export type XValue = string | number;
 export type ColorHex = string;
 
+// 색상 포함 인터페이스
 export interface WithColor {
   color?: ColorHex;
 }
 
-// 📊 Charts (차트) 타입
-
-// 이름과 값을 가지는 포인트
+// 이름 값 인터페이스
 export interface NamedValue extends WithColor {
   name: string;
   value: number;
@@ -65,7 +75,7 @@ export interface PaletteProps {
   colors?: ReadonlyArray<ColorHex>;
 }
 
-// 🔄 (이름 충돌 방지) 차트 전용 Grid 옵션
+// 차트 전용 Grid 옵션
 export interface ChartGridProps {
   showGrid?: boolean;
 }
@@ -289,7 +299,7 @@ export interface CardDescriptionProps extends HTMLAttributes<HTMLParagraphElemen
 export interface CardContentProps extends HTMLAttributes<HTMLDivElement> {}
 export interface CardFooterProps extends HTMLAttributes<HTMLDivElement> {}
 
-// Modal (UI)
+// Modal
 export interface ModalProps extends HTMLAttributes<HTMLDivElement> {
   isOpen: boolean;
   onClose: () => void;
@@ -410,43 +420,54 @@ export interface AriaProps {
   role?: string;
 }
 
-// ---------------------------------------------------------------------
 
-// ---------------------------------------------------------------------
-
-/** CSS 커스텀 프로퍼티 사용을 허용하는 스타일 타입 */
+// CSS 커스텀 프로퍼티 인터페이스
 export interface CSSCustomProperties extends React.CSSProperties {
   [key: `--${string}`]: string | number | undefined;
 }
 
+// 애니메이션 컴포넌트 인터페이스
 export interface BaseAnimationProps {
   className?: string;
   style?: CSSCustomProperties;
 }
 
+// 개별 애니메이션 컴포넌트 인터페이스
 export interface LoadingSpinnerProps extends BaseAnimationProps {
   size?: 'small' | 'medium' | 'large' | number;
   color?: string;
   thickness?: number;
 }
 
+// 전체 페이지 로딩 화면 인터페이스
+export interface LoadingPageProps {
+  title?: string;
+  description?: string;
+  size?: 'small' | 'medium' | 'large';
+  className?: string;
+}
+
+// 스피너 로더 인터페이스
 export interface PulseLoaderProps extends BaseAnimationProps {
   color?: string;
   count?: number;
 }
 
+// 성공 체크 표시 인터페이스
 export interface SuccessCheckProps extends BaseAnimationProps {
   size?: 'small' | 'medium' | 'large' | number;
   color?: string;
   onAnimationEnd?: () => void;
 }
 
+// 실패 엑스 표시 인터페이스
 export interface ErrorCrossProps extends BaseAnimationProps {
   size?: 'small' | 'medium' | 'large' | number;
   color?: string;
   onAnimationEnd?: () => void;
 }
 
+// 스켈레톤 로더 인터페이스
 export interface SkeletonLoaderProps extends BaseAnimationProps {
   width?: number | string;
   height?: number | string;
@@ -454,6 +475,7 @@ export interface SkeletonLoaderProps extends BaseAnimationProps {
   lines?: number;
 }
 
+// 플로팅 알림 인터페이스
 export interface FloatingNotificationProps extends BaseAnimationProps {
   children: React.ReactNode;
   type?: 'success' | 'error' | 'warning' | 'info';
@@ -463,12 +485,14 @@ export interface FloatingNotificationProps extends BaseAnimationProps {
   autoClose?: boolean;
 }
 
+// 애니메이션 리스트 인터페이스
 export interface AnimatedListProps extends BaseAnimationProps {
   children: React.ReactNode | React.ReactNode[];
   stagger?: number;
   direction?: 'up' | 'down' | 'left' | 'right';
 }
 
+// 진행률 표시줄 인터페이스
 export interface ProgressBarProps extends BaseAnimationProps {
   progress: number;
   animated?: boolean;
@@ -478,6 +502,7 @@ export interface ProgressBarProps extends BaseAnimationProps {
   showLabel?: boolean;
 }
 
+// 원형 진행률 표시기 인터페이스
 export interface CircularProgressProps extends BaseAnimationProps {
   progress: number;
   size?: number;
@@ -487,12 +512,13 @@ export interface CircularProgressProps extends BaseAnimationProps {
   showLabel?: boolean;
 }
 
+// 타이핑 표시기 인터페이스
 export interface TypingIndicatorProps extends BaseAnimationProps {
   dotColor?: string;
   dotCount?: number;
 }
 
-/** UI의 ModalProps와 충돌 방지용 애니메이션 모달 타입 */
+// 애니메이션 모달 인터페이스
 export interface AnimationModalProps extends BaseAnimationProps {
   isOpen: boolean;
   onClose: () => void;
@@ -501,6 +527,7 @@ export interface AnimationModalProps extends BaseAnimationProps {
   closeOnEscape?: boolean;
 }
 
+// 페이드 애니메이션 인터페이스
 export interface FadeProps extends BaseAnimationProps {
   children: React.ReactNode;
   direction?: 'up' | 'down' | 'left' | 'right';
@@ -509,13 +536,14 @@ export interface FadeProps extends BaseAnimationProps {
   trigger?: boolean;
 }
 
+// 하트비트 애니메이션 인터페이스
 export interface HeartbeatProps extends BaseAnimationProps {
   children: React.ReactNode;
   fast?: boolean;
   active?: boolean;
 }
 
-// 기본 유틸 타입
+// 범용 함수 타입
 export type AnyFn = (...args: any[]) => any;
 
 // SSR/브라우저 혼용 환경에서 타깃을 느슨하게 표현
