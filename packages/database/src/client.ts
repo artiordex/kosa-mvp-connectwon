@@ -3,12 +3,12 @@
  * Author : Shiwoo Min
  * Date : 2025-09-10
  */
-
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from '@prisma/client';
 
 // dev 핫리로드 시 다중 인스턴스 방지
 const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
 
+// PrismaClient 인스턴스 생성
 export const prisma =
   globalForPrisma.prisma ??
   new PrismaClient({
@@ -16,14 +16,11 @@ export const prisma =
     log: [
       { emit: 'stdout', level: 'error' },
       { emit: 'stdout', level: 'warn' },
-      ...(process.env['PRISMA_LOG_QUERIES'] === 'true'
-        ? [{ emit: 'stdout', level: 'query' }]
-        : []),
+      ...(process.env['PRISMA_LOG_QUERIES'] === 'true' ? [{ emit: 'stdout', level: 'query' }] : []),
     ] as any,
   });
 
 if (process.env['NODE_ENV'] !== 'production') {
   globalForPrisma.prisma = prisma;
 }
-
 export default prisma;

@@ -3,23 +3,24 @@
  * Author : Shiwoo Min
  * Date : 2025-09-10
  */
+import type { PrismaClient } from '@prisma/client';
 
 import { prisma } from './client.js';
-import type { PrismaClient } from '@prisma/client';
 
 // 트랜잭션 래퍼 - Prisma 6.x 호환
 export async function withTx<T>(
-  fn: (tx: Omit<PrismaClient, '$connect' | '$disconnect' | '$on' | '$transaction' | '$use' | '$extends'>) => Promise<T>
+  fn: (
+    tx: Omit<
+      PrismaClient,
+      '$connect' | '$disconnect' | '$on' | '$transaction' | '$use' | '$extends'
+    >,
+  ) => Promise<T>,
 ): Promise<T> {
   return prisma.$transaction(fn);
 }
 
 // 간단한 페이징 헬퍼
-export async function paginate<T>(
-  q: () => Promise<T[]>,
-  page = 1,
-  pageSize = 20
-) {
+export async function paginate<T>(q: () => Promise<T[]>, page = 1, pageSize = 20) {
   const [items] = await Promise.all([q()]);
   const total = items.length; // 실제로는 count 쿼리 권장
   return {
@@ -27,23 +28,20 @@ export async function paginate<T>(
     page,
     pageSize,
     total,
-    pages: Math.ceil(total / pageSize)
+    pages: Math.ceil(total / pageSize),
   };
 }
 
-// 더 정확한 페이징 헬퍼 (count 쿼리 포함)
+// COUNT 쿼리 페이징 헬퍼
 export async function paginateWithCount<T>(
   queryFn: (skip: number, take: number) => Promise<T[]>,
   countFn: () => Promise<number>,
   page = 1,
-  pageSize = 20
+  pageSize = 20,
 ) {
   const skip = (page - 1) * pageSize;
 
-  const [items, total] = await Promise.all([
-    queryFn(skip, pageSize),
-    countFn()
-  ]);
+  const [items, total] = await Promise.all([queryFn(skip, pageSize), countFn()]);
 
   return {
     items,
@@ -52,7 +50,7 @@ export async function paginateWithCount<T>(
     total,
     pages: Math.ceil(total / pageSize),
     hasNext: skip + pageSize < total,
-    hasPrev: page > 1
+    hasPrev: page > 1,
   };
 }
 
@@ -68,7 +66,12 @@ export async function checkDatabaseConnection(): Promise<boolean> {
 
 // 트랜잭션 내에서 안전한 실행
 export async function safeTransaction<T>(
-  fn: (tx: Omit<PrismaClient, '$connect' | '$disconnect' | '$on' | '$transaction' | '$use' | '$extends'>) => Promise<T>
+  fn: (
+    tx: Omit<
+      PrismaClient,
+      '$connect' | '$disconnect' | '$on' | '$transaction' | '$use' | '$extends'
+    >,
+  ) => Promise<T>,
 ): Promise<{ success: true; data: T } | { success: false; error: string }> {
   try {
     const data = await withTx(fn);
@@ -76,7 +79,7 @@ export async function safeTransaction<T>(
   } catch (error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Unknown error'
+      error: error instanceof Error ? error.message : 'Unknown error',
     };
   }
 }

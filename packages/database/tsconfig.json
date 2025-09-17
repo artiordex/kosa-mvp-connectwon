@@ -11,16 +11,11 @@
   "extends": "../../tsconfig.base.json",
 
   "compilerOptions": {
-    // 출력/입력 경로
     "outDir": "./dist",
     "rootDir": "./src",
-
-    // 서버 전용 타깃(브라우저 타입 유입 방지)
     "target": "ES2022",
     "lib": ["ES2022"],
     "types": ["node"],
-
-    // ESM(NodeNext) 해석
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
 
@@ -41,15 +36,19 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   },
-
   "include": [
     "src/**/*",
     // Prisma 시드 스크립트를 TS로 실행할 때 포함
     "prisma/seed.ts"
   ],
-
-  "exclude": ["dist", "node_modules", "src/generated", "prisma/migrations"],
-
+  "exclude": [
+    "dist",
+    "node_modules",
+    "src/generated",
+    "prisma/migrations",
+    "**/*.test.ts",
+    "**/*.spec.ts"
+  ],
   // 프로젝트 레퍼런스 (DB가 core/logger 타입을 참조한다면 빌드 순서 보장)
   "references": [{ "path": "../core" }, { "path": "../logger" }]
 }

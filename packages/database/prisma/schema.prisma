@@ -1,18 +1,20 @@
-// packages/database/prisma/schema.prisma
-
+/**
+ * Description : schema.prisma - 📌 Prisma 스키마
+ * Author : Shiwoo Min
+ * Date : 2025-09-10
+ */
+// Prisma 클라이언트 생성기
 generator client {
   provider = "prisma-client-js"
 }
 
+// 데이터베이스 연결 설정
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-// ================================
-// 사용자 관리
-// ================================
-
+// USERS
 model User {
   id            BigInt    @id @default(autoincrement())
   email         String?   @unique @db.Citext
@@ -23,7 +25,6 @@ model User {
   preferences   Json      @default("{}") @db.JsonB
   createdAt     DateTime  @default(now()) @map("created_at") @db.Timestamptz
   updatedAt     DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
-
   // 관계
   createdPrograms      Program[]            @relation("ProgramCreator")
   roomReservations     RoomReservation[]
@@ -33,10 +34,7 @@ model User {
   @@map("users")
 }
 
-// ================================
-// 프로그램 관리
-// ================================
-
+// PROGRAMS
 model Program {
   id               BigInt   @id @default(autoincrement())
   createdByUserId  BigInt   @map("created_by_user_id")
@@ -47,7 +45,6 @@ model Program {
   isActive         Boolean  @default(true) @map("is_active")
   createdAt        DateTime @default(now()) @map("created_at") @db.Timestamptz
   updatedAt        DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
-
   // 관계
   createdBy        User      @relation("ProgramCreator", fields: [createdByUserId], references: [id], onDelete: Restrict)
   sessions         Session[]
@@ -56,10 +53,7 @@ model Program {
   @@map("programs")
 }
 
-// ================================
-// 세션 관리
-// ================================
-
+// SESSION
 model Session {
   id                  BigInt    @id @default(autoincrement())
   programId           BigInt    @map("program_id")
@@ -72,7 +66,6 @@ model Session {
   locationText        String?   @map("location_text")
   createdAt           DateTime  @default(now()) @map("created_at") @db.Timestamptz
   updatedAt           DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
-
   // 관계
   program             Program              @relation(fields: [programId], references: [id], onDelete: Cascade)
   roomReservation     RoomReservation?     @relation(fields: [roomReservationId], references: [id], onDelete: SetNull)
@@ -82,10 +75,7 @@ model Session {
   @@map("sessions")
 }
 
-// ================================
-// 장소 관리
-// ================================
-
+// VENUES
 model Venue {
   id             BigInt   @id @default(autoincrement())
   name           String
@@ -94,13 +84,12 @@ model Venue {
   blackoutRules  Json?    @map("blackout_rules") @db.JsonB
   createdAt      DateTime @default(now()) @map("created_at") @db.Timestamptz
   updatedAt      DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
-
   // 관계
   rooms          Room[]
-
   @@map("venues")
 }
 
+// ROOM
 model Room {
   id               BigInt   @id @default(autoincrement())
   venueId          BigInt   @map("venue_id")
@@ -109,19 +98,14 @@ model Room {
   status           String   @default("ACTIVE")
   createdAt        DateTime @default(now()) @map("created_at") @db.Timestamptz
   updatedAt        DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
-
   // 관계
   venue            Venue             @relation(fields: [venueId], references: [id], onDelete: Cascade)
   reservations     RoomReservation[]
-
   @@unique([venueId, name], map: "rooms_uniq_per_venue")
   @@map("rooms")
 }
 
-// ================================
-// 방 예약 관리
-// ================================
-
+// RESERVATIONS
 model RoomReservation {
   id         BigInt    @id @default(autoincrement())
   roomId     BigInt    @map("room_id")
@@ -134,7 +118,6 @@ model RoomReservation {
   sessionId  BigInt?   @unique @map("session_id")
   createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamptz
   updatedAt  DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
-
   // 관계
   room       Room      @relation(fields: [roomId], references: [id], onDelete: Cascade)
   user       User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
@@ -143,10 +126,7 @@ model RoomReservation {
   @@map("room_reservations")
 }
 
-// ================================
-// 프로그램 참여자 관리
-// ================================
-
+// PARTICIPANT
 model ProgramParticipant {
   id        BigInt    @id @default(autoincrement())
   sessionId BigInt    @map("session_id")
@@ -154,19 +134,14 @@ model ProgramParticipant {
   role      String    @default("ATTENDEE")
   status    String    @default("APPLIED")
   joinedAt  DateTime? @default(now()) @map("joined_at") @db.Timestamptz
-
   // 관계
   session   Session   @relation(fields: [sessionId], references: [id], onDelete: Cascade)
   user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-
   @@unique([sessionId, userId], map: "program_participants_uniq")
   @@map("program_participants")
 }
 
-// ================================
-// AI 상호작용 관리
-// ================================
-
+// AI-INTERACTION
 model AiInteraction {
   id               BigInt    @id @default(autoincrement())
   userId           BigInt?   @map("user_id")
@@ -182,11 +157,9 @@ model AiInteraction {
   traceId          String?   @map("trace_id")
   meta             Json      @default("{}") @db.JsonB
   createdAt        DateTime  @default(now()) @map("created_at") @db.Timestamptz
-
   // 관계
   user             User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
   program          Program?  @relation(fields: [programId], references: [id], onDelete: SetNull)
   session          Session?  @relation(fields: [sessionId], references: [id], onDelete: SetNull)
-
   @@map("ai_interactions")
 }
