@@ -346,7 +346,8 @@
     "testkit",
     "chainguard",
     "NEXTAUTH",
-    "pnpmrc"
+    "pnpmrc",
+    "syncpack"
   ],
 
   // Nx Console AI 규칙 사용

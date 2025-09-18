@@ -1,0 +1,33 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:base", ":dependencyDashboard", ":semanticCommits"],
+  "description": "Renovate configuration for ConnectWon monorepo",
+  "enabledManagers": ["npm", "pnpm"],
+  "timezone": "Asia/Seoul",
+  "npm": {
+    "pnpm": { "enabled": true }
+  },
+  "postUpdateOptions": ["pnpmDedupe"],
+  "ignorePaths": ["docs/**"],
+  "packageRules": [
+    {
+      "description": "patch/minor merges",
+      "matchUpdateTypes": ["patch", "minor"],
+      "automerge": true
+    },
+    {
+      "description": "ConnectWon Apps",
+      "matchPaths": ["apps/**"],
+      "groupName": "apps"
+    },
+    {
+      "description": "ConnectWon Packages",
+      "matchPaths": ["packages/**"],
+      "groupName": "packages"
+    }
+  ],
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["on saturday"]
+  }
+}
