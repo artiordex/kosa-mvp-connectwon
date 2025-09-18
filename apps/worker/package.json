@@ -9,12 +9,16 @@
     "build": "tsc -p tsconfig.json",
     "start": "node ./dist/main.js"
   },
-  "dependencies": {
+  "peerDependencies": {
     "@connectwon/core": "workspace:*",
     "bullmq": "^5.58.5"
   },
-  "devDependencies": {},
   "engines": {
     "node": ">=20.11"
+  },
+  "dependencies": {
+    "@bull-board/api": "^6.12.7",
+    "@bull-board/express": "^6.12.7",
+    "@bull-board/ui": "^6.12.7"
   }
 }

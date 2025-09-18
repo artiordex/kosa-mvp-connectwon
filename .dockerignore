@@ -4,40 +4,73 @@
  * Date : 2025-09-06
  * 09-06 - Docker 자체 설정 파일 제외 제거
  * 09-17 - root로 이동
+ * 09-18 - reflect-metadata, @anthropic-ai/sdk 오류 해결을 위한 추가 제외사항
  */
 
-# Node.js 의존성 디렉토리 제외
+# Node.js 관련 - 모든 레벨에서 완전 제외
 node_modules
+**/node_modules
+**/**/node_modules
+***/***/node_modules
 
-# 빌드 결과물이 담긴 폴더 제외
+# 빌드 결과물
 dist
+**/dist
 build
+**/build
+.next
+**/.next
+out
+**/out
 
-# Git 버전 관리 관련 제외
-.git
+# 패키지 매니저 캐시
+.pnpm
+**/.pnpm
+.pnpm-store
+**/.pnpm-store
+.cache
+**/.cache
+.yarn
+**/.yarn
 
-# 로그 파일 제외
+# 로그 및 임시 파일
 *.log
+**/*.log
+*.tmp
+*.temp
+.DS_Store
+**/.DS_Store
 
-# 로컬 환경 변수 파일 제외
-.env
-
-# 개발 도구 설정 제외
+# 환경 및 설정
+.env*
 .vscode
 .idea
 
-# Docker 설정 파일 제외
-!packages
-!apps
+# Git
+.git
+
+# 테스트 관련
+coverage
+**/coverage
+test-results
+**/test-results
+.nyc_output
+**/.nyc_output
+
+# 허용할 파일/디렉토리만 명시
+!packages/*/src
+!packages/*/package.json
+!packages/*/tsconfig.json
+!apps/*/src
+!apps/*/public
+!apps/*/package.json
+!apps/*/next.config.*
+!apps/*/tailwind.config.*
+!apps/*/postcss.config.*
+!apps/*/tsconfig.json
 !infra
 !pnpm-lock.yaml
 !package.json
 !pnpm-workspace.yaml
 !nx.json
-!tsconfig.base.json
-!tsconfig.json
-
-# Windows 시스템 파일 제외
-$RECYCLE.BIN
-System Volume Information
-Thumbs.db
+!tsconfig*.json

@@ -345,7 +345,8 @@
     "googleusercontent",
     "testkit",
     "chainguard",
-    "NEXTAUTH"
+    "NEXTAUTH",
+    "pnpmrc"
   ],
 
   // Nx Console AI 규칙 사용

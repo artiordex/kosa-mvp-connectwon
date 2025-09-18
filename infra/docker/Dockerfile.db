@@ -1,20 +1,17 @@
 # postgres:17 이미지 기반
 # Description : Dockerfile.db - 📌 db docker build
 # Author : Shiwoo Min
-# Date : 2025-09-06
-# 09-06 - 도커 빌드 테스트: docker compose -f infra/docker/docker-compose.yml build postgres
-# 09-07 - init 스크립트 수동적용
-# 09-16 - chainguard 이미지에서 apk 명령어 제거
+# Date : 2025-09-18
 
-# Postgres 이미지
+# 1. Postgres 이미지
 FROM cgr.dev/chainguard/postgres:latest AS db
 
 # 타임존 설정
 ENV TZ=Asia/Seoul
 
-# 설정 파일 복사
+# 2. 설정 파일 복사
 COPY infra/database/conf/postgresql.conf /etc/postgresql/postgresql.conf
 COPY infra/database/conf/pg_hba.conf     /etc/postgresql/pg_hba.conf
 
-# 초기화 스크립트 복사
+# 3. 초기화 스크립트 복사
 COPY infra/database/init/ /docker-entrypoint-initdb.d/

@@ -1,32 +1,44 @@
 # Description : Dockerfile.admin - 📌 ConnectWon Admin (Next.js) 컨테이너 빌드
 # Author : Shiwoo Min
-# Date : 2025-09-15
-# 09-16 - 기존 오류 (FROM base 정의 누락, Next.js 모듈 경로 문제 해결) 수정
-# 09-17 - pnpm workspace 의존성 설치 오류 건 -> 전체 앱 package.json 복사 및 workspace 의존성 선빌드 추가
+# Date : 2025-09-18
 
-# 1. 공통 베이스
+# 1. 베이스 이미지
 FROM node:22-alpine3.22 AS base
 WORKDIR /app
 RUN corepack enable && apk add --no-cache libc6-compat && apk upgrade --no-cache
 
-# 2. 의존성 설치 - 전체 워크스페이스
+# 2. 의존성 설치 단계
 FROM base AS deps
 COPY pnpm-lock.yaml package.json pnpm-workspace.yaml nx.json ./
 COPY packages ./packages
-# 모든 앱의 package.json을 한 번에 복사
-COPY apps/*/package.json ./apps/
-RUN pnpm install --frozen-lockfile
+COPY apps/admin/package.json ./apps/admin/package.json
 
-# 3. 빌드
+# 워크스페이스 전체 설치 후 개별 앱 의존성 재설치
+RUN pnpm install --frozen-lockfile && \
+    cd apps/admin && \
+    pnpm install && \
+    ls -la node_modules | grep next-auth || echo "next-auth not found in local node_modules" && \
+    ls -la ../../../node_modules | grep next-auth || echo "next-auth not found in root node_modules"
+
+# 3. 빌드 단계
 FROM deps AS build
-COPY . .
+COPY apps/admin ./apps/admin
+COPY packages ./packages
+COPY tsconfig.* ./
+COPY nx.json pnpm-workspace.yaml package.json pnpm-lock.yaml ./
+
+# 빌드 환경변수 설정
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+
 RUN pnpm --filter @connectwon/admin build
 
-# 4. 런타임 (Next standalone)
+# 4. 런타임 단계
 FROM gcr.io/distroless/nodejs22-debian12:nonroot AS runtime
 WORKDIR /app
 ENV NODE_ENV=production
 COPY --from=deps  /app/node_modules ./node_modules
+COPY --from=deps  /app/apps/admin/node_modules ./apps/admin/node_modules
 COPY --from=build /app/apps/admin/.next ./apps/admin/.next
 COPY --from=build /app/apps/admin/package.json ./apps/admin/package.json
 EXPOSE 3001

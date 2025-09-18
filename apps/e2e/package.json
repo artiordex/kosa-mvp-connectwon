@@ -12,9 +12,11 @@
     "install:browsers": "playwright install --with-deps",
     "clean": "rimraf playwright-report test-results"
   },
-  "devDependencies": {
+  "peerDependencies": {
     "@connectwon/api-contract": "workspace:*",
-    "@connectwon/logger": "workspace:*",
+    "@connectwon/logger": "workspace:*"
+  },
+  "devDependencies": {
     "@playwright/test": "^1.51.1",
     "@types/dotenv": "^8.2.3",
     "dotenv": "^17.2.2"

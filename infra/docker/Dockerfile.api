@@ -1,32 +1,32 @@
 # Description : Dockerfile.api - 📌 ConnectWon API (NestJS) 컨테이너 빌드
 # Author : Shiwoo Min
-# Date : 2025-09-15
-# 09-16 - pnpm + 멀티스테이지 + distroless 런타임. tsc 경로 고정으로 TS5058 해결
-# 09-17 - pnpm workspace 의존성 설치 오류 건 -> 전체 앱 package.json 복사 및 workspace 의존성 선빌드 추가
+# Date : 2025-09-18
 
-# 1. 공통 베이스 (Alpine + pnpm)
+# 1. 공통 베이스
 FROM node:22-alpine3.22 AS base
 WORKDIR /app
 RUN corepack enable && apk add --no-cache libc6-compat && apk upgrade --no-cache
 
-# 2. 의존성 설치 - 전체 워크스페이스
+# 2. 의존성 설치
 FROM base AS deps
 COPY pnpm-lock.yaml package.json pnpm-workspace.yaml nx.json ./
 COPY packages ./packages
-# 모든 앱의 package.json을 한 번에 복사
-COPY apps/*/package.json ./apps/
+COPY apps/api/package.json ./apps/api/package.json
 RUN pnpm install --frozen-lockfile
 
 # 3. 빌드
 FROM deps AS build
-COPY . .
-RUN pnpm -w exec tsc -p apps/api/tsconfig.json
+COPY apps/api ./apps/api
+COPY packages ./packages
+COPY tsconfig.* ./
+COPY nx.json pnpm-workspace.yaml package.json pnpm-lock.yaml ./
+RUN pnpm --filter @connectwon/api build
 
-# 4. 런타임 (Distroless - node 22)
+# 4. 런타임 (Distroless)
 FROM gcr.io/distroless/nodejs22-debian12:nonroot AS runtime
 WORKDIR /app
 ENV NODE_ENV=production
-COPY --from=deps  /app/node_modules ./node_modules
+COPY --from=deps  /app/apps/api/node_modules ./apps/api/node_modules
 COPY --from=build /app/apps/api/dist ./apps/api/dist
 COPY --from=build /app/apps/api/package.json ./apps/api/package.json
 EXPOSE 8000

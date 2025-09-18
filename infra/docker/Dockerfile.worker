@@ -1,31 +1,32 @@
 # Description : Dockerfile.worker - 📌 ConnectWon Worker 빌드/런타임
 # Author : Shiwoo Min
-# Date : 2025-09-15
-# 09-16 - pnpm 의존성 설치 방식 변경, TypeScript 바이너리 경로 문제 해결
+# Date : 2025-09-18
 
 # 1. 공통 베이스
 FROM node:22-alpine3.22 AS base
 WORKDIR /app
 RUN corepack enable && apk add --no-cache libc6-compat && apk upgrade --no-cache
 
-# 2. 의존성 설치 - 전체 워크스페이스
+# 2. 의존성 설치
 FROM base AS deps
 COPY pnpm-lock.yaml package.json pnpm-workspace.yaml nx.json ./
 COPY packages ./packages
-# 모든 앱의 package.json을 한 번에 복사
-COPY apps/*/package.json ./apps/
+COPY apps/worker/package.json ./apps/worker/package.json
 RUN pnpm install --frozen-lockfile
 
 # 3. 빌드
 FROM deps AS build
-COPY . .
+COPY apps/worker ./apps/worker
+COPY packages ./packages
+COPY tsconfig.* ./
+COPY nx.json pnpm-workspace.yaml package.json pnpm-lock.yaml ./
 RUN pnpm --filter @connectwon/worker build
 
-# 4. 런타임 (Distroless)
+# 4. 런타임
 FROM gcr.io/distroless/nodejs22-debian12:nonroot AS runtime
 WORKDIR /app
 ENV NODE_ENV=production
-COPY --from=deps  /app/node_modules ./node_modules
+COPY --from=deps  /app/apps/worker/node_modules ./apps/worker/node_modules
 COPY --from=build /app/apps/worker/dist ./apps/worker/dist
 COPY --from=build /app/apps/worker/package.json ./apps/worker/package.json
 CMD ["apps/worker/dist/main.js"]

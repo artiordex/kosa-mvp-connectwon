@@ -5,6 +5,7 @@
    * Date : 2025-09-06
    * 09-12 : 소스맵/증분빌드/tsbuildinfo 추가, 라이브러리 스킵체크 활성화
    * 09-16 : Project References 추가, base 설정 상속으로 중복 제거
+   * 09-18 : ESM 지원 추가
    */
 
   // 루트의 tsconfig.base.json 상속
@@ -16,6 +17,11 @@
     "rootDir": "./src",
     "tsBuildInfoFile": "./dist/.tsbuildinfo",
 
+    // ESM 모듈 설정
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "target": "ES2022",
+
     // NestJS 데코레이터 필수 설정 (base에서 오버라이드)
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
@@ -24,8 +30,20 @@
     // NestJS/Express 특화 설정
     "strictPropertyInitialization": false,
 
+    // ESM 호환성 설정
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+
     // Node.js 환경 타입만 포함
     "types": ["node"]
+  },
+
+  // ts-node ESM 지원
+  "ts-node": {
+    "esm": true,
+    "experimentalSpecifierResolution": "node"
   },
 
   // API 소스 파일만 포함

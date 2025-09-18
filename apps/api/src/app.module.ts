@@ -4,10 +4,15 @@
  * Date : 2025-09-12
  */
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
-    // 일단 기본 모듈만 - 나중에 하나씩 추가
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: ['.env.local', '.env'],
+      cache: true,
+    }),
   ],
   controllers: [],
   providers: [],

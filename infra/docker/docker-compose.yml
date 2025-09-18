@@ -3,20 +3,12 @@
 # Date : 2025-09-06
 # 09-16 - ports 추가, network 설정 추가, healthcheck 수정
 # 09-17 - Grafana 자격증명/포트/ROOT_URL 하드코딩 제거 → 루트 .env 사용
-
-version: '3.8'
-
-# 컨테이너 올리기: docker compose up -d
-# 빌드 캐시 정리: docker compose build --no-cache
-# 초기빌드: docker compose build --no-cache --progress=plain
-# 루트에서 빌드: docker compose --env-file .env -f infra/docker/docker-compose.yml up -d
-# Docker 빌드 캐시 완전 제거: docker builder prune -af
-# Compose 파일 경로 명시하여 컨테이너 실행: docker compose -f infra/docker/docker-compose.yml up
-# infra/docker 디렉토리에서 직접 실행: cd infra/docker && docker compose up -d
-# 환경변수 파일: .env (루트)
+# 인프라만 올리기: docker compose -p connectwon --env-file .env -f infra/docker/docker-compose.yml up -d postgres redis redisinsight
+# 루트에서 빌드: docker compose -p connectwon --env-file $(pwd)/.env -f infra/docker/docker-compose.yml up -d
 # Docker 컨테이너 로그 확인: docker compose logs -f --tail=100
 # Docker 컨테이너 중지: docker compose down
-# Docker 일부 서비스만 올리기: docker compose up -d postgres redis
+# 주의 도커 다 날리기: docker rm -f $(docker ps -aq)
+version: '3.8'
 
 services:
   # Next.js (웹 프론트엔드)
@@ -47,7 +39,7 @@ services:
     networks:
       - connectwon-network
 
-  # Express.js API (백엔드)
+  # Nest.js API (백엔드)
   api:
     build:
       context: ../../
@@ -172,7 +164,7 @@ services:
     build:
       context: ../../
       dockerfile: infra/docker/Dockerfile.db
-    image: connectwon-postgres:17-local
+    image: postgres:17
     container_name: postgres
     restart: unless-stopped
     env_file:

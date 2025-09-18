@@ -2,6 +2,7 @@
  * Description : main.ts - 📌 NestJS API 서버 부트스트랩 진입점
  * Author : Shiwoo Min
  * Date : 2025-09-12
+ * 09-18 : 루트 경로 핸들러 추가
  */
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -82,6 +83,21 @@ async function bootstrap() {
 
     console.log('Swagger UI: http://localhost:8000/api/docs');
   }
+
+  // 루트 경로 핸들러
+  app.use('/', (_req: Request, res: Response) => {
+    res.status(200).json({
+      message: 'Connectwon API Server',
+      version: '1.0.0',
+      endpoints: {
+        health: '/health',
+        docs: '/api/docs',
+        api: '/api/v1'
+      },
+      environment: configService.get('NODE_ENV', 'development'),
+      timestamp: new Date().toISOString()
+    });
+  });
 
   // 헬스체크 엔드포인트
   app.use('/health', (_req: Request, res: Response) => {

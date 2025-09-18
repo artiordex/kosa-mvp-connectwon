@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "ConnectWon 사용자 웹 애플리케이션",
   "private": true,
-  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -12,7 +11,7 @@
     "type-check": "pnpm -w exec tsc --noEmit -p tsconfig.json",
     "clean": "pnpm -w exec rimraf .next dist"
   },
-  "dependencies": {
+  "peerDependencies": {
     "@connectwon/api-contract": "workspace:*",
     "@connectwon/sdk": "workspace:*",
     "@connectwon/ui": "workspace:*",
