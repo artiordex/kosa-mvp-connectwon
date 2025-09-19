@@ -347,7 +347,8 @@
     "chainguard",
     "NEXTAUTH",
     "pnpmrc",
-    "syncpack"
+    "syncpack",
+    "hintrc"
   ],
 
   // Nx Console AI 규칙 사용

@@ -127,6 +127,10 @@
     }
   },
   "dependencies": {
-    "dotenv": "^17.2.2"
+    "dotenv": "^17.2.2",
+    "framer-motion": "^12.23.15",
+    "react-color": "^2.19.3",
+    "react-dropzone": "^14.3.8",
+    "react-hook-form": "^7.62.0"
   }
 }

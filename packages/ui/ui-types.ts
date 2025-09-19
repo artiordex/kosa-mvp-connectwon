@@ -3,12 +3,195 @@
  * Author : Shiwoo Min
  * Date : 2025-09-16
  */
-import type { ButtonHTMLAttributes, FormHTMLAttributes, HTMLAttributes, InputHTMLAttributes, ReactNode, SelectHTMLAttributes, TextareaHTMLAttributes } from 'react';
+import type { ButtonHTMLAttributes, FormHTMLAttributes, HTMLAttributes, InputHTMLAttributes, ReactNode, SelectHTMLAttributes, TextareaHTMLAttributes, ComponentType } from 'react';
 import type React from 'react';
 
+export type NavItem = { href: string; label: string };
+
+export type Language = { code: string; name: string };
+
+// 공통 헤더 Props
+export type CommonHeaderProps = {
+  // 로고 슬롯
+  logo?: ReactNode;
+
+  // 상단 네비 항목
+  nav?: NavItem[];
+
+  // 현재 경로(활성 메뉴 표시용). 앱에서 usePathname()로 받아 주입
+  activePath?: string;
+
+  // 로그인/회원가입 버튼 노출 여부
+  showAuth?: boolean;
+  loginHref?: string;
+  signupHref?: string;
+  authRight?: ReactNode; // 우측 사용자 메뉴 등 커스텀 슬롯
+
+  // 언어 드롭다운(없으면 숨김)
+  languages?: Language[];
+  currentLanguage?: string; // code
+  onLanguageChange?: (code: string) => void;
+
+  // 레이아웃/스타일 커스터마이즈용
+  className?: string;
+
+  // 헤더를 sticky 로 고정할지
+  sticky?: boolean;
+};
+
+// 히어로 캐러셀 Props
+export type HeroSlide = {
+  title: string | React.ReactNode;
+  highlight?: string | React.ReactNode;
+  description?: string | React.ReactNode;
+  image: string;
+  alt?: string;
+};
+
+export type HeroCarouselProps = {
+  slides: HeroSlide[];
+  interval?: number;
+  autoPlay?: boolean;
+  align?: 'left' | 'center';
+  className?: string;
+  /** 인디케이터/화살표 표시 여부 */
+  showIndicators?: boolean;
+  showArrows?: boolean;
+  /** 글로벌 CTA(또는 슬라이드별 렌더러) */
+  renderCtas?: (index: number) => React.ReactNode;
+  /** 전환 콜백 */
+  onSlideChange?: (index: number) => void;
+  /** 높이/여백 커스터마이즈 */
+  contentPaddingClass?: string;    // 기본: py-20 lg:py-32
+  maxWidthClass?: string;          // 기본: max-w-7xl
+};
+
+// AppShell Props
+export interface AppShellProps {
+  children: ReactNode;
+  /**
+   * 레이아웃 변형 타입
+   * - default: 일반 웹사이트 (사이드바 없음)
+   * - admin: 관리자 패널 (사이드바 있음)
+   * - auth: 인증 페이지 (중앙 정렬)
+   * - minimal: 미니멀 레이아웃
+   */
+  variant?: 'default' | 'admin' | 'auth' | 'minimal';
+  showHeader?: boolean;
+  showFooter?: boolean;
+  showSidebar?: boolean;
+  className?: string;
+  headerSlot?: ReactNode;
+  sidebarSlot?: ReactNode;
+  footerSlot?: ReactNode;
+}
+
+// AppShell variant 타입
+export type AppShellVariant = 'default' | 'admin' | 'auth' | 'minimal';
+
+// 레이아웃 스타일 설정
+export interface LayoutStyleConfig {
+  container: string;
+  header: string;
+  sidebar: string;
+  main: string;
+  footer: string;
+}
+
+export interface QuickMenuItem {
+  /** 고유 식별자 */
+  id: string;
+  /** 아이콘 (RemixIcon 클래스명 또는 React 노드) */
+  icon: string | React.ReactNode;
+  /** 라벨 텍스트 */
+  label: string;
+  /** 클릭 핸들러 */
+  onClick: () => void;
+  /** 링크 URL (선택사항) */
+  href?: string;
+  /** 새 탭에서 열기 여부 */
+  target?: '_blank' | '_self';
+}
+
+export interface QuickMenuProps {
+  /** 메뉴 아이템 목록 */
+  items?: QuickMenuItem[];
+  /** 위치 설정 */
+  position?: 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left';
+  /** 맨 위로 버튼 표시 여부 */
+  showScrollToTop?: boolean;
+  /** 스크롤 최소 거리 (맨 위로 버튼이 나타날 스크롤 위치) */
+  scrollThreshold?: number;
+  /** 커스텀 클래스명 */
+  className?: string;
+  /** QUICK 버튼 배경색 */
+  buttonColor?: string;
+  /** 애니메이션 활성화 여부 */
+  enableAnimation?: boolean;
+  /** 클라이언트 사이드 렌더링 여부 (Next.js 등) */
+  isClient?: boolean;
+}
+
+export type FooterLink = {
+  label: string;
+  href: string;
+  external?: boolean; // 외부 링크면 true -> target/_blank + rel
+};
+
+export type FooterColumn = {
+  title: string;
+  links: FooterLink[];
+};
+
+export type SocialLink = {
+  label: string; // aria-label 용 (예: "Instagram")
+  href: string;
+  icon?: React.ReactNode; // <i className="ri-instagram-fill" /> 같은 노드
+  external?: boolean;
+};
+
+export type BrandBlock = {
+  name?: string; // 브랜드 텍스트(선택)
+  logo?: React.ReactNode; // <img/> or <Logo/>
+  description?: React.ReactNode; // 한 줄/두 줄 소개
+};
+
+export type FooterProps = {
+  brand?: BrandBlock;
+  columns?: FooterColumn[]; // 오른쪽 컬럼들
+  social?: SocialLink[]; // 브랜드 블록 하단 소셜
+  legal?: FooterLink[]; // 하단 우측: 약관/개인정보 등
+  year?: number; // 기본: this year
+  className?: string; // <footer> 커스터마이즈
+  containerClassName?: string; // 내부 컨테이너 커스텀
+  bottomRightSlot?: React.ReactNode; // 하단 우측 추가 배지/문구
+};
 
 
+export type SidebarItem = {
+  href: string;
+  label: string;
+  icon?: ReactNode | string; // 'ri-...' or <Icon/>
+  exact?: boolean; // true면 완전일치, 아니면 startsWith
+};
 
+export type SidebarNavProps = {
+  items: SidebarItem[];
+  extraItems?: SidebarItem[]; // 구분선 아래 추가 메뉴(설정/도움말 등)
+  isCollapsed?: boolean; // 접힘 여부
+  currentPath: string; // 현재 경로(앱에서 주입)
+  className?: string;
+
+  // 위치/크기 커스터마이즈 (기본: 헤더 높이 5rem 가정)
+  topOffsetClass?: string; // ex) 'top-20'
+  heightClass?: string; // ex) 'h-[calc(100vh-5rem)]'
+
+  // 링크를 어떻게 렌더링할지 주입(Next Link 등)
+  LinkComponent?: ComponentType<{ href: string; className?: string; children: ReactNode }>;
+
+  // LinkComponent가 없을 때 대체 네비게이션(기본: location.href)
+  onNavigate?: (href: string) => void;
+};
 
 // 빈 상태 Props
 export interface EmptyStateProps {

@@ -108,6 +108,7 @@ dist
 # vuepress v2.x 임시 및 캐시 디렉터리
 .temp
 .cache
+tmp/
 
 # SvelteKit 캐시 디렉터리
 .svelte-kit/

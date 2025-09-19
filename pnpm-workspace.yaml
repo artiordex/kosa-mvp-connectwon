@@ -8,6 +8,7 @@
 # API 서버 (포트 8000) - pnpm --filter @connectwon/api dev
 # 관리자 대시보드 (포트 3001) - pnpm --filter @connectwon/admin dev
 # 워커 (백그라운드 작업) - pnpm --filter @connectwon/worker start
+# 전체 의존성 확인 - pnpm list -r
 
 packages:
   - 'apps/*'

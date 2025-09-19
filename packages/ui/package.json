@@ -1,7 +1,6 @@
 {
   "name": "@connectwon/ui",
   "version": "1.0.0",
-  "description": "ConnectWon UI 컨포넌트 라이브러리",
   "private": true,
   "type": "module",
   "exports": {
@@ -9,15 +8,18 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
-    "./styles/*": "./styles/*",
+    "./styles/*": "./src/styles/*",
     "./package.json": "./package.json"
   },
   "files": [
     "dist",
-    "styles"
+    "src/styles"
   ],
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "sideEffects": [
+    "**/*.css"
+  ],
   "scripts": {
     "build": "pnpm -w exec tsc -p tsconfig.json",
     "dev": "pnpm -w exec tsc -w -p tsconfig.json",
@@ -25,18 +27,16 @@
     "prepublishOnly": "pnpm run build",
     "type-check": "pnpm -w exec tsc --noEmit -p tsconfig.json"
   },
-  "sideEffects": [
-    "*.css"
-  ],
   "dependencies": {
     "@fontsource/inter": "^5.2.7",
     "@fontsource/poppins": "^5.2.6",
     "@heroicons/react": "^2.2.0",
     "class-variance-authority": "^0.7.1",
-    "clsx": "^2.0.0",
+    "clsx": "^2.1.1",
+    "dayjs": "^1.11.10",
     "lucide-react": "^0.544.0",
     "react-icons": "^5.5.0",
-    "tailwind-merge": "^2.0.0"
+    "tailwind-merge": "^2.6.0"
   },
   "peerDependencies": {
     "react": "^18.0.0",

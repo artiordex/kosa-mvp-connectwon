@@ -4,8 +4,10 @@ kosa-mvp-connectwon
 │  ├─ config.json
 │  └─ README.md
 ├─ .cz-config.cjs
+├─ .dockerignore
 ├─ .eslintignore
 ├─ .eslintrc.json
+├─ .hintrc
 ├─ .husky
 │  └─ _
 │     ├─ applypatch-msg
@@ -23,18 +25,27 @@ kosa-mvp-connectwon
 │     ├─ pre-push
 │     ├─ pre-rebase
 │     └─ prepare-commit-msg
+├─ .pnpmrc
 ├─ .prettierrc.json
 ├─ apps
 │  ├─ admin
+│  │  ├─ next-env.d.ts
 │  │  ├─ next.config.mjs
 │  │  ├─ package.json
 │  │  ├─ project.json
+│  │  ├─ public
 │  │  ├─ server.ts
 │  │  ├─ src
 │  │  │  └─ app
 │  │  │     ├─ (auth)
 │  │  │     │  └─ login
 │  │  │     │     └─ page.tsx
+│  │  │     ├─ api
+│  │  │     │  ├─ auth
+│  │  │     │  ├─ proxy
+│  │  │     │  │  └─ [...path]
+│  │  │     │  └─ webhooks
+│  │  │     │     └─ stripe
 │  │  │     ├─ dashboard
 │  │  │     │  └─ page.tsx
 │  │  │     ├─ error.tsx
@@ -44,7 +55,9 @@ kosa-mvp-connectwon
 │  │  │     │  ├─ page.tsx
 │  │  │     │  └─ [id]
 │  │  │     │     ├─ edit
+│  │  │     │     │  └─ page.tsx
 │  │  │     │     └─ sessions
+│  │  │     │        └─ page.tsx
 │  │  │     ├─ reservation
 │  │  │     │  ├─ page.tsx
 │  │  │     │  └─ [id]
@@ -58,6 +71,7 @@ kosa-mvp-connectwon
 │  │  │           ├─ edit
 │  │  │           └─ rooms
 │  │  │              └─ [roomId]
+│  │  │                 └─ page.tsx
 │  │  ├─ tailwind.config.ts
 │  │  └─ tsconfig.json
 │  ├─ api
@@ -108,17 +122,15 @@ kosa-mvp-connectwon
 │  ├─ e2e
 │  │  ├─ actions
 │  │  │  ├─ BaseActions.ts
-│  │  │  ├─ JsForceActions.ts
 │  │  │  └─ WebActions.ts
 │  │  ├─ e2e-types.ts
-│  │  ├─ GlobalSetup.ts
-│  │  ├─ GlobalTeardown.ts
 │  │  ├─ locators
 │  │  │  └─ locator.ts
 │  │  ├─ package.json
 │  │  ├─ playwright.config.ts
 │  │  ├─ project.json
-│  │  ├─ test-results
+│  │  ├─ setup.ts
+│  │  ├─ teardown.ts
 │  │  ├─ tests
 │  │  │  ├─ admin
 │  │  │  │  └─ dashboard.spec.ts
@@ -130,9 +142,11 @@ kosa-mvp-connectwon
 │  │  │     └─ reservation.spec.ts
 │  │  └─ tsconfig.json
 │  ├─ web
+│  │  ├─ next-env.d.ts
 │  │  ├─ next.config.mjs
 │  │  ├─ package.json
 │  │  ├─ project.json
+│  │  ├─ public
 │  │  ├─ server.ts
 │  │  ├─ src
 │  │  │  └─ app
@@ -190,26 +204,35 @@ kosa-mvp-connectwon
 │     └─ tsconfig.json
 ├─ connectwon-env.ts
 ├─ docs
-│  ├─ 01_프로젝트소개.md
-│  ├─ 02_비즈니스모델.md
-│  ├─ 03_서비스플로우.md
-│  ├─ 04_도메인정의.md
-│  ├─ 05_기술스택개요.md
-│  ├─ 06_모노레포구조.md
-│  ├─ 07_전체아키텍처.md
-│  ├─ 08_도메인모듈패턴.md
-│  ├─ 09_데이터베이스설계.md
-│  ├─ 10_개발환경설정.md
-│  ├─ 11_코딩컨벤션.md
-│  ├─ 12_Git워크플로우.md
-│  ├─ 13_AI_API통합가이드.md
-│  ├─ 14_AI_서비스플로우.md
-│  ├─ 15_REST_API문서.md
-│  ├─ 16_인증권한.md
-│  ├─ 17_배포가이드.md
-│  ├─ 18_기술스택가이드.md
-│  ├─ 19_트러블슈팅건.md
-│  └─ 20_참고자료.md
+│  ├─ assets
+│  │  └─ ConnectWon.png
+│  ├─ guideline
+│  │  ├─ 01_프로젝트아키텍처.md
+│  │  ├─ 02_개발환경설정.md
+│  │  ├─ 03_외부라이브러리목록.md
+│  │  ├─ 04_의존성관리가이드.md
+│  │  └─ 05_배포및운영가이드.md
+│  └─ study
+│     ├─ 01_프로젝트소개.md
+│     ├─ 02_비즈니스모델.md
+│     ├─ 03_서비스플로우.md
+│     ├─ 04_도메인정의.md
+│     ├─ 05_기술스택개요.md
+│     ├─ 06_모노레포구조.md
+│     ├─ 07_전체아키텍처.md
+│     ├─ 08_도메인모듈패턴.md
+│     ├─ 09_데이터베이스설계.md
+│     ├─ 10_개발환경설정.md
+│     ├─ 11_코딩컨벤션.md
+│     ├─ 12_Git워크플로우.md
+│     ├─ 13_AI_API통합가이드.md
+│     ├─ 14_AI_서비스플로우.md
+│     ├─ 15_REST_API문서.md
+│     ├─ 16_인증권한.md
+│     ├─ 17_배포가이드.md
+│     ├─ 18_기술스택가이드.md
+│     ├─ 19_트러블슈팅건.md
+│     └─ 20_참고자료.md
 ├─ infra
 │  ├─ database
 │  │  ├─ conf
@@ -221,7 +244,6 @@ kosa-mvp-connectwon
 │  │     ├─ 30-seed.sql
 │  │     └─ 99-final-setup.sql
 │  ├─ docker
-│  │  ├─ .dockerignore
 │  │  ├─ docker-compose.yml
 │  │  ├─ Dockerfile.admin
 │  │  ├─ Dockerfile.api
@@ -308,6 +330,7 @@ kosa-mvp-connectwon
 │  │  ├─ project.json
 │  │  ├─ tailwind
 │  │  │  ├─ admin.ts
+│  │  │  ├─ animations.ts
 │  │  │  ├─ base.ts
 │  │  │  └─ web.ts
 │  │  ├─ testing
@@ -392,6 +415,7 @@ kosa-mvp-connectwon
 │  │  ├─ package.json
 │  │  ├─ project.json
 │  │  ├─ src
+│  │  │  ├─ index.ts
 │  │  │  ├─ logger.ts
 │  │  │  └─ transports
 │  │  │     ├─ console.ts
@@ -403,6 +427,7 @@ kosa-mvp-connectwon
 │  │  └─ tsconfig.json
 │  ├─ sdk
 │  │  ├─ package.json
+│  │  ├─ project.json
 │  │  ├─ sdk-types.ts
 │  │  ├─ src
 │  │  │  ├─ auth.ts
@@ -461,8 +486,7 @@ kosa-mvp-connectwon
 │     ├─ src
 │     │  ├─ animations
 │     │  │  ├─ Animation.tsx
-│     │  │  ├─ index.ts
-│     │  │  └─ tailwind-animations.ts
+│     │  │  └─ index.ts
 │     │  ├─ charts
 │     │  │  ├─ AreaChart.tsx
 │     │  │  ├─ BarChart.tsx
@@ -499,6 +523,14 @@ kosa-mvp-connectwon
 │     │  │  ├─ Stack.tsx
 │     │  │  ├─ Textarea.tsx
 │     │  │  └─ Toolbar.tsx
+│     │  ├─ layout
+│     │  │  ├─ AppShell.tsx
+│     │  │  ├─ Footer.tsx
+│     │  │  ├─ Header.tsx
+│     │  │  ├─ HeroCarousel.tsx
+│     │  │  ├─ QuickMenu.tsx
+│     │  │  ├─ SidebarNav.tsx
+│     │  │  └─ index.ts
 │     │  ├─ hooks
 │     │  │  ├─ index.ts
 │     │  │  ├─ useBoolean.ts
@@ -509,17 +541,18 @@ kosa-mvp-connectwon
 │     │  │  ├─ useMediaQuery.ts
 │     │  │  ├─ useOnClickOutside.ts
 │     │  │  └─ useThrottle.ts
-│     │  ├─ lib
 │     │  ├─ public
 │     │  │  ├─ icons
 │     │  │  └─ images
 │     │  ├─ styles
 │     │  │  ├─ animations.css
 │     │  │  └─ customs.css
-│     │  └─ templates
-│     │     ├─ error.tsx
-│     │     ├─ index.ts
-│     │     └─ loading.tsx
+│     │  ├─ templates
+│     │  │  ├─ error.tsx
+│     │  │  ├─ index.ts
+│     │  │  └─ loading.tsx
+│     │  └─ utils
+│     │     └─ cn.ts
 │     ├─ tailwind.config.ts
 │     ├─ tsconfig.json
 │     └─ ui-types.ts
@@ -527,9 +560,33 @@ kosa-mvp-connectwon
 ├─ pnpm-workspace.yaml
 ├─ PROJECT-ARCH.md
 ├─ README.md
+├─ renovate.json
 ├─ setup-structure.ps1
 ├─ test
 │  └─ setup.ts
+├─ tmp
+│  ├─ apps
+│  │  ├─ api
+│  │  │  └─ build
+│  │  └─ worker
+│  │     └─ build
+│  └─ packages
+│     ├─ api-contract
+│     │  └─ build
+│     ├─ client
+│     │  └─ build
+│     ├─ core
+│     │  └─ build
+│     ├─ database
+│     │  └─ build
+│     ├─ logger
+│     │  └─ build
+│     ├─ sdk
+│     │  └─ build
+│     ├─ server
+│     │  └─ build
+│     └─ ui
+│        └─ build
 ├─ tools
 │  ├─ services
 │  │  └─ webhook-catcher.ts

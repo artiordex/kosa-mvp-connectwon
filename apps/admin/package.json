@@ -30,6 +30,8 @@
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.10.0",
-    "next-auth": "^4.24.11"
+    "next-auth": "^4.24.11",
+    "react-window": "^2.1.1",
+    "recharts": "^3.2.1"
   }
 }
