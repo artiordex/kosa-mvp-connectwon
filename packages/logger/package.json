@@ -12,6 +12,10 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
+    "./logger-types": {
+      "types": "./dist/logger-types.d.ts",
+      "import": "./dist/logger-types.js"
+    },
     "./package.json": "./package.json"
   },
   "files": [

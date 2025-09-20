@@ -13,8 +13,8 @@
     "outDir": "dist",
 
     // Node ESM 권장
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
 
     // 런타임 타깃(서버 전용) + DOM 제거
     "target": "ES2022",
@@ -31,16 +31,17 @@
     "incremental": true,
     "tsBuildInfoFile": "dist/.tsbuildinfo",
 
-    // CJS 의존(winston 등)과의 상호운용
+    // CJS 의존과의 상호운용
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
+    "noEmit": false,
 
     // 품질/편의
     "skipLibCheck": true,
     "resolveJsonModule": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitAny": false
   },
-
   "include": ["src/**/*", "logger-types.ts"],
   "exclude": ["dist", "node_modules"]
 }

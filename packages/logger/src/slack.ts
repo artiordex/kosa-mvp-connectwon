@@ -3,16 +3,22 @@
  * Author : Shiwoo Min
  * Date : 2025-09-10
  */
-import type { LogLevel, SlackTransportOptions, Transport } from '../../logger-types.js';
-import { levelWeight } from '../../logger-types.js';
+import type { LogLevel, SlackTransportOptions, Transport } from '../logger-types.js';
+import { levelWeight } from '../logger-types.js';
 
-// Slack 전송 트랜스포트
+/**
+ * @description Slack Incoming Webhook으로 로그 전송하는 트랜스포트 생성 함수
+ * @param opts Slack 트랜스포트 옵션 (webhookUrl, username, 채널, 최소 레벨 등)
+ * @returns Transport 구현체
+ */
 export function SlackTransport(opts: SlackTransportOptions): Transport {
-  const min = levelWeight(opts.level ?? 'error'); // Slack은 보통 에러 이상만
+  const min = levelWeight(opts.level ?? 'error'); // 보통 에러 이상만 전송
   const fetchFn = opts.fetchImpl ?? fetch;
+
   return {
     async log(rec) {
       if (levelWeight(rec.level as LogLevel) < min) return;
+
       const lines = [
         `*${String(rec.level).toUpperCase()}* ${rec.msg ?? rec.message ?? ''}`,
         rec.service ? `• service: \`${rec.service}\`` : '',
@@ -20,6 +26,7 @@ export function SlackTransport(opts: SlackTransportOptions): Transport {
       ]
         .filter(Boolean)
         .join('\n');
+
       try {
         const res = await fetchFn(opts.webhookUrl, {
           method: 'POST',

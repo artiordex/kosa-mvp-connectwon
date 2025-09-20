@@ -3,10 +3,12 @@
  * Author : Shiwoo Min
  * Date : 2025-09-10
  */
-import type { LogLevel, LogRecord, PrettyTransportOptions, Transport } from '../../logger-types.js';
-import { levelWeight } from '../../logger-types.js';
+import type { LogLevel, LogRecord, PrettyTransportOptions, Transport } from '../logger-types.js';
+import { levelWeight } from '../logger-types.js';
 
-// 색상 함수들
+/**
+ * @description ANSI 컬러 함수 모음
+ */
 const C = {
   dim: (s: string) => `\x1b[2m${s}\x1b[0m`,
   gray: (s: string) => `\x1b[90m${s}\x1b[0m`,
@@ -17,6 +19,9 @@ const C = {
   magenta: (s: string) => `\x1b[35m${s}\x1b[0m`,
 };
 
+/**
+ * @description 로그 레벨별 컬러 맵핑
+ */
 const colorByLevel: Record<LogLevel, (s: string) => string> = {
   trace: C.gray,
   debug: C.blue,
@@ -29,14 +34,17 @@ const colorByLevel: Record<LogLevel, (s: string) => string> = {
   silly: C.dim,
 };
 
+/**
+ * @description 콘솔에 색상 및 형식 꾸며서 출력하는 트랜스포트 생성 함수
+ * @param opts 옵션 (레벨, 타임스탬프 출력 여부, 한줄 출력 여부 등)
+ * @returns Transport 구현체
+ */
 export function PrettyTransport(opts: PrettyTransportOptions = {}): Transport {
   const min = levelWeight(opts.level ?? 'info');
 
+  // 타임스탬프 문자열 생성 (ANSI 'dim' 적용)
   const ts = (r: LogRecord) => {
-    const t =
-      typeof r.time === 'number'
-        ? new Date(r.time).toISOString()
-        : (r.time ?? new Date().toISOString());
+    const t = typeof r.time === 'number' ? new Date(r.time).toISOString() : (r.time ?? new Date().toISOString());
     return C.dim(t);
   };
 
