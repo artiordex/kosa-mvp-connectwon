@@ -2,20 +2,35 @@
  * Description : setup.ts - 📌 OpenAPI Setup
  * Author : Shiwoo Min
  * Date : 2025-09-11
+ * 09-21 - 주석 보강
  */
 import type { OpenAPIV3 } from 'openapi-types';
 
-// 객체가 없으면 팩토리로 생성하는 유틸
+/**
+ * @description 객체가 없으면 팩토리로 새 객체 생성하는 유틸 함수
+ * @param obj 기존 객체 또는 undefined
+ * @param factory 객체 생성 팩토리 함수
+ * @returns 기존 객체 또는 새로 생성한 객체
+ */
 function ensure<T extends object>(obj: T | undefined, factory: () => T): T {
   return obj ?? factory();
 }
 
-// 배열에 중복 없이 아이템 추가하는 유틸
+/**
+ * @description 배열에 중복을 검사하여 조건에 맞는 아이템이 없으면 추가하는 유틸
+ * @param arr 대상 배열
+ * @param pred 중복 검사 함수
+ * @param item 추가할 아이템
+ */
 function pushUnique<T>(arr: T[], pred: (x: T) => boolean, item: T) {
   if (!arr.some(pred)) arr.push(item);
 }
 
-// 객체에서 undefined 값인 키를 제거하는 유틸
+/**
+ * @description 객체에서 undefined인 키를 필터링하여 제거한 새 객체 반환
+ * @param obj 원본 객체
+ * @returns undefined 값이 제거된 부분 객체
+ */
 function defined<T extends object>(obj: T): Partial<T> {
   // exactOptionalPropertyTypes 대응: undefined 값 키는 제거
   const out: Record<string, unknown> = {};
@@ -25,7 +40,9 @@ function defined<T extends object>(obj: T): Partial<T> {
   return out as Partial<T>;
 }
 
-// OpenAPI 기본 설정 객체
+/**
+ * @description OpenAPI 기본 설정 문서
+ */
 export const openApiConfig: OpenAPIV3.Document = {
   openapi: '3.0.3',
   info: {
@@ -49,22 +66,18 @@ export const openApiConfig: OpenAPIV3.Document = {
 - 오류: RFC 7807 표준 Problem Details 형식 준수
 - 요청 제한: 사용자별 요청 제한 (응답 헤더에서 확인)
     `.trim(),
-    version: '1.0.0', // API 버전
-    // 연락처 정보
+    version: '1.0.0',
     contact: {
       name: process.env['CONTACT_NAME'] || 'API Support',
       email: process.env['CONTACT_EMAIL'] || 'api-support@example.com',
       url: process.env['CONTACT_URL'] || 'https://example.com/support',
     },
-    // 라이선스 정보
     license: {
       name: 'MIT License',
       url: 'https://opensource.org/licenses/MIT',
     },
-    // 서비스 약관
     termsOfService: 'https://example.com/terms',
   },
-  // 서버 정보
   servers: [
     {
       url: process.env['DEV_SERVER_URL'] || 'http://localhost:3000/api/v1',
@@ -79,9 +92,7 @@ export const openApiConfig: OpenAPIV3.Document = {
       description: 'Production server',
     },
   ],
-  // 공통 컴포넌트
   components: {
-    // 보안 스키마
     securitySchemes: {
       bearerAuth: {
         type: 'http',
@@ -89,7 +100,6 @@ export const openApiConfig: OpenAPIV3.Document = {
         bearerFormat: 'JWT',
         description: 'JWT Bearer token for API authentication',
       },
-      // Google OAuth 2.0
       googleOAuth: {
         type: 'oauth2',
         description: 'Google OAuth 2.0 for user authentication',
@@ -106,44 +116,37 @@ export const openApiConfig: OpenAPIV3.Document = {
         },
       },
     },
-    // 공통 파라미터
     parameters: {
-      // 페이지네이션
       page: {
         name: 'page',
         in: 'query',
         description: 'Page number for pagination (1-based indexing)',
         schema: { type: 'integer', minimum: 1, default: 1, example: 1 },
       },
-      // 페이지당 항목 수
       limit: {
         name: 'limit',
         in: 'query',
         description: 'Maximum number of items per page',
         schema: { type: 'integer', minimum: 1, maximum: 100, default: 20, example: 20 },
       },
-      // 정렬
       sortBy: {
         name: 'sort_by',
         in: 'query',
         description: 'Field name to sort results by',
         schema: { type: 'string', example: 'created_at' },
       },
-      // 정렬 방향
       sortOrder: {
         name: 'sort_order',
         in: 'query',
         description: 'Sort direction for results',
         schema: { type: 'string', enum: ['asc', 'desc'], default: 'desc', example: 'desc' },
       },
-      // 생성일 필터 (이전)
       createdBefore: {
         name: 'created_before',
         in: 'query',
         description: 'Filter items created before this timestamp',
         schema: { type: 'string', format: 'date-time', example: '2024-12-31T23:59:59Z' },
       },
-      // 생성일 필터 (이후)
       createdAfter: {
         name: 'created_after',
         in: 'query',
@@ -151,9 +154,7 @@ export const openApiConfig: OpenAPIV3.Document = {
         schema: { type: 'string', format: 'date-time', example: '2024-01-01T00:00:00Z' },
       },
     },
-    // 공통 응답
     responses: {
-      // 400 Bad Request
       BadRequest: {
         description: 'Bad request - invalid input parameters',
         content: {
@@ -169,7 +170,6 @@ export const openApiConfig: OpenAPIV3.Document = {
           },
         },
       },
-      // 401 Unauthorized
       Unauthorized: {
         description: 'Unauthorized - authentication required',
         content: {
@@ -184,7 +184,6 @@ export const openApiConfig: OpenAPIV3.Document = {
           },
         },
       },
-      // 403 Forbidden
       Forbidden: {
         description: 'Forbidden - insufficient permissions',
         content: {
@@ -199,7 +198,6 @@ export const openApiConfig: OpenAPIV3.Document = {
           },
         },
       },
-      // 404 Not Found
       NotFound: {
         description: 'Resource not found',
         content: {
@@ -214,7 +212,6 @@ export const openApiConfig: OpenAPIV3.Document = {
           },
         },
       },
-      // 409 Conflict
       Conflict: {
         description: 'Conflict - resource already exists or constraint violation',
         content: {
@@ -230,7 +227,6 @@ export const openApiConfig: OpenAPIV3.Document = {
           },
         },
       },
-      // 422 Unprocessable Entity
       UnprocessableEntity: {
         description: 'Unprocessable entity - validation error',
         content: {
@@ -248,7 +244,6 @@ export const openApiConfig: OpenAPIV3.Document = {
           },
         },
       },
-      // 429 Too Many Requests
       TooManyRequests: {
         description: 'Too many requests - rate limit exceeded',
         headers: {
@@ -261,7 +256,6 @@ export const openApiConfig: OpenAPIV3.Document = {
             schema: { type: 'integer', format: 'int64' },
           },
         },
-        // 응답 바디
         content: {
           'application/json': {
             schema: { $ref: '#/components/schemas/ApiError' },
@@ -274,7 +268,6 @@ export const openApiConfig: OpenAPIV3.Document = {
           },
         },
       },
-      // 500 Internal Server Error
       InternalServerError: {
         description: 'Internal server error',
         content: {
@@ -290,32 +283,25 @@ export const openApiConfig: OpenAPIV3.Document = {
         },
       },
     },
-    // 공통 헤더
     headers: {
-      // 커스텀 헤더 예시
       'X-API-Version': {
         description: 'API version used for this request',
         schema: { type: 'string', example: '1.0.0' },
       },
-      // 요청 ID 헤더
       'X-Request-ID': {
         description: 'Unique identifier for this request',
         schema: { type: 'string', format: 'uuid', example: '550e8400-e29b-41d4-a716-446655440000' },
       },
-      // 요청 제한 헤더
       'X-Rate-Limit-Remaining': {
         description: 'Number of requests remaining in current rate limit window',
         schema: { type: 'integer', example: 99 },
       },
-      // 요청 제한 해제 헤더
       'X-Rate-Limit-Reset': {
         description: 'Unix timestamp when the rate limit window resets',
         schema: { type: 'integer', format: 'int64', example: 1640995200 },
       },
     },
-    // 참고: 여기서 schemas.ApiError 등 추가 정의가 필요하다면 이 파일이나 document에서 보강 가능
   },
-  // 전역 보안 설정 (Bearer 토큰 사용)
   security: [{ bearerAuth: [] }],
   paths: {},
   tags: [
@@ -333,20 +319,22 @@ export const openApiConfig: OpenAPIV3.Document = {
   ],
 };
 
-// OpenAPI 문서에 기본 설정을 적용하는 함수
-export function applyOpenApiSetup(
-  doc: OpenAPIV3.Document,
-  cfg: OpenAPIV3.Document = openApiConfig,
-) {
+/**
+ * @description OpenAPI 문서에 기본 설정을 병합 적용하는 함수
+ * @param doc 대상 OpenAPI 문서
+ * @param cfg 기본 설정 문서 (기본값: openApiConfig)
+ * @returns 병합 후 OpenAPI 문서 반환
+ */
+export function applyOpenApiSetup(doc: OpenAPIV3.Document, cfg: OpenAPIV3.Document = openApiConfig) {
   doc.info = { ...(doc.info ?? {}), ...defined(cfg.info ?? ({} as OpenAPIV3.InfoObject)) };
-  // servers
+
   if (cfg.servers?.length) {
     doc.servers = ensure(doc.servers, () => []);
     for (const s of cfg.servers) {
       pushUnique(doc.servers, x => x.url === s.url, s);
     }
   }
-  // tags
+
   if (cfg.tags?.length) {
     doc.tags = ensure(doc.tags, () => []);
     for (const t of cfg.tags) {
@@ -355,7 +343,6 @@ export function applyOpenApiSetup(
     }
   }
 
-  // security
   if (cfg.security?.length) {
     doc.security = ensure(doc.security, () => []);
     for (const s of cfg.security) {
@@ -363,37 +350,31 @@ export function applyOpenApiSetup(
     }
   }
 
-  // components
   if (cfg.components) {
     doc.components = ensure(doc.components, () => ({}));
-    // securitySchemes
+
     if (cfg.components.securitySchemes) {
       doc.components.securitySchemes = ensure(doc.components.securitySchemes, () => ({}));
       Object.assign(doc.components.securitySchemes, cfg.components.securitySchemes);
     }
-    // parameters
     if (cfg.components.parameters) {
       doc.components.parameters = ensure(doc.components.parameters, () => ({}));
       Object.assign(doc.components.parameters, cfg.components.parameters);
     }
-    // responses
     if (cfg.components.responses) {
       doc.components.responses = ensure(doc.components.responses, () => ({}));
       Object.assign(doc.components.responses, cfg.components.responses);
     }
-    // headers
     if (cfg.components.headers) {
       doc.components.headers = ensure(doc.components.headers, () => ({}));
       Object.assign(doc.components.headers, cfg.components.headers);
     }
-    // schemas (여기선 ApiError 같은 공통 스키마가 별도 정의되어 있을 수 있음)
     if (cfg.components.schemas) {
       doc.components.schemas = ensure(doc.components.schemas, () => ({}));
       Object.assign(doc.components.schemas, cfg.components.schemas);
     }
   }
 
-  // paths - cfg.paths가 있으면 doc.paths에 병합
   if (cfg.paths && Object.keys(cfg.paths).length > 0) {
     doc.paths = ensure(doc.paths, () => ({}));
     for (const [p, item] of Object.entries(cfg.paths)) {

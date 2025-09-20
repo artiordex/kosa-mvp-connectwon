@@ -5,17 +5,29 @@
  */
 import { z } from 'zod';
 
-// 예약 상태 정의
+/**
+ * @description 예약 상태 열거형
+ */
 export const ReservationStatus = z.enum(['PENDING', 'CONFIRMED', 'CANCELLED', 'COMPLETED']);
 
-// 참가자 상태 정의
+/**
+ * @description 참가자 상태 열거형
+ */
 export const ParticipantStatus = z.enum(['CONFIRMED', 'CANCELLED', 'ATTENDED', 'NO_SHOW']);
 
-// 타입 추출
+/**
+ * @description 예약 상태 타입
+ */
 export type ReservationStatus = z.infer<typeof ReservationStatus>;
+
+/**
+ * @description 참가자 상태 타입
+ */
 export type ParticipantStatus = z.infer<typeof ParticipantStatus>;
 
-// 세션 스키마
+/**
+ * @description 세션 기본 스키마
+ */
 export const SessionSchema = z.object({
   id: z.string(),
   program_id: z.string(),
@@ -31,7 +43,9 @@ export const SessionSchema = z.object({
   updated_at: z.date(),
 });
 
-// 룸 예약 스키마
+/**
+ * @description 룸 예약 기본 스키마
+ */
 export const RoomReservationSchema = z.object({
   id: z.string(),
   room_id: z.string(),
@@ -46,7 +60,9 @@ export const RoomReservationSchema = z.object({
   updated_at: z.date(),
 });
 
-// 참가자 스키마
+/**
+ * @description 참가자 기본 스키마
+ */
 export const ParticipantSchema = z.object({
   id: z.string(),
   user_id: z.string(),
@@ -57,7 +73,9 @@ export const ParticipantSchema = z.object({
   updated_at: z.date(),
 });
 
-// 세션 생성 스키마
+/**
+ * @description 세션 생성 요청 스키마
+ */
 export const CreateSessionSchema = z.object({
   program_id: z.string().min(1),
   title: z.string().min(1),
@@ -68,7 +86,9 @@ export const CreateSessionSchema = z.object({
   participant_fee: z.number().min(0).optional(),
 });
 
-// 세션 수정 스키마
+/**
+ * @description 세션 수정 요청 스키마
+ */
 export const UpdateSessionSchema = z.object({
   title: z.string().min(1).optional(),
   starts_at: z.string().datetime().optional(),
@@ -79,7 +99,9 @@ export const UpdateSessionSchema = z.object({
   status: ReservationStatus.optional(),
 });
 
-// 룸 예약 생성 스키마
+/**
+ * @description 룸 예약 생성 요청 스키마
+ */
 export const CreateRoomReservationSchema = z.object({
   room_id: z.string(),
   user_id: z.string().optional(),
@@ -91,7 +113,9 @@ export const CreateRoomReservationSchema = z.object({
   session_id: z.string().optional(),
 });
 
-// 룸 예약 수정 스키마
+/**
+ * @description 룸 예약 수정 요청 스키마
+ */
 export const UpdateRoomReservationSchema = z.object({
   starts_at: z.string().datetime().optional(),
   ends_at: z.string().datetime().optional(),
@@ -100,19 +124,25 @@ export const UpdateRoomReservationSchema = z.object({
   meta: z.record(z.unknown()).optional(),
 });
 
-// 참가자 생성 스키마
+/**
+ * @description 참가자 생성 요청 스키마
+ */
 export const CreateParticipantSchema = z.object({
   session_id: z.string().min(1),
   notes: z.string().max(500).optional(),
 });
 
-// 참가자 수정 스키마
+/**
+ * @description 참가자 수정 요청 스키마
+ */
 export const UpdateParticipantSchema = z.object({
   status: ParticipantStatus.optional(),
   notes: z.string().max(500).optional(),
 });
 
-// 조회 쿼리 스키마
+/**
+ * @description 세션 목록 조회 쿼리 스키마
+ */
 export const SessionQuerySchema = z.object({
   program_id: z.string().optional(),
   room_id: z.string().optional(),
@@ -123,7 +153,9 @@ export const SessionQuerySchema = z.object({
   limit: z.coerce.number().int().min(1).max(100).default(20),
 });
 
-// 룸 예약 조회 쿼리 스키마
+/**
+ * @description 룸 예약 목록 조회 쿼리 스키마
+ */
 export const RoomReservationQuerySchema = z.object({
   room_id: z.string().optional(),
   user_id: z.string().optional(),
@@ -134,7 +166,9 @@ export const RoomReservationQuerySchema = z.object({
   limit: z.coerce.number().int().min(1).max(100).default(20),
 });
 
-// 가용성 체크 스키마
+/**
+ * @description 룸 가용성 체크 요청 스키마
+ */
 export const CheckAvailabilitySchema = z.object({
   room_id: z.string(),
   starts_at: z.string().datetime(),
@@ -142,7 +176,9 @@ export const CheckAvailabilitySchema = z.object({
   exclude_reservation_id: z.string().optional(),
 });
 
-// 가용성 응답 스키마
+/**
+ * @description 룸 가용성 체크 응답 스키마
+ */
 export const AvailabilityResponseSchema = z.object({
   available: z.boolean(),
   message: z.string(),
@@ -158,7 +194,9 @@ export const AvailabilityResponseSchema = z.object({
     .optional(),
 });
 
-// 특정 날짜의 가용 슬롯 찾기 스키마
+/**
+ * @description 특정 날짜의 가용 슬롯 찾기 요청 스키마
+ */
 export const FindAvailableSlotsSchema = z.object({
   room_id: z.string(),
   date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/), // YYYY-MM-DD
@@ -173,7 +211,9 @@ export const FindAvailableSlotsSchema = z.object({
     .default('18:00'),
 });
 
-// 가용 슬롯 응답 스키마
+/**
+ * @description 가용 슬롯 응답 스키마
+ */
 export const AvailableSlotsResponseSchema = z.object({
   date: z.string(),
   room_id: z.string(),
@@ -185,7 +225,9 @@ export const AvailableSlotsResponseSchema = z.object({
   ),
 });
 
-// 세션과 함께 예약 생성 스키마
+/**
+ * @description 세션과 함께 예약 생성 요청 스키마
+ */
 export const CreateReservationWithSessionSchema = z.object({
   room_reservation: CreateRoomReservationSchema,
   session_info: z.object({
@@ -196,20 +238,26 @@ export const CreateReservationWithSessionSchema = z.object({
   }),
 });
 
-// 예약 취소 및 일정 변경 스키마
+/**
+ * @description 예약 취소 요청 스키마
+ */
 export const CancelReservationSchema = z.object({
   reason: z.string().min(1),
   request_refund: z.boolean().default(false),
 });
 
-// 일정 변경 스키마
+/**
+ * @description 예약 일정 변경 요청 스키마
+ */
 export const RescheduleReservationSchema = z.object({
   new_starts_at: z.string().datetime(),
   new_ends_at: z.string().datetime(),
   reason: z.string().min(1),
 });
 
-// 페이지네이션 스키마
+/**
+ * @description 페이지네이션 스키마
+ */
 export const PaginationSchema = z.object({
   page: z.number().int().min(1),
   limit: z.number().int().min(1),
@@ -217,25 +265,33 @@ export const PaginationSchema = z.object({
   pages: z.number().int().min(0),
 });
 
-// 리스트 응답 스키마
+/**
+ * @description 세션 목록 응답 스키마
+ */
 export const SessionListResponseSchema = z.object({
   sessions: z.array(SessionSchema),
   pagination: PaginationSchema,
 });
 
-// 룸 예약 리스트 응답 스키마
+/**
+ * @description 룸 예약 목록 응답 스키마
+ */
 export const RoomReservationListResponseSchema = z.object({
   reservations: z.array(RoomReservationSchema),
   pagination: PaginationSchema,
 });
 
-// 참가자 리스트 응답 스키마
+/**
+ * @description 참가자 목록 응답 스키마
+ */
 export const ParticipantListResponseSchema = z.object({
   participants: z.array(ParticipantSchema),
   pagination: PaginationSchema,
 });
 
-// 세션 상세 정보 스키마
+/**
+ * @description 세션 상세 정보 스키마
+ */
 export const SessionWithDetailsSchema = SessionSchema.extend({
   room: z
     .object({
@@ -259,7 +315,9 @@ export const SessionWithDetailsSchema = SessionSchema.extend({
   ),
 });
 
-// 룸 예약 상세 정보 스키마
+/**
+ * @description 룸 예약 상세 정보 스키마
+ */
 export const RoomReservationWithDetailsSchema = RoomReservationSchema.extend({
   room: z.object({
     id: z.string(),
@@ -285,7 +343,9 @@ export const RoomReservationWithDetailsSchema = RoomReservationSchema.extend({
     .nullable(),
 });
 
-// 예약 통계 스키마
+/**
+ * @description 예약 통계 스키마
+ */
 export const ReservationStatsSchema = z.object({
   room_id: z.string(),
   period: z.string(), // YYYY-MM
@@ -297,76 +357,214 @@ export const ReservationStatsSchema = z.object({
   average_duration: z.number().min(0),
 });
 
-// 타입 추출
+/**
+ * @description 세션 기본 타입
+ */
 export type Session = z.infer<typeof SessionSchema>;
+
+/**
+ * @description 룸 예약 기본 타입
+ */
 export type RoomReservation = z.infer<typeof RoomReservationSchema>;
+
+/**
+ * @description 참가자 기본 타입
+ */
 export type Participant = z.infer<typeof ParticipantSchema>;
+
+/**
+ * @description 세션 생성 요청 타입
+ */
 export type CreateSession = z.infer<typeof CreateSessionSchema>;
+
+/**
+ * @description 세션 수정 요청 타입
+ */
 export type UpdateSession = z.infer<typeof UpdateSessionSchema>;
+
+/**
+ * @description 룸 예약 생성 요청 타입
+ */
 export type CreateRoomReservation = z.infer<typeof CreateRoomReservationSchema>;
+
+/**
+ * @description 룸 예약 수정 요청 타입
+ */
 export type UpdateRoomReservation = z.infer<typeof UpdateRoomReservationSchema>;
+
+/**
+ * @description 참가자 생성 요청 타입
+ */
 export type CreateParticipant = z.infer<typeof CreateParticipantSchema>;
+
+/**
+ * @description 참가자 수정 요청 타입
+ */
 export type UpdateParticipant = z.infer<typeof UpdateParticipantSchema>;
+
+/**
+ * @description 세션 목록 조회 쿼리 타입
+ */
 export type SessionQuery = z.infer<typeof SessionQuerySchema>;
+
+/**
+ * @description 룸 예약 목록 조회 쿼리 타입
+ */
 export type RoomReservationQuery = z.infer<typeof RoomReservationQuerySchema>;
+
+/**
+ * @description 룸 가용성 체크 요청 타입
+ */
 export type CheckAvailability = z.infer<typeof CheckAvailabilitySchema>;
+
+/**
+ * @description 룸 가용성 체크 응답 타입
+ */
 export type AvailabilityResponse = z.infer<typeof AvailabilityResponseSchema>;
+
+/**
+ * @description 가용 슬롯 찾기 요청 타입
+ */
 export type FindAvailableSlots = z.infer<typeof FindAvailableSlotsSchema>;
+
+/**
+ * @description 가용 슬롯 응답 타입
+ */
 export type AvailableSlotsResponse = z.infer<typeof AvailableSlotsResponseSchema>;
+
+/**
+ * @description 세션과 함께 예약 생성 요청 타입
+ */
 export type CreateReservationWithSession = z.infer<typeof CreateReservationWithSessionSchema>;
+
+/**
+ * @description 예약 취소 요청 타입
+ */
 export type CancelReservation = z.infer<typeof CancelReservationSchema>;
+
+/**
+ * @description 예약 일정 변경 요청 타입
+ */
 export type RescheduleReservation = z.infer<typeof RescheduleReservationSchema>;
+
+/**
+ * @description 세션 목록 응답 타입
+ */
 export type SessionListResponse = z.infer<typeof SessionListResponseSchema>;
+
+/**
+ * @description 룸 예약 목록 응답 타입
+ */
 export type RoomReservationListResponse = z.infer<typeof RoomReservationListResponseSchema>;
+
+/**
+ * @description 참가자 목록 응답 타입
+ */
 export type ParticipantListResponse = z.infer<typeof ParticipantListResponseSchema>;
+
+/**
+ * @description 세션 상세 정보 타입
+ */
 export type SessionWithDetails = z.infer<typeof SessionWithDetailsSchema>;
+
+/**
+ * @description 룸 예약 상세 정보 타입
+ */
 export type RoomReservationWithDetails = z.infer<typeof RoomReservationWithDetailsSchema>;
+
+/**
+ * @description 예약 통계 타입
+ */
 export type ReservationStats = z.infer<typeof ReservationStatsSchema>;
+
+/**
+ * @description 페이지네이션 타입
+ */
 export type Pagination = z.infer<typeof PaginationSchema>;
 
-// 예약 활성화 여부
+/**
+ * @description 예약 활성 상태 여부 확인 함수
+ * @param reservation 확인할 룸 예약 객체
+ * @returns 예약이 확정되거나 대기 상태이면 true, 그렇지 않으면 false
+ */
 export function isActiveReservation(reservation: RoomReservation): boolean {
   return reservation.status === 'CONFIRMED' || reservation.status === 'PENDING';
 }
 
-// 세션이 가득 찼는지 여부
+/**
+ * @description 세션 정원 초과 여부 확인 함수
+ * @param session 확인할 세션 객체
+ * @returns 정원이 가득 찼으면 true, 그렇지 않으면 false
+ */
 export function isSessionFull(session: Session): boolean {
   return session.capacity !== null && session.current_participants >= session.capacity;
 }
 
-// 예약 취소 가능 여부
+/**
+ * @description 예약 취소 가능 여부 확인 함수
+ * @param reservation 확인할 룸 예약 객체
+ * @returns 취소 가능한 상태이면 true, 그렇지 않으면 false
+ */
 export function canCancelReservation(reservation: RoomReservation): boolean {
   return reservation.status === 'PENDING' || reservation.status === 'CONFIRMED';
 }
 
-// 세션 기간 계산
+/**
+ * @description 세션 진행 시간 계산 함수 (시간 단위)
+ * @param session 계산할 세션 객체
+ * @returns 세션 진행 시간 (시간 단위)
+ */
 export function getSessionDurationHours(session: Session): number {
   const start = new Date(session.starts_at);
   const end = new Date(session.ends_at);
   return (end.getTime() - start.getTime()) / (1000 * 60 * 60);
 }
 
-// 세션 생성 유효성 검사
+/**
+ * @description 세션 생성 데이터 유효성 검사 함수
+ * @param data 검사할 데이터
+ * @returns Zod 파싱 결과
+ */
 export function validateCreateSession(data: unknown) {
   return CreateSessionSchema.safeParse(data);
 }
 
-// 룸 예약 생성 유효성 검사
+/**
+ * @description 룸 예약 생성 데이터 유효성 검사 함수
+ * @param data 검사할 데이터
+ * @returns Zod 파싱 결과
+ */
 export function validateCreateRoomReservation(data: unknown) {
   return CreateRoomReservationSchema.safeParse(data);
 }
 
-// 가능 시간 체크 유효성 검사
+/**
+ * @description 룸 가용성 체크 데이터 유효성 검사 함수
+ * @param data 검사할 데이터
+ * @returns Zod 파싱 결과
+ */
 export function validateCheckAvailability(data: unknown) {
   return CheckAvailabilitySchema.safeParse(data);
 }
 
-// 시간 겹침 여부 체크
+/**
+ * @description 시간 슬롯 겹침 여부 확인 함수
+ * @param start1 첫 번째 시간 슬롯 시작 시간
+ * @param end1 첫 번째 시간 슬롯 종료 시간
+ * @param start2 두 번째 시간 슬롯 시작 시간
+ * @param end2 두 번째 시간 슬롯 종료 시간
+ * @returns 시간 슬롯이 겹치면 true, 그렇지 않으면 false
+ */
 export function isTimeSlotOverlapping(start1: Date, end1: Date, start2: Date, end2: Date): boolean {
   return start1 < end2 && start2 < end1;
 }
 
-// 시간 슬롯 포맷팅
+/**
+ * @description 시간 슬롯 한국어 포맷팅 함수
+ * @param starts_at 시작 시간
+ * @param ends_at 종료 시간
+ * @returns 포맷된 시간 문자열 (예: "09:00 - 11:00")
+ */
 export function formatTimeSlot(starts_at: Date, ends_at: Date): string {
   const start = starts_at.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' });
   const end = ends_at.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' });

@@ -5,106 +5,119 @@
  */
 import { z } from 'zod';
 
-// 사용자 인증 제공자
+/**
+ * @description 사용자 인증 제공자 유형 열거형
+ */
 export const AuthProvider = z.enum(['LOCAL', 'GOOGLE']);
-// 토큰 유형
-export const TokenType = z.enum(['ACCESS', 'REFRESH', 'RESET_PASSWORD']);
-// 인증 오류 코드
-export const AuthErrorCode = z.enum([
-  'UNAUTHORIZED',
-  'TOKEN_EXPIRED',
-  'INVALID_CREDENTIALS',
-  'ACCOUNT_LOCKED',
-  'EMAIL_NOT_VERIFIED',
-]);
 
-// 타입 추출
+/**
+ * @description 토큰 유형 열거형
+ */
+export const TokenType = z.enum(['ACCESS', 'REFRESH', 'RESET_PASSWORD']);
+
+/**
+ * @description 인증 오류 코드 열거형
+ */
+export const AuthErrorCode = z.enum(['UNAUTHORIZED', 'TOKEN_EXPIRED', 'INVALID_CREDENTIALS', 'ACCOUNT_LOCKED', 'EMAIL_NOT_VERIFIED']);
+
+/**
+ * @description 타입 추출
+ */
 export type AuthProvider = z.infer<typeof AuthProvider>;
 export type TokenType = z.infer<typeof TokenType>;
 export type AuthErrorCode = z.infer<typeof AuthErrorCode>;
 
-// 기본 데이터 스키마
+/**
+ * @description 토큰 기본 스키마 (액세스 토큰, 리프레시 토큰 포함)
+ */
 export const TokenSchema = z.object({
-  // 액세스 토큰 (JWT)
   access_token: z.string(),
-  // 리프레시 토큰 (JWT)
   refresh_token: z.string(),
-  // 토큰 유형
   token_type: z.string().default('Bearer'),
-  // 만료 시간 (초)
   expires_in: z.number().int().min(0),
-  // 만료 일시 (RFC3339)
   expires_at: z.date(),
 });
 
-// 사용자 프로필 스키마
+/**
+ * @description 사용자 프로필 스키마
+ */
 export const UserProfileSchema = z.object({
-  // 사용자 고유 ID
   id: z.string(),
-  // 사용자 이메일
   email: z.string().email(),
-  // 사용자 이름
   name: z.string(),
-  // 사용자 권한
   role: z.enum(['USER', 'CREATOR', 'ADMIN']),
-  // 인증 제공자
   provider: AuthProvider,
-  // 프로필 사진 URL
   avatar: z.string().url().nullable(),
-  // 마지막 로그인 일시
   last_login_at: z.date().nullable(),
-  // 계정 생성 일시
   created_at: z.date(),
 });
 
-// 기본 로그인 스키마
+/**
+ * @description 로그인 요청 스키마
+ */
 export const LoginSchema = z.object({
   email: z.string().email(),
   password: z.string().min(6),
 });
 
-// 회원가입 요청 스키마
+/**
+ * @description 회원가입 요청 스키마
+ */
 export const RegisterSchema = z.object({
   email: z.string().email(),
   name: z.string().min(1),
   password: z.string().min(6),
 });
 
-// Google OAuth 인증 요청 스키마
+/**
+ * @description Google OAuth 인증 요청 스키마
+ */
 export const GoogleAuthSchema = z.object({
   code: z.string().min(1),
   redirect_uri: z.string().url().optional(),
 });
 
-// Google OAuth 토큰 응답 스키마
+/**
+ * @description Google OAuth 토큰 응답 스키마
+ */
 export const GoogleTokenSchema = z.object({
   access_token: z.string().min(1),
-  id_token: z.string().min(1), // JWT format
+  id_token: z.string().min(1),
 });
 
-// 리프레시 토큰 요청 스키마
+/**
+ * @description 리프레시 토큰 요청 스키마
+ */
 export const RefreshTokenSchema = z.object({
-  refresh_token: z.string().min(1), // JWT format
+  refresh_token: z.string().min(1),
 });
 
-// 비밀번호 재설정 요청 스키마
+/**
+ * @description 비밀번호 재설정 요청 스키마
+ */
 export const ResetPasswordSchema = z.object({
   email: z.string().email(),
 });
 
-// 비밀번호 재설정 확인 스키마
+/**
+ * @description 비밀번호 재설정 확인 스키마
+ */
 export const ConfirmResetPasswordSchema = z.object({
   token: z.string().min(1),
   new_password: z.string().min(6),
 });
 
-// 비밀번호 변경 스키마
+/**
+ * @description 비밀번호 변경 요청 스키마
+ */
 export const ChangePasswordSchema = z.object({
   current_password: z.string().min(1),
   new_password: z.string().min(6),
 });
 
-// 인증 응답 스키마
+/**
+ * @description 인증 응답 스키마
+ */
 export const AuthResponseSchema = z.object({
   access_token: z.string(),
   refresh_token: z.string(),
@@ -113,29 +126,37 @@ export const AuthResponseSchema = z.object({
   user: UserProfileSchema,
 });
 
-// Google 인증 및 사용자 정보 응답 스키마
+/**
+ * @description Google 인증 및 사용자 정보 응답 스키마
+ */
 export const GoogleAuthUserSchema = z.object({
   token: z.string(),
   user: UserProfileSchema,
 });
 
-// 토큰 유효성 검사 응답 스키마
+/**
+ * @description 토큰 유효성 검사 응답 스키마
+ */
 export const TokenValidationResponseSchema = z.object({
   valid: z.boolean(),
   user_id: z.string().optional(),
-  expires_at: z.number().optional(), // Unix timestamp
+  expires_at: z.number().optional(),
   permissions: z.array(z.string()).optional(),
 });
 
-// 로그아웃 응답 스키마
+/**
+ * @description 로그아웃 응답 스키마
+ */
 export const LogoutResponseSchema = z.object({
   message: z.string(),
   success: z.boolean(),
 });
 
-// Google 사용자 정보 스키마
+/**
+ * @description Google 사용자 정보 스키마
+ */
 export const GoogleUserInfoSchema = z.object({
-  sub: z.string(), // Google unique ID
+  sub: z.string(),
   email: z.string().email(),
   email_verified: z.boolean(),
   name: z.string(),
@@ -145,7 +166,9 @@ export const GoogleUserInfoSchema = z.object({
   family_name: z.string().optional(),
 });
 
-// 인증 오류 스키마
+/**
+ * @description 인증 오류 응답 스키마
+ */
 export const AuthErrorSchema = z.object({
   error: z.string(),
   code: AuthErrorCode.optional(),
@@ -153,7 +176,9 @@ export const AuthErrorSchema = z.object({
   details: z.record(z.unknown()).optional(),
 });
 
-// 세션/토큰 관리 스키마
+/**
+ * @description 세션 및 토큰 관리 스키마
+ */
 export const SessionSchema = z.object({
   id: z.string(),
   user_id: z.string(),
@@ -166,15 +191,19 @@ export const SessionSchema = z.object({
   created_at: z.date(),
 });
 
-// 세션 생성 요청 스키마
+/**
+ * @description 세션 생성 요청 스키마
+ */
 export const CreateSessionSchema = z.object({
   user_id: z.string(),
   ip_address: z.string().optional(),
   user_agent: z.string().optional(),
-  expires_in: z.number().int().min(300).default(3600), // 5분 ~ 기본 1시간
+  expires_in: z.number().int().min(300).default(3600),
 });
 
-// 비밀번호 재설정 토큰 스키마
+/**
+ * @description 비밀번호 재설정 토큰 스키마
+ */
 export const PasswordResetTokenSchema = z.object({
   id: z.string(),
   user_id: z.string(),
@@ -184,7 +213,9 @@ export const PasswordResetTokenSchema = z.object({
   created_at: z.date(),
 });
 
-// 타입 추출
+/**
+ * @description 타입 추출
+ */
 export type Token = z.infer<typeof TokenSchema>;
 export type UserProfile = z.infer<typeof UserProfileSchema>;
 export type Login = z.infer<typeof LoginSchema>;
@@ -205,37 +236,66 @@ export type Session = z.infer<typeof SessionSchema>;
 export type CreateSession = z.infer<typeof CreateSessionSchema>;
 export type PasswordResetToken = z.infer<typeof PasswordResetTokenSchema>;
 
-// 토큰 만료 여부 확인
+/**
+ * @description 토큰 만료 여부 확인 함수
+ * @param token 만료 일시를 포함한 토큰 객체
+ * @returns 토큰이 만료되었으면 true, 그렇지 않으면 false
+ */
 export function isTokenExpired(token: { expires_at: Date }): boolean {
   return new Date() > token.expires_at;
 }
 
-// 세션 유효성 검사
+/**
+ * @description 세션 유효성 검사 함수
+ * @param session 검사할 세션 객체
+ * @returns 세션이 유효하면 true, 그렇지 않으면 false
+ */
 export function isSessionValid(session: Session): boolean {
   return !isTokenExpired(session) && session.last_used_at !== null;
 }
 
-// 인증 제공자 확인
+/**
+ * @description Google 사용자 여부 확인 함수
+ * @param user 사용자 프로필 객체
+ * @returns Google 사용자이면 true, 그렇지 않으면 false
+ */
 export function isGoogleUser(user: UserProfile): boolean {
   return user.provider === 'GOOGLE';
 }
 
-// 권한 확인 헬퍼
+/**
+ * @description 관리자 권한 확인 함수
+ * @param user 사용자 프로필 객체
+ * @returns 관리자 권한이 있으면 true, 그렇지 않으면 false
+ */
 export function hasAdminRole(user: UserProfile): boolean {
   return user.role === 'ADMIN';
 }
 
-// 사용자 관리 권한 확인
+/**
+ * @description 사용자 관리 권한 확인 함수
+ * @param user 사용자 프로필 객체
+ * @returns 사용자 관리 권한이 있으면 true, 그렇지 않으면 false
+ */
 export function canManageUsers(user: UserProfile): boolean {
   return hasAdminRole(user);
 }
 
-// 토큰 만료 일시 계산
+/**
+ * @description 토큰 만료 일시 계산 함수
+ * @param expiresIn 만료 시간 (초 단위)
+ * @returns 토큰 만료 일시
+ */
 export function getTokenExpiryDate(expiresIn: number): Date {
   return new Date(Date.now() + expiresIn * 1000);
 }
 
-// 인증 응답 생성 헬퍼
+/**
+ * @description 인증 응답 생성 헬퍼 함수
+ * @param user 사용자 프로필 객체
+ * @param tokens 토큰 객체
+ * @returns 인증 응답 객체
+ */
 export function createAuthResponse(user: UserProfile, tokens: Token): AuthResponse {
   return {
     access_token: tokens.access_token,
@@ -246,7 +306,11 @@ export function createAuthResponse(user: UserProfile, tokens: Token): AuthRespon
   };
 }
 
-// 이메일 마스킹 헬퍼
+/**
+ * @description 이메일 마스킹 헬퍼 함수
+ * @param email 마스킹할 이메일 주소
+ * @returns 마스킹된 이메일 주소
+ */
 export function maskEmail(email: string): string {
   const [local, domain] = email.split('@');
   if (!local || !domain || local.length <= 2) return email;
@@ -255,7 +319,11 @@ export function maskEmail(email: string): string {
   return `${maskedLocal}@${domain}`;
 }
 
-// 인증 오류 메시지 헬퍼
+/**
+ * @description 인증 오류 메시지 헬퍼 함수
+ * @param code 인증 오류 코드
+ * @returns 한국어 오류 메시지
+ */
 export function getAuthErrorMessage(code: AuthErrorCode): string {
   const messages = {
     UNAUTHORIZED: '인증이 필요합니다',
@@ -267,7 +335,11 @@ export function getAuthErrorMessage(code: AuthErrorCode): string {
   return messages[code] || '인증 오류가 발생했습니다';
 }
 
-// 비밀번호 보안 검사
+/**
+ * @description 비밀번호 보안 검사 함수
+ * @param password 검사할 비밀번호
+ * @returns 보안 요구사항을 만족하면 true, 그렇지 않으면 false
+ */
 export function isPasswordSecure(password: string): boolean {
   const hasMinLength = password.length >= 6;
   const hasLetter = /[a-zA-Z]/.test(password);
@@ -275,22 +347,34 @@ export function isPasswordSecure(password: string): boolean {
   return hasMinLength && hasLetter && hasNumber;
 }
 
-// 토큰 갱신 필요 여부 확인
-export function shouldRefreshToken(
-  token: { expires_at: Date },
-  bufferMinutes: number = 5,
-): boolean {
+/**
+ * @description 토큰 갱신 필요 여부 확인 함수
+ * @param token 검사할 토큰 객체
+ * @param bufferMinutes 갱신 시점 버퍼 시간 (분, 기본값: 5분)
+ * @returns 토큰 갱신이 필요하면 true, 그렇지 않으면 false
+ */
+export function shouldRefreshToken(token: { expires_at: Date }, bufferMinutes: number = 5): boolean {
   const now = new Date();
   const bufferTime = new Date(token.expires_at.getTime() - bufferMinutes * 60 * 1000);
   return now > bufferTime;
 }
 
-// 세션 갱신 필요 여부 확인
+/**
+ * @description 세션 갱신 필요 여부 확인 함수
+ * @param session 검사할 세션 객체
+ * @param bufferMinutes 갱신 시점 버퍼 시간 (분, 기본값: 10분)
+ * @returns 세션 갱신이 필요하면 true, 그렇지 않으면 false
+ */
 export function isSessionExpiringSoon(session: Session, bufferMinutes: number = 10): boolean {
   return shouldRefreshToken(session, bufferMinutes);
 }
 
-// 세션 핑거프린트 생성
+/**
+ * @description 세션 핑거프린트 생성 함수
+ * @param userAgent 사용자 에이전트 문자열 (선택적)
+ * @param ipAddress 클라이언트 IP 주소 (선택적)
+ * @returns 16자리 세션 핑거프린트
+ */
 export function generateSessionFingerprint(userAgent?: string, ipAddress?: string): string {
   const ua = userAgent?.substring(0, 50) || 'unknown';
   const ip = ipAddress || 'unknown';
@@ -306,42 +390,74 @@ export function generateSessionFingerprint(userAgent?: string, ipAddress?: strin
   return `${ua.length}-${ip.length}`.padEnd(16, '0').substring(0, 16);
 }
 
-// 로그인 유효성 검사 함수
+/**
+ * @description 로그인 유효성 검사 함수
+ * @param data 검사할 데이터
+ * @returns Zod 파싱 결과
+ */
 export function validateLogin(data: unknown) {
   return LoginSchema.safeParse(data);
 }
 
-// 회원가입 유효성 검사 함수
+/**
+ * @description 회원가입 유효성 검사 함수
+ * @param data 검사할 데이터
+ * @returns Zod 파싱 결과
+ */
 export function validateRegister(data: unknown) {
   return RegisterSchema.safeParse(data);
 }
 
-// Google 인증 유효성 검사 함수
+/**
+ * @description Google 인증 유효성 검사 함수
+ * @param data 검사할 데이터
+ * @returns Zod 파싱 결과
+ */
 export function validateGoogleAuth(data: unknown) {
   return GoogleAuthSchema.safeParse(data);
 }
 
-// 리프레시 토큰 유효성 검사 함수
+/**
+ * @description 리프레시 토큰 유효성 검사 함수
+ * @param data 검사할 데이터
+ * @returns Zod 파싱 결과
+ */
 export function validateRefreshToken(data: unknown) {
   return RefreshTokenSchema.safeParse(data);
 }
 
-// 비밀번호 재설정 요청 유효성 검사 함수
+/**
+ * @description 비밀번호 재설정 요청 유효성 검사 함수
+ * @param data 검사할 데이터
+ * @returns Zod 파싱 결과
+ */
 export function validateResetPassword(data: unknown) {
   return ResetPasswordSchema.safeParse(data);
 }
 
-// 비밀번호 재설정 확인 유효성 검사 함수
+/**
+ * @description 비밀번호 변경 유효성 검사 함수
+ * @param data 검사할 데이터
+ * @returns Zod 파싱 결과
+ */
 export function validateChangePassword(data: unknown) {
   return ChangePasswordSchema.safeParse(data);
 }
 
-// JWT 형식 검사
+/**
+ * @description JWT 형식 검사 함수
+ * @param token 검사할 JWT 토큰
+ * @returns 유효한 JWT 형식이면 true, 그렇지 않으면 false
+ */
 export function isValidJWTFormat(token: string): boolean {
   return /^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]*$/.test(token);
 }
 
-// JWT 페이로드 파싱
+/**
+ * @description JWT 페이로드 파싱 함수
+ * @param token JWT 토큰 문자열
+ * @returns 파싱된 페이로드 객체 또는 null
+ */
 export function parseJWTPayload(token: string): Record<string, unknown> | null {
   try {
     // 형식이 올바르지 않으면 null 반환
@@ -358,9 +474,7 @@ export function parseJWTPayload(token: string): Record<string, unknown> | null {
 
     // Node.js 환경
     if (typeof Buffer !== 'undefined') {
-      decoded = Buffer.from(payload.replace(/-/g, '+').replace(/_/g, '/'), 'base64').toString(
-        'utf-8',
-      );
+      decoded = Buffer.from(payload.replace(/-/g, '+').replace(/_/g, '/'), 'base64').toString('utf-8');
     }
     // 브라우저 환경
     else if (typeof atob !== 'undefined') {
@@ -377,7 +491,11 @@ export function parseJWTPayload(token: string): Record<string, unknown> | null {
   }
 }
 
-// JWT 만료 일시 추출
+/**
+ * @description JWT 만료 일시 추출 함수
+ * @param token JWT 토큰 문자열
+ * @returns 만료 일시 또는 null
+ */
 export function getJWTExpiry(token: string): Date | null {
   const payload = parseJWTPayload(token);
   if (!payload || !payload['exp'] || typeof payload['exp'] !== 'number') {
@@ -386,17 +504,32 @@ export function getJWTExpiry(token: string): Date | null {
   return new Date(payload['exp'] * 1000);
 }
 
-// 레이트 리밋 키 생성
+/**
+ * @description 레이트 리밋 키 생성 함수
+ * @param ip 클라이언트 IP 주소
+ * @param identifier 식별자
+ * @returns 레이트 리밋 키
+ */
 export function createRateLimitKey(ip: string, identifier: string): string {
   return `auth:${ip}:${identifier}`;
 }
 
-// 로그인 시도 레이트 리밋 키
+/**
+ * @description 로그인 시도 레이트 리밋 키 생성 함수
+ * @param email 이메일 주소
+ * @param ip 클라이언트 IP 주소
+ * @returns 로그인 시도 레이트 리밋 키
+ */
 export function getLoginAttemptKey(email: string, ip: string): string {
   return createRateLimitKey(ip, `login:${email}`);
 }
 
-// 비밀번호 재설정 시도 레이트 리밋 키
+/**
+ * @description 비밀번호 재설정 시도 레이트 리밋 키 생성 함수
+ * @param email 이메일 주소
+ * @param ip 클라이언트 IP 주소
+ * @returns 비밀번호 재설정 시도 레이트 리밋 키
+ */
 export function getPasswordResetAttemptKey(email: string, ip: string): string {
   return createRateLimitKey(ip, `reset:${email}`);
 }

@@ -1,8 +1,11 @@
 {
   "name": "@connectwon/api-contract",
   "sourceRoot": "packages/api-contract/src",
+  "__comment_projectType": "Nx 프로젝트 타입",
   "projectType": "library",
+  "version": "1.0.0",
   "tags": ["type:lib", "layer:shared"],
+  "__comment_targets": "Nx 빌드, 테스트, 린트 등 작업 정의",
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",

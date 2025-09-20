@@ -2,8 +2,12 @@
  * Description : venues.ts - 📌 Venues 관련 타입정의
  * Author : Shiwoo Min
  * Date : 2025-09-11
+ * 09-21 - 주석 보강
  */
-// 장소 정보 인터페이스
+/**
+ * @description 장소 정보 인터페이스
+ * @returns 장소에 대한 기본 정보와 상태를 포함하는 객체
+ */
 export interface Venue {
   id: string;
   name: string;
@@ -14,7 +18,10 @@ export interface Venue {
   updated_at: string;
 }
 
-// 장소 생성 요청 및 응답 인터페이스
+/**
+ * @description 장소 생성 요청 인터페이스
+ * @returns 장소 생성에 필요한 필드들
+ */
 export interface CreateVenueRequest {
   name: string;
   address?: string;
@@ -22,7 +29,10 @@ export interface CreateVenueRequest {
   blackout_rules?: Record<string, any>;
 }
 
-// 장소 수정 요청 인터페이스
+/**
+ * @description 장소 수정 요청 인터페이스
+ * @returns 장소 정보 수정에 사용할 수 있는 선택적 필드들
+ */
 export interface UpdateVenueRequest {
   name?: string;
   address?: string;
@@ -30,7 +40,10 @@ export interface UpdateVenueRequest {
   blackout_rules?: Record<string, any>;
 }
 
-// 장소 목록 조회 쿼리 파라미터 인터페이스
+/**
+ * @description 장소 목록 조회 쿼리 파라미터 인터페이스
+ * @returns 장소 목록 필터링 및 페이징에 사용
+ */
 export interface VenueListQuery {
   page?: number;
   limit?: number;
@@ -38,13 +51,19 @@ export interface VenueListQuery {
   address?: string;
 }
 
-// API 응답 인터페이스
+/**
+ * @description 단일 장소 API 응답 인터페이스
+ * @returns 장소 데이터와 선택적 메시지 포함
+ */
 export interface VenueResponse {
   data: Venue;
   message?: string;
 }
 
-// 장소 목록 응답 인터페이스
+/**
+ * @description 장소 목록 API 응답 인터페이스
+ * @returns 장소 배열과 페이지네이션 정보 포함
+ */
 export interface VenuesListResponse {
   data: Venue[];
   pagination: {
@@ -55,10 +74,16 @@ export interface VenuesListResponse {
   };
 }
 
-// 방 상태 타입 정의
+/**
+ * @description 방 상태 타입 정의
+ * @returns 방의 상태를 나타내는 문자열
+ */
 export type RoomStatus = 'ACTIVE' | 'INACTIVE' | 'MAINTENANCE';
 
-// 방 정보 인터페이스
+/**
+ * @description 방 정보 인터페이스
+ * @returns 방의 상세 정보를 포함하는 객체
+ */
 export interface Room {
   id: string;
   venue_id: string;
@@ -69,7 +94,10 @@ export interface Room {
   updated_at: string;
 }
 
-// 방 생성 요청 및 응답 인터페이스
+/**
+ * @description 방 생성 요청 인터페이스
+ * @returns 방 생성에 필요한 필드들
+ */
 export interface CreateRoomRequest {
   venue_id: string;
   name: string;
@@ -77,14 +105,20 @@ export interface CreateRoomRequest {
   status?: RoomStatus;
 }
 
-// 방 수정 요청 인터페이스
+/**
+ * @description 방 수정 요청 인터페이스
+ * @returns 방 정보 수정에 사용할 수 있는 선택적 필드들
+ */
 export interface UpdateRoomRequest {
   name?: string;
   capacity?: number;
   status?: RoomStatus;
 }
 
-// 방 목록 조회 쿼리 파라미터 인터페이스
+/**
+ * @description 방 목록 조회 쿼리 파라미터 인터페이스
+ * @returns 방 목록 필터링 및 페이징에 사용
+ */
 export interface RoomListQuery {
   page?: number;
   limit?: number;
@@ -93,13 +127,19 @@ export interface RoomListQuery {
   status?: RoomStatus;
 }
 
-// API 응답 인터페이스
+/**
+ * @description 단일 방 API 응답 인터페이스
+ * @returns 방 데이터와 선택적 메시지 포함
+ */
 export interface RoomResponse {
   data: Room;
   message?: string;
 }
 
-// 방 목록 응답 인터페이스
+/**
+ * @description 방 목록 API 응답 인터페이스
+ * @returns 방 배열과 페이지네이션 정보 포함
+ */
 export interface RoomsListResponse {
   data: Room[];
   pagination: {

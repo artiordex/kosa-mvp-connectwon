@@ -2,8 +2,12 @@
  * Description : users.ts - 📌 Users 관련 타입정의
  * Author : Shiwoo Min
  * Date : 2025-09-11
+ * 09-21 - 주석 보강
  */
-// 사용자 인터페이스
+/**
+ * @description 사용자 인터페이스
+ * @returns 사용자에 대한 기본 정보와 상태를 포함하는 객체
+ */
 export interface User {
   id: string;
   email: string | null;
@@ -16,7 +20,10 @@ export interface User {
   updated_at: string;
 }
 
-// 사용자 생성 요청 및 응답 인터페이스
+/**
+ * @description 사용자 생성 요청 인터페이스
+ * @returns 사용자 생성에 사용할 수 있는 필드들
+ */
 export interface CreateUserRequest {
   email?: string;
   name?: string;
@@ -25,7 +32,10 @@ export interface CreateUserRequest {
   preferences?: Record<string, any>;
 }
 
-// 사용자 수정 요청 인터페이스
+/**
+ * @description 사용자 수정 요청 인터페이스
+ * @returns 사용자 정보 수정에 사용 가능한 선택적 필드들
+ */
 export interface UpdateUserRequest {
   email?: string;
   name?: string;
@@ -34,7 +44,10 @@ export interface UpdateUserRequest {
   preferences?: Record<string, any>;
 }
 
-// 사용자 목록 조회 쿼리 파라미터 인터페이스
+/**
+ * @description 사용자 목록 조회 쿼리 파라미터 인터페이스
+ * @returns 사용자 목록 필터링 및 페이징에 사용
+ */
 export interface UserListQuery {
   page?: number;
   limit?: number;
@@ -44,13 +57,19 @@ export interface UserListQuery {
   created_before?: string;
 }
 
-// API 응답 인터페이스
+/**
+ * @description 단일 사용자 API 응답 인터페이스
+ * @returns 사용자 데이터와 선택적 메시지 포함
+ */
 export interface UserResponse {
   data: User;
   message?: string;
 }
 
-// 사용자 목록 응답 인터페이스
+/**
+ * @description 사용자 목록 API 응답 인터페이스
+ * @returns 사용자 배열과 페이지네이션 정보 포함
+ */
 export interface UsersListResponse {
   data: User[];
   pagination: {

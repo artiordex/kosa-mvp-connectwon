@@ -5,37 +5,59 @@
  */
 import type { OpenAPIV3 } from 'openapi-types';
 
-// 레퍼런스 헬퍼
+/**
+ * @description OpenAPI 컴포넌트 스키마 레퍼런스 생성 헬퍼
+ * @param name 스키마 이름
+ * @returns OpenAPI ReferenceObject
+ */
 export const ref = (name: string): OpenAPIV3.ReferenceObject => ({
   $ref: `#/components/schemas/${name}`,
 });
 
-// 스키마 레퍼런스 헬퍼
+/**
+ * @description OpenAPI 컴포넌트 응답 레퍼런스 생성 헬퍼
+ * @param name 응답 이름
+ * @returns OpenAPI ReferenceObject
+ */
 export const respRef = (name: string): OpenAPIV3.ReferenceObject => ({
   $ref: `#/components/responses/${name}`,
 });
 
-// 파라미터 레퍼런스 헬퍼
+/**
+ * @description OpenAPI 컴포넌트 파라미터 레퍼런스 생성 헬퍼
+ * @param name 파라미터 이름
+ * @returns OpenAPI ReferenceObject
+ */
 export const paramRef = (name: string): OpenAPIV3.ReferenceObject => ({
   $ref: `#/components/parameters/${name}`,
 });
 
-// 문자열 열거형 스키마 헬퍼
+/**
+ * @description 문자열 열거형 스키마 생성 헬퍼
+ * @param values 문자열 enum 값 배열
+ * @returns OpenAPI SchemaObject
+ */
 export const stringEnum = (values: string[]): OpenAPIV3.SchemaObject => ({
   type: 'string',
   enum: values,
 });
 
-// 정수 열거형 스키마 헬퍼
+/**
+ * @description 정수 열거형 스키마 생성 헬퍼
+ * @param values 정수 enum 값 배열
+ * @returns OpenAPI SchemaObject
+ */
 export const intEnum = (values: number[]): OpenAPIV3.SchemaObject => ({
   type: 'integer',
   enum: values,
 });
 
-// 페이지네이션 스키마 헬퍼
-export const cursorPage = (
-  itemSchema: OpenAPIV3.ReferenceObject | OpenAPIV3.SchemaObject,
-): OpenAPIV3.SchemaObject => ({
+/**
+ * @description 커서기반 페이지네이션 스키마 생성 헬퍼
+ * @param itemSchema 페이지네이션 대상 아이템 스키마
+ * @returns OpenAPI SchemaObject
+ */
+export const cursorPage = (itemSchema: OpenAPIV3.ReferenceObject | OpenAPIV3.SchemaObject): OpenAPIV3.SchemaObject => ({
   type: 'object',
   properties: {
     items: { type: 'array', items: itemSchema },
@@ -49,20 +71,24 @@ export const cursorPage = (
   },
 });
 
-// JSON 요청 바디 헬퍼
-export function jsonBody(
-  schema: OpenAPIV3.ReferenceObject | OpenAPIV3.SchemaObject,
-): OpenAPIV3.RequestBodyObject {
+/**
+ * @description JSON 요청 바디 스키마 생성 헬퍼
+ * @param schema 요청 바디 스키마
+ * @returns OpenAPI RequestBodyObject
+ */
+export function jsonBody(schema: OpenAPIV3.ReferenceObject | OpenAPIV3.SchemaObject): OpenAPIV3.RequestBodyObject {
   return {
     required: true,
     content: { 'application/json': { schema } },
   };
 }
 
-// 200 응답 헬퍼
-export function json200(
-  schema: OpenAPIV3.ReferenceObject | OpenAPIV3.SchemaObject,
-): OpenAPIV3.ResponsesObject {
+/**
+ * @description 200 OK 응답 스키마 생성 헬퍼
+ * @param schema 응답 스키마
+ * @returns OpenAPI ResponsesObject
+ */
+export function json200(schema: OpenAPIV3.ReferenceObject | OpenAPIV3.SchemaObject): OpenAPIV3.ResponsesObject {
   return {
     '200': { description: 'OK', content: { 'application/json': { schema } } },
   };

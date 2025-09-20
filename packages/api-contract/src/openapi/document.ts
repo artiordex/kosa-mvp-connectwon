@@ -2,10 +2,14 @@
  * Description : document.ts - 📌 OpenAPI 문서화 관련 타입정의
  * Author : Shiwoo Min
  * Date : 2025-09-11
+ * 09-21 - 주석 보강
  */
 import { OpenAPIV3 } from 'openapi-types';
 
-// OpenAPI 문서 객체
+/**
+ * @description OpenAPI 문서 객체 - API 명세의 기본 구조
+ * @returns {OpenAPIV3.Document} 완전한 OpenAPI 문서 객체
+ */
 export const document: OpenAPIV3.Document = {
   openapi: '3.0.3',
   info: { title: 'Connectwon API', version: '1.0.0' },
@@ -14,7 +18,10 @@ export const document: OpenAPIV3.Document = {
   tags: [],
 };
 
-// OpenAPI 경로 객체
+/**
+ * @description OpenAPI 경로 객체 - 모든 API 엔드포인트 정의
+ * @returns {OpenAPIV3.PathsObject} API 경로들의 완전한 정의
+ */
 export const paths: OpenAPIV3.PathsObject = {
   // 시스템 헬스체크 엔드포인트
   '/health': {

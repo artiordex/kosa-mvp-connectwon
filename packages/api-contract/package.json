@@ -10,6 +10,7 @@
   "files": [
     "dist"
   ],
+  "__comment_exports": "경로별로 타입 선언 및 JS 모듈 경로 지정",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -25,15 +26,18 @@
     },
     "./package.json": "./package.json"
   },
+  "__comment_scripts": "pnpm scripts 명령어",
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "dev": "tsc --watch -p tsconfig.json",
     "clean": "rimraf dist"
   },
+  "__comment_dependencies": "런타임 의존성 목록",
   "dependencies": {
     "@ts-rest/core": "^3.52.1",
     "zod": "^3.23.8"
   },
+  "__comment_devDependencies": "개발 의존성 목록",
   "devDependencies": {
     "@connectwon/configs": "workspace:*",
     "openapi-types": "^12.1.3"

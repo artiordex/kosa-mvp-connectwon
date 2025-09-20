@@ -2,11 +2,15 @@
  * Description : reservation.ts - 📌 Reservations 관련 타입정의
  * Author : Shiwoo Min
  * Date : 2025-09-11
+ * 09-21 - 주석 보강
  */
 import { initContract } from '@ts-rest/core';
 import { z } from 'zod';
 
-// 예약 스키마 정의
+/**
+ * @description 예약 스키마 정의
+ * @returns 예약 데이터 구조를 검증하는 Zod 스키마
+ */
 const ReservationSchema = z.object({
   id: z.string(),
   userId: z.string(),
@@ -19,7 +23,10 @@ const ReservationSchema = z.object({
   updatedAt: z.string().datetime(),
 });
 
-// 예약 생성 요청 스키마
+/**
+ * @description 예약 생성 요청 스키마
+ * @returns 예약 생성 시 필요한 필드들을 검증
+ */
 const CreateReservationSchema = z.object({
   userId: z.string(),
   serviceId: z.string(),
@@ -28,7 +35,10 @@ const CreateReservationSchema = z.object({
   notes: z.string().optional(),
 });
 
-// 예약 수정 요청 스키마
+/**
+ * @description 예약 수정 요청 스키마
+ * @returns 예약 수정 시 허용되는 필드들을 검증
+ */
 const UpdateReservationSchema = z.object({
   startTime: z.string().datetime().optional(),
   endTime: z.string().datetime().optional(),
@@ -36,7 +46,10 @@ const UpdateReservationSchema = z.object({
   notes: z.string().optional(),
 });
 
-// 예약 목록 조회 쿼리 파라미터 스키마
+/**
+ * @description 예약 목록 조회 쿼리 파라미터 스키마
+ * @returns 예약 목록을 필터링하고 페이징하기 위한 쿼리 파라미터
+ */
 const ReservationQuerySchema = z.object({
   userId: z.string().optional(),
   serviceId: z.string().optional(),
@@ -47,12 +60,19 @@ const ReservationQuerySchema = z.object({
   limit: z.coerce.number().min(1).max(100).default(10),
 });
 
-// ts-rest 컨트랙트 초기화
+/**
+ * @description ts-rest 컨트랙트 초기화
+ */
 const c = initContract();
 
-// 예약 관련 API 컨트랙트 정의
+/**
+ * @description 예약 관련 API 컨트랙트 정의
+ */
 export const reservationContract = c.router({
-  // 예약 생성
+  /**
+   * @description 예약 생성 API
+   * @summary 새로운 예약을 생성합니다
+   */
   createReservation: {
     method: 'POST',
     path: '/reservations',
@@ -70,7 +90,10 @@ export const reservationContract = c.router({
     summary: '새로운 예약을 생성합니다',
   },
 
-  // 예약 목록 조회
+  /**
+   * @description 예약 목록 조회 API
+   * @summary 예약 목록을 조회합니다
+   */
   getReservations: {
     method: 'GET',
     path: '/reservations',
@@ -89,7 +112,10 @@ export const reservationContract = c.router({
     summary: '예약 목록을 조회합니다',
   },
 
-  // 특정 예약 조회
+  /**
+   * @description 특정 예약 조회 API
+   * @summary 특정 예약을 조회합니다
+   */
   getReservation: {
     method: 'GET',
     path: '/reservations/:id',
@@ -105,7 +131,10 @@ export const reservationContract = c.router({
     summary: '특정 예약을 조회합니다',
   },
 
-  // 예약 수정
+  /**
+   * @description 예약 수정 API
+   * @summary 예약 정보를 수정합니다
+   */
   updateReservation: {
     method: 'PATCH',
     path: '/reservations/:id',
@@ -129,7 +158,10 @@ export const reservationContract = c.router({
     summary: '예약 정보를 수정합니다',
   },
 
-  // 예약 취소
+  /**
+   * @description 예약 취소 API
+   * @summary 예약을 취소합니다
+   */
   cancelReservation: {
     method: 'DELETE',
     path: '/reservations/:id',
@@ -150,7 +182,10 @@ export const reservationContract = c.router({
     summary: '예약을 취소합니다',
   },
 
-  // 사용자별 예약 조회
+  /**
+   * @description 사용자별 예약 조회 API
+   * @summary 특정 사용자의 예약 목록을 조회합니다
+   */
   getUserReservations: {
     method: 'GET',
     path: '/users/:userId/reservations',
@@ -176,7 +211,10 @@ export const reservationContract = c.router({
     summary: '특정 사용자의 예약 목록을 조회합니다',
   },
 
-  // 서비스별 예약 조회
+  /**
+   * @description 서비스별 예약 조회 API
+   * @summary 특정 서비스의 예약 목록을 조회합니다
+   */
   getServiceReservations: {
     method: 'GET',
     path: '/services/:serviceId/reservations',
