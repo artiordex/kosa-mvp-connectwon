@@ -3,7 +3,7 @@
  * Author : Shiwoo Min
  * Date : 2025-09-09
  */
-import type { ProblemDetails } from '../sdk-types.js';
+import type { ProblemDetails } from '../../sdk-types.js';
 
 // API 오류 표준 클래스
 export class ApiError extends Error {

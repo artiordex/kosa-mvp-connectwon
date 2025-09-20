@@ -3,7 +3,7 @@
  * Author : Shiwoo Min
  * Date : 2025-09-09
  */
-import type { Middleware } from '../sdk-types.js';
+import type { Middleware } from '../../sdk-types.js';
 
 // API 키 인증 미들웨어
 export function apiKeyAuth(headerName = 'x-api-key', key?: string): Middleware {

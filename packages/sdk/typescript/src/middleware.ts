@@ -3,7 +3,7 @@
  * Author : Shiwoo Min
  * Date : 2025-09-09
  */
-import type { HttpContext, HttpRequest, HttpResponse, Middleware } from '../sdk-types.js';
+import type { HttpContext, HttpRequest, HttpResponse, Middleware } from '../../sdk-types.js';
 
 // 미들웨어 배열을 단일 함수로 합성
 export function composeMiddlewares(

@@ -12,7 +12,7 @@ import type {
   ProblemDetails,
   RequestOptions,
   RetryPolicy,
-} from '../sdk-types.js';
+} from '../../sdk-types.js';
 import { ApiError, isRetryableStatus, NetworkError, TimeoutError } from './errors';
 import { composeMiddlewares } from './middleware';
 

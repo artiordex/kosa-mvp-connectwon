@@ -3,7 +3,7 @@
  * Author : Shiwoo Min
  * Date : 2025-09-09
  */
-import type { Middleware } from '../sdk-types.js';
+import type { Middleware } from '../../sdk-types.js';
 
 // 더 간단하고 안전한 randomId 생성
 function randomId(bytes = 16): string {

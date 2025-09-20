@@ -3,7 +3,7 @@
  * Author : Shiwoo Min
  * Date : 2025-09-09
  */
-import type { OffsetExtractor, PageExtractor } from '../sdk-types.js';
+import type { OffsetExtractor, PageExtractor } from '../../sdk-types.js';
 
 // 커서 기반 페이징 유틸
 export function cursorPager<T, J = any>(
