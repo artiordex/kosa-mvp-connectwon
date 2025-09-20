@@ -3,7 +3,7 @@
  * Author : Shiwoo Min
  * Date : 2025-09-07
  * 참고 명령어:
- *   npx tsc --project tsconfig.json --showConfig
+ *  npx tsc --project tsconfig.json --showConfig
  */
 {
   "extends": "./tsconfig.base.json",

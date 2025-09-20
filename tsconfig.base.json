@@ -2,10 +2,11 @@
  * Description : tsconfig.base.json - 📌 루트 TypeScript 공통 설정 (호이스팅 적용)
  * Author : Shiwoo Min
  * Date : 2025-09-06
- * 09-17- paths에 apps, packages 전체 추가
+ * 09-17 - paths에 apps, packages 전체 추가
+ * 09-20 - paths를 compilerOptions 내부로 이동, 중복 baseUrl 제거
+ * 컴파일러 가능한 상태인지 확인 - pnpm -w exec tsc --noEmit --showConfig > /dev/null
  */
 {
-  // 공통 타겟 및 모듈 시스템
   "compilerOptions": {
     // 절대경로 import를 위한 기준 디렉터리
     "baseUrl": ".",
@@ -20,12 +21,7 @@
     "moduleResolution": "NodeNext",
 
     // 서버/라이브러리 공통은 ES 표준
-    // 기존: "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "lib": ["ES2022"],
-
-    // 전역 타입 정의
-    // (웹과 충돌 방지 위해 공통에선 고정하지 않음. Node 패키지에서만 추가)
-    // "types": ["node"],
 
     // 타입 검사 관련
     "strict": true,
@@ -39,10 +35,8 @@
     // 암묵적 ESM 감지 강화
     "moduleDetection": "force",
 
-    // CJS 모듈과의 상호운용
+    // CJS/ESM 상호운용
     "esModuleInterop": true,
-
-    // ESM 모듈과의 상호운용
     "allowSyntheticDefaultImports": true,
 
     // import/export 구문 그대로 보존
@@ -57,18 +51,16 @@
 
     // JS 파일도 컴파일
     "allowJs": true,
-
-    // JS 출력 관련
     "checkJs": false,
 
-    // TypeScript Project References 지원
+    // Project References
     "declaration": true,
     "declarationMap": true,
     "isolatedModules": true,
     "incremental": true,
     "composite": true,
 
-    // 엄격한 검사 옵션
+    // 엄격 옵션
     "noImplicitAny": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
@@ -79,34 +71,36 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "allowUnreachableCode": false,
-    "allowUnusedLabels": false
-  },
-  "baseUrl": ".",
-  "paths": {
-    // packages
-    "@connectwon/core": ["packages/core/src/index.ts"],
-    "@connectwon/core/*": ["packages/core/src/*"],
-    "@connectwon/api-contract": ["packages/api-contract/src/schemas/index.ts"],
-    "@connectwon/api-contract/*": ["packages/api-contract/src/*"],
-    "@connectwon/configs": ["packages/configs/index.ts"],
-    "@connectwon/configs/*": ["packages/configs/*"],
-    "@connectwon/database": ["packages/database/src/index.ts"],
-    "@connectwon/database/*": ["packages/database/src/*"],
-    "@connectwon/logger": ["packages/logger/src/index.ts"],
-    "@connectwon/logger/*": ["packages/logger/src/*"],
-    "@connectwon/sdk": ["packages/sdk/src/index.ts"],
-    "@connectwon/sdk/*": ["packages/sdk/src/*"],
-    "@connectwon/client": ["packages/client/src/index.ts"],
-    "@connectwon/client/*": ["packages/client/src/*"],
-    "@connectwon/server": ["packages/server/src/index.ts"],
-    "@connectwon/server/*": ["packages/server/src/*"],
-    "@connectwon/ui": ["packages/ui/src/index.ts"],
-    "@connectwon/ui/*": ["packages/ui/src/*"],
-    // apps
-    "@connectwon/web/*": ["apps/web/src/*"],
-    "@connectwon/admin/*": ["apps/admin/src/*"],
-    "@connectwon/api/*": ["apps/api/src/*"],
-    "@connectwon/worker/*": ["apps/worker/src/*"],
-    "@connectwon/e2e/*": ["apps/e2e/src/*"]
+    "allowUnusedLabels": false,
+
+    // 경로 매핑 (packages / apps)
+    "paths": {
+      // packages
+      "@connectwon/core": ["packages/core/src/index.ts"],
+      "@connectwon/core/*": ["packages/core/src/*"],
+      "@connectwon/api-contract": ["packages/api-contract/src/schemas/index.ts"],
+      "@connectwon/api-contract/*": ["packages/api-contract/src/*"],
+      "@connectwon/configs": ["packages/configs/index.ts"],
+      "@connectwon/configs/*": ["packages/configs/*"],
+      "@connectwon/database": ["packages/database/src/index.ts"],
+      "@connectwon/database/*": ["packages/database/src/*"],
+      "@connectwon/logger": ["packages/logger/src/index.ts"],
+      "@connectwon/logger/*": ["packages/logger/src/*"],
+      "@connectwon/sdk": ["packages/sdk/src/index.ts"],
+      "@connectwon/sdk/*": ["packages/sdk/src/*"],
+      "@connectwon/client": ["packages/client/src/index.ts"],
+      "@connectwon/client/*": ["packages/client/src/*"],
+      "@connectwon/server": ["packages/server/src/index.ts"],
+      "@connectwon/server/*": ["packages/server/src/*"],
+      "@connectwon/ui": ["packages/ui/src/index.ts"],
+      "@connectwon/ui/*": ["packages/ui/src/*"],
+
+      // apps
+      "@connectwon/web/*": ["apps/web/src/*"],
+      "@connectwon/admin/*": ["apps/admin/src/*"],
+      "@connectwon/api/*": ["apps/api/src/*"],
+      "@connectwon/worker/*": ["apps/worker/src/*"],
+      "@connectwon/e2e/*": ["apps/e2e/src/*"]
+    }
   }
 }

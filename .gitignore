@@ -155,3 +155,15 @@ vite.config.ts.timestamp-*
 
 # Prisma 자동 생성 클라이언트
 /packages/database/generated/
+
+# Python 패키지 빌드 산출물
+*.egg-info/
+build/
+dist/
+__pycache__/
+*.pyc
+*.pyo
+
+# 가상환경
+poetry/
+.poetry/
