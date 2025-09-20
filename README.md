@@ -28,7 +28,6 @@ ConnectWon은 취업 및 창업 준비자를 위한 예약 기반 생활 서비�
 - [GitHub Repo](https://github.com/artiordex/kosa-mvp-connectwon)
 - [Figma](https://www.figma.com/file/your-id/your-project?type=design)
 - [Mermaid ERD](https://mermaid.live/edit#pako:your-encoded-data)
-
 - [Lucidchart](https://lucid.app/lucidchart/your-id/edit?viewport_loc=0%2C0%2C2000%2C2000)
 - [Dev Docs](https://github.com/artiordex/kosa-mvp-connectwon/tree/main/docs)
 ---

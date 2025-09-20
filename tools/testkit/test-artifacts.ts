@@ -2,14 +2,14 @@
  * Description : test-artifacts.ts - 📌 테스트 결과 저장 및 오류 처리 유틸
  * Author : Shiwoo Min
  * Date : 2025-09-09
+ * 09-21 - 타입 명확화, 예외 처리 강화, 주석 보강, 코드 스타일 일관성 개선
  */
+import { testConfig } from '../../connectwon-env.js';
+import type { Artifact, ArtifactKind, TestResult, TestStatus } from '../tool-types.js';
 import * as fs from 'fs/promises';
 import path from 'path';
 
-import { testConfig } from '../../connectwon-env.js';
-import type { Artifact, ArtifactKind, TestResult, TestStatus } from '../tool-types.js';
-
-// 기본 설정
+// 기본 옵션 설정
 const DEFAULT_OPTIONS = {
   outputDir: testConfig.artifactsDir,
   maxArtifactSize: 50 * 1024 * 1024, // 50MB
@@ -17,26 +17,40 @@ const DEFAULT_OPTIONS = {
   logVideo: testConfig.logVideo,
 };
 
-// 유틸리티 함수들
+/**
+ * 현재 시간 ISO 형식, 파일명에 안전한 문자열로 변환
+ * @returns 안전한 ISO 타임스탬프 문자열
+ */
 function nowTs(): string {
   return new Date().toISOString().replace(/[:.]/g, '-');
 }
 
-// 결과 ID 생성 (타임스탬프 + 랜덤)
+/**
+ * 결과 ID 생성: {ISO타임스탬프}-{랜덤 문자열}
+ * @returns 고유 결과 ID 문자열
+ */
 function generateResultId(): string {
   const ts = nowTs();
-  const random = Math.random().toString(36).substr(2, 6);
+  const random = Math.random().toString(36).substring(2, 8);
   return `${ts}-${random}`;
 }
 
-// 디렉터리 보장
+/**
+ * 디렉터리 존재 보장. 없으면 생성
+ * @param dir 생성할 디렉터리 경로
+ */
 async function ensureDir(dir: string): Promise<void> {
   await fs.mkdir(dir, { recursive: true });
 }
 
-// 아티팩트 저장 경로 결정
+/**
+ * 아티팩트 종류(kind)에 따른 저장 경로 반환
+ * @param outputDir 기본 출력 디렉터리
+ * @param kind 아티팩트 종류
+ * @returns 경로 문자열
+ */
 function getArtifactDir(outputDir: string, kind: ArtifactKind): string {
-  const subdirs = {
+  const subdirs: Record<ArtifactKind, string> = {
     screenshot: 'screenshots',
     trace: 'traces',
     video: 'videos',
@@ -46,7 +60,10 @@ function getArtifactDir(outputDir: string, kind: ArtifactKind): string {
   return path.join(outputDir, subdirs[kind]);
 }
 
-// 핵심 함수들
+/**
+ * 테스트 결과 등에 필요한 디렉터리들 생성
+ * @param outputDir 기본 출력 경로
+ */
 export async function initResultDirs(outputDir = DEFAULT_OPTIONS.outputDir): Promise<void> {
   const dirs = [
     outputDir,
@@ -57,11 +74,15 @@ export async function initResultDirs(outputDir = DEFAULT_OPTIONS.outputDir): Pro
     path.join(outputDir, 'videos'),
     path.join(outputDir, 'custom'),
   ];
-
   await Promise.all(dirs.map(ensureDir));
 }
 
-// 테스트 결과 저장
+/**
+ * 테스트 결과 저장 (JSON + 로그)
+ * @param status 테스트 상태 ('PASS', 'FAIL', 'SKIP' 등)
+ * @param options 상세 옵션 (테스트명, 소요시간, 상세내용, 에러, 출력 디렉터리)
+ * @returns 생성된 결과 ID
+ */
 export async function saveTestResult(
   status: TestStatus,
   options: {
@@ -91,11 +112,11 @@ export async function saveTestResult(
       : undefined,
   };
 
-  // 결과 파일 저장
+  // JSON 파일 저장
   const resultPath = path.join(outputDir, 'results', `${resultId}.json`);
   await fs.writeFile(resultPath, JSON.stringify(result, null, 2));
 
-  // 로그 파일에 한줄 추가
+  // 로그 파일에 기록 (한 줄)
   const logPath = path.join(outputDir, 'logs', 'test-run.log');
   const logLine = `[${result.timestamp}] [${status}] ${options.testName || 'Unknown'} - ${options.details || ''}\n`;
   await fs.appendFile(logPath, logLine);
@@ -103,7 +124,13 @@ export async function saveTestResult(
   return resultId;
 }
 
-// 아티팩트 저장
+/**
+ * 아티팩트 저장 (버퍼 또는 외부 경로 기준)
+ * @param resultId 결과 ID
+ * @param artifact 저장할 아티팩트 정보 (버퍼 또는 경로 포함)
+ * @param outputDir 출력 경로
+ * @returns 저장된 파일 경로나 null (실패 또는 너무 큼)
+ */
 export async function saveArtifact(
   resultId: string,
   artifact: Artifact,
@@ -116,7 +143,6 @@ export async function saveArtifact(
     }
 
     if (artifact.buffer) {
-      // 메모리 데이터를 파일로 저장
       const artifactDir = getArtifactDir(outputDir, artifact.kind);
       await ensureDir(artifactDir);
 
@@ -126,10 +152,8 @@ export async function saveArtifact(
       await fs.writeFile(filePath, artifact.buffer);
       return filePath;
     } else if (artifact.path) {
-      // 외부 경로만 기록
       return artifact.path;
     }
-
     return null;
   } catch (error) {
     console.error(`Failed to save artifact ${artifact.name}:`, error);
@@ -137,7 +161,12 @@ export async function saveArtifact(
   }
 }
 
-// 스크린샷 저장
+/**
+ * 스크린샷 저장 헬퍼
+ * @param resultId 결과 ID
+ * @param screenshotBuffer 스크린샷 버퍼
+ * @param outputDir 출력 디렉터리
+ */
 export async function captureScreenshot(
   resultId: string,
   screenshotBuffer: Buffer,
@@ -148,11 +177,15 @@ export async function captureScreenshot(
     name: 'screenshot.png',
     buffer: screenshotBuffer,
   };
-
   return saveArtifact(resultId, artifact, outputDir);
 }
 
-// 트레이스 저장
+/**
+ * 트레이스 저장 헬퍼
+ * @param resultId 결과 ID
+ * @param tracePath 트레이스 파일 경로
+ * @param outputDir 출력 디렉터리
+ */
 export async function saveTrace(
   resultId: string,
   tracePath: string,
@@ -165,40 +198,43 @@ export async function saveTrace(
     name: 'trace.zip',
     path: tracePath,
   };
-
   return saveArtifact(resultId, artifact, outputDir);
 }
 
-// 결과에 아티팩트 경로 추가
+/**
+ * 테스트 결과 JSON에 아티팩트 경로 추가
+ * @param resultId 결과 ID
+ * @param artifactPaths 추가할 아티팩트 경로 배열
+ * @param outputDir 출력 경로
+ */
 export async function updateResultWithArtifacts(
   resultId: string,
   artifactPaths: string[],
   outputDir = DEFAULT_OPTIONS.outputDir,
 ): Promise<void> {
   const resultPath = path.join(outputDir, 'results', `${resultId}.json`);
-
   try {
     const content = await fs.readFile(resultPath, 'utf-8');
     const result: TestResult = JSON.parse(content);
-
     result.artifacts = [...result.artifacts, ...artifactPaths.filter(Boolean)];
-
     await fs.writeFile(resultPath, JSON.stringify(result, null, 2));
   } catch (error) {
     console.error(`Failed to update result ${resultId}:`, error);
   }
 }
 
-// 오래된 아티팩트 정리
+/**
+ * 오래된 아티팩트 정리 (maxAgeDays일 이전 파일 삭제)
+ * @param outputDir 아티팩트 루트 경로
+ * @param maxAgeDays 보관 일수, 0 이하면 정리 안 함
+ */
 export async function cleanupOldArtifacts(
   outputDir = DEFAULT_OPTIONS.outputDir,
   maxAgeDays = testConfig.cleanupDays,
 ): Promise<void> {
   if (maxAgeDays <= 0) return;
-
   const cutoffDate = new Date();
   cutoffDate.setDate(cutoffDate.getDate() - maxAgeDays);
-
   const dirs = [
     path.join(outputDir, 'results'),
     path.join(outputDir, 'screenshots'),
@@ -208,11 +244,9 @@ export async function cleanupOldArtifacts(
   ];
 
   let cleanedCount = 0;
-
   for (const dir of dirs) {
     try {
       const files = await fs.readdir(dir);
-
       for (const file of files) {
         const filePath = path.join(dir, file);
         const stats = await fs.stat(filePath);
@@ -222,52 +256,61 @@ export async function cleanupOldArtifacts(
           cleanedCount++;
         }
       }
-    } catch (error) {
-      // 디렉토리가 없거나 접근 불가한 경우 무시
+    } catch {
+      // 디렉토리 없거나 접근 불가 시 무시
     }
   }
-
   if (cleanedCount > 0) {
     console.log(`Cleaned up ${cleanedCount} old artifacts (older than ${maxAgeDays} days)`);
   }
 }
 
-// 간단한 사용 예시
+/**
+ * 테스트 실패시 테스트 결과 및 아티팩트 저장 처리
+ * @param testName 테스트 이름
+ * @param error 발생 에러
+ * @param screenshotBuffer 스크린샷 데이터
+ * @param tracePath 트레이스 파일 경로
+ * @returns 결과 ID
+ */
 export async function handleTestFailure(
   testName: string,
   error: Error,
   screenshotBuffer?: Buffer,
   tracePath?: string,
 ): Promise<string> {
-  // 기본 결과 저장
   const resultId = await saveTestResult('FAIL', {
     testName,
     error,
     details: error.message,
   });
-
   // 아티팩트 수집
   const artifactPaths: string[] = [];
-
+  // 스크린샷 저장
   if (screenshotBuffer) {
     const screenshotPath = await captureScreenshot(resultId, screenshotBuffer);
     if (screenshotPath) artifactPaths.push(screenshotPath);
   }
 
+  // 트레이스 저장
   if (tracePath) {
     const savedTracePath = await saveTrace(resultId, tracePath);
     if (savedTracePath) artifactPaths.push(savedTracePath);
   }
 
-  // 결과 업데이트
+  // 결과 JSON에 아티팩트 경로 업데이트
   if (artifactPaths.length > 0) {
     await updateResultWithArtifacts(resultId, artifactPaths);
   }
-
   return resultId;
 }
 
-// 성공 처리
+/**
+ * 테스트 성공시 결과 처리
+ * @param testName 테스트 이름
+ * @param duration 실행 시간 (밀리초)
+ * @returns 결과 ID
+ */
 export async function handleTestSuccess(testName: string, duration: number): Promise<string> {
   return saveTestResult('PASS', {
     testName,
@@ -276,7 +319,11 @@ export async function handleTestSuccess(testName: string, duration: number): Pro
   });
 }
 
-// 통계 조회 (옵션)
+/**
+ * 테스트 결과 통계 조회
+ * @param outputDir 결과 저장 경로
+ * @returns 통계 객체
+ */
 export async function getTestStats(outputDir = DEFAULT_OPTIONS.outputDir): Promise<{
   total: number;
   passed: number;
@@ -288,14 +335,11 @@ export async function getTestStats(outputDir = DEFAULT_OPTIONS.outputDir): Promi
 
   try {
     const files = await fs.readdir(resultsDir);
-
     for (const file of files.filter(f => f.endsWith('.json'))) {
       try {
         const content = await fs.readFile(path.join(resultsDir, file), 'utf-8');
         const result: TestResult = JSON.parse(content);
-
         stats.total++;
-
         switch (result.status) {
           case 'PASS':
             stats.passed++;
@@ -308,12 +352,11 @@ export async function getTestStats(outputDir = DEFAULT_OPTIONS.outputDir): Promi
             break;
         }
       } catch {
-        // 파싱 실패한 파일 무시
+        // 파싱 실패시 무시
       }
     }
   } catch {
-    // 디렉토리 없음
+    // results 디렉토리 없으면 무시
   }
-
   return stats;
 }

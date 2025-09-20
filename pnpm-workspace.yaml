@@ -1,8 +1,7 @@
 # Description : pnpm-workspace.yaml - 📌 모노레포 워크스페이스 패키지 정의
 # Author : Shiwoo Min
 # Date : 2025-09-12
-# pnpm run build:packages - 모든 패키지 빌드
-# pnpm nx run-many -t build - 모든 패키지 빌드 (Nx 사용 시 pnpm)
+# pnpm nx run-many -t build - 모든 패키지 빌드
 # npx tsc --noEmit - 모든 패키지 타입체크
 # pnpm nx graph - 의존성 그래프 시각화
 # API 서버 (포트 8000) - pnpm --filter @connectwon/api dev

@@ -7,13 +7,13 @@
  * 09-18 - reflect-metadata, @anthropic-ai/sdk 오류 해결을 위한 추가 제외사항
  */
 
-# Node.js 관련 - 모든 레벨에서 완전 제외
+// Node.js 관련
 node_modules
 **/node_modules
 **/**/node_modules
 ***/***/node_modules
 
-# 빌드 결과물
+// 빌드 결과물
 dist
 **/dist
 build
@@ -23,7 +23,7 @@ build
 out
 **/out
 
-# 패키지 매니저 캐시
+// 패키지 매니저 캐시
 .pnpm
 **/.pnpm
 .pnpm-store
@@ -33,7 +33,7 @@ out
 .yarn
 **/.yarn
 
-# 로그 및 임시 파일
+// 로그 및 임시 파일
 *.log
 **/*.log
 *.tmp
@@ -41,15 +41,15 @@ out
 .DS_Store
 **/.DS_Store
 
-# 환경 및 설정
+// 환경 및 설정 파일
 .env*
 .vscode
 .idea
 
-# Git
+// Git 관련
 .git
 
-# 테스트 관련
+// 테스트 관련
 coverage
 **/coverage
 test-results
@@ -57,7 +57,7 @@ test-results
 .nyc_output
 **/.nyc_output
 
-# 허용할 파일/디렉토리만 명시
+// 허용할 파일/디렉토리만 명시
 !packages/*/src
 !packages/*/package.json
 !packages/*/tsconfig.json
@@ -74,3 +74,20 @@ test-results
 !pnpm-workspace.yaml
 !nx.json
 !tsconfig*.json
+
+// TypeScript incremental build 정보 제외
+*.tsbuildinfo
+**/*.tsbuildinfo
+
+// Nx 혹은 turbo repo 캐시 디렉토리 제외
+.turbo
+**/.turbo
+
+// 편집기 임시 및 백업 파일 제외
+*.swp
+*.swo
+**/*.swp
+**/*.swo
+
+// 윈도우 썸네일 캐시 파일 제외
+Thumbs.db

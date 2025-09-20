@@ -62,6 +62,8 @@ export default defineConfig({
       '@/web': path.resolve(__dirname, './apps/web/src'),
       '@/api': path.resolve(__dirname, './apps/api/src'),
       '@/admin': path.resolve(__dirname, './apps/admin/src'),
+      '@/worker': path.resolve(__dirname, './apps/worker/src'),
+      '@/e2e': path.resolve(__dirname, './apps/e2e/src'),
 
       // 패키지 별칭 추가
       '@connectwon/core': path.resolve(__dirname, './packages/core/src'),

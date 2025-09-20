@@ -348,7 +348,13 @@
     "NEXTAUTH",
     "pnpmrc",
     "syncpack",
-    "hintrc"
+    "hintrc",
+    "Lucidchart",
+    "mintimeout",
+    "maxtimeout",
+    "setuptools",
+    "aiohttp",
+    "isort"
   ],
 
   // Nx Console AI 규칙 사용

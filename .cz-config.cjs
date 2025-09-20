@@ -2,7 +2,7 @@
  * Description : .cz-config.cjs - 📌 Commitizen 커밋 메시지 규칙 정의 파일
  * Author : Shiwoo Min
  * Date : 2025-09-05
- * 09-12 : 커밋 메시지 규칙 세분화
+ * 09-21 - 커밋 메시지 규칙 세분화
  * Note : ESM 프로젝트에서도 이 파일만 CommonJS(.cjs)를 사용
  *        (commitizen은 내부적으로 CommonJS 방식으로 구성되어 있어 ESM을 지원하지 않음)
  */
@@ -13,10 +13,14 @@ module.exports = {
     { value: 'feat', name: 'feat: 새로운 기능 추가' },
     { value: 'fix', name: 'fix: 버그 수정' },
     { value: 'docs', name: 'docs: 문서 수정' },
-    { value: 'style', name: 'style: 코드 포맷팅' },
-    { value: 'refactor', name: 'refactor: 코드 리팩토링' },
+    { value: 'style', name: 'style: 코드 포맷팅 (띄어쓰기, 세미콜론 등)' },
+    { value: 'refactor', name: 'refactor: 코드 리팩토링 (기능 변경 없는 수정)' },
+    { value: 'perf', name: 'perf: 성능 개선' },
     { value: 'test', name: 'test: 테스트 추가 및 수정' },
-    { value: 'chore', name: 'chore: 기타 설정, 빌드 작업 등' },
+    { value: 'build', name: 'build: 빌드 관련 수정 및 외부 종속성 변경' },
+    { value: 'ci', name: 'ci: CI 설정 및 워크플로 수정' },
+    { value: 'chore', name: 'chore: 그 외 잡다한 변경사항 (코드 수정 아님)' },
+    { value: 'revert', name: 'revert: 이전 커밋 되돌리기' },
   ],
   // 작업 범위(scope) 선택 항목
   scopes: [
@@ -36,9 +40,11 @@ module.exports = {
     { name: 'packages/client' },
     { name: 'packages/sdk' },
     { name: 'packages/ui' },
-    // Root
-    { name: 'setting' },
+    // Root or config 영역
+    { name: 'root' },
+    { name: 'config' },
   ],
+
   // 커스텀 범위 직접 입력 허용
   allowCustomScopes: true,
 
@@ -53,11 +59,11 @@ module.exports = {
 
   // 사용자에게 보여질 메시지 정의
   messages: {
-    type: '변경유형 선택:',
-    scope: '변경 범위 선택:',
-    subject: '변경 메시지 작성:',
-    breaking: 'BREAKING CHANGES (선택):',
-    footer: '관련 이슈 링크 (옵션):',
+    type: '변경유형 선택 (취소하려면 Ctrl+C):',
+    scope: '변경 범위 선택 (취소하려면 Ctrl+C):',
+    subject: '변경 메시지 작성 (취소하려면 Ctrl+C):',
+    breaking: '중대한 변경사항(BREAKING CHANGES)이 있나요? (선택):',
+    footer: '관련 이슈 번호 혹은 링크 (옵션):',
     confirmCommit: '이 커밋 메시지로 진행할까요?',
   },
 };

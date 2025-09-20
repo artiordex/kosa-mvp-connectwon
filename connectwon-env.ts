@@ -2,9 +2,10 @@
  * Description : connectwon-env.ts - 📌 환경변수 타입정의 및 공통 로더
  * Author : Shiwoo Min
  * Date : 2025-09-09
- * 09-09: ESM 호환, isServer 도입, dotenv 동적 import, 주석 보강
- * 09-11: 큐 설정 추가 (QUEUE_CONCURRENCY, QUEUE_PREFIX), queueConfig 제공
- * 09-16: .env와 동기화, AWS/모니터링/비즈니스/Feature Flags 등 추가
+ * 09-09 - ESM 호환, isServer 도입, dotenv 동적 import, 주석 보강
+ * 09-11 - 큐 설정 추가 (QUEUE_CONCURRENCY, QUEUE_PREFIX), queueConfig 제공
+ * 09-16 - .env와 동기화, AWS/모니터링/비즈니스/Feature Flags 등 추가
+ * 09-21 - envBool 확장, envDurationSec 단위 추가, 함수 주석 보강, 기본값 명시 강화
  */
 
 // 런타임 가드 & dotenv 로드 (ESM 안전)
@@ -17,7 +18,6 @@ export const isServer =
 (async function safeLoadDotenv() {
   if (!isServer) return;
   try {
-    // @ts-expect-error: provided by consuming app
     const { config } = await import('dotenv');
     const dotenvPath = process.env['DOTENV_PATH'];
     config(dotenvPath ? { path: dotenvPath } : undefined);
@@ -28,18 +28,18 @@ export const isServer =
 
 // 타입 정의
 export interface ConnectWonEnv {
-  // 환경 구분
+  // 환경 구분 및 서버 포트 설정
   NODE_ENV: 'development' | 'staging' | 'production' | 'test';
   TZ?: string;
 
-  // 서버 설정
+  // 포트 설정
   WEB_PORT: string;
   API_PORT: string;
   ADMIN_PORT?: string;
   WORKER_PORT?: string;
   NGINX_PORT?: string;
 
-  // URL 설정
+  // URL 주소 설정
   WEB_URL: string;
   API_URL: string;
   ADMIN_URL?: string;
@@ -47,7 +47,7 @@ export interface ConnectWonEnv {
   BACKEND_URL?: string;
   CORS_ORIGINS?: string;
 
-  // 데이터베이스
+  // 데이터베이스 연결 정보
   DATABASE_URL: string;
   DATABASE_HOST?: string;
   DATABASE_PORT?: string;
@@ -59,7 +59,7 @@ export interface ConnectWonEnv {
   DATABASE_POOL_MAX?: string;
   TEST_DATABASE_URL?: string;
 
-  // Redis
+  // Redis 연결 정보
   REDIS_URL: string;
   REDIS_HOST?: string;
   REDIS_PORT?: string;
@@ -68,7 +68,7 @@ export interface ConnectWonEnv {
   TEST_REDIS_URL?: string;
   REDISINSIGHT_PORT?: string;
 
-  // 큐 설정
+  // 큐 (BullMQ 등) 설정
   QUEUE_REDIS_URL?: string;
   QUEUE_REDIS_HOST?: string;
   QUEUE_REDIS_PORT?: string;
@@ -76,7 +76,7 @@ export interface ConnectWonEnv {
   QUEUE_CONCURRENCY?: string;
   QUEUE_PREFIX?: string;
 
-  // 인증 설정
+  // 인증 및 세션
   JWT_SECRET: string;
   JWT_EXPIRES_IN?: string;
   JWT_REFRESH_SECRET?: string;
@@ -91,7 +91,7 @@ export interface ConnectWonEnv {
   COOKIE_HTTP_ONLY?: string;
   COOKIE_SAME_SITE?: string;
 
-  // AI 설정
+  // 외부 API 키 (AI 등)
   OPENAI_API_KEY?: string;
   ANTHROPIC_API_KEY?: string;
   HUGGINGFACE_API_KEY?: string;
@@ -104,18 +104,14 @@ export interface ConnectWonEnv {
   PAYMENT_CURRENCY?: string;
   PAYMENT_TIMEOUT_MINUTES?: string;
 
-  // AWS/Storage 설정
-  AWS_ACCESS_KEY_ID?: string;
-  AWS_SECRET_ACCESS_KEY?: string;
-  AWS_REGION?: string;
-  AWS_S3_BUCKET?: string;
-  AWS_S3_PUBLIC_BUCKET?: string;
-  AWS_CLOUDFRONT_DOMAIN?: string;
-  UPLOAD_PATH?: string;
-  MAX_FILE_SIZE?: string;
-  ALLOWED_FILE_TYPES?: string;
+  // Azure 스토리지 및 CDN 설정
+  AZURE_STORAGE_ACCOUNT?: string;
+  AZURE_STORAGE_ACCESS_KEY?: string;
+  AZURE_STORAGE_CONTAINER?: string;
+  AZURE_CDN_ENDPOINT?: string;
+  AZURE_REGION?: string;
 
-  // 이메일/알림 설정
+  // 이메일 및 슬랙 알림 설정
   EMAIL_PROVIDER?: string;
   SMTP_HOST?: string;
   SMTP_PORT?: string;
@@ -128,7 +124,7 @@ export interface ConnectWonEnv {
   SLACK_TOKEN?: string;
   SLACK_CHANNEL?: string;
 
-  // 모니터링 설정
+  // 로깅 및 모니터링 설정
   LOG_LEVEL?: 'error' | 'warn' | 'info' | 'http' | 'verbose' | 'debug' | 'silly';
   LOG_FORMAT?: 'json' | 'pretty' | 'simple';
   SENTRY_DSN?: string;
@@ -142,7 +138,7 @@ export interface ConnectWonEnv {
   GF_SERVER_HTTP_PORT?: string;
   GF_SERVER_ROOT_URL?: string;
 
-  // 비즈니스 설정
+  // 비즈니스 로직 관련 설정
   DEFAULT_RESERVATION_DURATION?: string;
   MAX_ADVANCE_BOOKING_DAYS?: string;
   CANCELLATION_DEADLINE_HOURS?: string;
@@ -152,14 +148,14 @@ export interface ConnectWonEnv {
   SIGNUP_BONUS_POINTS?: string;
   REFERRAL_BONUS_POINTS?: string;
 
-  // Rate Limiting
+  // Rate Limiting 설정
   RATE_LIMIT_WINDOW_MS?: string;
   RATE_LIMIT_MAX_REQUESTS?: string;
   RATE_LIMIT_SKIP_IF_SUCCESSFUL?: string;
   API_RATE_LIMIT_PER_MINUTE?: string;
   LOGIN_RATE_LIMIT_PER_HOUR?: string;
 
-  // Background Jobs
+  // 작업(Job) 스케줄 및 백그라운드 작업
   JOB_ATTEMPTS?: string;
   JOB_BACKOFF_TYPE?: string;
   JOB_DELAY?: string;
@@ -175,7 +171,7 @@ export interface ConnectWonEnv {
   FEATURE_ADVANCED_ANALYTICS?: string;
   FEATURE_BETA_FEATURES?: string;
 
-  // 소셜 OAuth
+  // 소셜 OAuth 설정
   GOOGLE_CLIENT_ID: string;
   GOOGLE_CLIENT_SECRET: string;
   GOOGLE_REDIRECT_URI?: string;
@@ -184,12 +180,12 @@ export interface ConnectWonEnv {
   NAVER_CLIENT_ID?: string;
   NAVER_CLIENT_SECRET?: string;
 
-  // Analytics
+  // 애널리틱스 (Google, Mixpanel 등)
   GOOGLE_ANALYTICS_ID?: string;
   GOOGLE_TAG_MANAGER_ID?: string;
   MIXPANEL_TOKEN?: string;
 
-  // n8n 설정
+  // n8n 워크플로우 설정
   N8N_PORT?: string;
   N8N_WEBHOOK_URL?: string;
   N8N_DB_NAME?: string;
@@ -197,11 +193,9 @@ export interface ConnectWonEnv {
   N8N_BASIC_AUTH_USER?: string;
   N8N_BASIC_AUTH_PASSWORD?: string;
   N8N_ENCRYPTION_KEY?: string;
-  N8N_EXECUTIONS_TIMEOUT?: string;
-  N8N_EXECUTIONS_MAX_TIMEOUT?: string;
   N8N_LOG_LEVEL?: string;
 
-  // 추가 서비스
+  // 추가 서비스 (Twilio, FCM, VAPID 등)
   TWILIO_ACCOUNT_SID?: string;
   TWILIO_AUTH_TOKEN?: string;
   TWILIO_PHONE_NUMBER?: string;
@@ -209,7 +203,7 @@ export interface ConnectWonEnv {
   VAPID_PUBLIC_KEY?: string;
   VAPID_PRIVATE_KEY?: string;
 
-  // Company/Locale
+  // 회사 및 로케일 정보
   COMPANY_NAME?: string;
   COMPANY_EMAIL?: string;
   COMPANY_PHONE?: string;
@@ -221,7 +215,7 @@ export interface ConnectWonEnv {
   SUPPORTED_LANGUAGES?: string;
   USE_I18N?: string;
 
-  // E2E/테스트 설정
+  // E2E 및 테스트 설정
   HEADLESS?: 'true' | 'false';
   BASE_URL?: string;
   CI?: 'true' | 'false';
@@ -245,7 +239,7 @@ export interface ConnectWonEnv {
   POSTGRES_EXTERNAL_PORT?: string;
   REDIS_EXTERNAL_PORT?: string;
 
-  // 레거시 필드들 (기존 호환)
+  // 레거시 필드 (기존 호환 용도)
   TEST_TIMEOUT?: string;
   E2E_ARTIFACTS_DIR?: string;
   SAVE_TRACE_ON_FAIL?: 'true' | 'false';
@@ -282,28 +276,50 @@ declare global {
   }
 }
 
-// 기본 env getter (빈 문자열도 미설정으로 간주)
+/**
+ * 환경변수 값 가져오기
+ * @param key 환경변수 이름
+ * @param defaultValue 기본값 (옵션)
+ * @returns 환경변수 값 또는 기본값
+ */
 export const env = (key: string, defaultValue?: string): string => {
   const v = process.env[key];
   return v === undefined || v === null || v === '' ? (defaultValue ?? '') : v;
 };
 
-// 타입별 env getter
+/**
+ * 불리언 환경변수 안전 파싱 함수
+ * @param key 환경변수 이름
+ * @param defaultValue 기본값, 없으면 false
+ * @returns boolean 값
+ */
 export const envBool = (key: string, defaultValue = false): boolean => {
   const v = env(key);
   if (!v) return defaultValue;
   const s = v.toLowerCase();
-  return s === 'true' || s === '1' || s === 'yes' || s === 'on';
+  if (['true', '1', 'yes', 'on'].includes(s)) return true;
+  if (['false', '0', 'no', 'off'].includes(s)) return false;
+  return defaultValue;
 };
 
-// 정수형 파싱 (NaN 시 기본값)
+/**
+ * 정수형 환경변수 파싱 (NaN 시 기본값 사용)
+ * @param key 환경변수 이름
+ * @param defaultValue 기본값 (기본 0)
+ * @returns 정수 값
+ */
 export const envInt = (key: string, defaultValue = 0): number => {
   const v = env(key);
   const n = parseInt(v, 10);
   return Number.isNaN(n) ? defaultValue : n;
 };
 
-// 쉼표 구분 문자열 → 배열 파싱
+/**
+ * 쉼표 구분 문자열을 배열로 변환
+ * @param key 환경변수 이름
+ * @param defaultValue 기본값 배열 (비어있음)
+ * @returns 문자열 배열
+ */
 export const envArray = (key: string, defaultValue: string[] = []): string[] => {
   const v = env(key);
   return v
@@ -314,7 +330,12 @@ export const envArray = (key: string, defaultValue: string[] = []): string[] => 
     : defaultValue;
 };
 
-// JSON 파싱 (실패 시 기본값)
+/**
+ * JSON 문자열 파싱 (실패 시 기본값 사용)
+ * @param key 환경변수 이름
+ * @param defaultValue 기본값
+ * @returns 파싱 결과 객체 또는 기본값
+ */
 export const envJson = <T = unknown>(key: string, defaultValue: T): T => {
   const v = env(key);
   if (!v) return defaultValue;
@@ -325,24 +346,36 @@ export const envJson = <T = unknown>(key: string, defaultValue: T): T => {
   }
 };
 
-// "7d"|"12h"|"30m"|"45s"|"300" → 초 단위로 파싱
-const DUR = { s: 1, m: 60, h: 3600, d: 86400 } as const;
-type Unit = keyof typeof DUR; // 's' | 'm' | 'h' | 'd'
+// duration 단위(초,분,시,일,주)
+const DUR = { s: 1, m: 60, h: 3600, d: 86400, w: 604800 } as const;
+type Unit = keyof typeof DUR;
 
+/**
+ * duration 문자열("10m","3h" 등) 을 초단위 숫자로 변환
+ * @param key 환경변수 이름
+ * @param defSec 기본 초 단위 값
+ * @returns 초 단위 숫자
+ */
 export const envDurationSec = (key: string, defSec: number): number => {
   const v = env(key);
   if (!v) return defSec;
 
-  const m = /^(\d+)\s*([smhd])?$/i.exec(v);
+  const m = /^(\d+)\s*([smhdw])?$/i.exec(v);
   if (!m) return defSec;
 
   const n = Number(m[1]);
   const u = (m[2]?.toLowerCase() ?? 's') as Unit;
 
-  return n * DUR[u]; // ← 이제 number로 확정
+  return n * DUR[u];
 };
 
-// URL 유효성 보장
+/**
+ * URL 유효성 검증 및 반환
+ * @param key 환경변수 이름
+ * @param def 기본값 URL 문자열 (옵션)
+ * @throws 유효하지 않은 URL일 경우 Error throw
+ * @returns 유효한 URL 문자열
+ */
 export const envUrl = (key: string, def?: string): string => {
   const value = env(key, def);
   try {
@@ -352,7 +385,7 @@ export const envUrl = (key: string, def?: string): string => {
   }
 };
 
-// 비밀 키 마스킹 (로그 시 사용)
+// 마스킹 할 비밀키 목록
 const SECRET_KEYS = new Set([
   'JWT_SECRET',
   'JWT_REFRESH_SECRET',
@@ -377,10 +410,19 @@ const SECRET_KEYS = new Set([
   'NEW_RELIC_LICENSE_KEY',
 ]);
 
+/**
+ * 비밀키 값 마스킹 처리 함수 (로그용)
+ * @param k 환경변수 이름
+ * @param v 값
+ * @returns 마스킹된 값 또는 원본
+ */
 export const maskSecret = (k: string, v: string) =>
   SECRET_KEYS.has(k) ? v.replace(/.(?=.{4})/g, '*') : v;
 
-// 환경 판별 & 기본값 테이블
+/**
+ * 현재 환경명 가져오기 (NODE_ENV)
+ * @returns 환경명 ('development'|'staging'|'production'|'test')
+ */
 export function getEnvironment(): ConnectWonEnv['NODE_ENV'] {
   const raw = env('NODE_ENV', 'development');
   if (['development', 'staging', 'production', 'test'].includes(raw)) {
@@ -388,14 +430,13 @@ export function getEnvironment(): ConnectWonEnv['NODE_ENV'] {
   }
   return 'development';
 }
-
 export const isProduction = () => getEnvironment() === 'production';
 export const isDevelopment = () => getEnvironment() === 'development';
 export const isStaging = () => getEnvironment() === 'staging';
 export const isTest = () => getEnvironment() === 'test';
 export const isCI = () => envBool('CI', false);
 
-// 환경별 기본값
+// 환경별 기본 환경변수 기본값 테이블
 export const ENV_DEFAULTS = {
   development: {
     WEB_PORT: '3000',
@@ -471,14 +512,22 @@ export const ENV_DEFAULTS = {
   },
 } as const;
 
-// 기본값(ENV_DEFAULTS)까지 고려한 getter 래퍼
+/**
+ * 기본값까지 포함하여 환경변수 값을 가져오는 래퍼
+ * @param key 환경변수 이름
+ * @param defaultValue 기본값 (옵션)
+ */
 export function getConfig<K extends keyof ConnectWonEnv>(key: K, defaultValue?: string): string {
   const envName = getEnvironment();
   const envDefaults = ENV_DEFAULTS[envName] as Record<string, string | undefined>;
   return env(key as string, defaultValue ?? envDefaults[key as string] ?? '');
 }
 
-// 불리언 기본값 처리
+/**
+ * 불리언 환경변수 기본값 처리 함수
+ * @param key 환경변수 이름
+ * @param defaultValue 기본값
+ */
 export function getConfigBool<K extends keyof ConnectWonEnv>(
   key: K,
   defaultValue?: boolean,
@@ -489,289 +538,23 @@ export function getConfigBool<K extends keyof ConnectWonEnv>(
   return envBool(key as string, fallback);
 }
 
-// 정수 기본값 처리
-export const getConfigInt = (key: keyof ConnectWonEnv, defaultValue = 0) =>
+/**
+ * 정수형 환경변수 기본값 처리 함수
+ * @param key 환경변수 이름
+ * @param defaultValue 기본값 (기본 0)
+ */
+export const getConfigInt = (key: keyof ConnectWonEnv, defaultValue = 0): number =>
   envInt(key as string, defaultValue);
 
-// 서비스 별 설정 모음
-export const serverConfig = {
-  webPort: getConfigInt('WEB_PORT', 3000),
-  apiPort: getConfigInt('API_PORT', 8000),
-  adminPort: getConfigInt('ADMIN_PORT', 3001),
-  webUrl: envUrl('WEB_URL', 'http://localhost:3000'),
-  apiUrl: envUrl('API_URL', 'http://localhost:8000'),
-  adminUrl: getConfig('ADMIN_URL', 'http://localhost:3001'),
-  corsOrigin: getConfig('CORS_ORIGINS', '*'),
-};
-
-// DB/Redis 설정
-export const dbConfig = {
-  url: getConfig('DATABASE_URL'),
-  redisUrl: getConfig('REDIS_URL'),
-  testUrl: getConfig('TEST_DATABASE_URL'),
-  poolMin: getConfigInt('DATABASE_POOL_MIN', 2),
-  poolMax: getConfigInt('DATABASE_POOL_MAX', 10),
-};
-
-// 인증 설정
-export const authConfig = {
-  jwtSecret: getConfig('JWT_SECRET'),
-  jwtExpiresIn: getConfig('JWT_EXPIRES_IN', '7d'),
-  jwtRefreshSecret: getConfig('JWT_REFRESH_SECRET'),
-  jwtRefreshExpiresIn: getConfig('JWT_REFRESH_EXPIRES_IN', '30d'),
-  sessionSecret: getConfig('SESSION_SECRET'),
-  sessionMaxAge: getConfigInt('SESSION_MAX_AGE', 86400000),
-  cookieSecret: getConfig('COOKIE_SECRET'),
-  cookieDomain: getConfig('COOKIE_DOMAIN', 'localhost'),
-  cookieSecure: getConfigBool('COOKIE_SECURE', false),
-};
-
-// 소셜 OAuth 설정
-export const oauthConfig = {
-  google: {
-    clientId: getConfig('GOOGLE_CLIENT_ID'),
-    clientSecret: getConfig('GOOGLE_CLIENT_SECRET'),
-    redirectUri: getConfig('GOOGLE_REDIRECT_URI'),
-  },
-  kakao: {
-    clientId: getConfig('KAKAO_CLIENT_ID'),
-    clientSecret: getConfig('KAKAO_CLIENT_SECRET'),
-  },
-  naver: {
-    clientId: getConfig('NAVER_CLIENT_ID'),
-    clientSecret: getConfig('NAVER_CLIENT_SECRET'),
-  },
-};
-
-// AI 설정
-export const aiConfig = {
-  openai: {
-    apiKey: getConfig('OPENAI_API_KEY'),
-  },
-  anthropic: {
-    apiKey: getConfig('ANTHROPIC_API_KEY'),
-  },
-  huggingface: {
-    apiKey: getConfig('HUGGINGFACE_API_KEY'),
-  },
-};
-
-// 결제 설정
-export const paymentConfig = {
-  provider: getConfig('PAYMENT_PROVIDER', 'stripe'),
-  currency: getConfig('PAYMENT_CURRENCY', 'KRW'),
-  timeout: getConfigInt('PAYMENT_TIMEOUT_MINUTES', 15),
-  stripe: {
-    secretKey: getConfig('STRIPE_SECRET_KEY'),
-    publishableKey: getConfig('STRIPE_PUBLISHABLE_KEY'),
-    webhookSecret: getConfig('STRIPE_WEBHOOK_SECRET'),
-  },
-};
-
-// AWS/Storage 설정
-export const awsConfig = {
-  accessKeyId: getConfig('AWS_ACCESS_KEY_ID'),
-  secretAccessKey: getConfig('AWS_SECRET_ACCESS_KEY'),
-  region: getConfig('AWS_REGION', 'ap-northeast-2'),
-  s3Bucket: getConfig('AWS_S3_BUCKET'),
-  s3PublicBucket: getConfig('AWS_S3_PUBLIC_BUCKET'),
-  cloudfrontDomain: getConfig('AWS_CLOUDFRONT_DOMAIN'),
-};
-
-// 업로드 설정
-export const uploadConfig = {
-  path: getConfig('UPLOAD_PATH', './uploads'),
-  maxFileSize: getConfigInt('MAX_FILE_SIZE', 10485760),
-  allowedTypes: envArray('ALLOWED_FILE_TYPES', ['image/jpeg', 'image/png']),
-};
-
-// 이메일 설정
-export const emailConfig = {
-  provider: getConfig('EMAIL_PROVIDER', 'smtp'),
-  smtp: {
-    host: getConfig('SMTP_HOST'),
-    port: getConfigInt('SMTP_PORT', 587),
-    secure: getConfigBool('SMTP_SECURE', false),
-    user: getConfig('SMTP_USER'),
-    pass: getConfig('SMTP_PASS'),
-    fromEmail: getConfig('SMTP_FROM_EMAIL'),
-    fromName: getConfig('SMTP_FROM_NAME', 'ConnectWon'),
-  },
-};
-
-// 알림 설정
-export const notificationConfig = {
-  slack: {
-    webhookUrl: getConfig('SLACK_WEBHOOK_URL'),
-    token: getConfig('SLACK_TOKEN'),
-    channel: getConfig('SLACK_CHANNEL', '#notifications'),
-  },
-};
-
-// 모니터링 설정
-export const monitoringConfig = {
-  sentry: {
-    dsn: getConfig('SENTRY_DSN'),
-  },
-  newRelic: {
-    licenseKey: getConfig('NEW_RELIC_LICENSE_KEY'),
-    appName: getConfig('NEW_RELIC_APP_NAME', 'ConnectWon'),
-  },
-  grafana: {
-    adminUser: getConfig('GF_SECURITY_ADMIN_USER', 'admin'),
-    adminPassword: getConfig('GF_SECURITY_ADMIN_PASSWORD'),
-    secretKey: getConfig('GF_SECURITY_SECRET_KEY'),
-    port: getConfigInt('GF_SERVER_HTTP_PORT', 3030),
-  },
-};
-
-// 비즈니스 설정
-export const businessConfig = {
-  reservation: {
-    defaultDuration: getConfigInt('DEFAULT_RESERVATION_DURATION', 60),
-    maxAdvanceBookingDays: getConfigInt('MAX_ADVANCE_BOOKING_DAYS', 30),
-    cancellationDeadlineHours: getConfigInt('CANCELLATION_DEADLINE_HOURS', 24),
-    overbookingThreshold: parseFloat(getConfig('OVERBOOKING_THRESHOLD', '0.1')),
-  },
-  payment: {
-    refundPolicyDays: getConfigInt('REFUND_POLICY_DAYS', 7),
-  },
-  points: {
-    perKrw: parseFloat(getConfig('POINTS_PER_KRW', '0.01')),
-    signupBonus: getConfigInt('SIGNUP_BONUS_POINTS', 1000),
-    referralBonus: getConfigInt('REFERRAL_BONUS_POINTS', 5000),
-  },
-};
-
-// Rate Limiting 설정
-export const rateLimitConfig = {
-  windowMs: getConfigInt('RATE_LIMIT_WINDOW_MS', 900000),
-  maxRequests: getConfigInt('RATE_LIMIT_MAX_REQUESTS', 100),
-  skipIfSuccessful: getConfigBool('RATE_LIMIT_SKIP_IF_SUCCESSFUL', true),
-  apiPerMinute: getConfigInt('API_RATE_LIMIT_PER_MINUTE', 60),
-  loginPerHour: getConfigInt('LOGIN_RATE_LIMIT_PER_HOUR', 5),
-};
-
-// Feature Flags 설정
-export const featureFlags = {
-  aiRecommendations: getConfigBool('FEATURE_AI_RECOMMENDATIONS', true),
-  paymentGateway: getConfigBool('FEATURE_PAYMENT_GATEWAY', true),
-  emailNotifications: getConfigBool('FEATURE_EMAIL_NOTIFICATIONS', true),
-  slackNotifications: getConfigBool('FEATURE_SLACK_NOTIFICATIONS', false),
-  advancedAnalytics: getConfigBool('FEATURE_ADVANCED_ANALYTICS', false),
-  betaFeatures: getConfigBool('FEATURE_BETA_FEATURES', false),
-};
-
-// 로그 설정
-export const logConfig = {
-  level: getConfig('LOG_LEVEL', 'info'),
-  format: getConfig('LOG_FORMAT', 'pretty'),
-  enableLogs: getConfigBool('ENABLE_LOGS', true),
-  logToFile: getConfigBool('LOG_TO_FILE', false),
-  logDir: getConfig('LOG_DIR', './logs'),
-  maxFiles: getConfig('LOG_MAX_FILES', '7d'),
-  serviceName: getConfig('SERVICE_NAME', 'connectwon-app'),
-  executionTime: getConfigBool('LOG_EXECUTION_TIME', true),
-};
-
-// E2E/테스트 설정
+// testConfig 객체
 export const testConfig = {
-  headless: getConfigBool('HEADLESS', true),
-  baseUrl: getConfig('BASE_URL', 'http://localhost:3000'),
   artifactsDir: getConfig('E2E_ARTIFACTS_DIR', './e2e-artifacts'),
   saveTrace: getConfigBool('SAVE_TRACE_ON_FAIL', true),
   logVideo: getConfigBool('LOG_VIDEO_ON_FAIL', true),
-  screenshotQuality: getConfig('SCREENSHOT_QUALITY', 'medium'),
-  debugMode: getConfigBool('DEBUG_MODE', false),
-  cleanupDays: getConfigInt('CLEANUP_ARTIFACTS_DAYS', 7),
-  timeout: getConfigInt('ACTION_TIMEOUT', 30),
+  headless: getConfigBool('HEADLESS', true),
+  baseUrl: getConfig('BASE_URL', 'http://localhost:3000'),
+  actionTimeout: getConfigInt('ACTION_TIMEOUT', 30),
   navigationTimeout: getConfigInt('NAVIGATION_TIMEOUT', 60),
   slowMo: getConfigInt('SLOW_MO', 100),
+  cleanupDays: getConfigInt('CLEANUP_ARTIFACTS_DAYS', 7),
 };
-
-// 큐 설정 모음 (Worker/BullMQ에서 사용)
-export const queueConfig = {
-  prefix: getConfig('QUEUE_PREFIX', 'connectwon'),
-  concurrency: getConfigInt('QUEUE_CONCURRENCY', 5),
-  jobAttempts: getConfigInt('JOB_ATTEMPTS', 3),
-  jobBackoffType: getConfig('JOB_BACKOFF_TYPE', 'exponential'),
-  jobDelay: getConfigInt('JOB_DELAY', 5000),
-};
-
-// n8n 설정
-export const n8nConfig = {
-  port: getConfigInt('N8N_PORT', 5678),
-  webhookUrl: getConfig('N8N_WEBHOOK_URL'),
-  dbName: getConfig('N8N_DB_NAME', 'n8n'),
-  basicAuth: {
-    active: getConfigBool('N8N_BASIC_AUTH_ACTIVE', true),
-    user: getConfig('N8N_BASIC_AUTH_USER', 'admin'),
-    password: getConfig('N8N_BASIC_AUTH_PASSWORD'),
-  },
-  encryptionKey: getConfig('N8N_ENCRYPTION_KEY'),
-  logLevel: getConfig('N8N_LOG_LEVEL', 'info'),
-};
-
-// Analytics 설정
-export const analyticsConfig = {
-  googleAnalyticsId: getConfig('GOOGLE_ANALYTICS_ID'),
-  googleTagManagerId: getConfig('GOOGLE_TAG_MANAGER_ID'),
-  mixpanelToken: getConfig('MIXPANEL_TOKEN'),
-};
-
-// Company/Locale 설정
-export const companyConfig = {
-  name: getConfig('COMPANY_NAME', 'ConnectWon'),
-  email: getConfig('COMPANY_EMAIL', 'contact@connectwon.com'),
-  phone: getConfig('COMPANY_PHONE'),
-  supportEmail: getConfig('SUPPORT_EMAIL', 'support@connectwon.com'),
-  defaultTimezone: getConfig('DEFAULT_TIMEZONE', 'Asia/Seoul'),
-  dateFormat: getConfig('DATE_FORMAT', 'YYYY-MM-DD'),
-  timeFormat: getConfig('TIME_FORMAT', 'HH:mm'),
-  defaultLanguage: getConfig('DEFAULT_LANGUAGE', 'ko'),
-  supportedLanguages: envArray('SUPPORTED_LANGUAGES', ['ko', 'en']),
-  useI18n: getConfigBool('USE_I18N', true),
-};
-
-// 기본 필수값 검증
-export function validateEnv(): void {
-  const required = ['NODE_ENV', 'DATABASE_URL', 'JWT_SECRET', 'API_PORT'] as const;
-  const missing = required.filter(k => !process.env[k]);
-  if (missing.length) {
-    throw new Error(`Missing required environment variables: ${missing.join(', ')}`);
-  }
-}
-
-// 환경별 추가 필수값 검증 (AI/결제 등 필요시 확장)
-export function validateEnvByEnvironment(): void {
-  const envName = getEnvironment();
-
-  // 환경별 필수 환경변수 정의
-  const envRequirements = {
-    development: ['DATABASE_URL', 'JWT_SECRET', 'SESSION_SECRET'],
-    test: ['TEST_DATABASE_URL', 'JWT_SECRET', 'SESSION_SECRET'],
-    staging: [
-      'DATABASE_URL',
-      'JWT_SECRET',
-      'SESSION_SECRET',
-      'GOOGLE_CLIENT_ID',
-      'GOOGLE_CLIENT_SECRET',
-      'REDIS_URL',
-    ],
-    production: [
-      'DATABASE_URL',
-      'JWT_SECRET',
-      'SESSION_SECRET',
-      'GOOGLE_CLIENT_ID',
-      'GOOGLE_CLIENT_SECRET',
-      'REDIS_URL',
-    ],
-  } as const satisfies Record<ConnectWonEnv['NODE_ENV'], readonly string[]>;
-
-  const required = envRequirements[envName];
-  const missing = required.filter(k => !process.env[k]);
-
-  if (missing.length) {
-    throw new Error(`Missing required environment variables for ${envName}: ${missing.join(', ')}`);
-  }
-}

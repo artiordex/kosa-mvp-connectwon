@@ -12,40 +12,38 @@
   },
   "engineStrict": true,
   "packageManager": "pnpm@10.7.0",
+  "__comment_scripts": "pnpm scripts 명령어",
   "scripts": {
-    "contracts:emit": "nx run @connectwon/api-contract:gen:openapi",
-    "dev:all": "concurrently \"pnpm --filter @connectwon/web dev\" \"pnpm --filter @connectwon/admin dev\" \"pnpm --filter @connectwon/api dev\" \"pnpm --filter @connectwon/worker dev\"",
+    "dev:web": "pnpm --filter @connectwon/web dev",
+    "dev:admin": "pnpm --filter @connectwon/admin dev",
+    "dev:api": "pnpm --filter @connectwon/api dev",
+    "dev:worker": "pnpm --filter @connectwon/worker dev",
     "dev:infra": "docker compose -f infra/docker/docker-compose.yml up -d postgres redis",
     "down:infra": "docker compose -f infra/docker/docker-compose.yml down",
-    "db:migrate": "pnpm --filter @connectwon/database exec prisma migrate dev --name init",
-    "db:seed": "pnpm --filter @connectwon/database exec tsx src/utils.ts seed",
-    "dev:stack": "run-s dev:infra prisma:generate db:migrate db:seed dev",
-    "prepare": "node -e \"process.exit(require('fs').existsSync('.git')?0:0)\" && husky install",
-    "nx": "nx",
-    "graph": "nx graph",
-    "build": "nx run-many -t build",
-    "dev": "nx run-many -t dev --parallel",
-    "lint": "nx run-many -t lint --parallel",
+    "dev:all": "concurrently \"pnpm run dev:web\" \"pnpm run dev:admin\" \"pnpm run dev:api\" \"pnpm run dev:worker\"",
+    "dev:stack": "run-s dev:infra prisma:generate db:migrate db:seed dev:all",
     "build:tsc": "tsc -b -v tsconfig.build.json",
     "build:packages": "pnpm -r --filter \"./packages/*\" run build",
     "build:api": "pnpm --filter @connectwon/api run build",
-    "prisma:generate": "pnpm --filter @connectwon/database run prisma:generate",
-    "postinstall": "pnpm prisma:generate || true",
+    "build:all": "nx run-many -t build",
     "test:unit": "nx run-many -t test --parallel",
     "test:e2e": "nx run e2e:test",
-    "test": "pnpm test:unit && pnpm test:e2e",
+    "test:all": "pnpm run test:unit && pnpm run test:e2e",
     "test:watch": "nx run-many -t test --parallel --watch",
     "test:coverage": "nx run-many -t test --parallel --coverage",
-    "affected:lint": "nx affected -t lint --parallel",
-    "affected:test": "nx affected -t test --parallel",
-    "affected:build": "nx affected -t build --parallel",
-    "e2e": "nx run e2e:test",
-    "format": "prettier --write \"**/*.{ts,tsx,js,json}\"",
+    "db:migrate": "pnpm --filter @connectwon/database exec prisma migrate dev --name init",
+    "db:seed": "pnpm --filter @connectwon/database exec tsx src/utils.ts seed",
+    "prisma:generate": "pnpm --filter @connectwon/database run prisma:generate",
+    "lint": "nx run-many -t lint --parallel",
     "lint:fix": "eslint --ext .ts,.tsx . --fix",
+    "format": "prettier --write \"**/*.{ts,tsx,js,json}\"",
+    "check-unused": "knip",
+    "prepare": "node -e \"process.exit(require('fs').existsSync('.git')?0:0)\" && husky install",
     "commit": "cz",
     "sync": "syncpack lint && syncpack fix-mismatches",
-    "check-unused": "knip"
+    "graph": "nx graph"
   },
+  "__comment_devDependencies": "개발용 의존성 모음",
   "devDependencies": {
     "@changesets/cli": "^2.29.6",
     "@eslint/js": "^9",
@@ -80,6 +78,9 @@
     "eslint-plugin-prettier": "^5.2.6",
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "eslint-plugin-unused-imports": "^3.2.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-jest": "^27.2.1",
+    "eslint-plugin-testing-library": "^5.10.4",
     "husky": "^9.1.7",
     "jsdom": "^26.1.0",
     "knip": "^5.63.1",
@@ -88,7 +89,8 @@
     "npm-run-all": "^4.1.5",
     "nx": "^21.4.1",
     "prettier": "^3.5.3",
-    "renovate": "^41.116.8",
+    "prettier-plugin-tailwindcss": "^0.2.8",
+    "cspell": "^6.27.0",
     "rimraf": "^6.0.0",
     "supertest": "^7.1.0",
     "syncpack": "^13.0.4",
@@ -97,15 +99,18 @@
     "tsx": "^4.19.3",
     "typescript": "^5.9.2",
     "typescript-eslint": "^8",
+    "typescript-styled-plugin": "^1.10.9",
     "vite": "^7.1.4",
     "vitest": "^3.2.4"
   },
+  "__comment_lintStaged": "커밋 전에 실행할 lint-staged 설정",
   "lint-staged": {
     "*.{ts,tsx,js,json}": [
       "prettier --write",
       "eslint --fix"
     ]
   },
+  "__comment_commitizenConfig": "커밋 메시지 표준화 도구 설정",
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-customizable"
@@ -114,6 +119,7 @@
       "config": "./.cz-config.cjs"
     }
   },
+  "__comment_pnpmOverrides": "pnpm 패키지 버전 강제 override 설정",
   "pnpm": {
     "overrides": {
       "@nestjs/swagger": "^11.2.0",
@@ -126,11 +132,14 @@
       "@types/react-dom": "18.3.0"
     }
   },
+  "__comment_useful_commands": "개발 및 배포 관련 유용한 명령어 모음",
   "dependencies": {
     "dotenv": "^17.2.2",
     "framer-motion": "^12.23.15",
     "react-color": "^2.19.3",
     "react-dropzone": "^14.3.8",
-    "react-hook-form": "^7.62.0"
+    "react-hook-form": "^7.62.0",
+    "react-query": "^3.39.3",
+    "zustand": "^4.4.2"
   }
 }

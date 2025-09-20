@@ -3,7 +3,8 @@
   "root": true,
 
   // 플러그인 설정
-  "plugins": ["@nx", "@typescript-eslint", "import", "playwright"],
+  "plugins": ["@nx", "@typescript-eslint", "import", "playwright", "react-hooks"],
+
   "env": {
     "es2022": true,
     "node": true,
@@ -51,15 +52,7 @@
   },
 
   // 산출물/캐시 무시
-  "ignorePatterns": [
-    "node_modules/",
-    "dist/",
-    "build/",
-    ".next/",
-    ".nx/",
-    "coverage/",
-    "generated/"
-  ],
+  "ignorePatterns": ["node_modules/", "dist/", "build/", ".next/", ".nx/", "coverage/", "generated/"],
 
   "rules": {
     "@nx/enforce-module-boundaries": [
@@ -74,15 +67,15 @@
       }
     ],
 
-    // 팀 스타일
+    // 팀 스타일: Prettier와 역할 분담 감안 결정을 주석에 명시 권장
     "semi": ["error", "always"],
-    "quotes": "off",
+    "quotes": "off", // Prettier에서 처리
     "@typescript-eslint/quotes": "off",
-    "indent": "off",
+    "indent": "off", // Prettier에서 처리
     "@typescript-eslint/indent": "off",
     "linebreak-style": "off",
     "no-trailing-spaces": "off",
-    "no-console": "off",
+    "no-console": "off", // 프로덕션 경고 필요 시 "warn"추천
     "object-shorthand": "off",
     "class-methods-use-this": "off",
     "no-underscore-dangle": "off",
@@ -100,7 +93,7 @@
       {
         "peerDependencies": true,
         "optionalDependencies": true,
-        "devDependencies": false
+        "devDependencies": false // 기본값
       }
     ],
 
@@ -108,16 +101,7 @@
     "import/order": [
       "warn",
       {
-        "groups": [
-          "builtin",
-          "external",
-          "internal",
-          "parent",
-          "sibling",
-          "index",
-          "object",
-          "type"
-        ],
+        "groups": ["builtin", "external", "internal", "parent", "sibling", "index", "object", "type"],
         "pathGroups": [{ "pattern": "@connectwon/**", "group": "internal", "position": "after" }],
         "pathGroupsExcludedImportTypes": ["builtin"],
         "newlines-between": "always",
@@ -208,6 +192,6 @@
     }
   ],
 
-  // eslint-disable 주석 남발 방지(유용)
+  // eslint-disable 주석 남발 방지
   "reportUnusedDisableDirectives": true
 }
