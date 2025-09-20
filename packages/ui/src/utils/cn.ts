@@ -1,226 +1,185 @@
 /**
- * cn - className 조합 및 조건부 적용 유틸리티
- *
- * @description
- * 여러 className을 조건부로 합치고, Tailwind CSS 클래스 충돌을 해결합니다.
- * clsx + tailwind-merge 조합으로 최적화된 className 문자열을 생성합니다.
- *
- * @author Shiwoo Min
- * @date 2025-09-19
- * @path packages/ui/src/utils/cn.ts
+ * Description : cn.ts - 📌 className 조합 및 조건부 적용 유틸리티
+ * Author : Shiwoo Min
+ * Date : 2025-09-21
  */
-
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
 /**
- * className을 조건부로 합치고 Tailwind 충돌을 해결하는 함수
- *
- * @param inputs - className 값들 (문자열, 객체, 배열, 조건부 등)
- * @returns 최적화된 className 문자열
- *
+ * @function cn
+ * @description
+ * className을 조건부로 합치고 Tailwind 충돌을 해결하는 함수.
+ * @param {...ClassValue[]} inputs - 문자열, 배열, 객체, falsy, 조건부 등 혼합 입력
+ * @returns {string} 최적화된 className 문자열
  * @example
- * ```typescript
- * // 기본 사용
- * cn('px-4 py-2', 'bg-blue-500')
- * // → 'px-4 py-2 bg-blue-500'
- *
- * // 조건부 적용
- * cn('btn', isActive && 'btn-active', disabled && 'btn-disabled')
- * // → 'btn btn-active' (isActive가 true일 때)
- *
- * // 객체 형태
- * cn('btn', {
- *   'btn-primary': variant === 'primary',
- *   'btn-secondary': variant === 'secondary'
- * })
- *
- * // Tailwind 충돌 해결
- * cn('px-2 py-1', 'px-4')
- * // → 'py-1 px-4' (나중 것이 우선)
- *
- * // 복잡한 조건부
- * cn(
- *   'base-class',
- *   condition1 && 'conditional-class',
- *   condition2 ? 'true-class' : 'false-class',
- *   { 'object-class': condition3 },
- *   additionalClassName
- * )
- * ```
+ * cn('px-2', 'py-1', isActive && 'bg-blue-500'); // => 'py-1 px-2 bg-blue-500'
  */
 export function cn(...inputs: ClassValue[]): string {
-  return twMerge(clsx(inputs));
+  // spread를 써서 clsx에 가변 인자로 넘기는 편이 타입 추론에 더 유리
+  return twMerge(clsx(...inputs));
 }
 
-// =================================================================
-// 순수 JavaScript 버전 (clsx/tailwind-merge 없이)
-// =================================================================
+/** @typedef {(string|number|boolean|null|undefined)} ClassPrimitive */
+type ClassPrimitive = string | number | boolean | null | undefined;
+/** @typedef {Record<string, boolean|null|undefined>} ClassMap */
+type ClassMap = Record<string, boolean | null | undefined>;
+/** @typedef {[cond: boolean, className: string]} ClassTuple */
+type ClassTuple = [cond: boolean, className: string];
+/** @typedef {(ClassPrimitive | ClassMap | ClassTuple | ClassInput[])} ClassInput */
+export type ClassInput = ClassPrimitive | ClassMap | ClassTuple | ClassInput[];
 
 /**
- * 외부 의존성 없는 순수 JavaScript cn 함수
- * clsx, tailwind-merge가 없을 때 사용
+ * @function cnPure
+ * @description
+ * 외부 의존성 없는 순수 병합 함수. tailwind-merge를 사용하지 않기 때문에
+ * 클래스 충돌 우선순위는 보장하지 않는다.
+ * @param {...ClassInput[]} classes - 병합할 클래스 입력들
+ * @returns {string} 병합된 className
  */
-export function cnPure(...classes: (string | undefined | null | boolean | { [key: string]: boolean })[]): string {
-  const result: string[] = [];
+export function cnPure(...classes: ClassInput[]): string {
+  const out: string[] = [];
+  const push = (v: ClassInput): void => {
+    if (!v) return;
 
-  for (const cls of classes) {
-    if (!cls) continue;
-
-    if (typeof cls === 'string') {
-      result.push(cls);
-    } else if (typeof cls === 'object') {
-      for (const [key, value] of Object.entries(cls)) {
-        if (value) {
-          result.push(key);
-        }
+    if (Array.isArray(v)) {
+      // 조건부 튜플 [boolean, string]
+      if (v.length === 2 && typeof v[0] === 'boolean' && typeof v[1] === 'string') {
+        if (v[0] && v[1]) out.push(v[1]);
+        return;
       }
+      // 일반 중첩 배열
+      for (const item of v) push(item as ClassInput);
+      return;
     }
-  }
-
-  return result.join(' ').trim();
+    if (typeof v === 'string' || typeof v === 'number') {
+      if (v !== '') out.push(String(v));
+      return;
+    }
+    if (typeof v === 'boolean' || v == null) {
+      // true 단독은 의미 없음. false/null/undefined는 무시.
+      return;
+    }
+    // 객체 맵 { 'class-a': true, 'class-b': false }
+    for (const [key, cond] of Object.entries(v as ClassMap)) {
+      if (cond) out.push(key);
+    }
+  };
+  for (const it of classes) push(it);
+  return out.join(' ');
 }
 
-// =================================================================
-// 타입 정의
-// =================================================================
-
 /**
- * cn 함수에 전달할 수 있는 값들의 타입
- */
-export type ClassNameValue =
-  | string
-  | number
-  | boolean
-  | undefined
-  | null
-  | { [key: string]: boolean | undefined | null }
-  | ClassNameValue[];
-
-// =================================================================
-// 유틸리티 함수들
-// =================================================================
-
-/**
- * 조건부 클래스 적용 헬퍼
- *
+ * @function conditionalClass
+ * @description
+ * 조건부 클래스 적용 헬퍼. 조건이 참인 클래스만 활성화하여 cn으로 병합한다.
+ * @param {string} baseClass - 기본 클래스
+ * @param {...Readonly<[boolean, ClassValue]>[]} pairs - [조건, 클래스] 튜플 배열
+ * @returns {string} 병합된 className
  * @example
- * ```typescript
- * const classes = conditionalClass(
- *   'base-class',
- *   isActive, 'active-class',
- *   isDisabled, 'disabled-class'
+ * conditionalClass('btn',
+ *   [isActive, 'btn-active'],
+ *   [isDisabled, 'opacity-50 cursor-not-allowed']
  * );
- * ```
  */
 export function conditionalClass(
   baseClass: string,
-  ...conditions: [boolean, string][]
+  ...pairs: ReadonlyArray<Readonly<[boolean, ClassValue]>>
 ): string {
-  const classes = [baseClass];
-
-  for (let i = 0; i < conditions.length; i += 2) {
-    const condition = conditions[i] as boolean;
-    const className = conditions[i + 1] as string;
-
-    if (condition) {
-      classes.push(className);
-    }
-  }
-
-  return cn(...classes);
+  const enabled = pairs.filter(([cond]) => cond).map(([, klass]) => klass);
+  return cn(baseClass, ...enabled);
 }
 
 /**
- * variant 기반 클래스 생성 헬퍼
- *
+ * @function variantClass
+ * @description
+ * variant 키에 따라 클래스를 선택해 병합한다.
+ * @template T extends string
+ * @param {ClassValue} baseClass - 기본 클래스
+ * @param {T | undefined} variant - 현재 변형 키
+ * @param {Partial<Record<T, ClassValue>>} variants - 변형 키 → 클래스 매핑
+ * @returns {string} 병합된 className
  * @example
- * ```typescript
- * const buttonClasses = variantClass('btn', 'primary', {
+ * variantClass('btn', variant, {
  *   primary: 'bg-blue-500 text-white',
  *   secondary: 'bg-gray-500 text-white',
  *   outline: 'border border-blue-500 text-blue-500'
  * });
- * ```
  */
 export function variantClass<T extends string>(
-  baseClass: string,
-  variant: T,
-  variants: Record<T, string>
+  baseClass: ClassValue,
+  variant: T | undefined,
+  variants: Partial<Record<T, ClassValue>>
 ): string {
-  return cn(baseClass, variants[variant]);
+  return variant ? cn(baseClass, variants[variant]) : cn(baseClass);
 }
 
 /**
- * 사이즈 기반 클래스 생성 헬퍼
- *
+ * @function sizeClass
+ * @description
+ * size 키에 따라 클래스를 선택해 병합한다.
+ * @template T extends string
+ * @param {ClassValue} baseClass - 기본 클래스
+ * @param {T | undefined} size - 현재 사이즈 키
+ * @param {Partial<Record<T, ClassValue>>} sizes - 사이즈 키 → 클래스 매핑
+ * @returns {string} 병합된 className
  * @example
- * ```typescript
- * const inputClasses = sizeClass('input', 'md', {
+ * sizeClass('input', size, {
  *   sm: 'px-2 py-1 text-sm',
  *   md: 'px-3 py-2 text-base',
  *   lg: 'px-4 py-3 text-lg'
  * });
- * ```
  */
 export function sizeClass<T extends string>(
-  baseClass: string,
-  size: T,
-  sizes: Record<T, string>
+  baseClass: ClassValue,
+  size: T | undefined,
+  sizes: Partial<Record<T, ClassValue>>
 ): string {
-  return cn(baseClass, sizes[size]);
+  return size ? cn(baseClass, sizes[size]) : cn(baseClass);
 }
 
-// =================================================================
-// 사용 예시 및 테스트
-// =================================================================
-
 /**
- * cn 함수 사용 예시들
+ * @namespace examples
+ * @description cn 사용 예시
  */
 export const examples = {
-  // 기본 사용
+  /** @function basic */
   basic: () => cn('px-4 py-2', 'bg-blue-500', 'text-white'),
 
-  // 조건부 적용
-  conditional: (isActive: boolean) => cn(
-    'btn',
-    'px-4 py-2',
-    isActive && 'bg-blue-500',
-    !isActive && 'bg-gray-300'
-  ),
+  /** @function conditional */
+  conditional: (isActive: boolean) =>
+    cn('btn', 'px-4 py-2', [isActive, 'bg-blue-500'], [!isActive, 'bg-gray-300']),
 
-  // 객체 형태
-  object: (variant: string) => cn('btn', {
-    'btn-primary': variant === 'primary',
-    'btn-secondary': variant === 'secondary',
-    'btn-outline': variant === 'outline'
-  }),
+  /** @function object */
+  object: (variant: string) =>
+    cn('btn', {
+      'btn-primary': variant === 'primary',
+      'btn-secondary': variant === 'secondary',
+      'btn-outline': variant === 'outline',
+    }),
 
-  // 복잡한 조합
-  complex: (variant: string, size: string, disabled: boolean) => cn(
-    'btn',
-    'transition-colors duration-200',
-    {
+  /** @function complex */
+  complex: (variant: string, size: string, disabled: boolean) =>
+    cn(
+      'btn',
+      'transition-colors duration-200',
       // variant
-      'bg-blue-500 text-white hover:bg-blue-600': variant === 'primary',
-      'bg-gray-500 text-white hover:bg-gray-600': variant === 'secondary',
-      'border border-blue-500 text-blue-500 hover:bg-blue-50': variant === 'outline',
-
+      {
+        'bg-blue-500 text-white hover:bg-blue-600': variant === 'primary',
+        'bg-gray-500 text-white hover:bg-gray-600': variant === 'secondary',
+        'border border-blue-500 text-blue-500 hover:bg-blue-50': variant === 'outline',
+      },
       // size
-      'px-2 py-1 text-sm': size === 'sm',
-      'px-4 py-2 text-base': size === 'md',
-      'px-6 py-3 text-lg': size === 'lg',
-
+      {
+        'px-2 py-1 text-sm': size === 'sm',
+        'px-4 py-2 text-base': size === 'md',
+        'px-6 py-3 text-lg': size === 'lg',
+      },
       // state
-      'opacity-50 cursor-not-allowed': disabled,
-      'hover:opacity-80': !disabled
-    }
-  )
+      [disabled, 'opacity-50 cursor-not-allowed'],
+      [!disabled, 'hover:opacity-80'],
+    ),
 };
 
-// =================================================================
-// Default Export
-// =================================================================
-
+/** @default cn */
 export default cn;

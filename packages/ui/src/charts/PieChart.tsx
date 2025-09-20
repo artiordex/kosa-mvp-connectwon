@@ -28,7 +28,14 @@ export function PieChart({
     <div className={className}>
       <ResponsiveContainer width="100%" height={height}>
         <RechartsPieChart>
-          <Pie data={data} cx="50%" cy="50%" outerRadius={radius} paddingAngle={2} dataKey="value">
+          <Pie
+            data={data as Record<string, any>[]}
+            cx="50%"
+            cy="50%"
+            outerRadius={radius}
+            paddingAngle={2}
+            dataKey="value"
+          >
             {data.map((entry, index) => (
               <Cell key={`cell-${index}`} fill={entry.color || colors[index % colors.length]} />
             ))}

@@ -355,6 +355,7 @@ export interface NamedValue extends WithColor {
   name: string;
   value: number;
   type?: 'positive' | 'negative' | 'total';
+  [key: string]: unknown;
 }
 
 /**
