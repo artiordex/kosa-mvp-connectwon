@@ -24,6 +24,5 @@
         "passWithNoTests": true
       }
     }
-  },
-  "implicitDependencies": ["@connectwon/logger"]
+  }
 }
