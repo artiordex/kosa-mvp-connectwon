@@ -34,11 +34,15 @@
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+
+    // 엄격 모드
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true
   },
   "include": [
     "src/**/*",
-    // Prisma 시드 스크립트를 TS로 실행할 때 포함
     "prisma/seed.ts"
   ],
   "exclude": [

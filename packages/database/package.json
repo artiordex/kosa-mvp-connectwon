@@ -16,6 +16,7 @@
     "dist",
     "prisma/schema.prisma"
   ],
+  "__comment_scripts": "pnpm scripts 명령어",
   "scripts": {
     "generate": "prisma generate",
     "migrate": "prisma migrate dev",

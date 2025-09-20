@@ -3,8 +3,8 @@
  * Author : Shiwoo Min
  * Date : 2025-09-10
  */
-import { prisma } from './dist/index.js';
-import 'dotenv/config'
+import { prisma } from './src/index.js';
+import 'dotenv/config';
 
 // DB 연결 테스트: pnpm tsx test-smoke.ts
 async function main() {
