@@ -4,12 +4,15 @@
   "description": "ConnectWon 사용자 웹 애플리케이션",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --port 3000",
     "build": "next build",
-    "start": "next start",
+    "start": "next start --port 3000",
     "lint": "next lint",
     "type-check": "pnpm -w exec tsc --noEmit -p tsconfig.json",
     "clean": "pnpm -w exec rimraf .next dist"
+  },
+  "engines": {
+    "node": ">=20.11"
   },
   "peerDependencies": {
     "@connectwon/api-contract": "workspace:*",
@@ -27,9 +30,6 @@
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.13"
-  },
-  "engines": {
-    "node": ">=20.11"
   },
   "dependencies": {
     "framer-motion": "^12.23.15",
