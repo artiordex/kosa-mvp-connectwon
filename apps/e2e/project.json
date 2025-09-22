@@ -7,8 +7,10 @@
     "test": {
       "executor": "@nx/playwright:playwright",
       "options": {
-        "config": "apps/e2e/playwright.config.ts"
-      }
+        "config": "apps/e2e/playwright.config.ts",
+        "passWithNoTests": false
+      },
+      "outputs": ["apps/e2e/test-results", "apps/e2e/playwright-report"]
     },
     "test:ui": {
       "executor": "nx:run-commands",
@@ -27,7 +29,8 @@
     "install": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "playwright install --with-deps"
+        "command": "playwright install --with-deps",
+        "cwd": "apps/e2e"
       }
     },
     "lint": {
@@ -37,5 +40,5 @@
       }
     }
   },
-  "implicitDependencies": ["@connectwon/web", "@connectwon/admin", "@connectwon/api"]
+  "implicitDependencies": []
 }

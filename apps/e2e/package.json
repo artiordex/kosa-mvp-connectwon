@@ -4,11 +4,15 @@
   "description": "ConnectWon E2E 테스트",
   "private": true,
   "type": "module",
+  "__comment_scripts": "pnpm scripts 명령어",
   "scripts": {
+    "build": "tsc -p tsconfig.json",
     "test": "playwright test",
     "test:ui": "playwright test --ui",
     "test:report": "playwright show-report",
     "test:debug": "playwright test --debug",
+    "test:ci": "playwright test --reporter=line",
+    "report": "playwright show-report",
     "install:browsers": "playwright install --with-deps",
     "clean": "rimraf playwright-report test-results"
   },
@@ -18,8 +22,8 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.51.1",
-    "@types/dotenv": "^8.2.3",
-    "dotenv": "^17.2.2"
+    "dotenv": "^17.2.2",
+    "@types/dotenv": "^8.2.3"
   },
   "engines": {
     "node": ">=20.11"

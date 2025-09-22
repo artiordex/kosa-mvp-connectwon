@@ -9,7 +9,7 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "rootDir": "./src",
-    "outDir": "./dist",
+    "outDir": "./dist/apps/worker",
 
     "target": "ES2022",
     "module": "NodeNext",
@@ -17,12 +17,17 @@
     "lib": ["ES2022"],
     "types": ["node"],
 
+    "declaration": true,
+    "declarationMap": true,
     "sourceMap": true,
+
     "incremental": true,
-    "tsBuildInfoFile": "./dist/.tsbuildinfo",
-    "declaration": false,
-    "declarationMap": false,
-    "composite": false
+    "tsBuildInfoFile": "./dist/apps/worker/.tsbuildinfo",
+
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", "**/*.test.*", "**/*.spec.*"]

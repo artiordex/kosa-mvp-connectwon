@@ -1,30 +1,12 @@
 ```
 kosa-mvp-connectwon
 ├─ .changeset
-│  ├─ config.json
-│  └─ README.md
 ├─ .cz-config.cjs
 ├─ .dockerignore
 ├─ .eslintignore
 ├─ .eslintrc.json
 ├─ .hintrc
 ├─ .husky
-│  └─ _
-│     ├─ applypatch-msg
-│     ├─ commit-msg
-│     ├─ h
-│     ├─ husky.sh
-│     ├─ post-applypatch
-│     ├─ post-commit
-│     ├─ post-merge
-│     ├─ post-rewrite
-│     ├─ pre-applypatch
-│     ├─ pre-auto-gc
-│     ├─ pre-commit
-│     ├─ pre-merge-commit
-│     ├─ pre-push
-│     ├─ pre-rebase
-│     └─ prepare-commit-msg
 ├─ .pnpmrc
 ├─ .prettierrc.json
 ├─ apps
@@ -481,8 +463,6 @@ kosa-mvp-connectwon
 │     │  ├─ fonts
 │     │  ├─ icons
 │     │  └─ images
-│     │     ├─ arti.png
-│     │     └─ artiordex.png
 │     ├─ src
 │     │  ├─ animations
 │     │  │  ├─ Animation.tsx
@@ -565,28 +545,6 @@ kosa-mvp-connectwon
 ├─ test
 │  └─ setup.ts
 ├─ tmp
-│  ├─ apps
-│  │  ├─ api
-│  │  │  └─ build
-│  │  └─ worker
-│  │     └─ build
-│  └─ packages
-│     ├─ api-contract
-│     │  └─ build
-│     ├─ client
-│     │  └─ build
-│     ├─ core
-│     │  └─ build
-│     ├─ database
-│     │  └─ build
-│     ├─ logger
-│     │  └─ build
-│     ├─ sdk
-│     │  └─ build
-│     ├─ server
-│     │  └─ build
-│     └─ ui
-│        └─ build
 ├─ tools
 │  ├─ services
 │  │  └─ webhook-catcher.ts

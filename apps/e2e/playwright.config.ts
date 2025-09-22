@@ -7,23 +7,44 @@
 import { defineConfig, devices } from '@playwright/test';
 import dotenv from 'dotenv';
 import os from 'os';
-import path from 'path';
-import { dirname } from 'path';
+import path, { dirname } from 'path';
 import { fileURLToPath } from 'url';
 
-// ESM 경로 유틸
+/**
+ * @description ESM 파일 경로 유틸 (Node.js ESM 환경에서 __filename/__dirname 대체)
+ */
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// .env 로드 (이 파일과 같은 폴더의 .env)
+/**
+ * @description e2e 폴더의 .env를 로드한다.
+ */
 dotenv.config({ path: path.resolve(__dirname, '.env') });
 
-// ENV 헬퍼 (대괄호 접근 + 안전 파싱)
+/**
+ * @description truthy 문자열 집합
+ */
 const truthy = new Set(['1', 'true', 'yes', 'on']);
-const falsy = new Set(['0', 'false', 'no', 'off']);
-const env = (k: string) => process.env[k];
 
-const envBool = (k: string, def: boolean) => {
+/**
+ * @description falsy 문자열 집합
+ */
+const falsy = new Set(['0', 'false', 'no', 'off']);
+
+/**
+ * @description 환경변수 값 가져오기
+ * @param {string} k 키
+ * @returns {string | undefined} 환경변수 값
+ */
+const env = (k: string): string | undefined => process.env[k];
+
+/**
+ * @description 환경변수를 불리언으로 파싱
+ * @param {string} k 키
+ * @param {boolean} def 기본값
+ * @returns {boolean} 파싱된 불리언 값
+ */
+const envBool = (k: string, def: boolean): boolean => {
   const raw = env(k);
   if (raw == null) return def;
   const v = raw.toLowerCase();
@@ -31,30 +52,51 @@ const envBool = (k: string, def: boolean) => {
   if (falsy.has(v)) return false;
   return def;
 };
-const envInt = (k: string, def: number) => {
+
+/**
+ * @description 환경변수를 정수로 파싱
+ * @param {string} k 키
+ * @param {number} def 기본값
+ * @returns {number} 파싱된 정수 값
+ */
+const envInt = (k: string, def: number): number => {
   const n = Number.parseInt(String(env(k) ?? ''), 10);
   return Number.isFinite(n) ? n : def;
 };
-const envStr = (k: string, def: string) => env(k) ?? def;
 
-// 파싱된 ENV
+/**
+ * @description 환경변수를 문자열로 가져오기 (없으면 기본값)
+ * @param {string} k 키
+ * @param {string} def 기본값
+ * @returns {string} 문자열 값
+ */
+const envStr = (k: string, def: string): string => env(k) ?? def;
+
+/**
+ * @description 파싱된 실행 환경 값들
+ */
 const IS_CI = envBool('CI', false);
-const HEADLESS = envBool('HEADLESS', true); // false면 UI(headed) 모드
+const HEADLESS = envBool('HEADLESS', true);
 const BASE_URL = envStr('BASE_URL', 'http://localhost:3000');
 
-// CI면 2회, 아니면 0 (원하면 RETRIES로 override 가능)
+/**
+ * @description 재시도/워커 설정
+ */
 const RETRIES = envInt('RETRIES', IS_CI ? 2 : 0);
-// CI=1 → 워커 1, 로컬 → CPU 75% (최소 1)
 const WORKERS = IS_CI ? 1 : Math.max(1, Math.floor(os.cpus().length * 0.75));
 
-// 타임아웃/슬로모션
-const GLOBAL_TIMEOUT_MS = 30 * 60 * 1000; // 30분
+/**
+ * @description 타임아웃 및 슬로모션 설정(ms)
+ */
+const GLOBAL_TIMEOUT_MS = 30 * 60 * 1000;
 const ACTION_TIMEOUT_MS = envInt('ACTION_TIMEOUT', 30) * 1000;
 const NAVIGATION_TIMEOUT_MS = envInt('NAVIGATION_TIMEOUT', 60) * 1000;
 const SLOW_MO_MS = envInt('SLOW_MO', 0);
 const BROWSER_LAUNCH_TIMEOUT_MS = envInt('BROWSER_LAUNCH_TIMEOUT', 60_000);
 
-// 공통 use 옵션
+/**
+ * @description 공통 Playwright `use` 옵션
+ */
 const commonUse = {
   baseURL: BASE_URL,
   headless: HEADLESS,
@@ -64,10 +106,12 @@ const commonUse = {
   navigationTimeout: NAVIGATION_TIMEOUT_MS,
   screenshot: 'only-on-failure' as const,
   video: 'retain-on-failure' as const,
-  trace: 'on-first-retry' as const,
+  trace: 'on-first-retry' as const
 };
 
-// 프로젝트 정의
+/**
+ * @description 데스크톱 크롬 프로젝트 설정
+ */
 const desktopProject = {
   name: 'Desktop Chrome',
   use: {
@@ -81,13 +125,16 @@ const desktopProject = {
         '--disable-dev-shm-usage',
         '--no-sandbox',
         '--disable-gpu',
-        '--disable-blink-features=AutomationControlled',
+        '--disable-blink-features=AutomationControlled'
       ],
-      timeout: BROWSER_LAUNCH_TIMEOUT_MS,
-    },
-  },
+      timeout: BROWSER_LAUNCH_TIMEOUT_MS
+    }
+  }
 };
 
+/**
+ * @description 모바일(픽셀5) 크롬 프로젝트 설정
+ */
 const mobileProject = {
   name: 'Mobile Chrome',
   use: {
@@ -98,38 +145,38 @@ const mobileProject = {
         '--disable-dev-shm-usage',
         '--no-sandbox',
         '--disable-gpu',
-        '--disable-blink-features=AutomationControlled',
+        '--disable-blink-features=AutomationControlled'
       ],
-      timeout: BROWSER_LAUNCH_TIMEOUT_MS,
-    },
-  },
+      timeout: BROWSER_LAUNCH_TIMEOUT_MS
+    }
+  }
 };
 
-// webServer: 조건 만족 시에만 키 추가
+/**
+ * @description 웹 서버 자동 기동 설정(옵션)
+ */
 const webServer = envBool('START_WEB_SERVER', false)
   ? {
       command: envStr('WEB_COMMAND', 'pnpm dev'),
       url: envStr('WEB_URL', 'http://localhost:3000'),
       reuseExistingServer: true,
-      timeout: 120_000,
+      timeout: 120_000
     }
   : undefined;
 
-// 최종 설정
+/**
+ * @description 최종 Playwright 구성 값
+ */
 export default defineConfig({
   testDir: '.',
   testMatch: ['e2e/**/*.spec.ts'],
-
   fullyParallel: true,
   forbidOnly: IS_CI,
   retries: RETRIES,
   workers: WORKERS,
   timeout: GLOBAL_TIMEOUT_MS,
-
   use: commonUse,
   projects: [desktopProject, mobileProject],
   reporter: [['list'], ['html', { open: 'never' }]],
-
-  // exactOptionalPropertyTypes 대응
-  ...(webServer ? { webServer } : {}),
+  ...(webServer ? { webServer } : {})
 });
