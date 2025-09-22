@@ -8,21 +8,23 @@
    * 09-18 : ESM 지원 추가
    * 09-21 : 워크스페이스 패키지 참조 정리 및 dependencies와 일치시킴
    * 09-22 : moduleResolution bundler → NodeNext (Node ESM 해석과 일치)
+   * 09-23 : 빌드 경로 project.json과 통일, esbuild 호환성 개선
    */
 
   // 루트의 tsconfig.base.json 상속
   "extends": "../../tsconfig.base.json",
 
   "compilerOptions": {
-    // API 전용 출력 설정
-    "outDir": "../../dist",
+    // API 전용 출력 설정 (project.json과 일치)
+    "outDir": "../../dist/apps/api",
     "rootDir": "./src",
-    "tsBuildInfoFile": "../../dist/.tsbuildinfo",
+    "tsBuildInfoFile": "../../dist/apps/api/.tsbuildinfo",
 
     // ESM 모듈 설정
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "module": "ES2022",
+    "moduleResolution": "bundler",
     "target": "ES2022",
+    "lib": ["ES2022"],
 
     // NestJS 데코레이터 필수 설정
     "experimentalDecorators": true,
@@ -37,16 +39,30 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
-    "verbatimModuleSyntax": true,
+    "verbatimModuleSyntax": false,
+
+    // 소스맵 및 빌드 최적화
+    "sourceMap": true,
+    "inlineSources": false,
+    "skipLibCheck": true,
 
     // Node.js 타입
     "types": ["node"],
+    "moduleDetection": "force",
 
     // 모듈 해석 도움
     "baseUrl": ".",
     "paths": {
       "@connectwon/*": ["../../packages/*/src"]
-    }
+    },
+
+    // 엄격한 타입 체크
+    "strict": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "exactOptionalPropertyTypes": false,
+    "noImplicitReturns": false,
+    "noFallthroughCasesInSwitch": true
   },
 
   // ts-node ESM 지원

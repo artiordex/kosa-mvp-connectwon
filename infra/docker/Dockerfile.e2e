@@ -10,52 +10,32 @@ FROM mcr.microsoft.com/playwright:v1.51.1-jammy AS base
 WORKDIR /app
 ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0 \
     PNPM_HOME=/root/.local/share/pnpm \
-    PATH="/root/.local/share/pnpm:$PATH" \
-    PNPM_FETCH_RETRIES=5 \
-    PNPM_FETCH_TIMEOUT=120000 \
-    PNPM_NETWORK_CONCURRENCY=8 \
-    npm_config_fetch_retries=5 \
-    npm_config_fetch_retry_mintimeout=20000 \
-    npm_config_fetch_retry_maxtimeout=120000
+    PATH="/root/.local/share/pnpm:$PATH"
 
 # corepack 활성화 + pnpm 버전 고정
-RUN corepack enable && \
-    set -eux; \
-    for i in 1 2 3 4 5; do \
-      corepack prepare pnpm@10.17.0 --activate && break; \
-      echo "corepack prepare failed (attempt $i). retrying..."; \
-      sleep $((i*10)); \
-    done && pnpm -v
+RUN corepack enable && corepack prepare pnpm@10.17.0 --activate && pnpm -v
 
-# 2. 의존성 설치 단계 (Black-box 모드)
-# - web/admin/api는 외부 서비스로 가정 → 런타임 의존성 불필요
+# 2. 의존성 설치 단계 (e2e + logger만 설치)
 FROM base AS deps
 WORKDIR /app
-
-# 루트 메타데이터 먼저 복사 (락파일 포함)
 COPY pnpm-lock.yaml pnpm-workspace.yaml package.json nx.json tsconfig.json tsconfig.base.json ./
-
-# E2E가 사용하는 내부 패키지들의 package.json만 복사 (캐시 최적화)
-COPY apps/e2e/package.json              apps/e2e/
-
-# 워크스페이스 부분 설치: 불필요한 패키지 설치 방지
+COPY apps/e2e/package.json        apps/e2e/
+COPY packages/logger/package.json packages/logger/
 RUN pnpm install --frozen-lockfile \
-  --filter @connectwon/e2e
+  --filter @connectwon/e2e \
+  --filter @connectwon/logger
 
 # 3. 빌드 단계
 FROM deps AS build
 WORKDIR /app
-COPY packages ./packages
-COPY apps/e2e ./apps/e2e
+COPY packages/logger ./packages/logger
+COPY apps/e2e        ./apps/e2e
 
-# 4. 런타임 단계 (Distroless)
+# 4. 런타임 단계 (테스트 러너 전용)
 FROM build AS runtime
 WORKDIR /app
+ENV CI=true PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
 
-ENV CI=true \
-    PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
-
-# 테스트 결과 디렉토리 권한
 RUN mkdir -p ./apps/e2e/test-results && chmod 777 ./apps/e2e/test-results
 
 CMD ["pnpm", "-w", "nx", "run", "@connectwon/e2e:test"]

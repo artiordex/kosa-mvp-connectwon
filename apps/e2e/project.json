@@ -12,6 +12,11 @@
       },
       "outputs": ["apps/e2e/test-results", "apps/e2e/playwright-report"]
     },
+    "build": {
+      "executor": "nx:run-script",
+      "options": { "script": "build" },
+      "dependsOn": []
+    },
     "test:ui": {
       "executor": "nx:run-commands",
       "options": {

@@ -1,8 +1,9 @@
 /**
  * Description : ecosystem.config.js - 📌 PM2 프로세스 매니저 설정 파일
- * Author      : Shiwoo Min
- * Date        : 2025-09-12
+ * Author : Shiwoo Min
+ * Date : 2025-09-12
  * 09-22 - 로그 경로 절대화(/app/logs), Node ESM 소스맵 플래그 추가
+ * 09-23 - 빌드 경로 수정 (dist/apps/api로 통일), 메모리 최적화
  */
 
 module.exports = {
@@ -11,11 +12,11 @@ module.exports = {
       // 앱 기본 정보
       name: 'connectwon-api',
       script: 'main.js',
-      cwd: '/app/dist', 
+      cwd: '/app/dist/apps/api', // 실제 NX 빌드 경로로 수정
 
       // 실행 환경
       interpreter: 'node',
-      node_args: '--max-old-space-size=1024 --enable-source-maps',
+      node_args: '--max-old-space-size=2048 --enable-source-maps',
 
       // 클러스터 모드 (프로덕션용)
       instances: process.env.NODE_ENV === 'production' ? 'max' : 1,
@@ -40,7 +41,7 @@ module.exports = {
       ignore_watch: ['node_modules', 'logs', '*.log'],
 
       // 메모리/프로세스 제한
-      max_memory_restart: '1G',
+      max_memory_restart: '2G',
       min_uptime: '10s',
       max_restarts: 10,
       autorestart: true,

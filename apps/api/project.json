@@ -5,18 +5,10 @@
   "tags": ["type:app", "layer:backend", "platform:node"],
   "targets": {
     "build": {
-      "executor": "@nx/js:tsc",
+      "executor": "@nestjs/cli:build",
       "options": {
-        "main": "apps/api/src/main.ts",
-        "outputPath": "dist",
-        "tsConfig": "apps/api/tsconfig.json",
-        "assets": [
-          { "input": "apps/api", "glob": "ecosystem.config.js", "output": "." },
-          { "input": "apps/api/src", "glob": "**/*.yaml", "output": "./src" },
-          { "input": "apps/api/src", "glob": "**/*.yml", "output": "./src" },
-          { "input": "apps/api/src", "glob": "**/*.json", "output": "./src" },
-          { "input": "apps/api/src", "glob": "**/*.proto", "output": "./src" }
-        ]
+        "outputPath": "dist/apps/api",
+        "tsConfig": "apps/api/tsconfig.json"
       }
     },
     "serve": {

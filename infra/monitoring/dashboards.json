@@ -23,14 +23,14 @@
     },
     "panels": [
       {
-        "id": 1,
-        "title": "서비스 상태 Overview",
+        "id": 13,
+        "title": "Frontend 상태 (Admin)",
         "type": "stat",
-        "gridPos": { "h": 3, "w": 24, "x": 0, "y": 0 },
+        "gridPos": { "h": 3, "w": 12, "x": 0, "y": 0 },
         "targets": [
           {
-            "expr": "up{job=~\"connectwon-(api|web|admin|worker)\"}",
-            "legendFormat": "{{job}}",
+            "expr": "up{job=\"connectwon-admin\"}",
+            "legendFormat": "Admin App",
             "refId": "A"
           }
         ],
@@ -40,95 +40,39 @@
             "mappings": [
               { "type": "value", "options": { "0": { "text": "🔴 DOWN", "color": "red" } } },
               { "type": "value", "options": { "1": { "text": "🟢 UP", "color": "green" } } }
-            ],
-            "thresholds": {
-              "steps": [
-                { "color": "red", "value": 0 },
-                { "color": "green", "value": 1 }
-              ]
-            }
+            ]
           }
         },
-        "options": {
-          "orientation": "horizontal",
-          "reduceOptions": { "calcs": ["lastNotNull"] },
-          "colorMode": "background"
-        }
+        "options": { "colorMode": "background" }
       },
       {
-        "id": 2,
-        "title": "비즈니스 핵심 지표 (금일)",
+        "id": 13,
+        "title": "Frontend 상태 (Web)",
         "type": "stat",
-        "gridPos": { "h": 4, "w": 24, "x": 0, "y": 3 },
+        "gridPos": { "h": 3, "w": 12, "x": 12, "y": 0 },
         "targets": [
           {
-            "expr": "increase(reservations_created_total[24h])",
-            "legendFormat": "금일 예약 수",
+            "expr": "up{job=\"connectwon-web\"}",
+            "legendFormat": "Web App",
             "refId": "A"
-          },
-          {
-            "expr": "increase(payments_completed_total[24h])",
-            "legendFormat": "금일 결제 완료",
-            "refId": "B"
-          },
-          {
-            "expr": "sum(increase(payment_amount_krw_total[24h]))",
-            "legendFormat": "금일 매출 (원)",
-            "refId": "C"
-          },
-          {
-            "expr": "increase(user_registrations_total[24h])",
-            "legendFormat": "신규 가입자",
-            "refId": "D"
-          },
-          {
-            "expr": "avg_over_time(active_users_current[24h])",
-            "legendFormat": "평균 동시 접속자",
-            "refId": "E"
-          },
-          {
-            "expr": "(increase(reservations_completed_total[24h]) / increase(reservations_created_total[24h])) * 100",
-            "legendFormat": "예약 완료율 (%)",
-            "refId": "F"
           }
         ],
         "fieldConfig": {
           "defaults": {
-            "unit": "short",
-            "color": { "mode": "palette-classic" }
-          },
-          "overrides": [
-            {
-              "matcher": { "id": "byName", "options": "금일 매출 (원)" },
-              "properties": [
-                { "id": "unit", "value": "currencyKRW" },
-                { "id": "color", "value": { "mode": "fixed", "fixedColor": "green" } }
-              ]
-            },
-            {
-              "matcher": { "id": "byName", "options": "예약 완료율 (%)" },
-              "properties": [
-                { "id": "unit", "value": "percent" },
-                {
-                  "id": "thresholds",
-                  "value": {
-                    "steps": [
-                      { "color": "red", "value": 0 },
-                      { "color": "yellow", "value": 80 },
-                      { "color": "green", "value": 90 }
-                    ]
-                  }
-                }
-              ]
-            }
-          ]
-        }
+            "unit": "bool",
+            "mappings": [
+              { "type": "value", "options": { "0": { "text": "🔴 DOWN", "color": "red" } } },
+              { "type": "value", "options": { "1": { "text": "🟢 UP", "color": "green" } } }
+            ]
+          }
+        },
+        "options": { "colorMode": "background" }
       },
       {
         "id": 3,
         "title": "API 요청률 (RPS)",
         "type": "timeseries",
-        "gridPos": { "h": 8, "w": 12, "x": 0, "y": 7 },
+        "gridPos": { "h": 8, "w": 12, "x": 0, "y": 3 },
         "targets": [
           {
             "expr": "sum(rate(http_requests_total{job=\"connectwon-api\"}[5m])) by (method, route)",
@@ -141,16 +85,13 @@
             "refId": "B"
           }
         ],
-        "fieldConfig": { "defaults": { "unit": "reqps" } },
-        "options": {
-          "legend": { "displayMode": "table", "placement": "bottom", "values": ["current", "max"] }
-        }
+        "fieldConfig": { "defaults": { "unit": "reqps" } }
       },
       {
         "id": 4,
         "title": "API 응답시간 분포",
         "type": "timeseries",
-        "gridPos": { "h": 8, "w": 12, "x": 12, "y": 7 },
+        "gridPos": { "h": 8, "w": 12, "x": 12, "y": 3 },
         "targets": [
           {
             "expr": "histogram_quantile(0.50, sum by (le) (rate(http_request_duration_seconds_bucket{job=\"connectwon-api\"}[5m])))",
@@ -167,188 +108,13 @@
             "legendFormat": "p99 (최악)",
             "refId": "C"
           }
-        ],
-        "fieldConfig": { "defaults": { "unit": "s" } },
-        "alert": {
-          "conditions": [
-            {
-              "query": { "params": ["B", "5m", "now"] },
-              "reducer": { "params": [], "type": "avg" },
-              "evaluator": { "params": [2], "type": "gt" }
-            }
-          ],
-          "executionErrorState": "alerting",
-          "for": "2m",
-          "frequency": "30s",
-          "handler": 1,
-          "name": "API 응답시간 경고"
-        }
-      },
-      {
-        "id": 5,
-        "title": "API 에러율",
-        "type": "stat",
-        "gridPos": { "h": 4, "w": 8, "x": 0, "y": 15 },
-        "targets": [
-          {
-            "expr": "((sum(rate(http_requests_total{job=\"connectwon-api\",status=~\"4..\"}[5m])) or vector(0)) / sum(rate(http_requests_total{job=\"connectwon-api\"}[5m]))) * 100",
-            "legendFormat": "4xx 에러율 (%)",
-            "refId": "A"
-          },
-          {
-            "expr": "((sum(rate(http_requests_total{job=\"connectwon-api\",status=~\"5..\"}[5m])) or vector(0)) / sum(rate(http_requests_total{job=\"connectwon-api\"}[5m]))) * 100",
-            "legendFormat": "5xx 에러율 (%)",
-            "refId": "B"
-          }
-        ],
-        "fieldConfig": {
-          "defaults": {
-            "unit": "percent",
-            "thresholds": {
-              "steps": [
-                { "color": "green", "value": 0 },
-                { "color": "yellow", "value": 1 },
-                { "color": "red", "value": 5 }
-              ]
-            }
-          }
-        },
-        "options": { "colorMode": "background" }
-      },
-      {
-        "id": 6,
-        "title": "결제 성공률",
-        "type": "stat",
-        "gridPos": { "h": 4, "w": 8, "x": 8, "y": 15 },
-        "targets": [
-          {
-            "expr": "(sum(rate(payments_completed_total[10m])) / sum(rate(payments_attempted_total[10m]))) * 100",
-            "legendFormat": "결제 성공률",
-            "refId": "A"
-          }
-        ],
-        "fieldConfig": {
-          "defaults": {
-            "unit": "percent",
-            "thresholds": {
-              "steps": [
-                { "color": "red", "value": 0 },
-                { "color": "yellow", "value": 90 },
-                { "color": "green", "value": 95 }
-              ]
-            }
-          }
-        },
-        "options": { "colorMode": "background" }
-      },
-      {
-        "id": 7,
-        "title": "예약 성공률",
-        "type": "stat",
-        "gridPos": { "h": 4, "w": 8, "x": 16, "y": 15 },
-        "targets": [
-          {
-            "expr": "(sum(rate(reservations_completed_total[10m])) / sum(rate(reservations_attempted_total[10m]))) * 100",
-            "legendFormat": "예약 성공률",
-            "refId": "A"
-          }
-        ],
-        "fieldConfig": {
-          "defaults": {
-            "unit": "percent",
-            "thresholds": {
-              "steps": [
-                { "color": "red", "value": 0 },
-                { "color": "yellow", "value": 85 },
-                { "color": "green", "value": 90 }
-              ]
-            }
-          }
-        },
-        "options": { "colorMode": "background" }
-      },
-      {
-        "id": 8,
-        "title": "시스템 리소스 - CPU",
-        "type": "timeseries",
-        "gridPos": { "h": 6, "w": 12, "x": 0, "y": 19 },
-        "targets": [
-          {
-            "expr": "100 - (avg by(instance) (irate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100)",
-            "legendFormat": "CPU 사용률 (%)",
-            "refId": "A"
-          }
-        ],
-        "fieldConfig": {
-          "defaults": {
-            "unit": "percent",
-            "min": 0,
-            "max": 100,
-            "thresholds": {
-              "steps": [
-                { "color": "green", "value": 0 },
-                { "color": "yellow", "value": 70 },
-                { "color": "red", "value": 85 }
-              ]
-            }
-          }
-        }
-      },
-      {
-        "id": 9,
-        "title": "시스템 리소스 - 메모리",
-        "type": "timeseries",
-        "gridPos": { "h": 6, "w": 12, "x": 12, "y": 19 },
-        "targets": [
-          {
-            "expr": "(1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100",
-            "legendFormat": "메모리 사용률 (%)",
-            "refId": "A"
-          }
-        ],
-        "fieldConfig": {
-          "defaults": {
-            "unit": "percent",
-            "min": 0,
-            "max": 100,
-            "thresholds": {
-              "steps": [
-                { "color": "green", "value": 0 },
-                { "color": "yellow", "value": 80 },
-                { "color": "red", "value": 90 }
-              ]
-            }
-          }
-        }
-      },
-      {
-        "id": 10,
-        "title": "PostgreSQL 상태",
-        "type": "timeseries",
-        "gridPos": { "h": 6, "w": 12, "x": 0, "y": 25 },
-        "targets": [
-          {
-            "expr": "pg_stat_activity_count or postgresql_connections_active",
-            "legendFormat": "활성 연결 수",
-            "refId": "A"
-          },
-          {
-            "expr": "rate(pg_stat_database_xact_commit[5m]) or rate(postgresql_transactions_total{type=\"commit\"}[5m])",
-            "legendFormat": "초당 커밋 수",
-            "refId": "B"
-          },
-          {
-            "expr": "pg_stat_database_tup_inserted or rate(postgresql_rows_total{operation=\"insert\"}[5m])",
-            "legendFormat": "초당 INSERT 수",
-            "refId": "C"
-          }
         ]
       },
       {
         "id": 11,
         "title": "Redis & Worker 큐 상태",
         "type": "timeseries",
-        "gridPos": { "h": 6, "w": 12, "x": 12, "y": 25 },
+        "gridPos": { "h": 6, "w": 24, "x": 0, "y": 11 },
         "targets": [
           {
             "expr": "redis_connected_clients or redis_clients_connected",
@@ -378,97 +144,51 @@
         ]
       },
       {
-        "id": 12,
-        "title": "비즈니스 트렌드 - 시간별 예약 & 매출",
+        "id": 10,
+        "title": "PostgreSQL 상태",
         "type": "timeseries",
-        "gridPos": { "h": 8, "w": 24, "x": 0, "y": 31 },
+        "gridPos": { "h": 6, "w": 24, "x": 0, "y": 17 },
         "targets": [
           {
-            "expr": "increase(reservations_created_total[1h])",
-            "legendFormat": "시간당 예약 생성",
+            "expr": "pg_stat_activity_count or postgresql_connections_active",
+            "legendFormat": "활성 연결 수",
             "refId": "A"
           },
           {
-            "expr": "increase(reservations_completed_total[1h])",
-            "legendFormat": "시간당 예약 완료",
+            "expr": "rate(pg_stat_database_xact_commit[5m]) or rate(postgresql_transactions_total{type=\"commit\"}[5m])",
+            "legendFormat": "초당 커밋 수",
             "refId": "B"
           },
           {
-            "expr": "increase(reservations_cancelled_total[1h])",
-            "legendFormat": "시간당 예약 취소",
+            "expr": "pg_stat_database_tup_inserted or rate(postgresql_rows_total{operation=\"insert\"}[5m])",
+            "legendFormat": "초당 INSERT 수",
             "refId": "C"
-          },
-          {
-            "expr": "increase(payment_amount_krw_total[1h])",
-            "legendFormat": "시간당 매출 (원)",
-            "refId": "D"
-          },
-          {
-            "expr": "increase(user_registrations_total[1h])",
-            "legendFormat": "시간당 신규 가입",
-            "refId": "E"
           }
-        ],
-        "fieldConfig": {
-          "overrides": [
-            {
-              "matcher": { "id": "byName", "options": "시간당 매출 (원)" },
-              "properties": [
-                { "id": "unit", "value": "currencyKRW" },
-                { "id": "custom.axisPlacement", "value": "right" }
-              ]
-            }
-          ]
-        }
+        ]
       },
       {
-        "id": 13,
-        "title": "Frontend 상태 (Web + Admin)",
-        "type": "stat",
-        "gridPos": { "h": 3, "w": 12, "x": 0, "y": 39 },
+        "id": 8,
+        "title": "시스템 리소스 - CPU",
+        "type": "timeseries",
+        "gridPos": { "h": 6, "w": 12, "x": 0, "y": 23 },
         "targets": [
           {
-            "expr": "up{job=\"connectwon-web\"}",
-            "legendFormat": "Web App",
+            "expr": "100 - (avg by(instance) (irate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100)",
+            "legendFormat": "CPU 사용률 (%)",
             "refId": "A"
-          },
-          {
-            "expr": "up{job=\"connectwon-admin\"}",
-            "legendFormat": "Admin App",
-            "refId": "B"
           }
-        ],
-        "fieldConfig": {
-          "defaults": {
-            "unit": "bool",
-            "mappings": [
-              { "type": "value", "options": { "0": { "text": "🔴 DOWN", "color": "red" } } },
-              { "type": "value", "options": { "1": { "text": "🟢 UP", "color": "green" } } }
-            ]
-          }
-        },
-        "options": { "colorMode": "background" }
+        ]
       },
       {
-        "id": 14,
-        "title": "실시간 사용자 활동",
+        "id": 9,
+        "title": "시스템 리소스 - 메모리",
         "type": "timeseries",
-        "gridPos": { "h": 6, "w": 12, "x": 12, "y": 39 },
+        "gridPos": { "h": 6, "w": 12, "x": 12, "y": 23 },
         "targets": [
           {
-            "expr": "active_users_current",
-            "legendFormat": "현재 접속자",
+            "expr": "(1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100",
+            "legendFormat": "메모리 사용률 (%)",
             "refId": "A"
-          },
-          {
-            "expr": "rate(page_views_total[5m]) * 60",
-            "legendFormat": "분당 페이지뷰",
-            "refId": "B"
-          },
-          {
-            "expr": "rate(user_sessions_started_total[5m]) * 60",
-            "legendFormat": "분당 새 세션",
-            "refId": "C"
           }
         ]
       }

@@ -3,6 +3,7 @@
   "description": "Nx 워크스페이스 설정",
   "extends": "nx/presets/npm.json",
   "defaultBase": "main",
+
   "__comment_namedInputs": "namedInputs: 빌드 캐시와 의존성 관리를 위한 입력 파일 집합을 정의",
   "namedInputs": {
     "default": ["{projectRoot}/**/*", "!{projectRoot}/dist/**/*", "!{projectRoot}/build/**/*", "!{projectRoot}/.next/**/*"],
@@ -20,6 +21,7 @@
     ],
     "env": ["{workspaceRoot}/.env*", "{workspaceRoot}/infra/docker/.env", "{workspaceRoot}/secrets/**", "{projectRoot}/.env*"]
   },
+
   "__comment_targetDefaults": "targetDefaults: Nx 작업 단위별 기본 입력, 출력, 캐싱, 의존성 등을 정의",
   "targetDefaults": {
     "build": {
@@ -70,14 +72,48 @@
       "cache": false
     }
   },
+
+  "__comment_tasksRunnerOptions": "tasksRunnerOptions: 병렬 처리 및 성능 최적화 설정 추가",
+  "tasksRunnerOptions": {
+    "default": {
+      "runner": "nx/tasks-runners/default",
+      "options": {
+        "cacheableOperations": ["build", "lint", "test", "type-check", "gen:openapi"],
+        "parallel": 2,
+        "maxParallel": 2,
+        "useDaemonProcess": true,
+        "skipNxCache": false,
+        "cacheDirectory": "node_modules/.cache/nx"
+      }
+    }
+  },
+
   "__comment_pluginsConfig": "pluginsConfig: Nx에서 사용하는 빌드와 검사 플러그인 지정",
   "pluginsConfig": {
     "@nx/js": {},
     "@nx/web": {}
   },
+
   "__comment_workspaceLayout": "workspaceLayout: 워크스페이스 내 앱과 라이브러리 디렉터리 구조 정의",
   "workspaceLayout": {
     "appsDir": "apps",
     "libsDir": "packages"
-  }
+  },
+
+  "__comment_generators": "generators: 코드 생성 시 기본 설정",
+  "generators": {
+    "@nx/react": {
+      "application": {
+        "babel": true
+      }
+    },
+    "@nx/next": {
+      "application": {
+        "linter": "eslint"
+      }
+    }
+  },
+
+  "__comment_nxCloudAccessToken": "nxCloudAccessToken: Nx Cloud 사용 시 토큰 (선택사항)",
+  "nxCloudAccessToken": "your-actual-token-here"
 }

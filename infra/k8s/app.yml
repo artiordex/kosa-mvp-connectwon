@@ -1,7 +1,7 @@
-# Description : app.yml - 📌 K8s ArgoCD 매니페스트
+# Description : app.yml - 📌 K8s ArgoCD 매니페스트 (수정 버전)
 # Author : Shiwoo Min
 # Date : 2025-09-15
-# 09-16 - 보안 강화(SecurityContext, NetworkPolicy), 고가용성(HPA, PDB), 운영 안정성 추가
+# 09-22 - NetPol/DNS 수정, API migration pnpm 반영, ingress rewrite, worker probe 개선, 로그 볼륨 추가
 # 참고 :
 # - 이미지 레포: ghcr.io/artiordex/kosa-mvp-connectwon/<service>:latest
 
@@ -26,7 +26,7 @@ data:
   NODE_ENV: 'production'
 
 ---
-# NetworkPolicy로 트래픽 제한
+# 기본 NetworkPolicy (DNS/내부만 허용)
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -39,7 +39,7 @@ spec:
     - Egress
   egress:
     # DNS 허용
-    - to: []
+    - to: {}
       ports:
         - protocol: UDP
           port: 53
@@ -47,10 +47,10 @@ spec:
     - to:
         - namespaceSelector:
             matchLabels:
-              name: connectwon
+              kubernetes.io/metadata.name: connectwon
 
 ---
-# Web NetworkPolicy - 특정 트래픽만 허용
+# Web NetworkPolicy
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -60,9 +60,7 @@ spec:
   podSelector:
     matchLabels:
       app: web
-  policyTypes:
-    - Ingress
-    - Egress
+  policyTypes: [Ingress, Egress]
   ingress:
     - from:
         - podSelector:
@@ -81,7 +79,7 @@ spec:
           port: 8000
 
 ---
-# Web(Next.js 사용자 앱)
+# Web (Next.js 사용자 앱)
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -94,11 +92,6 @@ spec:
   template:
     metadata:
       labels: { app: web }
-      # Prometheus 스크랩(선택) – /metrics를 제공할 때만 주석 해제
-      # annotations:
-      #   prometheus.io/scrape: "true"
-      #   prometheus.io/port: "3000"
-      #   prometheus.io/path: "/metrics"
     spec:
       imagePullSecrets:
         - name: ghcr-pull-secret
@@ -114,49 +107,29 @@ spec:
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
-            capabilities:
-              drop:
-                - ALL
+            capabilities: { drop: [ "ALL" ] }
           envFrom:
             - configMapRef: { name: connectwon-config }
-            - secretRef: { name: connectwon-secrets } # 필요 시 사용
-          # Next.js 헬스엔드포인트가 없다면, 200 루트 응답으로 간단히 체크
+            - secretRef: { name: connectwon-secrets }
           readinessProbe:
             httpGet: { path: '/', port: 3000 }
             initialDelaySeconds: 10
             periodSeconds: 10
-            timeoutSeconds: 2
-            failureThreshold: 6
           livenessProbe:
             httpGet: { path: '/', port: 3000 }
             initialDelaySeconds: 30
             periodSeconds: 20
-            timeoutSeconds: 2
-            failureThreshold: 6
           resources:
-            requests: { cpu: '100m', memory: '256Mi' }
+            requests: { cpu: '200m', memory: '256Mi' }
             limits: { cpu: '500m', memory: '512Mi' }
           volumeMounts:
-            - name: tmp-volume
-              mountPath: /tmp
-            - name: next-cache
-              mountPath: /app/.next/cache
+            - { name: tmp-volume, mountPath: /tmp }
+            - { name: next-cache, mountPath: /app/.next/cache }
+            - { name: logs, mountPath: /app/logs }
       volumes:
-        - name: tmp-volume
-          emptyDir: {}
-        - name: next-cache
-          emptyDir: {}
-      affinity:
-        podAntiAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-            - weight: 100
-              podAffinityTerm:
-                labelSelector:
-                  matchExpressions:
-                    - key: app
-                      operator: In
-                      values: ['web']
-                topologyKey: kubernetes.io/hostname
+        - { name: tmp-volume, emptyDir: {} }
+        - { name: next-cache, emptyDir: {} }
+        - { name: logs, emptyDir: {} }
 
 ---
 apiVersion: v1
@@ -169,40 +142,25 @@ spec:
   type: ClusterIP
   selector: { app: web }
   ports:
-    - name: http
-      port: 80
-      targetPort: 3000
+    - { name: http, port: 80, targetPort: 3000 }
 
 ---
-# Web HPA (Horizontal Pod Autoscaler)
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: web-hpa
   namespace: connectwon
 spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: web
+  scaleTargetRef: { apiVersion: apps/v1, kind: Deployment, name: web }
   minReplicas: 2
   maxReplicas: 10
   metrics:
     - type: Resource
-      resource:
-        name: cpu
-        target:
-          type: Utilization
-          averageUtilization: 70
+      resource: { name: cpu, target: { type: Utilization, averageUtilization: 70 } }
     - type: Resource
-      resource:
-        name: memory
-        target:
-          type: Utilization
-          averageUtilization: 80
+      resource: { name: memory, target: { type: Utilization, averageUtilization: 80 } }
 
 ---
-# Web PDB (Pod Disruption Budget)
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
@@ -210,12 +168,10 @@ metadata:
   namespace: connectwon
 spec:
   minAvailable: 1
-  selector:
-    matchLabels:
-      app: web
+  selector: { matchLabels: { app: web } }
 
 ---
-# Admin(Next.js 관리자 대시보드)
+# Admin (관리자 대시보드)
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -228,13 +184,8 @@ spec:
   template:
     metadata:
       labels: { app: admin }
-      # annotations:
-      #   prometheus.io/scrape: "true"
-      #   prometheus.io/port: "3001"
-      #   prometheus.io/path: "/metrics"
     spec:
-      imagePullSecrets:
-        - name: ghcr-pull-secret
+      imagePullSecrets: [ { name: ghcr-pull-secret } ]
       securityContext:
         runAsNonRoot: true
         runAsUser: 1001
@@ -247,9 +198,7 @@ spec:
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
-            capabilities:
-              drop:
-                - ALL
+            capabilities: { drop: [ "ALL" ] }
           envFrom:
             - configMapRef: { name: connectwon-config }
             - secretRef: { name: connectwon-secrets }
@@ -265,15 +214,13 @@ spec:
             requests: { cpu: '100m', memory: '256Mi' }
             limits: { cpu: '500m', memory: '512Mi' }
           volumeMounts:
-            - name: tmp-volume
-              mountPath: /tmp
-            - name: next-cache
-              mountPath: /app/.next/cache
+            - { name: tmp-volume, mountPath: /tmp }
+            - { name: next-cache, mountPath: /app/.next/cache }
+            - { name: logs, mountPath: /app/logs }
       volumes:
-        - name: tmp-volume
-          emptyDir: {}
-        - name: next-cache
-          emptyDir: {}
+        - { name: tmp-volume, emptyDir: {} }
+        - { name: next-cache, emptyDir: {} }
+        - { name: logs, emptyDir: {} }
 
 ---
 apiVersion: v1
@@ -286,12 +233,10 @@ spec:
   type: ClusterIP
   selector: { app: admin }
   ports:
-    - name: http
-      port: 80
-      targetPort: 3001
+    - { name: http, port: 80, targetPort: 3001 }
 
 ---
-# API(Nest/Express)
+# API (Nest/Express)
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -304,14 +249,12 @@ spec:
   template:
     metadata:
       labels: { app: api }
-      # Prometheus가 /metrics 수집 (노출 시 활성화)
       annotations:
         prometheus.io/scrape: 'true'
         prometheus.io/port: '8000'
         prometheus.io/path: '/metrics'
     spec:
-      imagePullSecrets:
-        - name: ghcr-pull-secret
+      imagePullSecrets: [ { name: ghcr-pull-secret } ]
       securityContext:
         runAsNonRoot: true
         runAsUser: 1001
@@ -320,65 +263,43 @@ spec:
       initContainers:
         - name: migration
           image: ghcr.io/artiordex/kosa-mvp-connectwon/api:latest
-          command: ['npm', 'run', 'db:migrate']
+          command: ['pnpm', 'run', 'db:migrate']
           envFrom:
             - configMapRef: { name: connectwon-config }
             - secretRef: { name: connectwon-secrets }
           securityContext:
             allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: true
-            capabilities:
-              drop:
-                - ALL
-          volumeMounts:
-            - name: tmp-volume
-              mountPath: /tmp
+            readOnlyRootFilesystem: false # 마이그레이션은 쓰기 필요
+            capabilities: { drop: [ "ALL" ] }
       containers:
         - name: api
           image: ghcr.io/artiordex/kosa-mvp-connectwon/api:latest
           ports: [{ containerPort: 8000 }]
-          env:
-            - name: PORT
-              value: '8000'
+          env: [ { name: PORT, value: '8000' } ]
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
-            capabilities:
-              drop:
-                - ALL
+            capabilities: { drop: [ "ALL" ] }
           envFrom:
             - configMapRef: { name: connectwon-config }
-            - secretRef: { name: connectwon-secrets } # DATABASE_URL / REDIS_URL / JWT_SECRET 등
+            - secretRef: { name: connectwon-secrets }
           readinessProbe:
             httpGet: { path: '/health', port: 8000 }
             initialDelaySeconds: 10
             periodSeconds: 10
-            timeoutSeconds: 2
           livenessProbe:
             httpGet: { path: '/health', port: 8000 }
             initialDelaySeconds: 30
             periodSeconds: 20
-            timeoutSeconds: 2
           resources:
-            requests: { cpu: '200m', memory: '384Mi' }
+            requests: { cpu: '300m', memory: '512Mi' }
             limits: { cpu: '1000m', memory: '1Gi' }
           volumeMounts:
-            - name: tmp-volume
-              mountPath: /tmp
+            - { name: tmp-volume, mountPath: /tmp }
+            - { name: logs, mountPath: /app/logs }
       volumes:
-        - name: tmp-volume
-          emptyDir: {}
-      affinity:
-        podAntiAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-            - weight: 100
-              podAffinityTerm:
-                labelSelector:
-                  matchExpressions:
-                    - key: app
-                      operator: In
-                      values: ['api']
-                topologyKey: kubernetes.io/hostname
+        - { name: tmp-volume, emptyDir: {} }
+        - { name: logs, emptyDir: {} }
 
 ---
 apiVersion: v1
@@ -391,53 +312,10 @@ spec:
   type: ClusterIP
   selector: { app: api }
   ports:
-    - name: http
-      port: 80
-      targetPort: 8000
+    - { name: http, port: 80, targetPort: 8000 }
 
 ---
-# API HPA (Horizontal Pod Autoscaler)
-apiVersion: autoscaling/v2
-kind: HorizontalPodAutoscaler
-metadata:
-  name: api-hpa
-  namespace: connectwon
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: api
-  minReplicas: 2
-  maxReplicas: 15
-  metrics:
-    - type: Resource
-      resource:
-        name: cpu
-        target:
-          type: Utilization
-          averageUtilization: 70
-    - type: Resource
-      resource:
-        name: memory
-        target:
-          type: Utilization
-          averageUtilization: 80
-
----
-# API PDB (Pod Disruption Budget)
-apiVersion: policy/v1
-kind: PodDisruptionBudget
-metadata:
-  name: api-pdb
-  namespace: connectwon
-spec:
-  minAvailable: 1
-  selector:
-    matchLabels:
-      app: api
-
----
-# Worker(BullMQ 등 백그라운드 작업자) – HTTP 트래픽은 없지만 /metrics를 열 경우 수집용 Service를 둘 수 있음
+# Worker
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -450,10 +328,80 @@ spec:
   template:
     metadata:
       labels: { app: worker }
-      # annotations:
-      #   prometheus.io/scrape: "true"
-      #   prometheus.io/port: "3003"
-      #   prometheus.io/path: "/metrics"
+    spec:
+      imagePullSecrets: [ { name: ghcr-pull-secret } ]
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        runAsGroup: 1001
+        fsGroup: 1001
+      containers:
+        - name: worker
+          image: ghcr.io/artiordex/kosa-mvp-connectwon/worker:latest
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: { drop: [ "ALL" ] }
+          envFrom:
+            - configMapRef: { name: connectwon-config }
+            - secretRef: { name: connectwon-secrets }
+          livenessProbe:
+            exec:
+              command: ['sh', '-c', "redis-cli -u $REDIS_URL ping | grep PONG"]
+            initialDelaySeconds: 30
+            periodSeconds: 30
+          resources:
+            requests: { cpu: '100m', memory: '256Mi' }
+            limits: { cpu: '500m', memory: '512Mi' }
+          volumeMounts:
+            - { name: tmp-volume, mountPath: /tmp }
+            - { name: logs, mountPath: /app/logs }
+      volumes:
+        - { name: tmp-volume, emptyDir: {} }
+        - { name: logs, emptyDir: {} }
+
+---
+# Ingress
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: connectwon
+  namespace: connectwon
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  rules:
+    - host: connectwon.local
+      http:
+        paths:
+          - path: /()(.*)
+            pathType: Prefix
+            backend:
+              service: { name: web, port: { number: 80 } }
+          - path: /api(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service: { name: api, port: { number: 80 } }
+          - path: /admin(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service: { name: admin, port: { number: 80 } }
+
+# n8n (Workflow Automation)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: n8n
+  namespace: connectwon
+  labels: { app: n8n }
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app: n8n }
+  template:
+    metadata:
+      labels: { app: n8n }
     spec:
       imagePullSecrets:
         - name: ghcr-pull-secret
@@ -463,108 +411,103 @@ spec:
         runAsGroup: 1001
         fsGroup: 1001
       containers:
-        - name: worker
-          image: ghcr.io/artiordex/kosa-mvp-connectwon/worker:latest
-          # metrics만 있다면 containerPort 생략 가능. 노출 시 아래 주석 해제:
-          # ports: [{ containerPort: 3003 }]
-          securityContext:
-            allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: true
-            capabilities:
-              drop:
-                - ALL
-          envFrom:
-            - configMapRef: { name: connectwon-config }
-            - secretRef: { name: connectwon-secrets } # QUEUE_REDIS_URL / REDIS_URL / DATABASE_URL 등
-          # 워커는 프로브가 애매할 수 있음 → 주기적 작업/메트릭 노출 기준으로 조정
-          livenessProbe:
-            exec: { command: ['sh', '-c', "node -e 'process.exit(0)'"] }
-            initialDelaySeconds: 30
-            periodSeconds: 30
-          resources:
-            requests: { cpu: '50m', memory: '128Mi' }
-            limits: { cpu: '500m', memory: '512Mi' }
+        - name: n8n
+          image: n8nio/n8n:1.80.0
+          ports:
+            - containerPort: 5678
+          env:
+            - name: N8N_PORT
+              value: "5678"
+            - name: N8N_HOST
+              value: "n8n.connectwon.svc.cluster.local"
+            - name: GENERIC_TIMEZONE
+              value: "Asia/Seoul"
+            - name: N8N_BASIC_AUTH_ACTIVE
+              value: "true"
+            - name: N8N_BASIC_AUTH_USER
+              valueFrom:
+                secretKeyRef:
+                  name: connectwon-secrets
+                  key: N8N_USER
+            - name: N8N_BASIC_AUTH_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: connectwon-secrets
+                  key: N8N_PASSWORD
+            - name: DB_TYPE
+              value: "postgresdb"
+            - name: DB_POSTGRESDB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: connectwon-secrets
+                  key: POSTGRES_HOST
+            - name: DB_POSTGRESDB_PORT
+              value: "5432"
+            - name: DB_POSTGRESDB_DATABASE
+              value: "n8n"
+            - name: DB_POSTGRESDB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: connectwon-secrets
+                  key: POSTGRES_USER
+            - name: DB_POSTGRESDB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: connectwon-secrets
+                  key: POSTGRES_PASSWORD
           volumeMounts:
-            - name: tmp-volume
-              mountPath: /tmp
+            - name: n8n-data
+              mountPath: /home/node/.n8n
       volumes:
-        - name: tmp-volume
-          emptyDir: {}
+        - name: n8n-data
+          persistentVolumeClaim:
+            claimName: n8n-pvc
 
 ---
-# Worker HPA (큐 길이 기반 스케일링 고려)
-apiVersion: autoscaling/v2
-kind: HorizontalPodAutoscaler
-metadata:
-  name: worker-hpa
-  namespace: connectwon
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: worker
-  minReplicas: 1
-  maxReplicas: 5
-  metrics:
-    - type: Resource
-      resource:
-        name: cpu
-        target:
-          type: Utilization
-          averageUtilization: 80
-    - type: Resource
-      resource:
-        name: memory
-        target:
-          type: Utilization
-          averageUtilization: 85
-
----
-# (선택) Worker 메트릭 수집용 Service – 위에서 ports 열면 사용
 apiVersion: v1
 kind: Service
 metadata:
-  name: worker-metrics
+  name: n8n
   namespace: connectwon
-  labels: { app: worker }
+  labels: { app: n8n }
 spec:
   type: ClusterIP
-  selector: { app: worker }
+  selector: { app: n8n }
   ports:
-    - name: metrics
-      port: 3003
-      targetPort: 3003
+    - name: http
+      port: 80
+      targetPort: 5678
 
 ---
-# (선택) Ingress – Nginx Ingress Controller가 있을 때 web/api/admin 라우팅 예시
+# (Optional) Ingress - 외부 접근용
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: connectwon
+  name: n8n
   namespace: connectwon
   annotations:
     kubernetes.io/ingress.class: "nginx"
-    # 필요 시 TLS/리라이트 등 주석 추가
 spec:
   rules:
-    - host: connectwon.local
+    - host: n8n.connectwon.local
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: web
+                name: n8n
                 port: { number: 80 }
-          - path: /api
-            pathType: Prefix
-            backend:
-              service:
-                name: api
-                port: { number: 80 }
-          - path: /admin
-            pathType: Prefix
-            backend:
-                service:
-                  name: admin
-                  port: { number: 80 }
+
+---
+# PVC (워크플로우/설정 저장)
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: n8n-pvc
+  namespace: connectwon
+spec:
+  accessModes: ["ReadWriteOnce"]
+  resources:
+    requests:
+      storage: 1Gi

@@ -93,3 +93,22 @@ test-results
 
 // 윈도우 썸네일 캐시 파일 제외
 Thumbs.db
+
+# Playwright / Cypress / 테스트 산출물
+playwright-report
+**/playwright-report
+cypress
+**/cypress
+
+# IDE별 캐시
+.idea/*
+.vscode/*
+.vscode-test
+
+# Docker 자체 캐시
+docker-compose.override.yml
+docker-compose.*.yml
+
+# OS별
+ehthumbs.db
+desktop.ini

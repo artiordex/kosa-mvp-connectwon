@@ -2,9 +2,39 @@
 # Author : Shiwoo Min
 # Date : 2025-09-15
 # 09-16 - printf 포맷팅 적용
+# 09-22 - 불필요한 or 조건 제거, 표현식 정리, 주석 가독성 개선
+# 09-23 - 서비스 순서 재배치 (admin → web → api → worker → db → system)
 
 groups:
-  # API (Nest/Express)
+  # Admin (Next.js 관리자 대시보드)
+  - name: connectwon-admin-alerts
+    rules:
+      - alert: ConnectWonAdminDown
+        expr: up{job="connectwon-admin"} == 0
+        for: 2m
+        labels:
+          severity: critical
+          service: admin
+          team: frontend
+        annotations:
+          summary: 'Admin 애플리케이션이 다운되었습니다'
+          description: '관리자 대시보드 서비스에 2분 이상 연결할 수 없습니다.'
+
+  # Web (Next.js 사용자 앱)
+  - name: connectwon-web-alerts
+    rules:
+      - alert: ConnectWonWebDown
+        expr: up{job="connectwon-web"} == 0
+        for: 2m
+        labels:
+          severity: critical
+          service: web
+          team: frontend
+        annotations:
+          summary: 'Web 애플리케이션이 다운되었습니다'
+          description: '사용자 Web 서비스에 2분 이상 연결할 수 없습니다.'
+
+  # API (Nest)
   - name: connectwon-api-alerts
     rules:
       # API 서버 다운
@@ -38,11 +68,7 @@ groups:
       # API 에러율 (5xx 비율 > 5%)
       - alert: ConnectWonAPIHighErrorRate
         expr: |
-          (
-            sum(rate(http_requests_total{job="connectwon-api", code=~"5.."}[5m]))
-            or
-            sum(rate(http_requests_total{job="connectwon-api", status_code=~"5.."}[5m]))
-          )
+          sum(rate(http_requests_total{job="connectwon-api", code=~"5.."}[5m]))
           /
           sum(rate(http_requests_total{job="connectwon-api"}[5m])) * 100 > 5
         for: 2m
@@ -52,7 +78,7 @@ groups:
           team: backend
         annotations:
           summary: 'API 에러율이 급증했습니다 (>5%)'
-          description: 'API 5xx 에러율이 5%를 초과했습니다. 현재: {{ printf "%.2f%%" $value }}'
+          description: 'API 5xx 에러율이 5%를 초과했습니다. 현재: {{ printf "%.2f" $value }}%%'
 
       # API 트래픽 급증 (RPS > 100)
       - alert: ConnectWonAPITrafficSpike
@@ -65,85 +91,6 @@ groups:
         annotations:
           summary: 'API 트래픽이 급증했습니다'
           description: '분당 API 요청이 평소보다 크게 증가했습니다. 현재: {{ printf "%.2f" $value }} RPS'
-
-  # 시스템 (node_exporter)
-  - name: connectwon-system-alerts
-    rules:
-      # 높은 CPU 사용률
-      - alert: ConnectWonHighCPUUsage
-        expr: 100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
-        for: 5m
-        labels:
-          severity: warning
-          service: system
-          team: infrastructure
-        annotations:
-          summary: '서버 CPU 사용률이 높습니다'
-          description: 'CPU 사용률이 80%를 5분간 초과했습니다. 현재: {{ printf "%.2f" $value }}%'
-
-      # 높은 메모리 사용률
-      - alert: ConnectWonHighMemoryUsage
-        expr: (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100 > 85
-        for: 5m
-        labels:
-          severity: warning
-          service: system
-          team: infrastructure
-        annotations:
-          summary: '서버 메모리 사용률이 높습니다'
-          description: '메모리 사용률이 85%를 5분간 초과했습니다. 현재: {{ printf "%.2f" $value }}%'
-
-      # 디스크 공간 부족 (tmpfs/overlay 제외)
-      - alert: ConnectWonLowDiskSpace
-        expr: (1 - (node_filesystem_avail_bytes{fstype!~"tmpfs|overlay"} / node_filesystem_size_bytes{fstype!~"tmpfs|overlay"})) * 100 > 80
-        for: 5m
-        labels:
-          severity: warning
-          service: system
-          team: infrastructure
-        annotations:
-          summary: '디스크 공간이 부족합니다'
-          description: '디스크 사용률이 80%를 초과했습니다. 경로: {{ $labels.mountpoint }}, 현재: {{ printf "%.2f" $value }}%'
-
-      # 시스템 로드 평균 높음
-      - alert: ConnectWonHighSystemLoad
-        expr: node_load15 > 4
-        for: 10m
-        labels:
-          severity: warning
-          service: system
-          team: infrastructure
-        annotations:
-          summary: '시스템 로드 평균이 높습니다'
-          description: '15분 평균 로드가 4를 10분간 초과했습니다. 현재: {{ printf "%.2f" $value }}'
-
-  # 데이터베이스 (postgres_exporter)
-  - name: connectwon-database-alerts
-    rules:
-      - alert: ConnectWonDatabaseDown
-        expr: pg_up == 0
-        for: 1m
-        labels:
-          severity: critical
-          service: database
-          team: backend
-        annotations:
-          summary: 'PostgreSQL 데이터베이스가 다운되었습니다'
-          description: '데이터베이스에 1분 이상 연결할 수 없습니다. 긴급 대응이 필요합니다.'
-
-      - alert: ConnectWonDatabaseHighConnections
-        expr: |
-          sum(pg_stat_activity_count) > 80
-          or
-          sum(pg_stat_database_numbackends) > 80
-        for: 5m
-        labels:
-          severity: warning
-          service: database
-          team: backend
-        annotations:
-          summary: '데이터베이스 연결 수가 과다합니다'
-          description: '활성/총 연결이 80개를 초과했습니다. 현재: {{ printf "%.0f" $value }}개'
 
   # Worker
   - name: connectwon-worker-alerts
@@ -159,16 +106,80 @@ groups:
           summary: 'Worker 프로세스가 다운되었습니다'
           description: '백그라운드 작업 처리가 중단되었습니다. 알림, 결제 처리 등에 영향 가능.'
 
-  # Frontend
-  - name: connectwon-frontend-alerts
+  # Postgres (Database)
+  - name: connectwon-postgres-alerts
     rules:
-      - alert: ConnectWonWebAppDown
-        expr: (up{job="connectwon-web"} == 0) or (up{job="connectwon-admin"} == 0)
-        for: 2m
+      # DB 다운
+      - alert: ConnectWonDatabaseDown
+        expr: pg_up == 0
+        for: 1m
         labels:
           severity: critical
-          service: frontend
-          team: frontend
+          service: database
+          team: backend
         annotations:
-          summary: 'Frontend 애플리케이션이 다운되었습니다'
-          description: 'web 또는 admin 서비스에 2분 이상 연결할 수 없습니다.'
+          summary: 'PostgreSQL 데이터베이스가 다운되었습니다'
+          description: '데이터베이스에 1분 이상 연결할 수 없습니다. 긴급 대응이 필요합니다.'
+
+      # 연결 수 과다
+      - alert: ConnectWonDatabaseHighConnections
+        expr: sum(pg_stat_database_numbackends) > 80
+        for: 5m
+        labels:
+          severity: warning
+          service: database
+          team: backend
+        annotations:
+          summary: '데이터베이스 연결 수가 과다합니다'
+          description: '총 연결 수가 80개를 초과했습니다. 현재: {{ printf "%.0f" $value }}개'
+
+  # 시스템 (node_exporter)
+  - name: connectwon-system-alerts
+    rules:
+      # 높은 CPU 사용률
+      - alert: ConnectWonHighCPUUsage
+        expr: 100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
+        for: 5m
+        labels:
+          severity: warning
+          service: system
+          team: infrastructure
+        annotations:
+          summary: '서버 CPU 사용률이 높습니다'
+          description: 'CPU 사용률이 80%를 5분간 초과했습니다. 현재: {{ printf "%.2f" $value }}%%'
+
+      # 높은 메모리 사용률
+      - alert: ConnectWonHighMemoryUsage
+        expr: (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100 > 85
+        for: 5m
+        labels:
+          severity: warning
+          service: system
+          team: infrastructure
+        annotations:
+          summary: '서버 메모리 사용률이 높습니다'
+          description: '메모리 사용률이 85%를 5분간 초과했습니다. 현재: {{ printf "%.2f" $value }}%%'
+
+      # 디스크 공간 부족 (tmpfs/overlay 제외)
+      - alert: ConnectWonLowDiskSpace
+        expr: (1 - (node_filesystem_avail_bytes{fstype!~"tmpfs|overlay"} / node_filesystem_size_bytes{fstype!~"tmpfs|overlay"})) * 100 > 80
+        for: 5m
+        labels:
+          severity: warning
+          service: system
+          team: infrastructure
+        annotations:
+          summary: '디스크 공간이 부족합니다'
+          description: '디스크 사용률이 80%를 초과했습니다. 경로: {{ $labels.mountpoint }}, 현재: {{ printf "%.2f" $value }}%%'
+
+      # 시스템 로드 평균 높음
+      - alert: ConnectWonHighSystemLoad
+        expr: node_load15 > 4
+        for: 10m
+        labels:
+          severity: warning
+          service: system
+          team: infrastructure
+        annotations:
+          summary: '시스템 로드 평균이 높습니다'
+          description: '15분 평균 로드가 4를 10분간 초과했습니다. 현재: {{ printf "%.2f" $value }}'

@@ -355,7 +355,10 @@
     "setuptools",
     "aiohttp",
     "isort",
-    "nodenext"
+    "nodenext",
+    "apiuser",
+    "loglevel",
+    "ehthumbs"
   ],
 
   // Nx Console AI 규칙 사용
