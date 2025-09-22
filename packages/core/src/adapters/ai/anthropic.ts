@@ -1,75 +1,68 @@
 /**
- * Description : anthropic.ts - 📌 Anthropic(Claude) 어댑터
+ * Description : anthropic.ts - 📌 Anthropic Claude API를 통한 채팅 완성 기능 제공
  * Author : Shiwoo Min
  * Date : 2025-09-10
  */
-import type { AIChatInput, AIChatResult, AIClient, AIClientOptions } from '../../../core-types.js';
+import type { Message, MessageCreateParamsNonStreaming } from '@anthropic-ai/sdk/resources/messages';
+import type { AIChatInput, AIChatResult, AIClient, AIClientOptions, AIMessage } from '../../../core-types.js';
 
+/**
+ * @description Anthropic Claude API 어댑터 클래스
+ * @implements {AIClient}
+ */
 export class AnthropicAdapter implements AIClient {
   constructor(private readonly opts: AIClientOptions) {}
 
-  // 채팅 생성
   async chat(input: AIChatInput): Promise<AIChatResult> {
     const { default: Anthropic } = await import('@anthropic-ai/sdk');
-    const client = new Anthropic({
-      apiKey: this.opts.apiKey,
-    });
+    const client = new Anthropic({ apiKey: this.opts.apiKey });
 
     const model = input.params?.model ?? this.opts.defaultModel ?? 'claude-3-5-sonnet-20241022';
 
-    // system 메시지 분리
-    const systemMessage = input.messages.find(m => m.role === 'system')?.content || input.system;
+    // system 메시지
+    const systemMessage = input.messages.find((m: AIMessage) => m.role === 'system')?.content || input.system;
 
-    // user/assistant 메시지만 필터링
-    const messages = input.messages
-      .filter(m => m.role !== 'system')
-      .map(m => ({
+    // user/assistant 만 추출
+    type ClaudeMsg = { role: 'user' | 'assistant'; content: string };
+    const messages: ClaudeMsg[] = input.messages
+      .filter((m: AIMessage) => m.role !== 'system')
+      .map((m: AIMessage) => ({
         role: m.role as 'user' | 'assistant',
         content: m.content,
       }));
 
-    try {
-      // system이 undefined인 경우 속성 자체를 제거
-      const createParams: any = {
-        model,
-        max_tokens: input.params?.maxTokens ?? 1024,
-        messages,
-      };
+    // Anthropic 메시지 포맷 변환
+    const baseParams: MessageCreateParamsNonStreaming = {
+      model,
+      max_tokens: input.params?.maxTokens ?? 1024,
+      messages,
+    };
 
-      // undefined가 아닌 경우에만 추가
-      if (input.params?.temperature !== undefined) {
-        createParams.temperature = input.params.temperature;
-      }
+    const createParams: MessageCreateParamsNonStreaming = {
+      ...baseParams,
+      ...(input.params?.temperature !== undefined ? { temperature: input.params.temperature } : {}),
+      ...(systemMessage ? { system: systemMessage } : {}),
+    };
 
-      if (systemMessage !== undefined) {
-        createParams.system = systemMessage;
-      }
+    const res: Message = await client.messages.create(createParams);
 
-      const res = await client.messages.create(createParams);
+    const content = res.content;
+    const text = Array.isArray(content)
+      ? (content as Array<{ type: string; text?: string }>)
+          .filter(block => block.type === 'text')
+          .map(block => block.text ?? '')
+          .join('')
+      : '';
 
-      // TextBlock 타입 안전하게 처리 - 타입 predicate 제거
-      const content = res.content;
-      const text = Array.isArray(content)
-        ? content
-            .filter(block => block.type === 'text')
-            .map(block => (block as any).text || '') // any로 캐스팅해서 text 접근
-            .join('')
-        : '';
-
-      return {
-        content: text,
-        finishReason: res.stop_reason || 'stop', // undefined 대신 기본값
-        usage: {
-          promptTokens: res.usage.input_tokens,
-          completionTokens: res.usage.output_tokens,
-          totalTokens: res.usage.input_tokens + res.usage.output_tokens,
-        },
-        raw: res,
-      };
-    } catch (error) {
-      throw new Error(
-        `Anthropic API error: ${error instanceof Error ? error.message : 'Unknown error'}`,
-      );
-    }
+    return {
+      content: text,
+      finishReason: (res as any).stop_reason || 'stop',
+      usage: {
+        promptTokens: (res as any).usage?.input_tokens ?? 0,
+        completionTokens: (res as any).usage?.output_tokens ?? 0,
+        totalTokens: ((res as any).usage?.input_tokens ?? 0) + ((res as any).usage?.output_tokens ?? 0),
+      },
+      raw: res,
+    };
   }
 }

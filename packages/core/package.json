@@ -12,22 +12,35 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
+    "./core-types": {
+      "types": "./dist/core-types.d.ts",
+      "import": "./dist/core-types.js"
+    },
     "./queue": {
       "types": "./dist/queue/index.d.ts",
       "import": "./dist/queue/index.js"
-    },
-    "./infrastructure/*": {
-      "types": "./dist/infrastructure/*.d.ts",
-      "import": "./dist/infrastructure/*.js"
     },
     "./application/*": {
       "types": "./dist/application/*.d.ts",
       "import": "./dist/application/*.js"
     },
+    "./infrastructure/*": {
+      "types": "./dist/infrastructure/*.d.ts",
+      "import": "./dist/infrastructure/*.js"
+    },
     "./ports/*": {
       "types": "./dist/ports/*.d.ts",
       "import": "./dist/ports/*.js"
-    }
+    },
+    "./adapters/*": {
+      "types": "./dist/adapters/*.d.ts",
+      "import": "./dist/adapters/*.js"
+    },
+    "./domain/*": {
+      "types": "./dist/domain/*.d.ts",
+      "import": "./dist/domain/*.js"
+    },
+    "./package.json": "./package.json"
   },
   "files": [
     "dist"
@@ -70,7 +83,12 @@
     }
   },
   "devDependencies": {
+    "@nestjs/common": "^11.0.0",
+    "@nestjs/core": "^11.0.0",
     "@connectwon/configs": "workspace:*",
-    "@types/nodemailer": "^7.0.1"
+    "@types/nodemailer": "^7.0.1",
+    "@types/node": "^24.0.0",
+    "typescript": "^5.6.0",
+    "rimraf": "^6.0.1"
   }
 }

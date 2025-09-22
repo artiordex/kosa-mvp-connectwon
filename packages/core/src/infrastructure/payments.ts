@@ -3,33 +3,58 @@
  * Author : Shiwoo Min
  * Date : 2025-09-10
  */
-
 // import type { Payments } from '@connectwon/core/ports/payments';
 
+/**
+ * @description 결제(청구) 파라미터
+ */
 export interface ChargeParams {
-  amountMinor: number; // 최소단위
-  currency: string; // 'KRW' | 'USD' ...
-  customerId: string; // Stripe customer id 등
+  /** @description 최소 화폐 단위 금액(예: KRW=원) */
+  amountMinor: number;
+  /** @description 통화 코드 (예: 'KRW', 'USD') */
+  currency: string;
+  /** @description 고객 식별자(Stripe customer id 등) */
+  customerId: string;
+  /** @description 설명(선택) */
   description?: string;
+  /** @description 메타데이터(선택) */
   metadata?: Record<string, string>;
+  /** @description 멱등성 키(선택) */
   idempotencyKey?: string;
-  paymentMethodId?: string; // PM 지정 결제 시
+  /** @description 지정 결제수단으로 즉시 confirm 시 사용 */
+  paymentMethodId?: string;
 }
 
+/**
+ * @description 환불 파라미터
+ */
 export interface RefundParams {
+  /** @description 원 거래 ID */
   chargeId: string;
-  amountMinor?: number; // 부분환불 시
+  /** @description 환불 금액(최소단위, 선택: 전체 환불 기본) */
+  amountMinor?: number;
+  /** @description 환불 사유(선택) */
   reason?: string;
+  /** @description 메타데이터(선택) */
   metadata?: Record<string, string>;
 }
 
+/**
+ * @description Stripe 결제 어댑터 래퍼
+ */
 export class StripePayments /* implements Payments */ {
+  /**
+   * @param {any} stripe Stripe SDK 인스턴스
+   */
   constructor(private readonly stripe: any) {}
 
-  // 결제 승인/즉시청구(환경에 맞춰 capture 전략 조절)
+  /**
+   * @description 결제 승인/즉시 청구
+   * @param {ChargeParams} params 청구 파라미터
+   * @returns {Promise<{ id: string }>} 생성된 결제/인텐트 ID
+   */
   async charge(params: ChargeParams): Promise<{ id: string }> {
     try {
-      // PaymentIntent 기반 예시
       const intent = await this.stripe.paymentIntents.create(
         {
           amount: params.amountMinor,
@@ -44,12 +69,15 @@ export class StripePayments /* implements Payments */ {
       );
       return { id: intent.id };
     } catch (err) {
-      // 로깅/매핑 포인트
       throw err;
     }
   }
 
-  // 환불
+  /**
+   * @description 환불 수행
+   * @param {RefundParams} params 환불 파라미터
+   * @returns {Promise<{ id: string }>} 환불 ID
+   */
   async refund(params: RefundParams): Promise<{ id: string }> {
     try {
       const refund = await this.stripe.refunds.create({
@@ -64,10 +92,12 @@ export class StripePayments /* implements Payments */ {
     }
   }
 
-  // 헬스체크
+  /**
+   * @description 결제 시스템 헬스체크(비용 고려 필요)
+   * @returns {Promise<boolean>} 성공 여부
+   */
   async health(): Promise<boolean> {
     try {
-      // 가벼운 API 호출(요금 주의). 사용량 고려해서 적절히 교체
       await this.stripe.balance.retrieve();
       return true;
     } catch {

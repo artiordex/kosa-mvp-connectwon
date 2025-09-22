@@ -1,38 +1,36 @@
 /**
- * Description : email.ts - 📌 이메일 제공자 포트 인터페이스
+ * Description : email.ts - 📌 이메일 전송/템플릿/통계/웹훅 등 이메일 제공자 포트 인터페이스
  * Author : Shiwoo Min
  * Date : 2025-09-10
  */
-
-// 이메일 제공자 포트 인터페이스
+/**
+ * @description 이메일 제공자 공통 포트
+ */
 export interface EmailProvider {
-  // 제공자 정보
+  /** @description 제공자 이름 */
   name: string;
 
-  // 이메일 전송
+  /** @description 단건 이메일 전송 */
   sendEmail(request: EmailSendRequest): Promise<EmailSendResult>;
-
-  // 대량 전송
+  /** @description 대량 이메일 전송 */
   sendBulkEmail(requests: EmailSendRequest[]): Promise<EmailSendResult[]>;
-
-  // 템플릿 전송
+  /** @description 템플릿 기반 전송 */
   sendTemplateEmail(request: TemplateEmailRequest): Promise<EmailSendResult>;
-
-  // 연결 테스트
+  /** @description 연결 테스트 */
   testConnection(): Promise<boolean>;
-
-  // 제공자 상태
+  /** @description 사용 가능 여부 */
   isAvailable(): boolean;
+  /** @description 헬스/상태 조회 */
   getStatus(): Promise<ProviderStatus>;
-
-  // 사용량 정보
+  /** @description 사용량 통계 */
   getUsageStats(): Promise<UsageStats>;
-
-  // 웹훅 처리 (전송 상태 업데이트)
+  /** @description 웹훅 처리(전송 상태 갱신 등) */
   handleWebhook(payload: unknown): Promise<WebhookResult>;
 }
 
-// 이메일 전송 요청 인터페이스
+/**
+ * @description 이메일 전송 요청
+ */
 export interface EmailSendRequest {
   to: EmailAddress[];
   cc?: EmailAddress[];
@@ -48,7 +46,9 @@ export interface EmailSendRequest {
   metadata?: Record<string, unknown>;
 }
 
-// 템플릿 기반 이메일 전송 요청 인터페이스
+/**
+ * @description 템플릿 이메일 전송 요청
+ */
 export interface TemplateEmailRequest {
   to: EmailAddress[];
   cc?: EmailAddress[];
@@ -59,13 +59,17 @@ export interface TemplateEmailRequest {
   metadata?: Record<string, unknown>;
 }
 
-// 이메일 주소 인터페이스
+/**
+ * @description 이메일 주소
+ */
 export interface EmailAddress {
   email: string;
   name?: string;
 }
 
-// 이메일 첨부파일 인터페이스
+/**
+ * @description 이메일 첨부
+ */
 export interface EmailAttachment {
   filename: string;
   content: Buffer | string;
@@ -74,7 +78,9 @@ export interface EmailAttachment {
   contentId?: string;
 }
 
-// 이메일 전송 결과 인터페이스
+/**
+ * @description 전송 결과
+ */
 export interface EmailSendResult {
   success: boolean;
   messageId?: string;
@@ -88,26 +94,22 @@ export interface EmailSendResult {
   metadata?: Record<string, unknown>;
 }
 
-// 제공자 상태 인터페이스
+/**
+ * @description 제공자 상태
+ */
 export interface ProviderStatus {
   name: string;
   isHealthy: boolean;
   lastChecked: string;
   responseTime?: number;
   errorRate?: number;
-  dailyQuota?: {
-    used: number;
-    total: number;
-    remaining: number;
-  };
-  monthlyQuota?: {
-    used: number;
-    total: number;
-    remaining: number;
-  };
+  dailyQuota?: { used: number; total: number; remaining: number };
+  monthlyQuota?: { used: number; total: number; remaining: number };
 }
 
-// 사용량 통계 인터페이스
+/**
+ * @description 사용량 통계(요약)
+ */
 export interface UsageStats {
   today: {
     sent: number;
@@ -126,14 +128,18 @@ export interface UsageStats {
   lastUpdated: string;
 }
 
-// 웹훅 처리 인터페이스
+/**
+ * @description 웹훅 처리 결과
+ */
 export interface WebhookResult {
   processed: boolean;
   events: EmailEvent[];
   error?: string;
 }
 
-// 이메일 이벤트 인터페이스
+/**
+ * @description 이메일 이벤트
+ */
 export interface EmailEvent {
   messageId: string;
   event: EmailEventType;
@@ -143,7 +149,7 @@ export interface EmailEvent {
   metadata?: Record<string, unknown>;
 }
 
-// 이메일 이벤트 유형
+/** @description 이메일 이벤트 종류 */
 export type EmailEventType =
   | 'sent'
   | 'delivered'
@@ -155,26 +161,26 @@ export type EmailEventType =
   | 'unsubscribed'
   | 'spam_reported';
 
-// SMTP 제공자 인터페이스
+/**
+ * @description SMTP 제공자 포트
+ */
 export interface SMTPEmailProvider extends EmailProvider {
+  /** @description 고정 'smtp' */
   name: 'smtp';
-
-  // SMTP 특화 설정
+  /** @description SMTP 설정 주입 */
   configure(config: SMTPConfig): void;
-
-  // 연결 풀 관리
+  /** @description 커넥션 풀 상태 */
   getConnectionPoolStats(): Promise<ConnectionPoolStats>;
 }
 
-// SMTP 설정 인터페이스
+/**
+ * @description SMTP 설정
+ */
 export interface SMTPConfig {
   host: string;
   port: number;
   secure: boolean;
-  auth: {
-    user: string;
-    pass: string;
-  };
+  auth: { user: string; pass: string };
   pool?: boolean;
   maxConnections?: number;
   maxMessages?: number;
@@ -182,28 +188,38 @@ export interface SMTPConfig {
   rateLimit?: number;
 }
 
-// 연결 통계 인터페이스
+/**
+ * @description 연결 풀 통계
+ */
 export interface ConnectionPoolStats {
   total: number;
   idle: number;
   active: number;
 }
 
-// SendGrid 제공자 인터페이스
+/**
+ * @description SendGrid 제공자 포트
+ */
 export interface SendGridEmailProvider extends EmailProvider {
+  /** @description 고정 'sendgrid' */
   name: 'sendgrid';
 
-  // SendGrid 특화 기능
+  /** @description 템플릿 목록 */
   getTemplates(): Promise<SendGridTemplate[]>;
+  /** @description 템플릿 생성 */
   createTemplate(template: CreateTemplateRequest): Promise<SendGridTemplate>;
+  /** @description 템플릿 수정 */
   updateTemplate(templateId: string, updates: UpdateTemplateRequest): Promise<SendGridTemplate>;
+  /** @description 템플릿 삭제 */
   deleteTemplate(templateId: string): Promise<void>;
 
-  // 통계 조회
+  /** @description 기간별 상세 통계 */
   getDetailedStats(startDate: string, endDate: string): Promise<SendGridStats>;
 }
 
-// SendGrid 템플릿 인터페이스
+/**
+ * @description SendGrid 템플릿
+ */
 export interface SendGridTemplate {
   id: string;
   name: string;
@@ -219,18 +235,20 @@ export interface SendGridTemplate {
   }>;
 }
 
-// 템플릿 관리 요청 인터페이스
+/** @description 템플릿 생성 요청 */
 export interface CreateTemplateRequest {
   name: string;
   generation: 'legacy' | 'dynamic';
 }
 
-// 템플릿 업데이트 요청 인터페이스
+/** @description 템플릿 업데이트 요청 */
 export interface UpdateTemplateRequest {
   name?: string;
 }
 
-// SendGrid 통계 인터페이스
+/**
+ * @description SendGrid 통계 응답
+ */
 export interface SendGridStats {
   date: string;
   stats: Array<{
@@ -255,15 +273,16 @@ export interface SendGridStats {
   }>;
 }
 
-// 이메일 제공자 팩토리
+/**
+ * @description 이메일 제공자 팩토리 포트
+ */
 export interface EmailProviderFactory {
   createSMTPProvider(config: SMTPConfig): SMTPEmailProvider;
   createSendGridProvider(apiKey: string): SendGridEmailProvider;
-
-  // 환경변수 기반 생성
+  /** @description 환경변수 기반 기본 제공자 생성 */
   createFromEnvironment(): EmailProvider;
-
-  // 다중 제공자 지원
+  /** @description 장애 시 순차 페일오버 */
   createFailoverProvider(providers: EmailProvider[]): EmailProvider;
+  /** @description 라운드로빈 로드밸런싱 */
   createLoadBalancingProvider(providers: EmailProvider[]): EmailProvider;
 }

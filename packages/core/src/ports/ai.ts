@@ -5,78 +5,204 @@
  */
 import type { AIProvider } from '../../core-types.js';
 
-// AI 서비스 포트 인터페이스
+/**
+ * @description AI 서비스 포트 인터페이스
+ */
 export interface AIService {
-  // 텍스트 생성
+  /**
+   * @description 프롬프트 기반 텍스트 생성
+   * @param {string} prompt 프롬프트
+   * @param {AIGenerationOptions} [options] 생성 옵션
+   * @returns {Promise<AITextResult>}
+   */
   generateText(prompt: string, options?: AIGenerationOptions): Promise<AITextResult>;
 
-  // 대화형 채팅
+  /**
+   * @description 대화형 채팅
+   * @param {AIChatMessage[]} messages 대화 이력
+   * @param {AIChatOptions} [options] 채팅 옵션
+   * @returns {Promise<AIChatResult>}
+   */
   chat(messages: AIChatMessage[], options?: AIChatOptions): Promise<AIChatResult>;
 
-  // 텍스트 요약
+  /**
+   * @description 텍스트 요약
+   * @param {string} text 원문
+   * @param {SummaryOptions} [options] 요약 옵션
+   * @returns {Promise<AISummaryResult>}
+   */
   summarize(text: string, options?: SummaryOptions): Promise<AISummaryResult>;
 
-  // 텍스트 분석
+  /**
+   * @description 텍스트 분석(감정/주제/키워드 등)
+   * @param {string} text 원문
+   * @param {AIAnalysisType} analysisType 분석 종류
+   * @returns {Promise<AIAnalysisResult>}
+   */
   analyzeText(text: string, analysisType: AIAnalysisType): Promise<AIAnalysisResult>;
 
-  // 감정 분석
+  /**
+   * @description 감정 분석(positive/negative/neutral)
+   * @param {string} text 원문
+   * @returns {Promise<AISentimentResult>}
+   */
   analyzeSentiment(text: string): Promise<AISentimentResult>;
 
-  // 키워드 추출
+  /**
+   * @description 키워드 추출
+   * @param {string} text 원문
+   * @param {number} [maxKeywords] 최대 개수
+   * @returns {Promise<AIKeywordsResult>}
+   */
   extractKeywords(text: string, maxKeywords?: number): Promise<AIKeywordsResult>;
 
-  // 텍스트 분류
+  /**
+   * @description 텍스트 분류
+   * @param {string} text 원문
+   * @param {string[]} categories 후보 카테고리
+   * @returns {Promise<AIClassificationResult>}
+   */
   classifyText(text: string, categories: string[]): Promise<AIClassificationResult>;
 
-  // 임베딩 생성
+  /**
+   * @description 단일 임베딩 생성
+   * @param {string} text 원문
+   * @returns {Promise<AIEmbeddingResult>}
+   */
   generateEmbedding(text: string): Promise<AIEmbeddingResult>;
+
+  /**
+   * @description 복수 임베딩 생성
+   * @param {string[]} texts 원문 리스트
+   * @returns {Promise<AIEmbeddingResult[]>}
+   */
   generateEmbeddings(texts: string[]): Promise<AIEmbeddingResult[]>;
 
-  // 텍스트 유사도 계산
+  /**
+   * @description 텍스트 유사도 계산
+   * @param {string} text1 텍스트 1
+   * @param {string} text2 텍스트 2
+   * @returns {Promise<AISimilarityResult>}
+   */
   calculateSimilarity(text1: string, text2: string): Promise<AISimilarityResult>;
+
+  /**
+   * @description 코퍼스에서 상위 유사 텍스트 찾기
+   * @param {string} queryText 질의 텍스트
+   * @param {string[]} corpus 후보 리스트
+   * @param {number} [topK] 상위 K
+   * @returns {Promise<AISimilarityMatch[]>}
+   */
   findSimilarTexts(
     queryText: string,
     corpus: string[],
     topK?: number,
   ): Promise<AISimilarityMatch[]>;
 
-  // 번역
+  /**
+   * @description 기계 번역
+   * @param {string} text 원문
+   * @param {string} targetLanguage 목표 언어 코드
+   * @param {string} [sourceLanguage] 원문 언어 코드
+   * @returns {Promise<AITranslationResult>}
+   */
   translate(
     text: string,
     targetLanguage: string,
     sourceLanguage?: string,
   ): Promise<AITranslationResult>;
 
-  // 텍스트 개선
+  /**
+   * @description 문체 보정(톤/명료성 개선)
+   * @param {string} text 원문
+   * @param {'formal'|'casual'|'professional'} [style] 스타일
+   * @returns {Promise<AITextResult>}
+   */
   improveText(text: string, style?: 'formal' | 'casual' | 'professional'): Promise<AITextResult>;
 
-  // 프로그램/세션 관련 AI 기능
+  /**
+   * @description 프로그램 소개문 생성
+   * @param {string} title 제목
+   * @param {string} [type] 유형
+   * @param {string} [details] 추가 설명
+   * @returns {Promise<AITextResult>}
+   */
   generateProgramDescription(title: string, type?: string, details?: string): Promise<AITextResult>;
+
+  /**
+   * @description 세션 계획 생성(아젠다/구성)
+   * @param {string} topic 주제
+   * @param {string} duration 소요시간
+   * @param {string} audience 대상
+   * @returns {Promise<AITextResult>}
+   */
   generateSessionPlan(topic: string, duration: string, audience: string): Promise<AITextResult>;
+
+  /**
+   * @description 태그 생성
+   * @param {string} title 제목
+   * @param {string} [description] 설명
+   * @param {number} [maxTags] 최대 태그 수
+   * @returns {Promise<AIKeywordsResult>}
+   */
   generateTags(title: string, description?: string, maxTags?: number): Promise<AIKeywordsResult>;
 
-  // 피드백 분석
+  /**
+   * @description 다중 피드백 분석(주요 테마/인사이트)
+   * @param {string[]} feedback 피드백 목록
+   * @returns {Promise<AIFeedbackAnalysis>}
+   */
   analyzeFeedback(feedback: string[]): Promise<AIFeedbackAnalysis>;
 
-  // AI 모델 관리
+  /**
+   * @description 사용 가능한 모델 목록
+   * @returns {Promise<AIModel[]>}
+   */
   getAvailableModels(): Promise<AIModel[]>;
+
+  /**
+   * @description 사용 모델 전환
+   * @param {AIProvider} provider 공급자
+   * @param {string} model 모델명
+   * @returns {Promise<void>}
+   */
   switchModel(provider: AIProvider, model: string): Promise<void>;
 
-  // 사용량 추적
+  /**
+   * @description 사용량 통계
+   * @param {TimeRange} [timeRange] 기간
+   * @returns {Promise<AIUsageStats>}
+   */
   getUsageStats(timeRange?: TimeRange): Promise<AIUsageStats>;
 
-  // 캐시 관리
+  /**
+   * @description 캐시 조회
+   * @param {string} cacheKey 키
+   * @returns {Promise<unknown>}
+   */
   getCachedResult(cacheKey: string): Promise<unknown>;
+
+  /**
+   * @description 캐시 저장
+   * @param {string} cacheKey 키
+   * @param {unknown} result 값
+   * @param {number} [ttl] TTL(초)
+   * @returns {Promise<void>}
+   */
   setCachedResult(cacheKey: string, result: unknown, ttl?: number): Promise<void>;
 }
 
-// AI 메시지 인터페이스
+/**
+ * @description AI 채팅 메시지
+ */
 export interface AIChatMessage {
   role: 'system' | 'user' | 'assistant';
   content: string;
 }
 
-// AI 생성 옵션 인터페이스
+/**
+ * @description 텍스트 생성 옵션
+ */
 export interface AIGenerationOptions {
   maxTokens?: number;
   temperature?: number;
@@ -85,22 +211,28 @@ export interface AIGenerationOptions {
   provider?: AIProvider;
 }
 
-// AI 채팅 옵션 인터페이스
+/**
+ * @description 채팅 옵션(생성 옵션 확장)
+ */
 export interface AIChatOptions extends AIGenerationOptions {
   systemPrompt?: string;
 }
 
-// 텍스트 요약 옵션 인터페이스
+/**
+ * @description 요약 옵션
+ */
 export interface SummaryOptions {
   maxLength?: number;
   style?: 'bullet' | 'paragraph' | 'key-points';
   language?: string;
 }
 
-// AI 분석 유형
+/** @description 분석 유형 */
 export type AIAnalysisType = 'sentiment' | 'topics' | 'keywords' | 'category' | 'readability';
 
-// AI 텍스트 결과 인터페이스
+/**
+ * @description 텍스트 결과
+ */
 export interface AITextResult {
   success: boolean;
   content: string;
@@ -110,19 +242,25 @@ export interface AITextResult {
   error?: string;
 }
 
-// AI 채팅 결과 인터페이스
+/**
+ * @description 채팅 결과
+ */
 export interface AIChatResult extends AITextResult {
   finishReason?: string;
 }
 
-// AI 요약 결과 인터페이스
+/**
+ * @description 요약 결과
+ */
 export interface AISummaryResult extends AITextResult {
   originalLength: number;
   summaryLength: number;
   compressionRatio: number;
 }
 
-// AI 분석 결과 인터페이스
+/**
+ * @description 분석 결과
+ */
 export interface AIAnalysisResult {
   success: boolean;
   analysisType: AIAnalysisType;
@@ -132,12 +270,15 @@ export interface AIAnalysisResult {
   error?: string;
 }
 
-// 감정 분석 결과 인터페이스
+/**
+ * @description 감정 분석 결과
+ */
 export interface AISentimentResult {
   success: boolean;
   sentiment: 'positive' | 'negative' | 'neutral';
   confidence: number;
-  score: number; // -1 to 1
+  /** @description -1 ~ 1 */
+  score: number;
   details?: {
     positive: number;
     negative: number;
@@ -146,7 +287,9 @@ export interface AISentimentResult {
   error?: string;
 }
 
-// 키워드 추출 결과 인터페이스
+/**
+ * @description 키워드 추출 결과
+ */
 export interface AIKeywordsResult {
   success: boolean;
   keywords: string[];
@@ -155,7 +298,9 @@ export interface AIKeywordsResult {
   error?: string;
 }
 
-// 텍스트 분류 결과 인터페이스
+/**
+ * @description 텍스트 분류 결과
+ */
 export interface AIClassificationResult {
   success: boolean;
   category: string;
@@ -168,7 +313,9 @@ export interface AIClassificationResult {
   error?: string;
 }
 
-// 임베딩 결과 인터페이스
+/**
+ * @description 임베딩 결과
+ */
 export interface AIEmbeddingResult {
   success: boolean;
   embedding: number[];
@@ -177,28 +324,36 @@ export interface AIEmbeddingResult {
   error?: string;
 }
 
-// 유사도 결과 인터페이스
+/**
+ * @description 유사도 결과
+ */
 export interface AISimilarityResult {
   success: boolean;
   similarity: number;
   error?: string;
 }
 
-// 유사 텍스트 매치 인터페이스
+/**
+ * @description 유사 텍스트 매치
+ */
 export interface AISimilarityMatch {
   text: string;
   similarity: number;
   index: number;
 }
 
-// 번역 결과 인터페이스
+/**
+ * @description 번역 결과
+ */
 export interface AITranslationResult extends AITextResult {
   sourceLanguage?: string;
   targetLanguage: string;
   confidence?: number;
 }
 
-// 텍스트 개선 결과 인터페이스
+/**
+ * @description 피드백 분석 결과
+ */
 export interface AIFeedbackAnalysis {
   success: boolean;
   overallSentiment: 'positive' | 'negative' | 'mixed' | 'neutral';
@@ -214,7 +369,9 @@ export interface AIFeedbackAnalysis {
   error?: string;
 }
 
-// AI 모델 정보 인터페이스
+/**
+ * @description 모델 메타 정보
+ */
 export interface AIModel {
   provider: AIProvider;
   name: string;
@@ -225,7 +382,7 @@ export interface AIModel {
   isAvailable: boolean;
 }
 
-// AI 기능 유형
+/** @description 모델 능력 플래그 */
 export type AICapability =
   | 'text_generation'
   | 'chat'
@@ -235,7 +392,9 @@ export type AICapability =
   | 'summarization'
   | 'classification';
 
-// AI 사용량 인터페이스
+/**
+ * @description 토큰/비용 사용량
+ */
 export interface AIUsage {
   promptTokens: number;
   completionTokens: number;
@@ -243,7 +402,9 @@ export interface AIUsage {
   costUSD?: number;
 }
 
-// AI 사용량 통계 인터페이스
+/**
+ * @description 사용량 통계
+ */
 export interface AIUsageStats {
   totalRequests: number;
   totalTokens: number;
@@ -275,29 +436,72 @@ export interface AIUsageStats {
   timeRange: TimeRange;
 }
 
-// 시간 범위 인터페이스
+/**
+ * @description 시간 범위
+ */
 export interface TimeRange {
   start: string;
   end: string;
 }
 
-// AI 작업 큐 포트 인터페이스
+/**
+ * @description AI 작업 큐 포트
+ */
 export interface AIJobQueue {
-  // 비동기 AI 작업 추가
+  /**
+   * @description 비동기 텍스트 생성 작업 추가
+   * @param {string} prompt 프롬프트
+   * @param {AIGenerationOptions} [options] 옵션
+   * @returns {Promise<string>} jobId
+   */
   addTextGenerationJob(prompt: string, options?: AIGenerationOptions): Promise<string>;
+
+  /**
+   * @description 분석 작업 추가
+   * @param {string} text 원문
+   * @param {AIAnalysisType} analysisType 분석 종류
+   * @returns {Promise<string>} jobId
+   */
   addAnalysisJob(text: string, analysisType: AIAnalysisType): Promise<string>;
+
+  /**
+   * @description 배치 처리 작업 추가
+   * @param {string[]} texts 원문 리스트
+   * @param {AIBatchOperation} operation 배치 작업 종류
+   * @returns {Promise<string>} jobId
+   */
   addBatchProcessingJob(texts: string[], operation: AIBatchOperation): Promise<string>;
 
-  // 작업 상태 확인
+  /**
+   * @description 작업 상태 조회
+   * @param {string} jobId 작업 ID
+   * @returns {Promise<AIJobStatus>}
+   */
   getJobStatus(jobId: string): Promise<AIJobStatus>;
+
+  /**
+   * @description 작업 결과 조회
+   * @param {string} jobId 작업 ID
+   * @returns {Promise<unknown>}
+   */
   getJobResult(jobId: string): Promise<unknown>;
 
-  // 작업 관리
+  /**
+   * @description 작업 취소
+   * @param {string} jobId 작업 ID
+   * @returns {Promise<boolean>} 취소 성공 여부
+   */
   cancelJob(jobId: string): Promise<boolean>;
+
+  /**
+   * @description 작업 재시도
+   * @param {string} jobId 작업 ID
+   * @returns {Promise<void>}
+   */
   retryJob(jobId: string): Promise<void>;
 }
 
-// 배치 처리 작업 유형
+/** @description 배치 작업 종류 */
 export type AIBatchOperation =
   | 'generate_tags'
   | 'analyze_sentiment'
@@ -305,7 +509,9 @@ export type AIBatchOperation =
   | 'translate'
   | 'classify';
 
-// AI 작업 상태 인터페이스
+/**
+ * @description AI 작업 상태
+ */
 export interface AIJobStatus {
   id: string;
   status: 'pending' | 'processing' | 'completed' | 'failed' | 'cancelled';

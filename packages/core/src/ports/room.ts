@@ -3,44 +3,42 @@
  * Author : Shiwoo Min
  * Date : 2025-09-10
  */
-import type {
-  CreateRoom,
-  CursorPaginatedResponse,
-  CursorPaginationQuery,
-  Id,
-  Room,
-  RoomReservation,
-  RoomWithVenue,
-  UpdateRoom,
-} from '../../core-types.js';
+import type { CreateRoom, CursorPaginatedResponse, CursorPaginationQuery, Id, Room, RoomReservation, RoomWithVenue, UpdateRoom } from '../../core-types.js';
 
-// 방 저장소 포트 인터페이스
+/**
+ * @description 방 저장소 포트
+ */
 export interface RoomRepository {
-  // 기본 CRUD 작업
+  /** @description ID로 조회 */
   findById(id: Id): Promise<Room | null>;
+  /** @description 장소 조인 포함 조회 */
   findByIdWithVenue(id: Id): Promise<RoomWithVenue | null>;
+
+  /** @description 생성 */
   create(room: CreateRoom): Promise<Room>;
+  /** @description 갱신 */
   update(id: Id, updates: UpdateRoom): Promise<Room>;
+  /** @description 삭제 */
   delete(id: Id): Promise<void>;
 
-  // 목록 조회
+  /** @description 페이징 목록 */
   findMany(query: CursorPaginationQuery): Promise<CursorPaginatedResponse<Room>>;
+  /** @description 페이징 목록(장소 조인) */
   findManyWithVenue(query: CursorPaginationQuery): Promise<CursorPaginatedResponse<RoomWithVenue>>;
 
-  // 장소별 방 조회
+  /** @description 장소별 방 목록 */
   findByVenueId(venueId: Id, query: CursorPaginationQuery): Promise<CursorPaginatedResponse<Room>>;
 
-  // 상태별 방 조회
-  findByStatus(
-    status: string,
-    query: CursorPaginationQuery,
-  ): Promise<CursorPaginatedResponse<Room>>;
+  /** @description 상태별 목록 */
+  findByStatus(status: string, query: CursorPaginationQuery): Promise<CursorPaginatedResponse<Room>>;
+
+  /** @description 사용 가능한 방 검색 */
   findActiveRooms(query: CursorPaginationQuery): Promise<CursorPaginatedResponse<Room>>;
 
-  // 검색
+  /** @description 텍스트 검색 */
   search(term: string, query: CursorPaginationQuery): Promise<CursorPaginatedResponse<Room>>;
 
-  // 예약 가능성 확인
+  /** @description 기간/수용인원 조건으로 가능한 방 목록 */
   findAvailableRooms(
     venueId: Id,
     startTime: string,
@@ -48,31 +46,31 @@ export interface RoomRepository {
     minCapacity?: number,
   ): Promise<Room[]>;
 
-  // 시간 충돌 체크
+  /** @description 특정 방의 시간 충돌 여부 */
   checkRoomAvailability(roomId: Id, startTime: string, endTime: string): Promise<boolean>;
+
+  /** @description 충돌하는 예약 목록 */
   findConflictingReservations(
     roomId: Id,
     startTime: string,
     endTime: string,
   ): Promise<RoomReservation[]>;
 
-  // 수용 인원 기준 검색
-  findByMinCapacity(
-    minCapacity: number,
-    query: CursorPaginationQuery,
-  ): Promise<CursorPaginatedResponse<Room>>;
+  /** @description 최솟값 이상 수용 가능한 방 목록 */
+  findByMinCapacity(minCapacity: number, query: CursorPaginationQuery): Promise<CursorPaginatedResponse<Room>>;
 
-  // 상태 변경
+  /** @description 상태 갱신/전환 */
   updateStatus(id: Id, status: string): Promise<void>;
   activateRoom(id: Id): Promise<void>;
   deactivateRoom(id: Id): Promise<void>;
   setMaintenance(id: Id): Promise<void>;
 
-  // 존재 여부 확인
+  /** @description 존재 여부 */
   exists(id: Id): Promise<boolean>;
+  /** @description 동일 장소 내 이름 중복 여부 */
   existsByName(venueId: Id, name: string): Promise<boolean>;
 
-  // 통계
+  /** @description 통계 */
   count(): Promise<number>;
   countByVenue(venueId: Id): Promise<number>;
   countByStatus(status: string): Promise<number>;

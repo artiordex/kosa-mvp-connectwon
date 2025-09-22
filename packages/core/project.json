@@ -8,9 +8,12 @@
       "executor": "@nx/js:tsc",
       "options": {
         "main": "packages/core/src/index.ts",
-        "outputPath": "dist/packages/core",
-        "tsConfig": "packages/core/tsconfig.json"
-      }
+        "outputPath": "packages/core/dist",
+        "tsConfig": "packages/core/tsconfig.json",
+        "assets": [],
+        "generatePackageJson": false
+      },
+      "outputs": ["{options.outputPath}"]
     },
     "lint": {
       "executor": "@nx/eslint:lint",
@@ -24,5 +27,6 @@
         "passWithNoTests": true
       }
     }
-  }
+  },
+  "implicitDependencies": ["@connectwon/api-contract"]
 }

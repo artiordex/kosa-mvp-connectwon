@@ -1,104 +1,106 @@
 /**
- * Description : auth.ts - 📌 인증 서비스 포트 인터페이스
+ * Description : auth.ts - 📌
+ * @description 인증/인가/세션/JWT 관련 포트 인터페이스
  * Author : Shiwoo Min
  * Date : 2025-09-10
  */
 import type { CreateUser, Id, User } from '../../core-types.js';
 
-// 인증 서비스 포트 인터페이스
+/**
+ * @description 인증 서비스 포트
+ */
 export interface AuthService {
-  // Google OAuth 인증
+  /** @description Google OAuth 인증 */
   authenticateWithGoogle(googleToken: string): Promise<AuthResult>;
+  /** @description Google 토큰 검증 */
   verifyGoogleToken(token: string): Promise<GoogleTokenPayload | null>;
 
-  // 이메일 인증
+  /** @description 이메일 인증코드 발송 */
   sendVerificationCode(email: string, purpose: VerificationPurpose): Promise<void>;
+  /** @description 인증코드 검증 */
   verifyCode(email: string, code: string, purpose: VerificationPurpose): Promise<boolean>;
 
-  // 사용자 등록/로그인
+  /** @description 사용자 등록 */
   registerUser(userData: CreateUser): Promise<User>;
+  /** @description 이메일 기반 로그인(패스워드 없는 플로우 가정) */
   loginUser(email: string): Promise<AuthResult>;
 
-  // 세션 관리
+  /** @description 세션 생성 */
   createSession(user: User): Promise<UserSession>;
+  /** @description 세션 검증 */
   verifySession(sessionToken: string): Promise<UserSession | null>;
+  /** @description 세션 갱신 */
   refreshSession(sessionToken: string): Promise<UserSession>;
+  /** @description 세션 무효화 */
   revokeSession(sessionToken: string): Promise<void>;
+  /** @description 해당 사용자 모든 세션 무효화 */
   revokeAllSessions(userId: Id): Promise<void>;
 
-  // 토큰 관리
+  /** @description 액세스 토큰 생성 */
   generateAccessToken(user: User): Promise<string>;
+  /** @description 리프레시 토큰 생성 */
   generateRefreshToken(user: User): Promise<string>;
+  /** @description 액세스 토큰 검증 */
   verifyAccessToken(token: string): Promise<TokenPayload | null>;
+  /** @description 리프레시 토큰 검증 */
   verifyRefreshToken(token: string): Promise<TokenPayload | null>;
 
-  // 보안 기능
+  /** @description 레이트 리밋 확인 */
   checkRateLimit(identifier: string, action: string): Promise<RateLimitResult>;
+  /** @description 보안 이벤트 로깅 */
   logSecurityEvent(event: SecurityEvent): Promise<void>;
 
-  // 사용자 상태 관리
+  /** @description 사용자 활성화/비활성화/역할 변경 */
   activateUser(userId: Id): Promise<void>;
   deactivateUser(userId: Id): Promise<void>;
   changeUserRole(userId: Id, roleFlags: number): Promise<void>;
 }
 
-// JWT 서비스 포트 인터페이스
+/**
+ * @description JWT 서비스 포트
+ */
 export interface JWTService {
-  // 토큰 생성
+  /** @description 토큰 서명 */
   sign(payload: Record<string, unknown>, options?: JWTSignOptions): Promise<string>;
-
-  // 토큰 검증
+  /** @description 토큰 검증 */
   verify<T = Record<string, unknown>>(token: string): Promise<T>;
-
-  // 토큰 디코딩 (검증 없이)
+  /** @description 검증 없이 디코딩 */
   decode<T = Record<string, unknown>>(token: string): T | null;
-
-  // 토큰 갱신
+  /** @description 리프레시 토큰을 통한 갱신 */
   refresh(refreshToken: string): Promise<TokenPair>;
-
-  // 토큰 무효화
+  /** @description 토큰 무효화(블랙리스트) */
   revoke(token: string): Promise<void>;
-
-  // 블랙리스트 확인
+  /** @description 블랙리스트 여부 */
   isRevoked(token: string): Promise<boolean>;
 }
 
-// 패스워드 서비스 포트 인터페이스
-
+/**
+ * @description 패스워드 유틸리티 서비스 포트
+ */
 export interface PasswordService {
-  // 해시 생성
   hash(password: string): Promise<string>;
-
-  // 패스워드 검증
   verify(password: string, hash: string): Promise<boolean>;
-
-  // 패스워드 강도 검사
   validateStrength(password: string): PasswordStrengthResult;
-
-  // 임시 패스워드 생성
   generateTemporaryPassword(): string;
 }
 
-// 2단계 인증 서비스 포트 인터페이스
+/**
+ * @description 2단계 인증 서비스 포트
+ */
 export interface TwoFactorService {
-  // TOTP 설정
   generateTOTPSecret(userId: Id): Promise<TOTPSetup>;
   verifyTOTPSetup(userId: Id, secret: string, token: string): Promise<boolean>;
-  enableTOTP(userId: Id, secret: string): Promise<string[]>; // 백업 코드 반환
-
-  // TOTP 검증
+  enableTOTP(userId: Id, secret: string): Promise<string[]>;
   verifyTOTP(userId: Id, token: string): Promise<boolean>;
-
-  // 백업 코드
   generateBackupCodes(userId: Id): Promise<string[]>;
   verifyBackupCode(userId: Id, code: string): Promise<boolean>;
-
-  // 2FA 관리
   disable2FA(userId: Id): Promise<void>;
   get2FAStatus(userId: Id): Promise<TwoFactorStatus>;
 }
 
-// 인증 결과 인터페이스
+/**
+ * @description 인증 결과
+ */
 export interface AuthResult {
   success: boolean;
   user?: User;
@@ -108,7 +110,9 @@ export interface AuthResult {
   requiresVerification?: boolean;
 }
 
-// 사용자 세션 인터페이스
+/**
+ * @description 사용자 세션
+ */
 export interface UserSession {
   id: string;
   userId: Id;
@@ -121,14 +125,18 @@ export interface UserSession {
   userAgent?: string;
 }
 
-// 토큰 쌍 인터페이스
+/**
+ * @description 액세스/리프레시 토큰 쌍
+ */
 export interface TokenPair {
   accessToken: string;
   refreshToken: string;
   expiresIn: number;
 }
 
-// JWT 페이로드 인터페이스
+/**
+ * @description JWT 페이로드
+ */
 export interface TokenPayload {
   userId: Id;
   email: string;
@@ -138,7 +146,9 @@ export interface TokenPayload {
   sessionId?: string;
 }
 
-// Google 토큰 페이로드 인터페이스
+/**
+ * @description Google ID 토큰 페이로드(요약)
+ */
 export interface GoogleTokenPayload {
   sub: string;
   email: string;
@@ -147,10 +157,12 @@ export interface GoogleTokenPayload {
   email_verified: boolean;
 }
 
-// 이메일 인증 목적 타입
+/** @description 이메일 인증 목적 */
 export type VerificationPurpose = 'signup' | 'login' | 'email_change' | 'password_reset';
 
-// 속도 제한 결과 인터페이스
+/**
+ * @description 레이트 리밋 결과
+ */
 export interface RateLimitResult {
   allowed: boolean;
   remaining: number;
@@ -158,7 +170,9 @@ export interface RateLimitResult {
   retryAfter?: number;
 }
 
-// 보안 이벤트 인터페이스
+/**
+ * @description 보안 이벤트
+ */
 export interface SecurityEvent {
   type: SecurityEventType;
   userId?: Id;
@@ -168,7 +182,7 @@ export interface SecurityEvent {
   timestamp: string;
 }
 
-// 보안 이벤트 유형
+/** @description 보안 이벤트 타입 */
 export type SecurityEventType =
   | 'login_success'
   | 'login_failure'
@@ -182,7 +196,9 @@ export type SecurityEventType =
   | '2fa_enabled'
   | '2fa_disabled';
 
-// JWT 서명 옵션 인터페이스
+/**
+ * @description JWT 서명 옵션
+ */
 export interface JWTSignOptions {
   expiresIn?: string | number;
   audience?: string;
@@ -191,10 +207,13 @@ export interface JWTSignOptions {
   algorithm?: string;
 }
 
-// 패스워드 강도 결과 인터페이스
+/**
+ * @description 패스워드 강도 평가 결과
+ */
 export interface PasswordStrengthResult {
   isValid: boolean;
-  score: number; // 0-4
+  /** @description 0~4 */
+  score: number;
   feedback: string[];
   requirements: {
     minLength: boolean;
@@ -205,80 +224,57 @@ export interface PasswordStrengthResult {
   };
 }
 
-// 2단계 인증 설정 인터페이스
+/**
+ * @description TOTP 설정 정보
+ */
 export interface TOTPSetup {
   secret: string;
   qrCodeUrl: string;
   manualEntryKey: string;
 }
 
-// 2단계 인증 상태 인터페이스
+/**
+ * @description 2FA 상태
+ */
 export interface TwoFactorStatus {
   enabled: boolean;
   backupCodesCount: number;
   lastUsed?: string;
 }
 
-// 권한 관리 포트 인터페이스
-
+/**
+ * @description 권한/역할 서비스 포트
+ */
 export interface PermissionService {
-  // 역할 관리
   hasRole(userId: Id, role: string): Promise<boolean>;
   addRole(userId: Id, role: string): Promise<void>;
   removeRole(userId: Id, role: string): Promise<void>;
   getUserRoles(userId: Id): Promise<string[]>;
-
-  // 권한 확인
   hasPermission(userId: Id, permission: string): Promise<boolean>;
   hasAnyPermission(userId: Id, permissions: string[]): Promise<boolean>;
   hasAllPermissions(userId: Id, permissions: string[]): Promise<boolean>;
-
-  // 권한 부여/제거
   grantPermission(userId: Id, permission: string): Promise<void>;
   revokePermission(userId: Id, permission: string): Promise<void>;
   getUserPermissions(userId: Id): Promise<string[]>;
-
-  // 리소스 기반 권한
-  canAccessResource(
-    userId: Id,
-    resourceType: string,
-    resourceId: string,
-    action: string,
-  ): Promise<boolean>;
-  grantResourceAccess(
-    userId: Id,
-    resourceType: string,
-    resourceId: string,
-    actions: string[],
-  ): Promise<void>;
-  revokeResourceAccess(
-    userId: Id,
-    resourceType: string,
-    resourceId: string,
-    actions?: string[],
-  ): Promise<void>;
+  canAccessResource(userId: Id, resourceType: string, resourceId: string, action: string): Promise<boolean>;
+  grantResourceAccess(userId: Id, resourceType: string, resourceId: string, actions: string[]): Promise<void>;
+  revokeResourceAccess(userId: Id, resourceType: string, resourceId: string, actions?: string[]): Promise<void>;
 }
 
-// 감사 로그 포트 인터페이스
-
+/**
+ * @description 감사 로그 서비스 포트
+ */
 export interface AuditLogService {
-  // 로그 기록
   log(event: AuditEvent): Promise<void>;
-
-  // 로그 조회
   getAuditLogs(filters: AuditLogFilters): Promise<AuditEvent[]>;
   getUserAuditLogs(userId: Id, filters?: AuditLogFilters): Promise<AuditEvent[]>;
-  getResourceAuditLogs(
-    resourceType: string,
-    resourceId: string,
-    filters?: AuditLogFilters,
-  ): Promise<AuditEvent[]>;
-
-  // 로그 통계
+  getResourceAuditLogs(resourceType: string, resourceId: string, filters?: AuditLogFilters): Promise<AuditEvent[]>;
   getAuditStats(timeRange: TimeRange): Promise<AuditStats>;
 }
 
-// 감사 이벤트 인터페이스
+/**
+ * @description 감사 이벤트
+ */
 export interface AuditEvent {
   id: string;
   userId?: Id;
@@ -293,7 +289,9 @@ export interface AuditEvent {
   details?: Record<string, unknown>;
 }
 
-// 감사 로그 필터 인터페이스
+/**
+ * @description 감사 로그 조회 필터
+ */
 export interface AuditLogFilters {
   startDate?: string;
   endDate?: string;
@@ -304,13 +302,15 @@ export interface AuditLogFilters {
   offset?: number;
 }
 
-// 시간 범위 인터페이스
+/** @description 시간 범위 */
 export interface TimeRange {
   start: string;
   end: string;
 }
 
-// 감사 통계 인터페이스
+/**
+ * @description 감사 통계
+ */
 export interface AuditStats {
   totalEvents: number;
   eventsByAction: Record<string, number>;

@@ -1,29 +1,42 @@
 /**
- * Description : search.ts - 📌 검색 어댑터(PGVector 래퍼)
+ * Description : search.ts - 📌 PGVector 기반 간단 검색 어댑터 래퍼와 인덱싱/쿼리 타입 정의
  * Author : Shiwoo Min
  * Date : 2025-09-10
  */
-
 // import type { Search } from '@connectwon/core/ports/search';
-
-// 인덱싱 문서
+/**
+ * @description 임베딩 인덱싱 문서
+ */
 export interface IndexDoc {
+  /** @description 문서 ID */
   id: string;
+  /** @description 원문 콘텐츠 */
   content: string;
-  embedding: number[]; // pgvector: vector(1536) 등
+  /** @description 임베딩 벡터(예: 1536차원) */
+  embedding: number[];
+  /** @description 부가 메타데이터(jsonb 저장 권장) */
   metadata?: Record<string, unknown>;
 }
 
-// pgvector 확장 사용 가정
+/**
+ * @description PGVector를 사용하는 간단 래퍼
+ */
 export class PgvectorSearch /* implements Search */ {
+  /**
+   * @param {any} pg node-postgres 등 클라이언트
+   * @param {string} [table='documents'] 테이블명
+   */
   constructor(
     private readonly pg: any,
     private readonly table = 'documents',
   ) {}
 
-  // 인덱싱(Upsert)
+  /**
+   * @description 문서 인덱싱(Upsert)
+   * @param {IndexDoc} doc 인덱싱 문서
+   * @returns {Promise<void>}
+   */
   async index(doc: IndexDoc): Promise<void> {
-    // 메타데이터는 jsonb로 저장
     const text = `
       INSERT INTO ${this.table} (id, content, embedding, metadata)
       VALUES ($1, $2, $3, $4)
@@ -41,7 +54,13 @@ export class PgvectorSearch /* implements Search */ {
     await this.pg.query(text, values);
   }
 
-  // 유사도 검색
+  /**
+   * @description 코사인/내적 기반 유사도 검색 (pgvector <-> 연산자)
+   * @param {number[]} queryEmbedding 쿼리 임베딩
+   * @param {number} [limit=10] 결과 제한
+   * @param {string} [filterJsonPath] jsonb 경로 필터(선택, 구현체 의존)
+   * @returns {Promise<Array<{ id: string; content: string; score: number; metadata: any }>>}
+   */
   async query(
     queryEmbedding: number[],
     limit = 10,
@@ -66,7 +85,10 @@ export class PgvectorSearch /* implements Search */ {
     }));
   }
 
-  // 간단 헬스체크
+  /**
+   * @description 간단 헬스체크
+   * @returns {Promise<boolean>} 성공 여부
+   */
   async health(): Promise<boolean> {
     try {
       await this.pg.query('SELECT 1');
@@ -76,11 +98,14 @@ export class PgvectorSearch /* implements Search */ {
     }
   }
 
-  // float[] → pgvector 캐스팅 헬퍼
-  private toVector(vec: number[]): any {
-    // node-postgres는 pgvector 확장 타입 등록 시 배열을 그대로 넘겨도 되고,
-    // 문자열 캐스팅이 필요한 경우가 있어 프로젝트 설정에 맞춰 조정
-    // 여기서는 안전하게 문자열 표기 사용: '[1,2,3]'
+  /**
+   * @description float[]를 pgvector 리터럴로 변환
+   * @param {number[]} vec 벡터
+   * @returns {string} 예: "[1,0.5,0]"
+   * @private
+   */
+  private toVector(vec: number[]): string {
+    // node-postgres에서 pgvector 타입 등록 유무에 따라 문자열/배열 처리 선택
     return `[${vec.join(',')}]`;
   }
 }
