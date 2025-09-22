@@ -3,7 +3,7 @@
 # Date : 2025-09-06
 # 09-16 - ports 추가, network 설정 추가, healthcheck 수정
 # 09-17 - Grafana 자격증명/포트/ROOT_URL 하드코딩 제거 → 루트 .env 사용
-# 인프라만 올리기: docker compose -p connectwon --env-file .env -f infra/docker/docker-compose.yml up -d postgres redis redisinsight
+# 인프라만 올리기: docker compose -p connectwon --env-file .env -f infra/docker/docker-compose.yml up -d postgres redis redisinsight prometheus grafana n8n
 # 루트에서 빌드: docker compose -p connectwon --env-file .env -f infra/docker/docker-compose.yml up -d
 # Docker 컨테이너 로그 확인: docker compose logs -f --tail=100
 # Docker 컨테이너 중지: docker compose down
