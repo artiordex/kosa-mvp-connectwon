@@ -8,14 +8,14 @@
       "executor": "@nx/js:tsc",
       "options": {
         "main": "apps/api/src/main.ts",
-        "outputPath": "dist/apps/api",
+        "outputPath": "dist",
         "tsConfig": "apps/api/tsconfig.json",
         "assets": [
-          {
-            "input": "apps/api",
-            "glob": "ecosystem.config.js",
-            "output": "."
-          }
+          { "input": "apps/api", "glob": "ecosystem.config.js", "output": "." },
+          { "input": "apps/api/src", "glob": "**/*.yaml", "output": "./src" },
+          { "input": "apps/api/src", "glob": "**/*.yml", "output": "./src" },
+          { "input": "apps/api/src", "glob": "**/*.json", "output": "./src" },
+          { "input": "apps/api/src", "glob": "**/*.proto", "output": "./src" }
         ]
       }
     },
@@ -23,7 +23,7 @@
       "executor": "@nx/js:node",
       "options": {
         "buildTarget": "api:build",
-        "port": 8080
+        "port": 8000
       }
     },
     "lint": {
@@ -39,5 +39,5 @@
       }
     }
   },
-  "implicitDependencies": ["@connectwon/core", "@connectwon/database", "@connectwon/server"]
+  "implicitDependencies": ["@connectwon/core", "@connectwon/database", "@connectwon/logger", "@connectwon/api-contract"]
 }

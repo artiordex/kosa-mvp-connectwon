@@ -1,7 +1,8 @@
 /**
  * Description : ecosystem.config.js - 📌 PM2 프로세스 매니저 설정 파일
- * Author : Shiwoo Min
- * Date : 2025-09-12
+ * Author      : Shiwoo Min
+ * Date        : 2025-09-12
+ * 09-22 - 로그 경로 절대화(/app/logs), Node ESM 소스맵 플래그 추가
  */
 
 module.exports = {
@@ -9,12 +10,12 @@ module.exports = {
     {
       // 앱 기본 정보
       name: 'connectwon-api',
-      script: 'main.js', // Nx 빌드 결과: dist/apps/api/main.js
-      cwd: '../../dist/apps/api', // 빌드된 위치
+      script: 'main.js',
+      cwd: '/app/dist', 
 
       // 실행 환경
       interpreter: 'node',
-      node_args: '--max-old-space-size=1024',
+      node_args: '--max-old-space-size=1024 --enable-source-maps',
 
       // 클러스터 모드 (프로덕션용)
       instances: process.env.NODE_ENV === 'production' ? 'max' : 1,
@@ -44,10 +45,10 @@ module.exports = {
       max_restarts: 10,
       autorestart: true,
 
-      // 로그 설정 (프로젝트 루트 기준)
-      log_file: '../../logs/api-combined.log',
-      out_file: '../../logs/api-out.log',
-      error_file: '../../logs/api-error.log',
+      // 로그 설정 (컨테이너 내부 절대 경로)
+      log_file: '/app/logs/api-combined.log',
+      out_file: '/app/logs/api-out.log',
+      error_file: '/app/logs/api-error.log',
       log_date_format: 'YYYY-MM-DD HH:mm:ss Z',
       merge_logs: true,
 
@@ -65,7 +66,7 @@ module.exports = {
       name: 'connectwon-api-dev',
       script: 'pnpm',
       args: 'nx serve api',
-      cwd: '../..', // 모노레포 루트
+      cwd: process.cwd(),
 
       // 개발 모드는 단일 인스턴스
       instances: 1,
@@ -74,20 +75,9 @@ module.exports = {
       // 환경 변수
       env: {
         NODE_ENV: 'development',
-        PORT: 8080,
+        PORT: 8000,
         LOG_LEVEL: 'debug',
       },
-
-      // 개발용 설정
-      watch: false, // Nx가 알아서 watch 처리
-      min_uptime: '3s',
-      max_restarts: 5,
-      max_memory_restart: '500M',
-
-      // 개발용 로그
-      log_file: 'logs/api-dev.log',
-      out_file: '/dev/null',
-      error_file: 'logs/api-dev-error.log',
     },
   ],
 };

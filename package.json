@@ -13,6 +13,7 @@
   "packageManager": "pnpm@10.7.0",
   "__comment_scripts": "pnpm scripts 명령어",
   "scripts": {
+    "dev:compose": "docker compose -p connectwon --env-file .env -f infra/docker/docker-compose.yml up -d --build",
     "dev:web": "pnpm --filter @connectwon/web dev",
     "dev:admin": "pnpm --filter @connectwon/admin dev",
     "dev:api": "pnpm --filter @connectwon/api dev",

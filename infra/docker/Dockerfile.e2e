@@ -1,29 +1,61 @@
 # Description : Dockerfile.e2e - 📌 ConnectWon E2E 테스트 (Playwright) 컨테이너 빌드
 # Author : Shiwoo Min
 # Date : 2025-09-18
+# 09-20 - corepack + pnpm 고정/재시도, 필터드 설치로 캐시/안정성 개선
+# 09-22 - Black-box 모드로 단순화: web/admin/api는 외부 서비스로 가정, 러너만 포함
+# e2e 빌드: docker compose -p connectwon --env-file .env -f infra/docker/docker-compose.yml up -d --build e2e
 
-# 1. Playwright 공식 베이스 이미지
-FROM mcr.microsoft.com/playwright:v1.51.1-jammy
+# 1. Playwright 공식 베이스 (브라우저 포함)
+FROM mcr.microsoft.com/playwright:v1.51.1-jammy AS base
+WORKDIR /app
+ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0 \
+    PNPM_HOME=/root/.local/share/pnpm \
+    PATH="/root/.local/share/pnpm:$PATH" \
+    PNPM_FETCH_RETRIES=5 \
+    PNPM_FETCH_TIMEOUT=120000 \
+    PNPM_NETWORK_CONCURRENCY=8 \
+    npm_config_fetch_retries=5 \
+    npm_config_fetch_retry_mintimeout=20000 \
+    npm_config_fetch_retry_maxtimeout=120000
+
+# corepack 활성화 + pnpm 버전 고정
+RUN corepack enable && \
+    set -eux; \
+    for i in 1 2 3 4 5; do \
+      corepack prepare pnpm@10.17.0 --activate && break; \
+      echo "corepack prepare failed (attempt $i). retrying..."; \
+      sleep $((i*10)); \
+    done && pnpm -v
+
+# 2. 의존성 설치 단계 (Black-box 모드)
+# - web/admin/api는 외부 서비스로 가정 → 런타임 의존성 불필요
+FROM base AS deps
 WORKDIR /app
 
-# 2. 의존성 설치
-COPY pnpm-lock.yaml package.json pnpm-workspace.yaml nx.json ./
-COPY packages ./packages
-COPY apps/*/package.json ./apps/
-RUN corepack enable && pnpm install --frozen-lockfile
+# 루트 메타데이터 먼저 복사 (락파일 포함)
+COPY pnpm-lock.yaml pnpm-workspace.yaml package.json nx.json tsconfig.json tsconfig.base.json ./
 
-# 3. E2E 소스 복사
+# E2E가 사용하는 내부 패키지들의 package.json만 복사 (캐시 최적화)
+COPY apps/e2e/package.json              apps/e2e/
+
+# 워크스페이스 부분 설치: 불필요한 패키지 설치 방지
+RUN pnpm install --frozen-lockfile \
+  --filter @connectwon/e2e
+
+# 3. 빌드 단계
+FROM deps AS build
+WORKDIR /app
+COPY packages ./packages
 COPY apps/e2e ./apps/e2e
 
-# 4. Playwright 브라우저 설치
-RUN npx playwright install --with-deps
+# 4. 런타임 단계 (Distroless)
+FROM build AS runtime
+WORKDIR /app
 
-# 5. 환경 변수 설정
 ENV CI=true \
     PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
 
-# 6. 결과 디렉토리 생성
+# 테스트 결과 디렉토리 권한
 RUN mkdir -p ./apps/e2e/test-results && chmod 777 ./apps/e2e/test-results
 
-# 7. 테스트 실행 (헬스체크 없음)
-CMD ["pnpm", "--filter", "@connectwon/e2e", "test"]
+CMD ["pnpm", "-w", "nx", "run", "@connectwon/e2e:test"]

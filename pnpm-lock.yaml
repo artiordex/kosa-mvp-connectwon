@@ -359,13 +359,14 @@ importers:
         version: 4.1.8
 
   apps/e2e:
-    devDependencies:
+    dependencies:
       '@connectwon/api-contract':
         specifier: workspace:*
         version: link:../../packages/api-contract
       '@connectwon/logger':
         specifier: workspace:*
         version: link:../../packages/logger
+    devDependencies:
       '@playwright/test':
         specifier: ^1.51.1
         version: 1.55.0

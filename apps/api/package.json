@@ -4,19 +4,20 @@
   "description": "ConnectWon REST-API 기반 백엔드",
   "private": true,
   "type": "module",
+  "__comment_scripts": "pnpm scripts 명령어",
   "scripts": {
     "dev": "pnpm -w exec tsx watch apps/api/src/main.ts",
-    "build": "pnpm -w exec tsc -p tsconfig.json",
+    "build": "nx build api",
     "start": "node dist/main.js",
+    "start:prod": "node --enable-source-maps dist/main.js",
+    "start:pm2": "pm2 start ecosystem.config.js --env production",
+    "start:pm2:dev": "pm2 start ecosystem.config.js --only connectwon-api-dev",
     "clean": "pnpm -w exec rimraf dist",
     "db:generate": "pnpm --filter=@connectwon/database generate",
     "db:migrate": "pnpm --filter=@connectwon/database migrate",
     "db:studio": "pnpm --filter=@connectwon/database studio"
   },
-  "peerDependencies": {
-    "@connectwon/database": "workspace:*",
-    "bullmq": "^5.58.5"
-  },
+  "__comment_dependencies": "런타임 의존성",
   "dependencies": {
     "@nestjs/bullmq": "^11.0.3",
     "@nestjs/common": "^11.1.6",
@@ -25,19 +26,30 @@
     "@nestjs/platform-express": "^11.1.6",
     "@nestjs/swagger": "^11.2.0",
     "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "helmet": "^7.1.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.2",
-    "cors": "^2.8.5",
+    "zod": "^3.23.8",
     "express": "^4.21.2",
-    "helmet": "^7.1.0",
-    "ioredis": "^5.7.0",
-    "jsonwebtoken": "^9.0.2",
+    "cors": "^2.8.5",
     "morgan": "^1.10.0",
-    "reflect-metadata": "^0.1.14",
+    "ioredis": "^5.7.0",
     "swagger-ui-express": "^5.0.1",
-    "zod": "^3.23.8"
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.1",
+    "@connectwon/core": "workspace:*",
+    "@connectwon/database": "workspace:*",
+    "@connectwon/logger": "workspace:*",
+    "@connectwon/api-contract": "workspace:*"
   },
+  "__comment_peer": "피어 의존성",
+  "peerDependencies": {
+    "bullmq": "^5.58.5"
+  },
+  "__comment_dev": "개발 의존성",
   "devDependencies": {
+    "@nestjs/cli": "^10.0.0",
     "@types/bcryptjs": "^2.4.6",
     "@types/cors": "^2.8.19",
     "@types/express": "^4.17.23",
@@ -47,6 +59,7 @@
     "@types/node": "^24.3.1",
     "@types/swagger-ui-express": "^4.1.8"
   },
+  "__comment_engines": "런타임 요구사항",
   "engines": {
     "node": ">=20.11"
   }

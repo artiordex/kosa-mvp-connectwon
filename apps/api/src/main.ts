@@ -4,12 +4,12 @@
  * Date : 2025-09-12
  * 09-18 : 루트 경로 핸들러 추가
  */
+import 'reflect-metadata';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import type { Request, Response } from 'express';
-import 'reflect-metadata';
 
 import { AppModule } from './app.module.js';
 

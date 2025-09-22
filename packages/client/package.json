@@ -1,5 +1,5 @@
 {
-  "name": "@connectwon/next-client",
+  "name": "@connectwon/client",
   "version": "1.0.0",
   "description": "ConnectWon Next.js/React 클라이언트 유틸리티",
   "private": true,

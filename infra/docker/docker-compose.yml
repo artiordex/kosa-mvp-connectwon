@@ -138,12 +138,16 @@ services:
       - connectwon-network
     environment:
       - BASE_URL=http://web:3000
+      # - ADMIN_BASE_URL=http://admin:3001
       - API_URL=http://api:8000
     depends_on:
       web:
         condition: service_healthy
+      # admin:
+      #   condition: service_healthy
       api:
         condition: service_healthy
+    shm_size: "1gb"
     volumes:
       - ../../apps/e2e/test-results:/app/apps/e2e/test-results
 

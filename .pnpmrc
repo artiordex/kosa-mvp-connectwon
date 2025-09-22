@@ -3,11 +3,13 @@
 # Date  : 2025-09-12
 # 09-17 - 스타일링, 테스트, 코드 품질, ORM/DB 관련 패키지 호이스팅 추가
 # 09-18 - TypeScript 라이브러리 오류 해결을 위한 shamefully-hoist 설정 추가
+# 09-22 - pnpm v10 deploy 정책 대응 (inject-workspace-packages 추가)
 # NOTE:
 #   - public-hoist-pattern 설정을 통해 특정 패키지들을 루트 node_modules로 끌어올려
 #     모든 워크스페이스에서 공유 사용 (중복 설치 방지, 버전 일관성 유지)
 #   - auto-install-peers 설정을 통해 peer dependencies 자동 설치 활성화
 #   - shamefully-hoist로 TypeScript 표준 라이브러리 접근 문제 해결
+#   - pnpm v10 이후 deploy 시 inject-workspace-packages 필요
 
 # 모든 @types/* 패키지들
 public-hoist-pattern[]=*@types/*
@@ -53,6 +55,9 @@ public-hoist-pattern[]=prisma
 node-linker=hoisted
 shamefully-hoist=true
 
-# 심링크 관련 설정 (모듈 해석 개선)
+# pnpm v10 deploy 정책 대응
+inject-workspace-packages=true
+
+# 심링크 관련 설정 (Docker/Windows 호환성 개선 필요 시 활성화)
 symlink=false
 prefer-symlinked-executables=false
