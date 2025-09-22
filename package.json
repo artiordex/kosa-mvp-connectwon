@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "ConnectWon - 도전자들을 위한 예약 기반 생활 서비스",
   "private": true,
-  "type": "module",
   "author": "Shiwoo Min",
   "license": "MIT",
   "engines": {

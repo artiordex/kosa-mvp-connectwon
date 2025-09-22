@@ -5,12 +5,7 @@
   "defaultBase": "main",
   "__comment_namedInputs": "namedInputs: 빌드 캐시와 의존성 관리를 위한 입력 파일 집합을 정의",
   "namedInputs": {
-    "default": [
-      "{projectRoot}/**/*",
-      "!{projectRoot}/dist/**/*",
-      "!{projectRoot}/build/**/*",
-      "!{projectRoot}/.next/**/*"
-    ],
+    "default": ["{projectRoot}/**/*", "!{projectRoot}/dist/**/*", "!{projectRoot}/build/**/*", "!{projectRoot}/.next/**/*"],
     "production": [
       "default",
       "!{projectRoot}/**/*.spec.ts",
@@ -23,18 +18,13 @@
       "!{projectRoot}/coverage/**",
       "!{projectRoot}/generated/**"
     ],
-    "env": [
-      "{workspaceRoot}/.env*",
-      "{workspaceRoot}/infra/docker/.env",
-      "{workspaceRoot}/secrets/**",
-      "{projectRoot}/.env*"
-    ]
+    "env": ["{workspaceRoot}/.env*", "{workspaceRoot}/infra/docker/.env", "{workspaceRoot}/secrets/**", "{projectRoot}/.env*"]
   },
   "__comment_targetDefaults": "targetDefaults: Nx 작업 단위별 기본 입력, 출력, 캐싱, 의존성 등을 정의",
   "targetDefaults": {
     "build": {
       "inputs": ["production", "^production", "env"],
-      "outputs": ["{projectRoot}/dist", "{projectRoot}/.next"],
+      "outputs": ["{workspaceRoot}/dist", "{projectRoot}/.next"],
       "cache": true,
       "dependsOn": ["^build"]
     },

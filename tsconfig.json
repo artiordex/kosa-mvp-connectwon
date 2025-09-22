@@ -16,11 +16,11 @@
     // (모노레포에선 기본 탐색이 더 안전하므로 비활성화)
     // "typeRoots": ["./node_modules/@types"],
 
-    // 타입 선언 파일(.d.ts) 관련
+    // 타입 선언 파일(.d.ts) 관련 ← 루트는 산출물 생성하지 않으므로 주석
     // "declarationMap": true,
 
-    // 모노레포에서 빌드 성능 향상을 위한 증분 빌드 정보 파일
-    "tsBuildInfoFile": "./dist/.tsbuildinfo",
+    // 모노레포에서 빌드 성능 향상을 위한 증분 빌드 정보 파일 ← 루트는 noEmit로 전환, 캐시 파일 경합 방지
+    // "tsBuildInfoFile": "./dist/.tsbuildinfo",
 
     // JSON 모듈 import 지원
     "resolveJsonModule": true,
@@ -34,31 +34,31 @@
     // default import 지원 (esModuleInterop과 함께 사용 권장)
     "allowSyntheticDefaultImports": true,
 
-    // import/export 구문을 원본 그대로 유지 (Next.js 호환 ↑)
+    // import/export 구문을 원본 그대로 유지 (Next.js 호환 ↑) ← 전역 강제보단 각 프로젝트에서 필요 시 켜기
     // "verbatimModuleSyntax": true,
 
     // 파일명 대소문자 일관성 검사 (대소문자 오류 방지)
     "forceConsistentCasingInFileNames": true,
 
-    // 컴파일 에러 시 .js 파일 출력 여부
-    "noEmitOnError": false,
+    // 컴파일 산출물 생성 금지 (루트는 집계/타입체크 전용)
+    "noEmit": true,
 
-    // ESM/번들러 모듈에러 방지를 위한 주석처리
+    // 컴파일 에러 시 .js 파일 출력 여부 ← noEmit 사용
+    // "noEmitOnError": false,
+
+    // ESM/번들러 모듈에러 방지를 위한 주석처리  ← 런타임/빌드는 각 앱 tsconfig에서 관리
     // "module": "ESNext",
-    // "moduleResolution": "Bundler",
+    // "moduleResolution": "Bundler"
 
-    // 런타임 타깃/라이브러리
-    "target": "ES2022",
+    // 사용하지 않는 코드에 대한 경고 비활성화 ← 전역 완화 옵션은 개별 프로젝트에서 필요 시 조정
+    // "noUnusedLocals": false,
+    // "noUnusedParameters": false,
 
-    // 사용하지 않는 코드에 대한 경고 비활성화
-    "noUnusedLocals": false,
-    "noUnusedParameters": false,
+    // JSX 변환 설정 (Next.js 호환)  ← 웹 앱에서만 필요하므로 apps/web, apps/admin tsconfig로 이동
+    // "jsx": "react-jsx",
 
-    // JSX 변환 설정 (Next.js 호환)
-    "jsx": "react-jsx",
-
-    // 빌드 산출물 타깃 라이브러리
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    // 빌드 산출물 타깃 라이브러리 ← DOM 계열은 프론트 전용. 각 웹 앱에서 지정
+    // "lib": ["ES2022", "DOM", "DOM.Iterable"],
 
     // 경로 별칭은 tsconfig.base.json에서 통합 관리
     // "paths": { ... },

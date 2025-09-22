@@ -354,7 +354,8 @@
     "maxtimeout",
     "setuptools",
     "aiohttp",
-    "isort"
+    "isort",
+    "nodenext"
   ],
 
   // Nx Console AI 규칙 사용
