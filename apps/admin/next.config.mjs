@@ -9,62 +9,73 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import 'dotenv/config';
 
-// ES modules에서 __dirname 대체
+/** @constant __filename ESM 환경에서 현재 파일 경로 */
 const __filename = fileURLToPath(import.meta.url);
+/** @constant __dirname ESM 환경에서 현재 디렉터리 경로 */
 const __dirname = path.dirname(__filename);
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Nx 모노레포 설정
+  /**
+   * @property output
+   * @description Nx/모노레포 배포를 위한 standalone 출력
+   * @default "standalone"
+   */
   output: 'standalone',
 
-  // 모노레포 packages 사용
-  transpilePackages: [
-    '@connectwon/ui',
-    '@connectwon/api-contract',
-    '@connectwon/core',
-    '@connectwon/sdk',
-    '@connectwon/client',
-  ],
+  /**
+   * @property transpilePackages
+   * @description 내부 패키지(ESM/클라 전용 포함) 트랜스파일
+   */
+  transpilePackages: ['@connectwon/ui', '@connectwon/api-contract', '@connectwon/sdk', '@connectwon/client'],
 
-  // React Strict Mode - 임시로 비활성화 (Context 에러 해결)
+  /**
+   * @property reactStrictMode
+   * @description Context 이슈 회피를 위한 임시 비활성화
+   * @default false
+   */
   reactStrictMode: false,
 
-  // 이미지 최적화 설정 (public 폴더 없이 작동)
+  /**
+   * @property images
+   * @description public 폴더 없이도 원격 이미지 허용
+   */
   images: {
     unoptimized: true,
     remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'avatars.githubusercontent.com',
-      },
-      {
-        protocol: 'https',
-        hostname: 'lh3.googleusercontent.com',
-      },
+      { protocol: 'https', hostname: 'avatars.githubusercontent.com' },
+      { protocol: 'https', hostname: 'lh3.googleusercontent.com' },
     ],
   },
 
-  // 실험적 기능
+  /**
+   * @property outputFileTracingRoot
+   * @description 서버 번들 트레이싱 루트(정식 키)
+   */
+  outputFileTracingRoot: path.resolve(__dirname, '../../'),
+
+  /**
+   * @property experimental
+   * @description 안정성 우선으로 실험 옵션 최소화
+   */
   experimental: {
-    optimizePackageImports: ['lucide-react'],
-    outputFileTracingRoot: path.resolve(__dirname, '../../'),
-    // 정적 최적화 완전 비활성화
+    // @note RSC 경계 충돌 가능성 있어 비활성화
+    // optimizePackageImports: ['lucide-react'],
     isrMemoryCacheSize: 0,
   },
 
-  // 기본 리다이렉트
+  /**
+   * @method redirects
+   * @description 기본 루트 → 대시보드 리다이렉트
+   */
   async redirects() {
-    return [
-      {
-        source: '/',
-        destination: '/dashboard',
-        permanent: false,
-      },
-    ];
+    return [{ source: '/', destination: '/dashboard', permanent: false }];
   },
 
-  // 개발 환경 API 프록시
+  /**
+   * @method rewrites
+   * @description 개발 환경 API 프록시
+   */
   async rewrites() {
     if (process.env.NODE_ENV === 'development') {
       return [
@@ -77,17 +88,31 @@ const nextConfig = {
     return [];
   },
 
-  // 성능 최적화
+  /**
+   * @property compress
+   * @description gzip 압축 활성화
+   * @default true
+   */
   compress: true,
+
+  /**
+   * @property poweredByHeader
+   * @description X-Powered-By 헤더 제거
+   * @default false
+   */
   poweredByHeader: false,
 
-  // 빌드 설정 - 임시로 에러 무시 (빌드 완료를 위해)
-  typescript: {
-    ignoreBuildErrors: true,
-  },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
+  /**
+   * @property typescript
+   * @description 빌드 진행을 위한 타입 에러 임시 무시
+   */
+  typescript: { ignoreBuildErrors: true },
+
+  /**
+   * @property eslint
+   * @description 빌드 진행을 위한 ESLint 에러 임시 무시
+   */
+  eslint: { ignoreDuringBuilds: true },
 };
 
 export default nextConfig;

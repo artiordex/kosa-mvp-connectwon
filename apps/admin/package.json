@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "ConnectWon Admin 웹 애플리케이션",
   "private": true,
+  "__comment_scripts": "pnpm scripts 명령어",
   "scripts": {
     "dev": "next dev --port 3001",
     "build": "next build",
