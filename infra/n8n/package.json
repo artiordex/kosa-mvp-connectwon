@@ -2,16 +2,20 @@
   "name": "@connectwon/n8n",
   "version": "0.1.0",
   "private": true,
+  "__comment_scripts": "pnpm scripts 명령어",
   "scripts": {
     "dev": "cross-env NODE_ENV=development n8n",
     "start": "cross-env NODE_ENV=production n8n",
-    "export": "node scripts/export-workflows.js",
-    "import": "node scripts/import-workflows.js"
+    "export:workflows": "node scripts/export-workflows.js",
+    "import:workflows": "node scripts/import-workflows.js",
+    "setup": "bash scripts/setup.sh",
+    "deploy": "bash scripts/deploy.sh"
+  },
+  "dependencies": {
+    "n8n": "1.44.0"
   },
   "devDependencies": {
-    "n8n": "1.44.0",
     "cross-env": "^7.0.3",
     "axios": "^1.7.7"
   }
 }
-

@@ -7,14 +7,28 @@
     "setup": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "bash scripts/setup.sh",
+        "command": "pnpm --filter @connectwon/n8n run setup",
         "cwd": "infra/n8n"
       }
     },
     "deploy": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "bash scripts/deploy.sh",
+        "command": "pnpm --filter @connectwon/n8n run deploy",
+        "cwd": "infra/n8n"
+      }
+    },
+    "dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "pnpm --filter @connectwon/n8n run dev",
+        "cwd": "infra/n8n"
+      }
+    },
+    "start": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "pnpm --filter @connectwon/n8n run start",
         "cwd": "infra/n8n"
       }
     }

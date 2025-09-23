@@ -7,28 +7,78 @@
 {
   // 루트의 tsconfig.base.json 상속
   "extends": "../../tsconfig.base.json",
-  "compilerOptions": {
-    "rootDir": "./src",
-    "outDir": "./dist/apps/worker",
 
+  "compilerOptions": {
+    // 출력 설정
+    "rootDir": "./src",
+    "outDir": "../../dist/apps/worker",
+
+    // ES2022 타겟 및 NodeNext 모듈
     "target": "ES2022",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "lib": ["ES2022"],
     "types": ["node"],
 
+    // 선언 파일 생성
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
 
+    // 증분 빌드
     "incremental": true,
-    "tsBuildInfoFile": "./dist/apps/worker/.tsbuildinfo",
+    "tsBuildInfoFile": "../../dist/apps/worker/.tsbuildinfo",
 
+    // 모듈 상호 운용성
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+
+    // 모노레포 패키지 경로 매핑
+    "paths": {
+      "@connectwon/core": ["../../packages/core/src"],
+      "@connectwon/core/*": ["../../packages/core/src/*"],
+      "@connectwon/database": ["../../packages/database/src"],
+      "@connectwon/database/*": ["../../packages/database/src/*"],
+      "@connectwon/logger": ["../../packages/logger/src"],
+      "@connectwon/logger/*": ["../../packages/logger/src/*"],
+      "@connectwon/api-contract": ["../../packages/api-contract/src"],
+      "@connectwon/api-contract/*": ["../../packages/api-contract/src/*"],
+      "@connectwon/sdk": ["../../packages/sdk/src"],
+      "@connectwon/sdk/*": ["../../packages/sdk/src/*"],
+      "@connectwon/ui": ["../../packages/ui/src"],
+      "@connectwon/ui/*": ["../../packages/ui/src/*"],
+      "~/*": ["./src/*"]
+    },
+
+    // 경로 해석 기준점
+    "baseUrl": ".",
+    "exactOptionalPropertyTypes": false
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist", "**/*.test.*", "**/*.spec.*"]
+
+  // 포함할 파일들
+  "include": ["src/**/*", "**/*.d.ts"],
+
+  // 제외할 파일들
+  "exclude": ["node_modules", "dist", "**/*.test.*", "**/*.spec.*", "coverage"],
+
+  // 프로젝트 참조
+  "references": [
+    {
+      "path": "../../packages/core"
+    },
+    {
+      "path": "../../packages/database"
+    },
+    {
+      "path": "../../packages/logger"
+    },
+    {
+      "path": "../../packages/api-contract"
+    },
+    {
+      "path": "../../packages/sdk"
+    }
+  ]
 }

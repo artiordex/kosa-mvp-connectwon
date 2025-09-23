@@ -358,7 +358,8 @@
     "nodenext",
     "apiuser",
     "loglevel",
-    "ehthumbs"
+    "ehthumbs",
+    "mjml"
   ],
 
   // Nx Console AI 규칙 사용

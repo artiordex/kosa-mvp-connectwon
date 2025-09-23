@@ -11,34 +11,29 @@ RUN corepack enable \
   && apk add --no-cache libc6-compat ca-certificates \
   && apk upgrade --no-cache \
   && update-ca-certificates \
-  && pnpm config set fetch-retries 6 \
-  && pnpm config set fetch-retry-mintimeout 20000 \
-  && pnpm config set fetch-retry-maxtimeout 600000 \
-  && pnpm config set network-timeout 600000
+  && pnpm config set fetch-retries 3 \
+  && pnpm config set network-timeout 60000
 
 # 2. 의존성 설치 단계
 FROM base AS deps
 WORKDIR /app
 
-# 루트 메타데이터 먼저 복사 (락파일 포함)
+# 루트 메타데이터 먼저 복사
 COPY pnpm-lock.yaml pnpm-workspace.yaml package.json nx.json tsconfig.json tsconfig.base.json ./
 
-# worker가 의존하는 내부 패키지들의 package.json만 복사 (캐시 최적화)
+# worker가 의존하는 내부 패키지들의 package.json만 복사 (database 제외)
 COPY packages/api-contract/package.json packages/api-contract/
-COPY packages/database/package.json     packages/database/
 COPY packages/client/package.json       packages/client/
 COPY packages/server/package.json       packages/server/
 COPY packages/sdk/package.json          packages/sdk/
-# core/logger/configs 를 빼먹지 말아야 TS/런타임 의존성을 풀 수 있음
 COPY packages/core/package.json         packages/core/
 COPY packages/logger/package.json       packages/logger/
 COPY packages/configs/package.json      packages/configs/
 COPY apps/worker/package.json           apps/worker/
 
-# pnpm install 시 filter로 범위 제한 → 락파일 불일치 오류 방지
-RUN pnpm install --frozen-lockfile \
+# database 패키지 제외하고 설치
+RUN pnpm install --no-frozen-lockfile \
   --filter @connectwon/api-contract \
-  --filter @connectwon/database \
   --filter @connectwon/client \
   --filter @connectwon/server \
   --filter @connectwon/sdk \
@@ -50,6 +45,8 @@ RUN pnpm install --frozen-lockfile \
 # 3. 빌드 단계
 FROM deps AS build
 WORKDIR /app
+
+# 소스 코드 복사 (database 제외)
 COPY packages ./packages
 COPY apps/worker ./apps/worker
 

@@ -3,20 +3,66 @@
   "sourceRoot": "apps/worker/src",
   "projectType": "application",
   "targets": {
+    "__comment_build": "빌드 설정",
     "build": {
       "executor": "@nx/js:tsc",
       "options": {
         "tsConfig": "apps/worker/tsconfig.json",
-        "assets": []
+        "assets": ["apps/worker/src/templates/*.hbs", "apps/worker/src/templates/*.mjml"]
       },
       "outputs": ["{workspaceRoot}/dist/apps/worker"]
     },
+    "__comment_serve": "개발 서버 실행",
     "serve": {
       "executor": "@nx/js:node",
       "options": {
-        "buildTarget": "@connectwon/worker:build"
+        "buildTarget": "@connectwon/worker:build",
+        "inspect": true,
+        "watch": true
+      },
+      "configurations": {
+        "production": {
+          "inspect": false,
+          "watch": false
+        }
+      }
+    },
+    "__comment_test": "테스트 실행",
+    "test": {
+      "executor": "@nx/vite:test",
+      "outputs": ["{workspaceRoot}/coverage/apps/worker"],
+      "options": {
+        "config": "apps/worker/vitest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "__comment_lint": "코드 린트 검사",
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/worker/**/*.{ts,tsx,js,jsx}"]
+      }
+    },
+    "__comment_type_check": "TypeScript 타입 체크",
+    "type-check": {
+      "executor": "@nx/js:tsc",
+      "options": {
+        "tsConfig": "apps/worker/tsconfig.json",
+        "noEmit": true
+      }
+    },
+    "__comment_docker": "Docker 빌드",
+    "docker-build": {
+      "executor": "@nx/docker:build",
+      "options": {
+        "dockerfile": "infra/docker/Dockerfile.worker",
+        "context": ".",
+        "tags": ["connectwon/worker:latest"]
       }
     }
   },
-  "implicitDependencies": ["@connectwon/core"]
+  "__comment_dependencies": "프로젝트 의존성",
+  "implicitDependencies": ["@connectwon/core", "@connectwon/database", "@connectwon/logger", "@connectwon/api-contract", "@connectwon/sdk"],
+  "tags": ["scope:worker", "type:application"]
 }

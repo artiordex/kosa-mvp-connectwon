@@ -107,7 +107,7 @@ spec:
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
-            capabilities: { drop: [ "ALL" ] }
+            capabilities: { drop: ['ALL'] }
           envFrom:
             - configMapRef: { name: connectwon-config }
             - secretRef: { name: connectwon-secrets }
@@ -185,7 +185,7 @@ spec:
     metadata:
       labels: { app: admin }
     spec:
-      imagePullSecrets: [ { name: ghcr-pull-secret } ]
+      imagePullSecrets: [{ name: ghcr-pull-secret }]
       securityContext:
         runAsNonRoot: true
         runAsUser: 1001
@@ -198,7 +198,7 @@ spec:
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
-            capabilities: { drop: [ "ALL" ] }
+            capabilities: { drop: ['ALL'] }
           envFrom:
             - configMapRef: { name: connectwon-config }
             - secretRef: { name: connectwon-secrets }
@@ -254,7 +254,7 @@ spec:
         prometheus.io/port: '8000'
         prometheus.io/path: '/metrics'
     spec:
-      imagePullSecrets: [ { name: ghcr-pull-secret } ]
+      imagePullSecrets: [{ name: ghcr-pull-secret }]
       securityContext:
         runAsNonRoot: true
         runAsUser: 1001
@@ -270,16 +270,16 @@ spec:
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: false # 마이그레이션은 쓰기 필요
-            capabilities: { drop: [ "ALL" ] }
+            capabilities: { drop: ['ALL'] }
       containers:
         - name: api
           image: ghcr.io/artiordex/kosa-mvp-connectwon/api:latest
           ports: [{ containerPort: 8000 }]
-          env: [ { name: PORT, value: '8000' } ]
+          env: [{ name: PORT, value: '8000' }]
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
-            capabilities: { drop: [ "ALL" ] }
+            capabilities: { drop: ['ALL'] }
           envFrom:
             - configMapRef: { name: connectwon-config }
             - secretRef: { name: connectwon-secrets }
@@ -329,7 +329,7 @@ spec:
     metadata:
       labels: { app: worker }
     spec:
-      imagePullSecrets: [ { name: ghcr-pull-secret } ]
+      imagePullSecrets: [{ name: ghcr-pull-secret }]
       securityContext:
         runAsNonRoot: true
         runAsUser: 1001
@@ -341,13 +341,13 @@ spec:
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
-            capabilities: { drop: [ "ALL" ] }
+            capabilities: { drop: ['ALL'] }
           envFrom:
             - configMapRef: { name: connectwon-config }
             - secretRef: { name: connectwon-secrets }
           livenessProbe:
             exec:
-              command: ['sh', '-c', "redis-cli -u $REDIS_URL ping | grep PONG"]
+              command: ['sh', '-c', 'redis-cli -u $REDIS_URL ping | grep PONG']
             initialDelaySeconds: 30
             periodSeconds: 30
           resources:
@@ -368,7 +368,7 @@ metadata:
   name: connectwon
   namespace: connectwon
   annotations:
-    kubernetes.io/ingress.class: "nginx"
+    kubernetes.io/ingress.class: 'nginx'
     nginx.ingress.kubernetes.io/rewrite-target: /$2
 spec:
   rules:
@@ -388,6 +388,7 @@ spec:
             backend:
               service: { name: admin, port: { number: 80 } }
 
+---
 # n8n (Workflow Automation)
 apiVersion: apps/v1
 kind: Deployment
@@ -417,13 +418,13 @@ spec:
             - containerPort: 5678
           env:
             - name: N8N_PORT
-              value: "5678"
+              value: '5678'
             - name: N8N_HOST
-              value: "n8n.connectwon.svc.cluster.local"
+              value: 'n8n.connectwon.svc.cluster.local'
             - name: GENERIC_TIMEZONE
-              value: "Asia/Seoul"
+              value: 'Asia/Seoul'
             - name: N8N_BASIC_AUTH_ACTIVE
-              value: "true"
+              value: 'true'
             - name: N8N_BASIC_AUTH_USER
               valueFrom:
                 secretKeyRef:
@@ -435,16 +436,16 @@ spec:
                   name: connectwon-secrets
                   key: N8N_PASSWORD
             - name: DB_TYPE
-              value: "postgresdb"
+              value: 'postgresdb'
             - name: DB_POSTGRESDB_HOST
               valueFrom:
                 secretKeyRef:
                   name: connectwon-secrets
                   key: POSTGRES_HOST
             - name: DB_POSTGRESDB_PORT
-              value: "5432"
+              value: '5432'
             - name: DB_POSTGRESDB_DATABASE
-              value: "n8n"
+              value: 'n8n'
             - name: DB_POSTGRESDB_USER
               valueFrom:
                 secretKeyRef:
@@ -486,7 +487,7 @@ metadata:
   name: n8n
   namespace: connectwon
   annotations:
-    kubernetes.io/ingress.class: "nginx"
+    kubernetes.io/ingress.class: 'nginx'
 spec:
   rules:
     - host: n8n.connectwon.local
@@ -507,7 +508,7 @@ metadata:
   name: n8n-pvc
   namespace: connectwon
 spec:
-  accessModes: ["ReadWriteOnce"]
+  accessModes: ['ReadWriteOnce']
   resources:
     requests:
       storage: 1Gi

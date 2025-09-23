@@ -1,70 +1,30 @@
-# Description : Dockerfile.api - ConnectWon API (NestJS) 컨테이너 빌드
-# Author      : Shiwoo Min
-# Date        : 2025-09-22
-# 09-22 - Web 패턴 적용: Alpine 런타임 + 단순화 + pnpm deploy 제거
-# 09-23 - 디버깅 로그 추가 (pnpm / node / nx 버전, 의존성 목록 확인)
-# 09-23 - 초상세 디버깅 모드 적용 (파일 시스템, 메모리, 프로세스 추적)
-
+# Description : Dockerfile.api - 📌 ConnectWon API (NestJS) 컨테이너 빌드
+# Author : Shiwoo Min
+# Date : 2025-09-23
 # api 빌드: docker compose -p connectwon --env-file .env -f infra/docker/docker-compose.yml up -d --build api
 
 # 1. 베이스 이미지
 FROM node:22-alpine3.22 AS base
-
 WORKDIR /app
 
-# 시스템 정보 출력
-RUN echo "=== 🔍 SYSTEM DEBUG INFO ===" \
-  && echo "📋 OS Info: $(cat /etc/os-release | head -2)" \
-  && echo "💾 Memory: $(free -h)" \
-  && echo "💽 Disk: $(df -h /)" \
-  && echo "🔧 Architecture: $(uname -m)" \
-  && echo "⚡ Available CPUs: $(nproc)" \
-  && echo "🕐 Timezone: $(date '+%Y-%m-%d %H:%M:%S %Z')" \
-  && echo ""
+# 필수 패키지만 설치
+RUN corepack enable \
+  && apk add --no-cache libc6-compat ca-certificates \
+  && apk upgrade --no-cache
 
-# 패키지 매니저 및 시스템 의존성 설치
-RUN echo "=== 📦 INSTALLING SYSTEM PACKAGES ===" \
-  && corepack enable \
-  && echo "✅ Corepack enabled" \
-  && apk add --no-cache libc6-compat ca-certificates bash curl procps htop \
-  && echo "✅ System packages installed: $(apk list --installed | wc -l) packages" \
-  && apk upgrade --no-cache \
-  && echo "✅ System packages upgraded" \
-  && update-ca-certificates \
-  && echo "✅ CA certificates updated" \
-  && echo ""
-
-# PNPM 설정 및 버전 확인
-RUN echo "=== ⚙️  PNPM CONFIGURATION ===" \
-  && pnpm config set fetch-retries 5 \
-  && pnpm config set fetch-retry-mintimeout 10000 \
-  && pnpm config set fetch-retry-maxtimeout 180000 \
-  && pnpm config set network-timeout 180000 \
-  && pnpm config set registry https://registry.npmjs.org/ \
-  && echo "✅ PNPM configured for network resilience" \
-  && echo "📊 PNPM version: $(pnpm -v)" \
-  && echo "📊 Node version: $(node -v)" \
-  && echo "📊 NPM version: $(npm -v)" \
-  && echo "📊 PNPM config:" \
-  && pnpm config list \
-  && echo ""
+# PNPM 최적화 설정
+RUN pnpm config set fetch-retries 2 \
+  && pnpm config set network-timeout 30000 \
+  && pnpm config set registry https://registry.npmjs.org/
 
 # 2. 의존성 설치 단계
 FROM base AS deps
-
 WORKDIR /app
 
-# 파일 복사 전 디렉토리 구조 확인
-RUN echo "=== 📂 WORKSPACE PREPARATION ===" \
-  && echo "📍 Current directory: $(pwd)" \
-  && echo "📁 Directory contents before copy:" \
-  && ls -la . || echo "Directory is empty" \
-  && echo ""
+# 워크스페이스 파일들 복사
+COPY pnpm-lock.yaml pnpm-workspace.yaml package.json nx.json tsconfig.base.json ./
 
-# 워크스페이스 루트 파일들 복사
-COPY pnpm-lock.yaml pnpm-workspace.yaml package.json nx.json tsconfig.json tsconfig.base.json ./
-
-# 패키지별 package.json 복사
+# API 관련 package.json만 복사
 COPY packages/api-contract/package.json packages/api-contract/
 COPY packages/database/package.json     packages/database/
 COPY packages/server/package.json       packages/server/
@@ -74,33 +34,8 @@ COPY packages/configs/package.json      packages/configs/
 COPY packages/sdk/package.json          packages/sdk/
 COPY apps/api/package.json              apps/api/
 
-# 복사된 파일 구조 확인
-RUN echo "=== 📁 COPIED FILES VERIFICATION ===" \
-  && echo "📋 Root files:" \
-  && ls -la . \
-  && echo "" \
-  && echo "📦 Package structure:" \
-  && find packages apps -name "package.json" -type f | sort \
-  && echo "" \
-  && echo "📊 Workspace info:" \
-  && cat pnpm-workspace.yaml \
-  && echo "" \
-  && echo "🔍 Lock file info:" \
-  && echo "Lock file size: $(wc -l < pnpm-lock.yaml) lines" \
-  && head -10 pnpm-lock.yaml \
-  && echo "..." \
-  && echo ""
-
-# 필터된 의존성 설치
-RUN echo "=== 📚 FILTERED DEPENDENCY INSTALLATION ===" \
-  && echo "🚀 Starting filtered dependency installation..." \
-  && echo "💡 Tool versions:" \
-  && echo "   - PNPM: $(pnpm -v)" \
-  && echo "   - Node: $(node -v)" \
-  && echo "   - NPM: $(npm -v)" \
-  && echo "" \
-  && echo "🎯 Installing dependencies for specific packages..." \
-  && time pnpm install --frozen-lockfile \
+# 필터된 의존성 설치 (로그 최소화)
+RUN pnpm install --frozen-lockfile \
     --filter @connectwon/api-contract \
     --filter @connectwon/database \
     --filter @connectwon/server \
@@ -109,212 +44,51 @@ RUN echo "=== 📚 FILTERED DEPENDENCY INSTALLATION ===" \
     --filter @connectwon/configs \
     --filter @connectwon/sdk \
     --filter @connectwon/api \
-  && echo "" \
-  && echo "✅ Filtered dependencies installed successfully!" \
-  && echo "📊 Installation statistics:" \
-  && echo "   - Node modules size: $(du -sh node_modules 2>/dev/null || echo 'N/A')" \
-  && echo "   - Installed packages: $(find node_modules -maxdepth 2 -name package.json | wc -l)" \
-  && echo "   - PNPM store size: $(du -sh ~/.pnpm-store 2>/dev/null || echo 'N/A')" \
-  && echo ""
+    --reporter=silent
 
 # 3. 빌드 단계
 FROM deps AS build
 
 WORKDIR /app
 
-# 소스 코드 복사 전 상태 확인
-RUN echo "=== 🔄 BUILD STAGE PREPARATION ===" \
-  && echo "📍 Current directory: $(pwd)" \
-  && echo "📊 Available memory: $(free -h)" \
-  && echo "📊 Available disk space: $(df -h /)" \
-  && echo "📁 Current structure:" \
-  && ls -la . \
-  && echo ""
-
-# 전체 소스 코드 복사
+# 소스 코드 복사
 COPY packages ./packages
 COPY apps/api ./apps/api
 
-# 복사된 소스 코드 검증
-RUN echo "=== 📂 SOURCE CODE VERIFICATION ===" \
-  && echo "📦 Packages structure:" \
-  && find packages -type f -name "*.ts" -o -name "*.js" -o -name "*.json" | head -20 \
-  && echo "..." \
-  && echo "📱 API app structure:" \
-  && find apps/api -type f -name "*.ts" -o -name "*.js" -o -name "*.json" | head -20 \
-  && echo "..." \
-  && echo "📊 Source file count:" \
-  && echo "   - TypeScript files: $(find . -name '*.ts' -not -path './node_modules/*' | wc -l)" \
-  && echo "   - JavaScript files: $(find . -name '*.js' -not -path './node_modules/*' | wc -l)" \
-  && echo "   - JSON files: $(find . -name '*.json' -not -path './node_modules/*' | wc -l)" \
-  && echo ""
-
 ENV NODE_ENV=production
 
-# 전체 의존성 설치 (devDependencies 포함)
-RUN echo "=== 🔨 FULL DEPENDENCY INSTALLATION ===" \
-  && echo "🚀 Installing all dependencies including devDependencies..." \
-  && echo "💾 Memory before install: $(free -h)" \
-  && echo "" \
-  && time pnpm install --frozen-lockfile \
-  && echo "" \
-  && echo "✅ Full dependencies installed!" \
-  && echo "💾 Memory after install: $(free -h)" \
-  && echo "📊 Final node_modules size: $(du -sh node_modules)" \
-  && echo ""
+# 전체 의존성 설치 (로그 최소화)
+RUN pnpm install --frozen-lockfile --reporter=silent
 
-# 의존성 목록 상세 출력
-RUN echo "=== 📋 DEPENDENCY ANALYSIS ===" \
-  && echo "🔍 Top-level dependencies:" \
-  && pnpm list --depth=0 || echo "⚠️ Some dependencies may have issues" \
-  && echo "" \
-  && echo "🎯 Workspace packages:" \
-  && pnpm -r list --depth=0 || echo "⚠️ Some workspace packages may have issues" \
-  && echo "" \
-  && echo "🔧 NX version and info:" \
-  && pnpm nx --version || echo "⚠️ NX not available" \
-  && pnpm nx report || echo "⚠️ NX report failed" \
-  && echo ""
-
-# 빌드 전 환경 체크
-RUN echo "=== 🏗️  PRE-BUILD CHECKS ===" \
-  && echo "🔍 Build environment:" \
-  && echo "   - NODE_ENV: ${NODE_ENV}" \
-  && echo "   - Working directory: $(pwd)" \
-  && echo "   - Available memory: $(free -h | grep Mem)" \
-  && echo "   - Available disk: $(df -h / | tail -1)" \
-  && echo "" \
-  && echo "📋 TypeScript config validation:" \
-  && ls -la apps/api/tsconfig.json || echo "⚠️ API tsconfig not found" \
-  && echo "📋 NX project config:" \
-  && ls -la apps/api/project.json || echo "⚠️ API project.json not found" \
-  && echo ""
-
-# API 빌드 실행
-RUN echo "=== 🚀 API BUILD EXECUTION ===" \
-  && echo "🏗️ Starting API build process..." \
-  && echo "⏰ Build started at: $(date)" \
-  && echo "💾 Memory before build: $(free -h | grep Mem)" \
-  && echo "" \
-  && time pnpm --filter @connectwon/api build \
-  && echo "" \
-  && echo "✅ API build completed successfully!" \
-  && echo "⏰ Build finished at: $(date)" \
-  && echo "💾 Memory after build: $(free -h | grep Mem)" \
-  && echo ""
-
-# 빌드 결과 검증
-RUN echo "=== ✅ BUILD VERIFICATION ===" \
-  && echo "📁 Build output verification:" \
-  && ls -la dist/ || echo "⚠️ dist directory not found" \
-  && echo "" \
-  && echo "📱 API build output:" \
-  && ls -la dist/apps/api/ || echo "⚠️ API build output not found" \
-  && echo "" \
-  && echo "📊 Build statistics:" \
-  && echo "   - Build size: $(du -sh dist/ 2>/dev/null || echo 'N/A')" \
-  && echo "   - JS files: $(find dist/ -name '*.js' 2>/dev/null | wc -l)" \
-  && echo "   - Map files: $(find dist/ -name '*.map' 2>/dev/null | wc -l)" \
-  && echo "" \
-  && echo "🔍 Main entry point check:" \
-  && ls -la dist/apps/api/main.js || echo "⚠️ main.js not found" \
-  && echo "   File size: $(wc -c < dist/apps/api/main.js 2>/dev/null || echo 'N/A') bytes" \
-  && echo ""
+# API 빌드 실행 (로그 최소화)
+RUN pnpm --filter @connectwon/api build --reporter=silent
 
 # 4. 런타임 단계
 FROM node:22-alpine3.22 AS runtime
 
 WORKDIR /app
 
-# 런타임 환경 설정
 ENV NODE_ENV=production \
     PORT=8000
 
-# 런타임 시스템 정보
-RUN echo "=== 🚀 RUNTIME STAGE PREPARATION ===" \
-  && echo "📋 Runtime OS info: $(cat /etc/os-release | head -2)" \
-  && echo "💾 Runtime memory: $(free -h)" \
-  && echo "💽 Runtime disk: $(df -h /)" \
-  && echo "🌍 Runtime environment:" \
-  && echo "   - NODE_ENV: ${NODE_ENV}" \
-  && echo "   - PORT: ${PORT}" \
-  && echo ""
-
 # 런타임 패키지 설치
-RUN echo "=== 📦 RUNTIME PACKAGE INSTALLATION ===" \
-  && apk add --no-cache ca-certificates dumb-init procps \
-  && echo "✅ Runtime packages installed" \
-  && apk upgrade --no-cache \
-  && echo "✅ Runtime packages upgraded" \
-  && update-ca-certificates \
-  && echo "✅ CA certificates updated" \
-  && echo ""
+RUN apk add --no-cache ca-certificates dumb-init \
+  && apk upgrade --no-cache
 
 # 빌드 결과물 복사
-RUN echo "=== 📋 COPYING BUILD ARTIFACTS ===" \
-  && echo "📁 Preparing to copy build artifacts..." \
-  && echo ""
-
 COPY --from=build /app/dist/apps/api ./dist
 COPY --from=build /app/package.json ./package.json
 COPY --from=build /app/pnpm-lock.yaml ./pnpm-lock.yaml
 
-# 복사 결과 검증
-RUN echo "=== ✅ RUNTIME COPY VERIFICATION ===" \
-  && echo "📁 Copied files verification:" \
-  && ls -la . \
-  && echo "" \
-  && echo "📱 API runtime files:" \
-  && ls -la dist/ \
-  && echo "" \
-  && echo "🔍 Critical files check:" \
-  && ls -la dist/main.js || echo "⚠️ main.js not found" \
-  && ls -la package.json || echo "⚠️ package.json not found" \
-  && ls -la pnpm-lock.yaml || echo "⚠️ pnpm-lock.yaml not found" \
-  && echo ""
-
 # 런타임 의존성 설치
-RUN echo "=== 📚 RUNTIME DEPENDENCIES INSTALLATION ===" \
-  && corepack enable \
-  && echo "✅ Corepack enabled for runtime" \
-  && echo "🚀 Installing production dependencies..." \
-  && echo "💾 Memory before install: $(free -h | grep Mem)" \
-  && echo "" \
-  && time pnpm install --prod --frozen-lockfile \
-  && echo "" \
-  && echo "✅ Production dependencies installed!" \
-  && echo "💾 Memory after install: $(free -h | grep Mem)" \
-  && echo "📊 Production node_modules size: $(du -sh node_modules)" \
-  && echo "" \
-  && echo "🧹 Cleaning up pnpm store..." \
-  && rm -rf ~/.pnpm-store \
-  && echo "✅ PNPM store cleaned" \
-  && echo ""
-
-# 최종 런타임 검증
-RUN echo "=== 🎯 FINAL RUNTIME VERIFICATION ===" \
-  && echo "📊 Final container stats:" \
-  && echo "   - Total size: $(du -sh / 2>/dev/null | head -1 || echo 'N/A')" \
-  && echo "   - App size: $(du -sh . || echo 'N/A')" \
-  && echo "   - Available memory: $(free -h | grep Mem)" \
-  && echo "   - Available disk: $(df -h / | tail -1)" \
-  && echo "" \
-  && echo "🔍 Node.js runtime check:" \
-  && node --version \
-  && echo "" \
-  && echo "🎯 Application entry point verification:" \
-  && ls -la dist/main.js \
-  && echo "   File size: $(wc -c < dist/main.js) bytes" \
-  && echo "   File type: $(file dist/main.js)" \
-  && echo "" \
-  && echo "✅ Runtime preparation completed successfully!" \
-  && echo ""
+RUN corepack enable \
+  && pnpm install --prod --frozen-lockfile --reporter=silent \
+  && rm -rf ~/.pnpm-store
 
 EXPOSE 8000
 
-# 헬스체크 추가
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD curl -f http://localhost:8000/health || exit 1
+  CMD wget --no-verbose --tries=1 --spider http://localhost:8000/health || exit 1
 
 ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 CMD ["node", "dist/main.js"]
