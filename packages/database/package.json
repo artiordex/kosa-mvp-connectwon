@@ -26,7 +26,7 @@
     "push": "prisma db push",
     "introspect": "prisma db pull",
     "build": "tsc -p tsconfig.json",
-    "clean": "tsc -p rimraf dist",
+    "clean": "rimraf dist",
     "prepublishOnly": "pnpm run build"
   },
   "dependencies": {

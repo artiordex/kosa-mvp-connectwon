@@ -76,6 +76,7 @@ test-results
 !pnpm-workspace.yaml
 !nx.json
 !tsconfig*.json
+!packages/*/prisma/**
 
 // TypeScript incremental build 정보 제외
 *.tsbuildinfo

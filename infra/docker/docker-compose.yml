@@ -8,8 +8,6 @@
 # Docker 컨테이너 로그 확인: docker compose logs -f --tail=100
 # Docker 컨테이너 중지: docker compose down
 # 주의 도커 다 날리기: docker rm -f $(docker ps -aq)
-version: '3.8'
-
 services:
   # Next.js (웹 프론트엔드)
   web:
@@ -23,6 +21,9 @@ services:
       - NODE_ENV=${NODE_ENV:-production}
       - PORT=${WEB_PORT:-3000}
       - HOST=0.0.0.0
+      - NX_DAEMON=false
+      - NX_CLOUD=${NX_CLOUD:-false}
+      - NX_CLOUD_ACCESS_TOKEN=${NX_CLOUD_ACCESS_TOKEN}
     expose:
       - '3000'
     ports:
@@ -51,6 +52,9 @@ services:
       - NODE_ENV=${NODE_ENV:-production}
       - PORT=${API_PORT:-8000}
       - HOST=0.0.0.0
+      - NX_DAEMON=false
+      - NX_CLOUD=${NX_CLOUD:-false}
+      - NX_CLOUD_ACCESS_TOKEN=${NX_CLOUD_ACCESS_TOKEN}
     expose:
       - '8000'
     ports:
@@ -79,6 +83,9 @@ services:
       - NODE_ENV=${NODE_ENV:-production}
       - PORT=${ADMIN_PORT:-3001}
       - HOST=0.0.0.0
+      - NX_DAEMON=false
+      - NX_CLOUD=${NX_CLOUD:-false}
+      - NX_CLOUD_ACCESS_TOKEN=${NX_CLOUD_ACCESS_TOKEN}
     expose:
       - '3001'
     ports:
@@ -112,6 +119,9 @@ services:
       - QUEUE_REDIS_DB=${QUEUE_REDIS_DB}
       - QUEUE_REDIS_URL=redis://:${REDIS_PASSWORD}@${QUEUE_REDIS_HOST}:${QUEUE_REDIS_PORT}/${QUEUE_REDIS_DB}
       - DATABASE_URL=${DATABASE_URL:?DATABASE_URL is required}
+      - NX_DAEMON=false
+      - NX_CLOUD=${NX_CLOUD:-false}
+      - NX_CLOUD_ACCESS_TOKEN=${NX_CLOUD_ACCESS_TOKEN}
     depends_on:
       postgres:
         condition: service_healthy
@@ -138,8 +148,11 @@ services:
       - connectwon-network
     environment:
       - BASE_URL=http://web:3000
-      # - ADMIN_BASE_URL=http://admin:3001
+      - ADMIN_BASE_URL=http://admin:3001
       - API_URL=http://api:8000
+      - NX_DAEMON=false
+      - NX_CLOUD=${NX_CLOUD:-false}
+      - NX_CLOUD_ACCESS_TOKEN=${NX_CLOUD_ACCESS_TOKEN}
     depends_on:
       web:
         condition: service_healthy
@@ -147,7 +160,7 @@ services:
       #   condition: service_healthy
       api:
         condition: service_healthy
-    shm_size: "1gb"
+    shm_size: '1gb'
     volumes:
       - ../../apps/e2e/test-results:/app/apps/e2e/test-results
 

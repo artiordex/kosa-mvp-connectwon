@@ -81,7 +81,7 @@
         "cacheableOperations": ["build", "lint", "test", "type-check", "gen:openapi"],
         "parallel": 2,
         "maxParallel": 2,
-        "useDaemonProcess": true,
+        "useDaemonProcess": false,
         "skipNxCache": false,
         "cacheDirectory": "node_modules/.cache/nx"
       }
@@ -112,8 +112,5 @@
         "linter": "eslint"
       }
     }
-  },
-
-  "__comment_nxCloudAccessToken": "nxCloudAccessToken: Nx Cloud 사용 시 토큰 (선택사항)",
-  "nxCloudAccessToken": "your-actual-token-here"
+  }
 }

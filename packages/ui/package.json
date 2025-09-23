@@ -22,11 +22,10 @@
   ],
   "__comment_scripts": "pnpm scripts 명령어",
   "scripts": {
-    "build": "pnpm -w exec tsc -p tsconfig.json",
-    "dev": "pnpm -w exec tsc -w -p tsconfig.json",
-    "clean": "pnpm -w exec rimraf dist",
+    "build": "tsc -p tsconfig.json",
+    "clean": "rimraf dist",
     "prepublishOnly": "pnpm run build",
-    "type-check": "pnpm -w exec tsc --noEmit -p tsconfig.json"
+    "type-check": "tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {
     "@fontsource/inter": "^5.2.7",

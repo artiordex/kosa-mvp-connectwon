@@ -1,63 +1,70 @@
-# Description : Dockerfile.worker - 📌 ConnectWon Worker 빌드/런타임
+# Description : Dockerfile.worker - 📌 ConnectWon Worker (NestJS) 컨테이너 빌드
 # Author : Shiwoo Min
-# Date : 2025-09-18
-# 09-20 - deps 단계 filter 설치 + Distroless 런타임
+# Date : 2025-09-23
 # worker 빌드: docker compose -p connectwon --env-file .env -f infra/docker/docker-compose.yml up -d --build worker
 
-# 1. 베이스 이미지
+# 1. Base 이미지
 FROM node:22-alpine3.22 AS base
 WORKDIR /app
+
 RUN corepack enable \
-  && apk add --no-cache libc6-compat ca-certificates \
+  && apk add --no-cache libc6-compat ca-certificates bash \
   && apk upgrade --no-cache \
   && update-ca-certificates \
-  && pnpm config set fetch-retries 3 \
-  && pnpm config set network-timeout 60000
+  && pnpm config set fetch-retries 6 \
+  && pnpm config set fetch-retry-mintimeout 20000 \
+  && pnpm config set fetch-retry-maxtimeout 600000 \
+  && pnpm config set network-timeout 600000
 
-# 2. 의존성 설치 단계
+# 2. 의존성 설치 단계 (deps)
 FROM base AS deps
-WORKDIR /app
 
-# 루트 메타데이터 먼저 복사
-COPY pnpm-lock.yaml pnpm-workspace.yaml package.json nx.json tsconfig.json tsconfig.base.json ./
+# 공용 설정 파일 복사 (최소한만)
+COPY pnpm-lock.yaml pnpm-workspace.yaml package.json nx.json tsconfig*.json ./
 
-# worker가 의존하는 내부 패키지들의 package.json만 복사 (database 제외)
+# 각 패키지별 package.json만 복사
 COPY packages/api-contract/package.json packages/api-contract/
-COPY packages/client/package.json       packages/client/
+COPY packages/database/package.json     packages/database/
 COPY packages/server/package.json       packages/server/
-COPY packages/sdk/package.json          packages/sdk/
 COPY packages/core/package.json         packages/core/
 COPY packages/logger/package.json       packages/logger/
 COPY packages/configs/package.json      packages/configs/
+COPY packages/sdk/package.json          packages/sdk/
 COPY apps/worker/package.json           apps/worker/
 
-# database 패키지 제외하고 설치
-RUN pnpm install --no-frozen-lockfile \
-  --filter @connectwon/api-contract \
-  --filter @connectwon/client \
-  --filter @connectwon/server \
-  --filter @connectwon/sdk \
-  --filter @connectwon/core \
-  --filter @connectwon/logger \
-  --filter @connectwon/configs \
-  --filter @connectwon/worker
+# 의존성 설치
+RUN pnpm install --frozen-lockfile --reporter=silent
 
 # 3. 빌드 단계
 FROM deps AS build
-WORKDIR /app
 
-# 소스 코드 복사 (database 제외)
+ENV NODE_ENV=production \
+    NX_DAEMON=false \
+    NX_CLOUD=false \
+    NODE_OPTIONS="--max-old-space-size=4096"
+
+# Prisma schema 먼저 복사
+COPY packages/database/prisma ./packages/database/prisma
+
+# 소스코드 복사
 COPY packages ./packages
 COPY apps/worker ./apps/worker
 
-# Nx 빌드
-RUN pnpm nx run @connectwon/worker:build
+# Prisma Client 생성
+RUN pnpm --filter @connectwon/database generate
+
+# Worker 빌드 (Nx 캐시/Daemon 비활성화)
+RUN pnpm nx build worker --nx-daemon=false --skip-nx-cache
 
 # 4. 런타임 단계 (Distroless)
 FROM gcr.io/distroless/nodejs22-debian12:nonroot AS runtime
 WORKDIR /app
+
 ENV NODE_ENV=production
 
-COPY --from=build /app/dist/apps/worker ./dist/apps/worker
+# 빌드 결과물 복사
+COPY --from=build /app/dist/apps/worker ./dist
+COPY --from=build /app/node_modules ./node_modules
+COPY --from=build /app/package.json ./package.json
 
-CMD ["dist/apps/worker/main.js"]
+CMD ["dist/main.js"]

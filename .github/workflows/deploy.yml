@@ -3,6 +3,7 @@
 # Date : 2025-09-11
 # 09-15 - 이미지 네임스페이스 구조 개선, 캐시 scope 분리, arm64 지원, QEMU 추가로 멀티아키 안정화, GHCR 권한 명시, fail-fast 비활성화
 # 09-17 - 빌드 스탭 반복 건 리팩토링
+
 name: Deploy
 
 on:
@@ -31,6 +32,16 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      # GitHub App 토큰 발급
+      - name: Create GitHub App Token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          owner: artiordex
+          repositories: kosa-mvp-connectwon
 
       - name: Detect changes (skip unchanged)
         id: changes

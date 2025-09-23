@@ -47,7 +47,7 @@
   ],
   "__comment_scripts": "pnpm scripts 명령어",
   "scripts": {
-    "build": "tsc -p tsconfig.json",
+    "build": "tsc -p tsconfig.json --skipLibCheck",
     "dev": "tsc -p tsconfig.json -w",
     "clean": "rimraf dist",
     "prepublishOnly": "pnpm run build"

@@ -18,8 +18,8 @@
   ],
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "pnpm -w exec tsc -p tsconfig.json",
-    "clean": "pnpm -w exec rimraf dist",
+    "build": "tsc -p tsconfig.json",
+    "clean": "rimraf dist",
     "prepublishOnly": "pnpm run build"
   },
   "dependencies": {

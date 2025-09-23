@@ -27,26 +27,36 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # 2. Node.js 설치
+      # 2. GitHub App 토큰 발급
+      - name: Create GitHub App Token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          owner: artiordex
+          repositories: kosa-mvp-connectwon
+
+      # 3. Node.js 설치
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      # 3. pnpm 설치
+      # 4. pnpm 설치
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
           # run_install 옵션을 false로 설정하여 자동 설치 방지
           run_install: false
 
-      # 4. pnpm store 경로 가져오기
+      # 5. pnpm store 경로 가져오기
       - name: Get pnpm store path
         id: pnpm_store
         shell: bash
         run: echo "path=$(pnpm store path --silent)" >> "$GITHUB_OUTPUT"
 
-      # 5. pnpm store 캐싱
+      # 6. pnpm store 캐싱
       - name: Cache pnpm store
         uses: actions/cache@v4
         with:
@@ -56,12 +66,12 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pnpm-
 
-      # 6. 의존성 설치
+      # 7. 의존성 설치
       - name: Install
         run: pnpm install --frozen-lockfile
         # --frozen-lockfile : lockfile과 실제 의존성이 불일치하면 실패 (재현성 확보)
 
-      # 7. Nx 캐시 캐싱
+      # 8. Nx 캐시 캐싱
       - name: Cache Nx
         uses: actions/cache@v4
         with:
@@ -70,21 +80,21 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-nx-
 
-      # 8. Lint (변경된 프로젝트만)
+      # 9. Lint (변경된 프로젝트만)
       - name: Lint (affected)
         run: pnpm nx affected -t lint --parallel=3
         # --parallel : 병렬 실행으로 속도 최적화
         # affected   : 변경된 범위에 해당하는 프로젝트만 lint 수행
 
-      # 9. Test (변경된 프로젝트만)
+      # 10. Test (변경된 프로젝트만)
       - name: Test (affected)
         run: pnpm nx affected -t test --parallel=3
 
-      # 10. Build (변경된 프로젝트만)
+      # 11. Build (변경된 프로젝트만)
       - name: Build (affected)
         run: pnpm nx affected -t build --parallel=2
 
-      # 11. dist 아티팩트 업로드
+      # 12. dist 아티팩트 업로드
       - name: Upload dist
         if: success()
         uses: actions/upload-artifact@v4

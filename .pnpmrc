@@ -15,6 +15,9 @@
 # 모든 @types/* 패키지들
 public-hoist-pattern[]=*@types/*
 
+# NX Cloud 설정
+nxCloudAccessToken=${NX_CLOUD_ACCESS_TOKEN}
+
 # TypeScript 컴파일러 및 관련 도구들 공통 사용
 public-hoist-pattern[]=typescript
 public-hoist-pattern[]=ts-node
