@@ -1,14 +1,14 @@
 {
-  "extends": [
-    "development"
-  ],
+  "extends": ["development"],
   "hints": {
     "axe/aria": [
       "default",
       {
-        "aria-valid-attr-value": "off"
+        "aria-valid-attr-value": "warn"
       }
     ],
-    "no-inline-styles": "off"
+    "no-inline-styles": "warn",
+    "axe/color-contrast": "warn",
+    "axe/button-name": "warn"
   }
 }

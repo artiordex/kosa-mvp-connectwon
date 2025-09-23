@@ -5,64 +5,53 @@
  * 09-06 - Docker 자체 설정 파일 제외 제거
  * 09-17 - root로 이동
  * 09-18 - reflect-metadata, @anthropic-ai/sdk 오류 해결을 위한 추가 제외사항
+ * 09-23 - Node.js/monorepo 구조 반영 및 ignore 단순화
  */
 
-// Node.js 관련
+# Node.js 관련
 node_modules
-**/node_modules
-**/**/node_modules
-***/***/node_modules
 
-// 빌드 결과물
+# 빌드 결과물
 dist
-**/dist
 build
-**/build
 .next
-**/.next
 out
-**/out
 
-// 패키지 매니저 캐시
+# 패키지 매니저 캐시
 .pnpm
-**/.pnpm
 .pnpm-store
-**/.pnpm-store
 .cache
-**/.cache
 .yarn
-**/.yarn
+.npm
 
-// 로그 및 임시 파일
+# 로그 및 임시 파일
 *.log
-**/*.log
 *.tmp
 *.temp
-.DS_Store
-**/.DS_Store
 
-// 환경 및 설정 파일
+# 환경 및 설정 파일
 .env*
 .vscode
 .idea
 
-// Git 관련
+# Git 관련
 .git
+.gitignore
 
-// 테스트 관련
+# 테스트 관련
 coverage
-**/coverage
 test-results
-**/test-results
 .nyc_output
-**/.nyc_output
+playwright-report
+cypress
 
-// 허용할 파일/디렉토리만 명시
+# 허용할 파일/디렉토리만 명시
 !packages/*/src
 !packages/*/package.json
 !packages/*/tsconfig.json
 !packages/*/*.ts
 !packages/*/*.d.ts
+!packages/*/prisma/**
 !apps/*/src
 !apps/*/public
 !apps/*/package.json
@@ -76,40 +65,29 @@ test-results
 !pnpm-workspace.yaml
 !nx.json
 !tsconfig*.json
-!packages/*/prisma/**
 
-// TypeScript incremental build 정보 제외
+# TypeScript incremental build 정보 제외
 *.tsbuildinfo
-**/*.tsbuildinfo
 
-// Nx 혹은 turbo repo 캐시 디렉토리 제외
+# Nx / Turborepo 캐시 디렉토리
 .turbo
-**/.turbo
+.nx
 
-// 편집기 임시 및 백업 파일 제외
+# 편집기 임시 및 백업 파일
 *.swp
 *.swo
-**/*.swp
-**/*.swo
 
-// 윈도우 썸네일 캐시 파일 제외
+# OS 파일
+.DS_Store
 Thumbs.db
-
-# Playwright / Cypress / 테스트 산출물
-playwright-report
-**/playwright-report
-cypress
-**/cypress
-
-# IDE별 캐시
-.idea/*
-.vscode/*
-.vscode-test
-
-# Docker 자체 캐시
-docker-compose.override.yml
-docker-compose.*.yml
-
-# OS별
 ehthumbs.db
 desktop.ini
+
+# 문서 및 라이선스
+README.md
+*.md
+LICENSE
+
+# Docker 관련
+docker-compose.override.yml
+docker-compose.*.yml

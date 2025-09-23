@@ -2,11 +2,10 @@
  * Description : launch.json - 📌 VS Code에서 Debug 및 Testing 실행 설정 파일
  * Author : Shiwoo Min
  * Date : 2025-09-02
- * 09-09: Vitest/Playwright 설정 변경
+ * 09-09 : Vitest/Playwright 설정 변경
  */
 {
   "version": "0.2.0",
-
   "configurations": [
     // Vitest: 단일 파일 디버그
     {
@@ -30,9 +29,8 @@
       "type": "node",
       "request": "launch",
       "program": "${workspaceFolder}/node_modules/vitest/vitest.mjs",
-      "args": ["run", "--no-threads", "--watch=false", "--config", "vitest.config.ts"],
+      "args": ["run", "--watch=false", "--config", "vitest.config.ts"],
       "autoAttachChildProcesses": true,
-      "smartStep": true,
       "envFile": "${workspaceFolder}/.env",
       "cwd": "${workspaceFolder}",
       "console": "integratedTerminal",
@@ -46,9 +44,8 @@
       "type": "node",
       "request": "launch",
       "program": "${workspaceFolder}/node_modules/vitest/vitest.mjs",
-      "args": ["watch", "--no-threads", "--config", "vitest.config.ts"],
+      "args": ["watch", "--config", "vitest.config.ts"],
       "autoAttachChildProcesses": true,
-      "smartStep": true,
       "envFile": "${workspaceFolder}/.env",
       "cwd": "${workspaceFolder}",
       "console": "integratedTerminal",
@@ -58,11 +55,11 @@
 
     // E2E: PC 웹 (headed)
     {
-      "name": "Playwright E2E - PC (headed)",
+      "name": "Playwright E2E - PC",
       "type": "node",
       "request": "launch",
       "program": "${workspaceFolder}/node_modules/@playwright/test/cli.js",
-      "args": ["test", "e2e/pc-web", "--reporter=html", "--trace=retain-on-failure"],
+      "args": ["test", "e2e/pc-web", "--headed", "--reporter=html", "--trace=retain-on-failure"],
       "runtimeArgs": ["--require", "tsconfig-paths/register"],
       // .env 자동 로딩
       "envFile": "${workspaceFolder}/.env",
@@ -75,11 +72,11 @@
 
     // E2E: 모바일 웹(PC 뷰포트) (headed)
     {
-      "name": "Playwright E2E - PC Mobile Web (headed)",
+      "name": "Playwright E2E - PC Mobile Web",
       "type": "node",
       "request": "launch",
       "program": "${workspaceFolder}/node_modules/@playwright/test/cli.js",
-      "args": ["test", "e2e/pc-mobile-web", "--reporter=html", "--trace=retain-on-failure"],
+      "args": ["test", "e2e/pc-mobile-web", "--headed", "--reporter=html", "--trace=retain-on-failure"],
       "runtimeArgs": ["--require", "tsconfig-paths/register"],
       "envFile": "${workspaceFolder}/.env",
       "env": { "POC": "mw" },
@@ -91,11 +88,11 @@
 
     // E2E: API (headed)
     {
-      "name": "Playwright E2E - API (headed)",
+      "name": "Playwright E2E - API",
       "type": "node",
       "request": "launch",
       "program": "${workspaceFolder}/node_modules/@playwright/test/cli.js",
-      "args": ["test", "e2e/api", "--reporter=html", "--trace=retain-on-failure"],
+      "args": ["test", "e2e/api", "--headed", "--reporter=html", "--trace=retain-on-failure"],
       "runtimeArgs": ["--require", "tsconfig-paths/register"],
       "envFile": "${workspaceFolder}/.env",
       "env": { "POC": "api" },

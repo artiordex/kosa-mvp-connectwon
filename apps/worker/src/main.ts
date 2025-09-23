@@ -29,7 +29,7 @@ export const QUEUES = {
  * @description 환경 변수로부터 Redis 연결 설정 생성
  */
 function makeRedisConnectionFromEnv() {
-  const url = process.env.REDIS_URL;
+  const url = process.env['REDIS_URL'];
 
   if (url) {
     try {
@@ -53,16 +53,16 @@ function makeRedisConnectionFromEnv() {
     }
   }
 
-  const tls = (process.env.REDIS_TLS ?? '').toLowerCase();
-  const host = process.env.REDIS_HOST || '127.0.0.1';
-  const port = Number(process.env.REDIS_PORT || '6379');
+  const tls = (process.env['REDIS_TLS'] ?? '').toLowerCase();
+  const host = process.env['REDIS_HOST'] || '127.0.0.1';
+  const port = Number(process.env['REDIS_PORT'] || '6379');
 
   return {
     host,
     port,
-    username: process.env.REDIS_USERNAME || undefined,
-    password: process.env.REDIS_PASSWORD || undefined,
-    db: process.env.REDIS_DB ? Number(process.env.REDIS_DB) : undefined,
+    username: process.env['REDIS_USERNAME'] || undefined,
+    password: process.env['REDIS_PASSWORD'] || undefined,
+    db: process.env['REDIS_DB'] ? Number(process.env['REDIS_DB']) : undefined,
     ...(tls === '1' || tls === 'true' ? { tls: {} } : {}),
     maxRetriesPerRequest: null,
     retryDelayOnFailover: 100,
@@ -71,30 +71,28 @@ function makeRedisConnectionFromEnv() {
   };
 }
 
+const connection = makeRedisConnectionFromEnv();
+
 /**
- * @description 기본 작업 옵션 (BullMQ 타입에 맞게 수정)
+ * @description 기본 작업 옵션
  */
 const DEFAULT_JOB_OPTIONS: JobsOptions = {
   attempts: 3,
-  backoff: {
-    type: 'exponential',
-    delay: 2000,
-  },
+  backoff: { type: 'exponential', delay: 2000 },
   removeOnComplete: 50,
   removeOnFail: 20,
 };
 
 /**
- * @description 기본 워커 옵션 (BullMQ 타입에 맞게 수정)
+ * @description 기본 워커 옵션
  */
 const DEFAULT_WORKER_OPTIONS: WorkerOptions = {
-  concurrency: Number(process.env.WORKER_CONCURRENCY || '10'),
+  concurrency: Number(process.env['WORKER_CONCURRENCY'] || '10'),
+  connection, // 👈 connection을 여기 포함시킴
 };
 
-const connection = makeRedisConnectionFromEnv();
-
 /**
- * @description Queue 생성 헬퍼 함수
+ * @description Queue 생성 헬퍼
  */
 function makeQueue(name: string, defaultJobOptions?: JobsOptions): Queue {
   const queue = new Queue(name, {
@@ -111,14 +109,13 @@ function makeQueue(name: string, defaultJobOptions?: JobsOptions): Queue {
 }
 
 /**
- * @description Worker 생성 헬퍼 함수
+ * @description Worker 생성 헬퍼
  */
 function makeWorker<T = any>(name: string, processor: Processor<T, any>, opts?: WorkerOptions) {
   const worker = new Worker<T>(name, processor, {
-    connection,
-    ...DEFAULT_WORKER_OPTIONS,
-    ...opts,
-  } as any);
+    ...DEFAULT_WORKER_OPTIONS, // 기본 옵션
+    ...opts, // 필요하면 override
+  });
 
   worker.on('ready', () => {
     console.log('워커 준비 완료', { workerName: name });
@@ -140,17 +137,13 @@ function makeWorker<T = any>(name: string, processor: Processor<T, any>, opts?: 
 }
 
 /**
- * @description QueueEvents 생성 및 이벤트 핸들링
+ * @description QueueEvents 생성
  */
 function makeQueueEvents(name: string) {
   const events = new QueueEvents(name, { connection } as any);
 
   events.on('completed', ({ jobId, returnvalue }) => {
-    console.log('작업 완료', {
-      queueName: name,
-      jobId,
-      result: returnvalue,
-    });
+    console.log('작업 완료', { queueName: name, jobId, result: returnvalue });
   });
 
   events.on('failed', ({ jobId, failedReason }) => {
@@ -164,7 +157,7 @@ function makeQueueEvents(name: string) {
   return events;
 }
 
-// 큐/워커/이벤트 인스턴스 생성
+// 큐/워커/이벤트 초기화
 export const reservationQueue = makeQueue(QUEUES.RESERVATION);
 export const notificationQueue = makeQueue(QUEUES.NOTIFICATION);
 
@@ -174,28 +167,21 @@ const notificationWorker = makeWorker(QUEUES.NOTIFICATION, notificationProcessor
 const reservationEvents = makeQueueEvents(QUEUES.RESERVATION);
 const notificationEvents = makeQueueEvents(QUEUES.NOTIFICATION);
 
-/**
- * @description Express 애플리케이션 설정
- */
+// Express 설정
 const app = express();
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Bull Board 대시보드 설정
+// Bull Board
 const serverAdapter = new ExpressAdapter();
 serverAdapter.setBasePath('/admin/queues');
-
 createBullBoard({
   queues: [new BullMQAdapter(reservationQueue), new BullMQAdapter(notificationQueue)],
-  serverAdapter: serverAdapter,
+  serverAdapter,
 });
-
 app.use('/admin/queues', serverAdapter.getRouter());
 
-/**
- * @description 루트 엔드포인트
- */
+// 기본 라우트
 app.get('/', (_req, res) => {
   res.json({
     status: 'running',
@@ -215,44 +201,27 @@ app.get('/', (_req, res) => {
   });
 });
 
-/**
- * @description 헬스체크 엔드포인트
- */
-app.get('/health', async (_req, res) => {
-  try {
-    res.status(200).json({
-      status: 'healthy',
-      uptime: process.uptime(),
-      memory: process.memoryUsage(),
-      timestamp: new Date().toISOString(),
-    });
-  } catch (error) {
-    res.status(500).json({
-      status: 'error',
-      error: error instanceof Error ? error.message : String(error),
-      timestamp: new Date().toISOString(),
-    });
-  }
+// 헬스체크
+app.get('/health', (_req, res) => {
+  res.status(200).json({
+    status: 'healthy',
+    uptime: process.uptime(),
+    memory: process.memoryUsage(),
+    timestamp: new Date().toISOString(),
+  });
 });
 
-/**
- * @description Prometheus 메트릭 엔드포인트
- */
+// Prometheus metrics
 app.get('/metrics', async (_req, res) => {
   try {
     res.set('Content-Type', 'text/plain');
     res.send(await getMetrics());
   } catch (error) {
-    console.error('메트릭 수집 실패', {
-      error: error instanceof Error ? error.message : String(error),
-    });
     res.status(500).send('# 메트릭 수집 실패\n');
   }
 });
 
-/**
- * @description 큐 통계 정보 엔드포인트
- */
+// 큐 통계
 app.get('/stats', async (_req, res) => {
   try {
     const [reservationStats, notificationStats] = await Promise.all([
@@ -263,7 +232,7 @@ app.get('/stats', async (_req, res) => {
     updateQueueSize(QUEUES.RESERVATION, reservationStats[0].length);
     updateQueueSize(QUEUES.NOTIFICATION, notificationStats[0].length);
 
-    const stats = {
+    res.json({
       reservation: {
         waiting: reservationStats[0].length,
         active: reservationStats[1].length,
@@ -277,13 +246,8 @@ app.get('/stats', async (_req, res) => {
         failed: notificationStats[3].length,
       },
       timestamp: new Date().toISOString(),
-    };
-
-    res.json(stats);
-  } catch (error) {
-    console.error('큐 통계 조회 실패', {
-      error: error instanceof Error ? error.message : String(error),
     });
+  } catch (error) {
     res.status(500).json({
       error: '큐 통계 조회 실패',
       timestamp: new Date().toISOString(),
@@ -291,60 +255,35 @@ app.get('/stats', async (_req, res) => {
   }
 });
 
-// Express 서버 시작
+// 서버 실행
 const port = Number(process.env['WORKER_PORT'] || '3003');
 const host = process.env['WORKER_HOST'] || '0.0.0.0';
+const server = app.listen(port, host, () => console.log('워커 서버 시작됨', { port, host }));
 
-const server = app.listen(port, host, () => {
-  console.log('워커 서버 시작됨', {
-    port,
-    host,
-  });
-});
-
-/**
- * @description 스케줄 작업 등록
- */
-async function initializeSchedules() {
+// 스케줄 등록
+(async function initializeSchedules() {
   try {
-    await registerSchedules({
-      reservationQueue,
-      notificationQueue,
-    });
+    await registerSchedules({ reservationQueue, notificationQueue });
     console.log('스케줄 작업 등록 완료');
   } catch (error) {
-    console.error('스케줄 작업 등록 실패', {
-      error: error instanceof Error ? error.message : String(error),
-    });
+    console.error('스케줄 작업 등록 실패', { error });
   }
-}
+})();
 
-initializeSchedules();
-
-/**
- * @description 우아한 종료 처리
- */
+// 종료 핸들링
 async function gracefulShutdown(sig: string) {
   console.log('종료 신호 수신됨', { signal: sig });
-
   server.close();
 
-  try {
-    await Promise.allSettled([
-      reservationWorker.close(),
-      notificationWorker.close(),
-      reservationQueue.close(),
-      notificationQueue.close(),
-      reservationEvents.close(),
-      notificationEvents.close(),
-    ]);
-
-    console.log('모든 워커 및 큐 종료 완료');
-    process.exit(0);
-  } catch (error) {
-    console.error('종료 중 오류 발생', error);
-    process.exit(1);
-  }
+  await Promise.allSettled([
+    reservationWorker.close(),
+    notificationWorker.close(),
+    reservationQueue.close(),
+    notificationQueue.close(),
+    reservationEvents.close(),
+    notificationEvents.close(),
+  ]);
+  process.exit(0);
 }
 
 process.on('SIGINT', () => void gracefulShutdown('SIGINT'));

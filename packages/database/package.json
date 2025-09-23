@@ -32,7 +32,7 @@
   "dependencies": {
     "@connectwon/core": "workspace:*",
     "@connectwon/logger": "workspace:*",
-    "@prisma/client": "^6.15.0",
+    "@prisma/client": "^6.16.2",
     "dotenv": "^17.2.2"
   },
   "devDependencies": {

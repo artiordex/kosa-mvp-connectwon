@@ -4,7 +4,7 @@
  * Date : 2025-09-09
  * 09-21 - 타입 명확화, 예외 처리 강화, 주석 보강, 코드 스타일 일관성 개선
  */
-import { testConfig } from '../../connectwon-env.js';
+import { testConfig } from '../../packages/core/src/connectwon-env.js';
 import type { Artifact, ArtifactKind, TestResult, TestStatus } from '../tool-types.js';
 import * as fs from 'fs/promises';
 import path from 'path';

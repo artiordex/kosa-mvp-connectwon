@@ -33,7 +33,7 @@ COPY packages/sdk/package.json          packages/sdk/
 COPY apps/worker/package.json           apps/worker/
 
 # 의존성 설치
-RUN pnpm install --frozen-lockfile --reporter=silent
+RUN pnpm install --frozen-lockfile
 
 # 3. 빌드 단계
 FROM deps AS build
@@ -53,8 +53,8 @@ COPY apps/worker ./apps/worker
 # Prisma Client 생성
 RUN pnpm --filter @connectwon/database generate
 
-# Worker 빌드 (Nx 캐시/Daemon 비활성화)
-RUN pnpm nx build worker --nx-daemon=false --skip-nx-cache
+# Worker 빌드
+RUN pnpm nx build worker
 
 # 4. 런타임 단계 (Distroless)
 FROM gcr.io/distroless/nodejs22-debian12:nonroot AS runtime

@@ -677,7 +677,7 @@ importers:
         specifier: workspace:*
         version: link:../logger
       '@prisma/client':
-        specifier: ^6.15.0
+        specifier: ^6.16.2
         version: 6.16.2(prisma@6.16.2(typescript@5.9.2))(typescript@5.9.2)
       dotenv:
         specifier: ^17.2.2
