@@ -63,6 +63,6 @@
     }
   },
   "__comment_dependencies": "프로젝트 의존성",
-  "implicitDependencies": ["@connectwon/core", "@connectwon/database", "@connectwon/logger", "@connectwon/api-contract", "@connectwon/sdk"],
+  "implicitDependencies": ["@connectwon/core", "@connectwon/database", "@connectwon/logger"],
   "tags": ["scope:worker", "type:application"]
 }

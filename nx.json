@@ -39,11 +39,11 @@
       "cache": true
     },
     "test": {
-      "inputs": ["default", "^default"],
+      "inputs": ["default"],
       "cache": true
     },
     "e2e": {
-      "inputs": ["default", "^production"],
+      "inputs": ["default"],
       "cache": false
     },
     "gen:openapi": {

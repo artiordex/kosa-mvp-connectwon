@@ -8,11 +8,9 @@
 # 1. Playwright 공식 베이스 (브라우저 포함)
 FROM mcr.microsoft.com/playwright:v1.51.1-jammy AS base
 WORKDIR /app
-ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0 \
-    PNPM_HOME=/root/.local/share/pnpm \
-    PATH="/root/.local/share/pnpm:$PATH"
 
 # corepack 활성화 + pnpm 버전 고정
+ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0
 RUN corepack enable && corepack prepare pnpm@10.17.0 --activate && pnpm -v
 
 # 2. 의존성 설치 단계 (e2e + logger만 설치)
@@ -31,11 +29,11 @@ WORKDIR /app
 COPY packages/logger ./packages/logger
 COPY apps/e2e        ./apps/e2e
 
-# 4. 런타임 단계 (테스트 러너 전용)
+# 4. 런타임 단계 (Playwright 러너)
 FROM build AS runtime
 WORKDIR /app
 ENV CI=true PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
 
 RUN mkdir -p ./apps/e2e/test-results && chmod 777 ./apps/e2e/test-results
 
-CMD ["pnpm", "-w", "nx", "run", "@connectwon/e2e:test"]
+CMD ["pnpm", "nx", "run", "e2e:test"]

@@ -11,41 +11,48 @@
 # Node.js 관련
 node_modules
 
-# 빌드 결과물
+# Build artifacts
 dist
 build
 .next
 out
 
-# 패키지 매니저 캐시
+# Package manager caches
 .pnpm
 .pnpm-store
 .cache
 .yarn
 .npm
 
-# 로그 및 임시 파일
+# Logs / temp
 *.log
 *.tmp
 *.temp
+*.tsbuildinfo
 
-# 환경 및 설정 파일
-.env*
+# IDE / OS
 .vscode
 .idea
+.DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini
+*.swp
+*.swo
 
-# Git 관련
+# Git
 .git
 .gitignore
 
-# 테스트 관련
+# Tests / coverage
 coverage
 test-results
 .nyc_output
 playwright-report
 cypress
+test
 
-# 허용할 파일/디렉토리만 명시
+# Allowed (whitelist)
 !packages/*/src
 !packages/*/package.json
 !packages/*/tsconfig.json
@@ -66,28 +73,19 @@ cypress
 !nx.json
 !tsconfig*.json
 
-# TypeScript incremental build 정보 제외
-*.tsbuildinfo
-
-# Nx / Turborepo 캐시 디렉토리
-.turbo
+# Nx / Turborepo
 .nx
+.turbo
 
-# 편집기 임시 및 백업 파일
-*.swp
-*.swo
-
-# OS 파일
-.DS_Store
-Thumbs.db
-ehthumbs.db
-desktop.ini
-
-# 문서 및 라이선스
+# Docs
 README.md
 *.md
 LICENSE
 
-# Docker 관련
+# Docker
 docker-compose.override.yml
 docker-compose.*.yml
+
+# Misc
+tmp
+docs

@@ -3,7 +3,7 @@
 # Date : 2025-09-23
 # api 빌드: docker compose -p connectwon --env-file .env -f infra/docker/docker-compose.yml up -d --build api
 
-# 1. Base 이미지
+# 1. 베이스 이미지
 FROM node:22-alpine3.22 AS base
 WORKDIR /app
 
@@ -30,22 +30,18 @@ COPY packages/database/package.json     packages/database/
 COPY packages/server/package.json       packages/server/
 COPY packages/core/package.json         packages/core/
 COPY packages/logger/package.json       packages/logger/
-COPY packages/configs/package.json      packages/configs/
-COPY packages/sdk/package.json          packages/sdk/
 COPY apps/api/package.json              apps/api/
 
 # pnpm install 시 filter로 범위 제한 → 락파일 불일치 오류 방지
 RUN pnpm install --frozen-lockfile \
-  --filter @connectwon/api \
+  --filter @connectwon/api-contract \
+  --filter @connectwon/database \
   --filter @connectwon/server \
   --filter @connectwon/core \
   --filter @connectwon/logger \
-  --filter @connectwon/configs \
-  --filter @connectwon/database \
-  --filter @connectwon/api-contract \
-  --filter @connectwon/sdk
+  --filter @connectwon/api
 
-# 3. 빌드 단계
+  # 3. 빌드 단계
 FROM deps AS build
 WORKDIR /app
 
@@ -62,13 +58,14 @@ COPY apps/api ./apps/api
 # Prisma Client 생성
 RUN pnpm --filter @connectwon/database generate
 
-# API 빌드 (Nx 캐시/Daemon 비활성화)
-RUN pnpm nx build api --nx-daemon=false --skip-nx-cache
+# ------ 까지 성공
+
+# API 빌드)
+RUN pnpm nx build api
 
 # 4. 런타임 단계
 FROM gcr.io/distroless/nodejs22-debian12:nonroot AS runtime
 WORKDIR /app
-
 ENV NODE_ENV=production \
     PORT=8000
 
