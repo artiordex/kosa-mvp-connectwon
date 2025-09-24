@@ -1,0 +1,36 @@
+# Description : .wslconfig - 📌 WSL2 시스템 리소스 및 동작 설정
+# Author : Shiwoo Min
+# Date : 2025-09-24
+# Memo : %UserProfile%\.wslconfig (C:\Users\[Username]\.wslconfig)
+#        swapFile=%USERPROFILE%\\AppData\\Local\\Temp\\swap.vhdx
+
+[wsl2]
+# 메모리 설정
+memory=16GB
+
+# 프로세서 설정
+processors=4
+
+# 스왑 파일 크기
+swap=8GB
+
+# 로컬호스트 포워딩
+localhostForwarding=true
+
+# 중첩 가상화 활성화
+nestedVirtualization=true
+
+# 페이지 보고 활성화 - 메모리 사용량 최적화
+pageReporting=true
+
+# GUI 응용프로그램 지원 (WSLg)
+guiApplications=false
+
+# 디버그 콘솔 활성화 (문제 해결 시)
+debugConsole=false
+
+# 커널 명령행 추가 옵션
+# kernelCommandLine=
+
+# WSL2 VM이 유휴 상태일 때 자동으로 메모리를 해제하는 시간 (초)
+# vmIdleTimeout=60000

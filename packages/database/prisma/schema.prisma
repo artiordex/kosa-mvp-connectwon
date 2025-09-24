@@ -1,31 +1,34 @@
 /**
- * Description : schema.prisma - 📌 Prisma 스키마
- * Author : Shiwoo Min
- * Date : 2025-09-10
+ * description : schema.prisma - 📌 Prisma 데이터베이스 스키마
+ * author : Shiwoo Min
+ * date : 2025-09-24
  */
-// Prisma 클라이언트 생성기
+
 generator client {
   provider = "prisma-client-js"
 }
 
-// 데이터베이스 연결 설정
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-// USERS
+/**
+ * USERS
+ * 사용자 기본 정보
+ */
 model User {
-  id            BigInt    @id @default(autoincrement())
-  email         String?   @unique @db.Citext
-  name          String?
-  googleSub     String?   @unique @map("google_sub")
-  lastLoginAt   DateTime? @map("last_login_at") @db.Timestamptz
-  roleFlags     Int       @default(0) @map("role_flags")
-  preferences   Json      @default("{}") @db.JsonB
-  createdAt     DateTime  @default(now()) @map("created_at") @db.Timestamptz
-  updatedAt     DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
-  // 관계
+  id           BigInt    @id @default(autoincrement())
+  email        String?   @unique @db.Citext
+  name         String?
+  lastLoginAt  DateTime? @map("last_login_at") @db.Timestamptz
+  roleFlags    Int       @default(0) @map("role_flags")
+  preferences  Json      @default("{}") @db.JsonB
+  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt    DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  /// Relations
+  authProviders        AuthProvider[]
   createdPrograms      Program[]            @relation("ProgramCreator")
   roomReservations     RoomReservation[]
   programParticipants  ProgramParticipant[]
@@ -34,99 +37,140 @@ model User {
   @@map("users")
 }
 
-// PROGRAMS
+/**
+ * AUTH_PROVIDERS
+ * 모든 인증 수단(local, google, kakao, github 등)을 통합 관리
+ */
+model AuthProvider {
+  id           BigInt   @id @default(autoincrement())
+  userId       BigInt   @map("user_id")
+  provider     String
+  providerSub  String?  @map("provider_sub")
+  passwordHash String?  @map("password_hash")
+  meta         Json     @default("{}") @db.JsonB
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt    DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  /// Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerSub], map: "uq_provider_sub")
+  /// NOTE: uq_user_local (user_id unique where provider=local) → 수동 validation 필요
+  @@map("auth_providers")
+}
+
+/**
+ * PROGRAMS
+ */
 model Program {
-  id               BigInt   @id @default(autoincrement())
-  createdByUserId  BigInt   @map("created_by_user_id")
-  type             String?
-  title            String
-  description      String?
-  aiSummaryTags    Json     @default("[]") @map("ai_summary_tags") @db.JsonB
-  isActive         Boolean  @default(true) @map("is_active")
-  createdAt        DateTime @default(now()) @map("created_at") @db.Timestamptz
-  updatedAt        DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
-  // 관계
-  createdBy        User      @relation("ProgramCreator", fields: [createdByUserId], references: [id], onDelete: Restrict)
-  sessions         Session[]
-  aiInteractions   AiInteraction[]
+  id              BigInt   @id @default(autoincrement())
+  createdByUserId BigInt   @map("created_by_user_id")
+  type            String?
+  title           String
+  description     String?
+  aiSummaryTags   Json     @default("[]") @map("ai_summary_tags") @db.JsonB
+  isActive        Boolean  @default(true) @map("is_active")
+  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt       DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  /// Relations
+  createdBy      User              @relation("ProgramCreator", fields: [createdByUserId], references: [id], onDelete: Restrict)
+  sessions       Session[]
+  aiInteractions AiInteraction[]
 
   @@map("programs")
 }
 
-// SESSION
+/**
+ * SESSIONS
+ */
 model Session {
-  id                  BigInt    @id @default(autoincrement())
-  programId           BigInt    @map("program_id")
-  startsAt            DateTime  @map("starts_at") @db.Timestamptz
-  endsAt              DateTime  @map("ends_at") @db.Timestamptz
-  capacity            Int?
-  participantFee      Int?      @map("participant_fee")
-  status              String    @default("SCHEDULED")
-  roomReservationId   BigInt?   @unique @map("room_reservation_id")
-  locationText        String?   @map("location_text")
-  createdAt           DateTime  @default(now()) @map("created_at") @db.Timestamptz
-  updatedAt           DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
-  // 관계
-  program             Program              @relation(fields: [programId], references: [id], onDelete: Cascade)
-  roomReservation     RoomReservation?     @relation(fields: [roomReservationId], references: [id], onDelete: SetNull)
-  participants        ProgramParticipant[]
-  aiInteractions      AiInteraction[]
+  id                BigInt    @id @default(autoincrement())
+  programId         BigInt    @map("program_id")
+  startsAt          DateTime  @map("starts_at") @db.Timestamptz
+  endsAt            DateTime  @map("ends_at") @db.Timestamptz
+  capacity          Int?
+  participantFee    Int?      @map("participant_fee")
+  status            String    @default("SCHEDULED")
+  roomReservationId BigInt?   @unique @map("room_reservation_id")
+  locationText      String?   @map("location_text")
+  createdAt         DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt         DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  /// Relations
+  program         Program            @relation(fields: [programId], references: [id], onDelete: Cascade)
+  roomReservation RoomReservation?   @relation(fields: [roomReservationId], references: [id], onDelete: SetNull)
+  participants    ProgramParticipant[]
+  aiInteractions  AiInteraction[]
 
   @@map("sessions")
 }
 
-// VENUES
+/**
+ * VENUES
+ */
 model Venue {
-  id             BigInt   @id @default(autoincrement())
-  name           String
-  address        String?
-  openingHours   Json?    @map("opening_hours") @db.JsonB
-  blackoutRules  Json?    @map("blackout_rules") @db.JsonB
-  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamptz
-  updatedAt      DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
-  // 관계
-  rooms          Room[]
+  id            BigInt   @id @default(autoincrement())
+  name          String
+  address       String?
+  openingHours  Json?    @map("opening_hours") @db.JsonB
+  blackoutRules Json?    @map("blackout_rules") @db.JsonB
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt     DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  /// Relations
+  rooms Room[]
+
   @@map("venues")
 }
 
-// ROOM
+/**
+ * ROOMS
+ */
 model Room {
-  id               BigInt   @id @default(autoincrement())
-  venueId          BigInt   @map("venue_id")
-  name             String
-  capacity         Int?
-  status           String   @default("ACTIVE")
-  createdAt        DateTime @default(now()) @map("created_at") @db.Timestamptz
-  updatedAt        DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
-  // 관계
-  venue            Venue             @relation(fields: [venueId], references: [id], onDelete: Cascade)
-  reservations     RoomReservation[]
+  id        BigInt   @id @default(autoincrement())
+  venueId   BigInt   @map("venue_id")
+  name      String
+  capacity  Int?
+  status    String   @default("ACTIVE")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  /// Relations
+  venue        Venue             @relation(fields: [venueId], references: [id], onDelete: Cascade)
+  reservations RoomReservation[]
+
   @@unique([venueId, name], map: "rooms_uniq_per_venue")
   @@map("rooms")
 }
 
-// RESERVATIONS
+/**
+ * ROOM_RESERVATIONS
+ */
 model RoomReservation {
-  id         BigInt    @id @default(autoincrement())
-  roomId     BigInt    @map("room_id")
-  userId     BigInt?   @map("user_id")
-  startsAt   DateTime  @map("starts_at") @db.Timestamptz
-  endsAt     DateTime  @map("ends_at") @db.Timestamptz
-  purpose    String?
-  status     String    @default("PENDING")
-  meta       Json      @default("{}") @db.JsonB
-  sessionId  BigInt?   @unique @map("session_id")
-  createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamptz
-  updatedAt  DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
-  // 관계
-  room       Room      @relation(fields: [roomId], references: [id], onDelete: Cascade)
-  user       User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
-  session    Session?
+  id        BigInt    @id @default(autoincrement())
+  roomId    BigInt    @map("room_id")
+  userId    BigInt?   @map("user_id")
+  startsAt  DateTime  @map("starts_at") @db.Timestamptz
+  endsAt    DateTime  @map("ends_at") @db.Timestamptz
+  purpose   String?
+  status    String    @default("PENDING")
+  meta      Json      @default("{}") @db.JsonB
+  sessionId BigInt?   @unique @map("session_id")
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  /// Relations
+  room    Room    @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  user    User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+  session Session?
 
   @@map("room_reservations")
 }
 
-// PARTICIPANT
+/**
+ * PROGRAM_PARTICIPANTS
+ */
 model ProgramParticipant {
   id        BigInt    @id @default(autoincrement())
   sessionId BigInt    @map("session_id")
@@ -134,14 +178,18 @@ model ProgramParticipant {
   role      String    @default("ATTENDEE")
   status    String    @default("APPLIED")
   joinedAt  DateTime? @default(now()) @map("joined_at") @db.Timestamptz
-  // 관계
-  session   Session   @relation(fields: [sessionId], references: [id], onDelete: Cascade)
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  /// Relations
+  session Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@unique([sessionId, userId], map: "program_participants_uniq")
   @@map("program_participants")
 }
 
-// AI-INTERACTION
+/**
+ * AI_INTERACTIONS
+ */
 model AiInteraction {
   id               BigInt    @id @default(autoincrement())
   userId           BigInt?   @map("user_id")
@@ -157,9 +205,11 @@ model AiInteraction {
   traceId          String?   @map("trace_id")
   meta             Json      @default("{}") @db.JsonB
   createdAt        DateTime  @default(now()) @map("created_at") @db.Timestamptz
-  // 관계
-  user             User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
-  program          Program?  @relation(fields: [programId], references: [id], onDelete: SetNull)
-  session          Session?  @relation(fields: [sessionId], references: [id], onDelete: SetNull)
+
+  /// Relations
+  user    User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  program Program? @relation(fields: [programId], references: [id], onDelete: SetNull)
+  session Session? @relation(fields: [sessionId], references: [id], onDelete: SetNull)
+
   @@map("ai_interactions")
 }

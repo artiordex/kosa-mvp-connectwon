@@ -35,11 +35,13 @@
   "__comment_dependencies": "런타임 의존성 목록",
   "dependencies": {
     "@ts-rest/core": "^3.52.1",
+    "swagger-ui-dist": "^5.29.0",
     "zod": "^3.23.8"
   },
   "__comment_devDependencies": "개발 의존성 목록",
   "devDependencies": {
     "@connectwon/configs": "workspace:*",
+    "@types/node": "^24.3.1",
     "openapi-types": "^12.1.3"
   }
 }

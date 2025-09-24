@@ -2,6 +2,9 @@
 # Author : Shiwoo Min
 # Date : 2025-09-15
 # 09-22 - RBAC 역할 보강, syncPolicy 일관화, retry/backoff 표준화, 주석 정리
+# ArgoCD 설치 - kubectl create namespace argocd
+# ArgoCD 적용 - kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+# 8080 → 443 포워딩 - kubectl port-forward svc/argocd-server -n argocd 8080:443
 
 ---
 # Project 정의
@@ -30,17 +33,20 @@ spec:
 
   # 클러스터 레벨 리소스 권한
   clusterResourceWhitelist:
-    - { group: "", kind: Namespace }
-    - { group: "networking.k8s.io", kind: Ingress }
+    - { group: '', kind: Namespace }
+    - { group: 'networking.k8s.io', kind: Ingress }
 
   # 네임스페이스 리소스 권한
   namespaceResourceWhitelist:
-    - { group: "", kind: ConfigMap }
-    - { group: "", kind: Secret }
-    - { group: "", kind: Service }
-    - { group: "", kind: PersistentVolumeClaim }
-    - { group: "apps", kind: Deployment }
-    - { group: "apps", kind: ReplicaSet }
+    - { group: '', kind: ConfigMap }
+    - { group: '', kind: Secret }
+    - { group: '', kind: Service }
+    - { group: '', kind: PersistentVolumeClaim }
+    - { group: 'apps', kind: Deployment }
+    - { group: 'apps', kind: ReplicaSet }
+    - { group: 'apps', kind: StatefulSet }
+    - { group: 'batch', kind: Job }
+    - { group: 'batch', kind: CronJob }
 
   # RBAC 역할
   roles:
@@ -48,14 +54,14 @@ spec:
       description: Read-only access
       policies:
         - p, proj:connectwon:readonly, applications, get, connectwon/*, allow
-      groups: [ connectwon:developers ]
+      groups: [connectwon:developers]
 
     - name: admin
       description: Full admin access
       policies:
         - p, proj:connectwon:admin, applications, *, connectwon/*, allow
         - p, proj:connectwon:admin, repositories, *, *, allow
-      groups: [ connectwon:admins ]
+      groups: [connectwon:admins]
 
 ---
 # Production Application
@@ -90,13 +96,15 @@ spec:
       - CreateNamespace=true
       - PrunePropagationPolicy=foreground
       - PruneLast=true
+      - ApplyOutOfSyncOnly=true
+      - Replace=true
     retry:
       limit: 5
       backoff: { duration: 5s, factor: 2, maxDuration: 3m }
   revisionHistoryLimit: 10
   info:
-    - { name: "Description", value: "ConnectWon Production Environment" }
-    - { name: "Owner", value: "DevOps Team" }
+    - { name: 'Description', value: 'ConnectWon Production Environment' }
+    - { name: 'Owner', value: 'DevOps Team' }
 
 ---
 # Staging Application
@@ -131,8 +139,8 @@ spec:
       backoff: { duration: 5s, factor: 2, maxDuration: 1m }
   revisionHistoryLimit: 5
   info:
-    - { name: "Description", value: "ConnectWon Staging Environment" }
-    - { name: "Owner", value: "Development Team" }
+    - { name: 'Description', value: 'ConnectWon Staging Environment' }
+    - { name: 'Owner', value: 'Development Team' }
 
 ---
 # Development Application (Manual Sync)
@@ -163,5 +171,5 @@ spec:
       backoff: { duration: 5s, factor: 2, maxDuration: 30s }
   revisionHistoryLimit: 3
   info:
-    - { name: "Description", value: "ConnectWon Development Environment (Manual Sync)" }
-    - { name: "Owner", value: "Developers" }
+    - { name: 'Description', value: 'ConnectWon Development Environment (Manual Sync)' }
+    - { name: 'Owner', value: 'Developers' }

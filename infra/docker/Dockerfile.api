@@ -3,7 +3,7 @@
 # Date : 2025-09-23
 # api 빌드: docker compose -p connectwon --env-file .env -f infra/docker/docker-compose.yml up -d --build api
 
-# 1. Base 이미지
+# 1. 베이스 이미지
 FROM node:22-alpine3.22 AS base
 WORKDIR /app
 
@@ -17,27 +17,33 @@ RUN corepack enable \
   && pnpm config set fetch-retry-maxtimeout 600000 \
   && pnpm config set network-timeout 600000
 
-# 2. 의존성 설치 단계 (deps)
+# 2. 의존성 설치 단계
 FROM base AS deps
+WORKDIR /app
 
-# 공용 설정 파일 복사 (최소한만)
-COPY pnpm-lock.yaml pnpm-workspace.yaml package.json nx.json tsconfig*.json ./
+# 루트 메타데이터 먼저 복사 (락파일 포함) → 캐시 안정화
+COPY pnpm-lock.yaml pnpm-workspace.yaml package.json nx.json tsconfig.json tsconfig.base.json ./
 
-# 각 패키지별 package.json만 복사 (선택적 설치 최적화)
+# api가 사용하는 내부 패키지들의 package.json만 복사 (캐시 최적화)
 COPY packages/api-contract/package.json packages/api-contract/
 COPY packages/database/package.json     packages/database/
 COPY packages/server/package.json       packages/server/
 COPY packages/core/package.json         packages/core/
 COPY packages/logger/package.json       packages/logger/
-COPY packages/configs/package.json      packages/configs/
-COPY packages/sdk/package.json          packages/sdk/
 COPY apps/api/package.json              apps/api/
 
-# 의존성 설치
-RUN pnpm install --frozen-lockfile --reporter=silent
+# pnpm install 시 filter로 범위 제한 → 락파일 불일치 오류 방지
+RUN pnpm install --frozen-lockfile \
+  --filter @connectwon/api-contract \
+  --filter @connectwon/database \
+  --filter @connectwon/server \
+  --filter @connectwon/core \
+  --filter @connectwon/logger \
+  --filter @connectwon/api
 
-# 3. 빌드 단계
+  # 3. 빌드 단계
 FROM deps AS build
+WORKDIR /app
 
 ENV NODE_ENV=production \
     NX_DAEMON=false \
@@ -46,21 +52,20 @@ ENV NODE_ENV=production \
 
 # Prisma schema 먼저 복사
 COPY packages/database/prisma ./packages/database/prisma
-
-# 소스코드 전체 복사 (dockerignore로 불필요 파일 제외)
 COPY packages ./packages
 COPY apps/api ./apps/api
 
 # Prisma Client 생성
 RUN pnpm --filter @connectwon/database generate
 
-# API 빌드 (Nx 캐시/Daemon 비활성화)
-RUN pnpm nx build api --nx-daemon=false --skip-nx-cache
+# ------ 까지 성공
 
-# 4. 런타임 단계 (Distroless)
+# API 빌드)
+RUN pnpm nx build api
+
+# 4. 런타임 단계
 FROM gcr.io/distroless/nodejs22-debian12:nonroot AS runtime
 WORKDIR /app
-
 ENV NODE_ENV=production \
     PORT=8000
 
@@ -69,6 +74,5 @@ COPY --from=build /app/dist/apps/api ./dist
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/package.json ./package.json
 
-# 포트 노출 및 실행
 EXPOSE 8000
 CMD ["dist/main.js"]

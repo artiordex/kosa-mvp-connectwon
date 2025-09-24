@@ -1,8 +1,7 @@
 /**
  * Description : emit.ts - 📌 OpenAPI 문서화 관련 타입정의
  * Author : Shiwoo Min
- * Date : 2025-09-11
- * 09-21 - 주석 보강
+ * Date : 2025-09-21
  */
 
 import { mkdir, writeFile } from 'node:fs/promises';

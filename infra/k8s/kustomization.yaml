@@ -1,0 +1,46 @@
+# Description : kustomization.yaml - 📌 Kubernetes 기본 리소스 설정
+# Author : Shiwoo Min
+# Date : 2025-09-24
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# 네임스페이스 설정
+namespace: connectwon
+
+# 모든 리소스에 공통 라벨 추가
+commonLabels:
+  app: connectwon
+  version: v1
+  managed-by: kustomize
+
+# 리소스 파일들
+resources:
+- deployment.yaml
+- service.yaml
+- ingress.yaml
+
+# .env 파일에서 Secret 생성 (루트 디렉토리의 .env 파일 참조)
+secretGenerator:
+- name: connectwon-secrets
+  envs:
+  - ../../../.env
+  type: Opaque
+
+# 민감하지 않은 설정용 ConfigMap 생성
+configMapGenerator:
+- name: connectwon-config
+  literals:
+  - NODE_ENV=production
+  - TZ=Asia/Seoul
+  - COMPANY_NAME=ConnectWon
+  - DEFAULT_LANGUAGE=ko
+
+# 이미지 태그 관리
+images:
+- name: connectwon-web
+  newTag: latest
+- name: connectwon-api
+  newTag: latest
+- name: connectwon-admin
+  newTag: latest

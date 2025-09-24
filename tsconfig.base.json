@@ -76,23 +76,23 @@
     // 경로 매핑 (packages / apps)
     "paths": {
       // packages
-      "@connectwon/core": ["packages/core/src/index.ts"],
+      "@connectwon/core": ["packages/core/src"],
       "@connectwon/core/*": ["packages/core/src/*"],
-      "@connectwon/api-contract": ["packages/api-contract/src/schemas/index.ts"],
+      "@connectwon/api-contract": ["packages/api-contract/src"],
       "@connectwon/api-contract/*": ["packages/api-contract/src/*"],
-      "@connectwon/configs": ["packages/configs/index.ts"],
-      "@connectwon/configs/*": ["packages/configs/*"],
-      "@connectwon/database": ["packages/database/src/index.ts"],
+      "@connectwon/configs": ["packages/configs/src"],
+      "@connectwon/configs/*": ["packages/configs/src/*"],
+      "@connectwon/database": ["packages/database/src"],
       "@connectwon/database/*": ["packages/database/src/*"],
-      "@connectwon/logger": ["packages/logger/src/index.ts"],
+      "@connectwon/logger": ["packages/logger/src"],
       "@connectwon/logger/*": ["packages/logger/src/*"],
-      "@connectwon/sdk": ["packages/sdk/src/index.ts"],
+      "@connectwon/sdk": ["packages/sdk/src"],
       "@connectwon/sdk/*": ["packages/sdk/src/*"],
-      "@connectwon/client": ["packages/client/src/index.ts"],
+      "@connectwon/client": ["packages/client/src"],
       "@connectwon/client/*": ["packages/client/src/*"],
-      "@connectwon/server": ["packages/server/src/index.ts"],
+      "@connectwon/server": ["packages/server/src"],
       "@connectwon/server/*": ["packages/server/src/*"],
-      "@connectwon/ui": ["packages/ui/src/index.ts"],
+      "@connectwon/ui": ["packages/ui/src"],
       "@connectwon/ui/*": ["packages/ui/src/*"],
 
       // apps

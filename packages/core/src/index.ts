@@ -24,3 +24,5 @@ export * from './infrastructure/index.js';
 export * from './queue/index.js';
 // ports
 export * as Ports from './ports/index.js';
+// env
+export * from './connectwon-env.js';

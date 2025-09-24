@@ -2,6 +2,7 @@
  * Description : snippet - 📌 스니펫(자동완성) 설정
  * Author : Shiwoo Min
  * Date : 2025-09-09
+ * 09-23: Import 중복 문제 해결, React Hook/Next.js 스니펫 추가, JSON 문법 오류 수정
  * 참고: https://code.visualstudio.com/docs/editor/userdefinedsnippets
  */
 
@@ -17,12 +18,78 @@
       "  ${3:// props}",
       "}",
       "",
-      "export function ${2:Component}({ ${4:children} }: ${2:Component}Props): JSX.Element {",
+      "export function ${2:Component}(${4:props}: ${2:Component}Props): JSX.Element {",
       "  return (",
       "    <div className=\"${5:container}\">${6:content}</div>",
       "  );",
-      "}",
-    ],
+      "}"
+    ]
+  },
+
+  // React Hook - useState
+  "React useState": {
+    "scope": "typescriptreact,javascriptreact",
+    "prefix": "ustate",
+    "description": "useState Hook",
+    "body": [
+      "const [${1:state}, set${1/(.*)/${1:/capitalize}/}] = useState${2|<string>,<number>,<boolean>,<any>,|}(${3:initialValue});"
+    ]
+  },
+
+  // React Hook - useEffect
+  "React useEffect": {
+    "scope": "typescriptreact,javascriptreact",
+    "prefix": "ueffect",
+    "description": "useEffect Hook",
+    "body": [
+      "useEffect(() => {",
+      "  ${1:// effect}",
+      "  ${2|,return () => {\\n    // cleanup\\n  };|}",
+      "}, [${3:dependencies}]);"
+    ]
+  },
+
+  // Next.js App Router - Page
+  "Next.js Page": {
+    "scope": "typescriptreact",
+    "prefix": "nextpage",
+    "description": "Next.js App Router 페이지 컴포넌트",
+    "body": [
+      "import { Metadata } from 'next';",
+      "",
+      "export const metadata: Metadata = {",
+      "  title: '${1:Page Title}',",
+      "  description: '${2:Page Description}'",
+      "};",
+      "",
+      "export default function ${3:Page}() {",
+      "  return (",
+      "    <div className=\"${4:container}\">",
+      "      <h1>${5:Page Content}</h1>",
+      "    </div>",
+      "  );",
+      "}"
+    ]
+  },
+
+  // Next.js App Router - Layout
+  "Next.js Layout": {
+    "scope": "typescriptreact",
+    "prefix": "nextlayout",
+    "description": "Next.js App Router 레이아웃 컴포넌트",
+    "body": [
+      "export default function ${1:Root}Layout({",
+      "  children,",
+      "}: {",
+      "  children: React.ReactNode;",
+      "}) {",
+      "  return (",
+      "    <${2|html,div|}${3| lang=\"ko\",|}>",
+      "      ${4:children}",
+      "    </${2|html,div|}>",
+      "  );",
+      "}"
+    ]
   },
 
   // 디버깅용 로거(파일/라인 + 태그/페이로드)
@@ -30,7 +97,15 @@
     "scope": "typescript,typescriptreact,javascript,javascriptreact",
     "prefix": "dlog",
     "description": "파일/라인 번호를 포함한 디버그 로그",
-    "body": ["console.log(`[${TM_FILENAME_BASE}:${TM_LINE_NUMBER}] ${1:tag}`, ${2:payload});"],
+    "body": ["console.log(`[${TM_FILENAME_BASE}:${TM_LINE_NUMBER}] ${1:tag}`, ${2:payload});"]
+  },
+
+  // 간단한 console.log
+  "Console Log": {
+    "scope": "typescript,typescriptreact,javascript,javascriptreact",
+    "prefix": "cl",
+    "description": "간단한 console.log",
+    "body": ["console.log(${1:value});"]
   },
 
   // ESM 함수 기본 골격
@@ -41,8 +116,8 @@
     "body": [
       "export function ${1:name}(${2:args}: ${3:any}): ${4:void} {",
       "  ${5:// TODO: 구현}",
-      "}",
-    ],
+      "}"
+    ]
   },
 
   // Async + try/catch 패턴
@@ -58,8 +133,8 @@
       "    console.error('[${1:run}] failed:', err);",
       "    throw err;",
       "  }",
-      "}",
-    ],
+      "}"
+    ]
   },
 
   // Class 기본 골격
@@ -76,8 +151,8 @@
       "  public ${4:method}(${5:param}: ${6:any}): ${7:void} {",
       "    ${8:// 구현}",
       "  }",
-      "}",
-    ],
+      "}"
+    ]
   },
 
   // Node ESM 스크립트(Top-Level Await)
@@ -92,11 +167,11 @@
       "(async () => {",
       "  ${1:// TODO: 비동기 로직}",
       "  console.log('done');",
-      "})();",
-    ],
+      "})();"
+    ]
   },
 
-  // Playwright 기본 테스트
+  // Playwright 기본 테스트 (import 포함)
   "Playwright Test": {
     "scope": "typescript,javascript",
     "prefix": "pwtest",
@@ -109,8 +184,36 @@
       "    await page.goto('${3:http://localhost:3000}');",
       "    await expect(page).toHaveTitle(/${4:Home}/);",
       "  });",
-      "});",
-    ],
+      "});"
+    ]
+  },
+
+  // Playwright 테스트 (import 없음)
+  "Playwright Test (no import)": {
+    "scope": "typescript,javascript",
+    "prefix": "pwt",
+    "description": "Playwright 테스트 (import 없음)",
+    "body": [
+      "test.describe('${1:suite}', () => {",
+      "  test('${2:should work}', async ({ page }) => {",
+      "    await page.goto('${3:http://localhost:3000}');",
+      "    await expect(page).toHaveTitle(/${4:Home}/);",
+      "  });",
+      "});"
+    ]
+  },
+
+  // Playwright 단일 테스트
+  "Playwright Single Test": {
+    "scope": "typescript,javascript",
+    "prefix": "ptest",
+    "description": "Playwright 단일 테스트",
+    "body": [
+      "test('${1:should work}', async ({ page }) => {",
+      "  await page.goto('${2:http://localhost:3000}');",
+      "  ${3:// assertions}",
+      "});"
+    ]
   },
 
   // Playwright: 스크린샷 비교(비주얼 리그레션)
@@ -127,8 +230,21 @@
       "    fullPage: true,",
       "    animations: 'disabled'",
       "  });",
-      "});",
-    ],
+      "});"
+    ]
+  },
+
+  // Playwright 스크린샷 (단일)
+  "Playwright Screenshot": {
+    "scope": "typescript,javascript",
+    "prefix": "pwss",
+    "description": "Playwright 스크린샷 단일",
+    "body": [
+      "await expect(page).toHaveScreenshot('${1:name}.png', {",
+      "  fullPage: ${2|true,false|},",
+      "  animations: '${3|disabled,allow|}'",
+      "});"
+    ]
   },
 
   // Vitest 기본 테스트
@@ -143,8 +259,34 @@
       "  it('${2:works}', () => {",
       "    expect(${3:1 + 1}).toBe(${4:2});",
       "  });",
-      "});",
-    ],
+      "});"
+    ]
+  },
+
+  // Vitest 테스트 (import 없음)
+  "Vitest Test (no import)": {
+    "scope": "typescript,javascript",
+    "prefix": "vit",
+    "description": "Vitest describe/it (import 없음)",
+    "body": [
+      "describe('${1:module}', () => {",
+      "  it('${2:works}', () => {",
+      "    expect(${3:1 + 1}).toBe(${4:2});",
+      "  });",
+      "});"
+    ]
+  },
+
+  // Vitest 단일 테스트
+  "Vitest Single Test": {
+    "scope": "typescript,javascript",
+    "prefix": "vtest",
+    "description": "Vitest 단일 it 테스트",
+    "body": [
+      "it('${1:works}', () => {",
+      "  expect(${2:1 + 1}).toBe(${3:2});",
+      "});"
+    ]
   },
 
   // Vitest 모킹(vi.mock)
@@ -163,8 +305,18 @@
       "  it('should mock', () => {",
       "    expect(${2:fn}()).toBe(${3:'mocked'});",
       "  });",
-      "});",
-    ],
+      "});"
+    ]
+  },
+
+  // Vitest Mock Function
+  "Vitest Mock Function": {
+    "scope": "typescript,javascript",
+    "prefix": "vimockfn",
+    "description": "vi.fn() 모킹",
+    "body": [
+      "const ${1:mockFn} = vi.fn(${2|() => 'mocked',|})"
+    ]
   },
 
   // 환경변수 안전 접근(기본값 포함)
@@ -176,8 +328,8 @@
       "const ${1:VAL} = process.env['${2:KEY}'] ?? '${3:default}';",
       "if (!${1:VAL}) {",
       "  throw new Error('Missing env: ${2:KEY}');",
-      "}",
-    ],
+      "}"
+    ]
   },
 
   // AbortController가 포함된 fetch 래퍼
@@ -196,8 +348,8 @@
       "  } finally {",
       "    clearTimeout(id);",
       "  }",
-      "}",
-    ],
+      "}"
+    ]
   },
 
   // Promise.allSettled 패턴
@@ -212,7 +364,43 @@
       "  .map(r => r.value);",
       "const ${4:rejected} = ${1:results}",
       "  .filter((r): r is PromiseRejectedResult => r.status === 'rejected')",
-      "  .map(r => r.reason);",
-    ],
+      "  .map(r => r.reason);"
+    ]
   },
+
+  // TypeScript Interface
+  "TypeScript Interface": {
+    "scope": "typescript,typescriptreact",
+    "prefix": "interface",
+    "description": "TypeScript 인터페이스",
+    "body": [
+      "interface ${1:Name} {",
+      "  ${2:property}: ${3:string};",
+      "}"
+    ]
+  },
+
+  // TypeScript Type
+  "TypeScript Type": {
+    "scope": "typescript,typescriptreact",
+    "prefix": "type",
+    "description": "TypeScript 타입 별칭",
+    "body": [
+      "type ${1:Name} = ${2:string | number};"
+    ]
+  },
+
+  // API Response Type
+  "API Response Type": {
+    "scope": "typescript,typescriptreact",
+    "prefix": "apitype",
+    "description": "API 응답 타입 정의",
+    "body": [
+      "interface ${1:Api}Response {",
+      "  success: boolean;",
+      "  data${2|?: any,: any|};",
+      "  ${3|error?: string;,message?: string;|}",
+      "}"
+    ]
+  }
 }

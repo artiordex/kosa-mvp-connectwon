@@ -6,7 +6,7 @@
 import { prisma } from './src/index.js';
 import 'dotenv/config';
 
-// DB 연결 테스트: pnpm tsx test-smoke.ts
+// DB 연결 테스트: pnpm tsx packages/database/test-smoke.ts
 async function main() {
   const now = await prisma.$queryRawUnsafe<Date>('select now()');
   console.log('db ok:', now);
