@@ -1,7 +1,7 @@
 /**
  * Description : tsconfig.json - 📌 API 계약 패키지 (TypeScript 설정)
- * Author      : Shiwoo Min
- * Date        : 2025-09-05
+ * Author : Shiwoo Min
+ * Date  : 2025-09-24
  * 09-12 : ESNext/Bundler 해석, d.ts/소스맵/증분빌드, Node 타입 차단(types: [])
  */
 {
@@ -30,6 +30,10 @@
     // 브라우저/서버 공통을 위해 Node 전역타입 유입 차단
     "lib": ["ES2022"],
     "types": ["node"],
+
+    // JS 파일 처리
+    "allowJs": true,
+    "checkJs": true,
 
     // 품질/편의
     "exactOptionalPropertyTypes": true,

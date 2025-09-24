@@ -2,7 +2,6 @@
  * Description : setup.ts - 📌 OpenAPI Setup
  * Author : Shiwoo Min
  * Date : 2025-09-11
- * 09-21 - 주석 보강
  */
 import type { OpenAPIV3 } from 'openapi-types';
 
