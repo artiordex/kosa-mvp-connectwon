@@ -1,26 +1,68 @@
-import { Injectable } from '@nestjs/common';
+/**
+ * @description program.processor.ts - 📌 프로그램 관련 비동기 작업 처리 (BullMQ 기반)
+ * @author Shiwoo
+ * @date 2025-09-26
+ */
+import { OnWorkerEvent, Processor, WorkerHost } from '@nestjs/bullmq';
+import { Job } from 'bullmq';
 
-import { CreatePaymentDto } from './dto/create-payment.dto';
-// 결제 생성 DTO
-import { PaymentStatusDto } from './dto/payment-status.dto';
+@Processor('program-queue')
+export class ProgramProcessor extends WorkerHost {
+  /**
+   * @description 큐의 잡 처리 로직 (Job마다 실행됨)
+   */
+  async process(job: Job<any>): Promise<any> {
+    switch (job.name) {
+      case 'update-status':
+        return this.handleUpdateStatus(job);
 
-import { CreatePaymentDto } from './dto/create-payment.dto';
-import { PaymentStatusDto } from './dto/payment-status.dto';
+      case 'promote-waitlist':
+        return this.handlePromoteWaitlist(job);
 
-// 결제 상태 DTO
+      case 'send-notification':
+        return this.handleSendNotification(job);
 
-@Injectable()
-export class PaymentProcessor {
-  // 결제 처리 로직 (예: 외부 결제 시스템 연동)
-  async processPayment(createPaymentDto: CreatePaymentDto): Promise<string> {
-    // 실제 결제 시스템 처리 로직 (예: Stripe, PayPal API 호출)
-    console.log('Processing payment', createPaymentDto);
-    return 'payment_id_123'; // 생성된 결제 ID
+      case 'aggregate-stats':
+        return this.handleAggregateStats(job);
+
+      default:
+        console.warn(`처리할 수 없는 Job: ${job.name}`);
+    }
   }
 
-  async getPaymentStatus(paymentId: string): Promise<PaymentStatusDto> {
-    // 결제 상태 확인 로직 (예: 결제 시스템에서 상태 조회)
-    console.log('Getting status for payment', paymentId);
-    return { status: 'success' }; // 결제 상태 예시
+  private async handleUpdateStatus(job: Job<{ programId: string; newStatus: string }>) {
+    // TODO: DB 조회 → 상태 업데이트 → 로그 기록
+    console.log('프로그램 상태 업데이트:', job.data);
+  }
+
+  private async handlePromoteWaitlist(job: Job<{ programId: string; slots: number }>) {
+    // TODO: 대기자 slots 만큼 승급 처리 → 알림 발송
+    console.log('대기자 승급 처리:', job.data);
+  }
+
+  private async handleSendNotification(job: Job<{ programId: string; message: string }>) {
+    // TODO: 참여자 목록 조회 → message 발송
+    console.log('참여자 알림 발송:', job.data);
+  }
+
+  private async handleAggregateStats(job: Job<{ programId: string; period: 'daily' | 'weekly' | 'monthly' }>) {
+    // TODO: 기간별 데이터 집계 → 통계 업데이트
+    console.log('프로그램 통계 집계:', job.data);
+  }
+
+  /**
+   * @description 작업 실패 이벤트 핸들러
+   */
+  @OnWorkerEvent('failed')
+  onFailed(job: Job, err: Error) {
+    console.error(`Job 실패: ${job.name}`, err);
+  }
+
+  /**
+   * @description 작업 완료 이벤트 핸들러
+   */
+  @OnWorkerEvent('completed')
+  onCompleted(job: Job) {
+    console.log(`Job 완료: ${job.name}`);
   }
 }
