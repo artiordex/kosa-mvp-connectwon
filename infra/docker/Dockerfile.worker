@@ -58,7 +58,7 @@ COPY apps/worker ./apps/worker
 RUN pnpm --filter @connectwon/database generate
 
 # Worker 빌드
-RUN pnpm nx build worker
+RUN pnpm --filter @connectwon/worker build
 
 # 4. 런타임 단계 (Distroless)
 FROM gcr.io/distroless/nodejs22-debian12:nonroot AS runtime

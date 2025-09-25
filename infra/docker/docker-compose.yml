@@ -1,8 +1,9 @@
 # Description : docker-compose.yml - 📌 도커 컴포즈 설정 파일
 # Author : Shiwoo Min
-# Date : 2025-09-06
+# Date : 2025-09-24
 # 09-16 - ports 추가, network 설정 추가, healthcheck 수정
 # 09-17 - Grafana 자격증명/포트/ROOT_URL 하드코딩 제거 → 루트 .env 사용
+# 09-24 - 컨테이너간 DB/Redis 연결 수정, 불필요한 환경변수 정리
 # 인프라만 올리기: docker compose -p connectwon --env-file .env -f infra/docker/docker-compose.yml up -d postgres redis redisinsight prometheus grafana n8n
 # 루트에서 빌드: docker compose -p connectwon --env-file .env -f infra/docker/docker-compose.yml up -d
 # Docker 컨테이너 로그 확인: docker compose logs -f --tail=100
@@ -24,6 +25,12 @@ services:
       - NX_DAEMON=false
       - NX_CLOUD=${NX_CLOUD:-false}
       - NX_CLOUD_ACCESS_TOKEN=${NX_CLOUD_ACCESS_TOKEN}
+      # URL 설정
+      - NEXT_PUBLIC_API_URL=${API_URL:-http://localhost:8000}
+      - NEXT_PUBLIC_WEB_URL=${WEB_URL:-http://localhost:3000}
+      # 기능 플래그
+      - NEXT_PUBLIC_FEATURE_AI_RECOMMENDATIONS=${FEATURE_AI_RECOMMENDATIONS:-true}
+      - NEXT_PUBLIC_FEATURE_PAYMENT_GATEWAY=${FEATURE_PAYMENT_GATEWAY:-true}
     expose:
       - '3000'
     ports:
@@ -49,16 +56,27 @@ services:
     env_file:
       - ../../.env
     environment:
+      # 개발환경에서 파일 변경 감지 설정
+      - CHOKIDAR_USEPOLLING=true
+      - CHOKIDAR_INTERVAL=1000
       - NODE_ENV=${NODE_ENV:-production}
       - PORT=${API_PORT:-8000}
       - HOST=0.0.0.0
       - NX_DAEMON=false
       - NX_CLOUD=${NX_CLOUD:-false}
       - NX_CLOUD_ACCESS_TOKEN=${NX_CLOUD_ACCESS_TOKEN}
+      # 컨테이너간 연결을 위한 오버라이드
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      - REDIS_URL=redis://:${REDIS_PASSWORD}@redis:6379/${REDIS_DB}
     expose:
       - '8000'
     ports:
       - '0.0.0.0:${API_PORT:-8000}:8000'
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     healthcheck:
       test:
         [
@@ -86,10 +104,18 @@ services:
       - NX_DAEMON=false
       - NX_CLOUD=${NX_CLOUD:-false}
       - NX_CLOUD_ACCESS_TOKEN=${NX_CLOUD_ACCESS_TOKEN}
+      # URL 설정
+      - NEXT_PUBLIC_API_URL=${API_URL:-http://localhost:8000}
+      - NEXT_PUBLIC_ADMIN_URL=${ADMIN_URL:-http://localhost:3001}
+      # 기능 플래그
+      - NEXT_PUBLIC_FEATURE_ADVANCED_ANALYTICS=${FEATURE_ADVANCED_ANALYTICS:-false}
     expose:
       - '3001'
     ports:
       - '0.0.0.0:${ADMIN_PORT:-3001}:3001'
+    depends_on:
+      api:
+        condition: service_healthy
     healthcheck:
       test:
         [
@@ -114,11 +140,9 @@ services:
     environment:
       - NODE_ENV=${NODE_ENV:-production}
       - REDIS_PASSWORD=${REDIS_PASSWORD}
-      - QUEUE_REDIS_HOST=${QUEUE_REDIS_HOST}
-      - QUEUE_REDIS_PORT=${QUEUE_REDIS_PORT}
-      - QUEUE_REDIS_DB=${QUEUE_REDIS_DB}
-      - QUEUE_REDIS_URL=redis://:${REDIS_PASSWORD}@${QUEUE_REDIS_HOST}:${QUEUE_REDIS_PORT}/${QUEUE_REDIS_DB}
-      - DATABASE_URL=${DATABASE_URL:?DATABASE_URL is required}
+      # 컨테이너간 연결을 위한 Redis URL 오버라이드
+      - QUEUE_REDIS_URL=redis://:${REDIS_PASSWORD}@redis:6379/${QUEUE_REDIS_DB}
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
       - NX_DAEMON=false
       - NX_CLOUD=${NX_CLOUD:-false}
       - NX_CLOUD_ACCESS_TOKEN=${NX_CLOUD_ACCESS_TOKEN}
@@ -129,56 +153,10 @@ services:
         condition: service_healthy
     healthcheck:
       test: >
-        CMD-SHELL node -e "require('redis').createClient({ url: process.env.QUEUE_REDIS_URL }).connect().then(()=>process.exit(0)).catch(()=>process.exit(1))"
+        CMD-SHELL node -e "require('redis').createClient({ url: 'redis://:${REDIS_PASSWORD}@redis:6379/${QUEUE_REDIS_DB}' }).connect().then(()=>process.exit(0)).catch(()=>process.exit(1))"
       interval: 10s
       timeout: 5s
       retries: 5
-    networks:
-      - connectwon-network
-
-  # Playwright (E2E 테스트)
-  e2e:
-    build:
-      context: ../../
-      dockerfile: infra/docker/Dockerfile.e2e
-    container_name: e2e
-    env_file:
-      - ../../.env
-    networks:
-      - connectwon-network
-    environment:
-      - BASE_URL=http://web:3000
-      - ADMIN_BASE_URL=http://admin:3001
-      - API_URL=http://api:8000
-      - NX_DAEMON=false
-      - NX_CLOUD=${NX_CLOUD:-false}
-      - NX_CLOUD_ACCESS_TOKEN=${NX_CLOUD_ACCESS_TOKEN}
-    depends_on:
-      web:
-        condition: service_healthy
-      # admin:
-      #   condition: service_healthy
-      api:
-        condition: service_healthy
-    shm_size: '1gb'
-    volumes:
-      - ../../apps/e2e/test-results:/app/apps/e2e/test-results
-
-  # Nginx 리버스 프록시
-  nginx:
-    image: nginx:1.27-alpine
-    container_name: nginx
-    ports:
-      - '0.0.0.0:${NGINX_PORT:-80}:80'
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
-    depends_on:
-      web:
-        condition: service_healthy
-      api:
-        condition: service_healthy
-      admin:
-        condition: service_healthy
     networks:
       - connectwon-network
 
@@ -199,7 +177,7 @@ services:
       - TZ=${TZ}
       - PGDATA=/var/lib/postgresql/data/pgdata
     ports:
-      - '0.0.0.0:${POSTGRES_EXTERNAL_PORT:-5432}:5432'
+      - '0.0.0.0:5432:5432'
     volumes:
       - pg_data:/var/lib/postgresql/data
       - ../database/conf/postgresql.conf:/etc/postgresql/postgresql.conf:ro
@@ -224,7 +202,7 @@ services:
     env_file:
       - ../../.env
     ports:
-      - '0.0.0.0:${REDIS_EXTERNAL_PORT:-6379}:6379'
+      - '0.0.0.0:6379:6379'
     environment:
       - REDIS_PASSWORD=${REDIS_PASSWORD:?REDIS_PASSWORD is required}
       - REDIS_MAXMEMORY=${REDIS_MAXMEMORY:-512mb}
@@ -272,13 +250,13 @@ services:
       - N8N_PORT=${N8N_PORT:-5678}
       - N8N_PROTOCOL=http
       - NODE_ENV=production
-      - WEBHOOK_URL=${N8N_WEBHOOK_URL:-http://localhost:5678/}
+      - WEBHOOK_URL=http://localhost:${N8N_PORT:-5678}/
       - GENERIC_TIMEZONE=${TZ:-Asia/Seoul}
       - DB_TYPE=postgresdb
       - DB_POSTGRESDB_HOST=postgres
       - DB_POSTGRESDB_PORT=5432
       - DB_POSTGRESDB_DATABASE=${N8N_DB_NAME:-n8n}
-      - DB_POSTGRESDB_USER=${POSTGRES_USER:-postgres}
+      - DB_POSTGRESDB_USER=${POSTGRES_USER}
       - DB_POSTGRESDB_PASSWORD=${POSTGRES_PASSWORD}
       - N8N_BASIC_AUTH_ACTIVE=${N8N_BASIC_AUTH_ACTIVE:-true}
       - N8N_BASIC_AUTH_USER=${N8N_BASIC_AUTH_USER:-admin}
@@ -288,7 +266,7 @@ services:
       - EXECUTIONS_MODE=regular
       - EXECUTIONS_TIMEOUT=${N8N_EXECUTIONS_TIMEOUT:-3600}
       - EXECUTIONS_MAX_TIMEOUT=${N8N_EXECUTIONS_MAX_TIMEOUT:-14400}
-      - N8N_LOG_LEVEL=${N8N_LOG_LEVEL:-info}
+      - N8N_LOG_LEVEL=info
       - N8N_LOG_OUTPUT=console
       - QUEUE_BULL_REDIS_HOST=redis
       - QUEUE_BULL_REDIS_PORT=6379
@@ -332,15 +310,15 @@ services:
     image: grafana/grafana:10.4.5
     container_name: grafana
     ports:
-      - '0.0.0.0:3005:3000'
+      - '0.0.0.0:${GF_SERVER_HTTP_PORT:-3030}:3000'
     env_file:
       - ../../.env
     environment:
       - GF_SECURITY_ADMIN_USER=${GF_SECURITY_ADMIN_USER:-admin}
       - GF_SECURITY_ADMIN_PASSWORD=${GF_SECURITY_ADMIN_PASSWORD:?set_in_.env}
       - GF_SECURITY_SECRET_KEY=${GF_SECURITY_SECRET_KEY}
-      - GF_SERVER_HTTP_PORT=${GF_SERVER_HTTP_PORT:-3030}
-      - GF_SERVER_ROOT_URL=${GF_SERVER_ROOT_URL:-http://localhost:3030}
+      - GF_SERVER_HTTP_PORT=3000
+      - GF_SERVER_ROOT_URL=http://localhost:${GF_SERVER_HTTP_PORT:-3030}
     volumes:
       - ../monitoring/grafana.ini:/etc/grafana/grafana.ini:ro
       - ../monitoring/dashboards.json:/var/lib/grafana/dashboards/dashboards.json:ro
@@ -348,6 +326,50 @@ services:
     depends_on:
       prometheus:
         condition: service_started
+    networks:
+      - connectwon-network
+
+  # Playwright (E2E 테스트)
+  e2e:
+    build:
+      context: ../../
+      dockerfile: infra/docker/Dockerfile.e2e
+    container_name: e2e
+    env_file:
+      - ../../.env
+    networks:
+      - connectwon-network
+    environment:
+      - BASE_URL=http://web:3000
+      - ADMIN_BASE_URL=http://admin:3001
+      - API_URL=http://api:8000
+      - NX_DAEMON=false
+      - NX_CLOUD=${NX_CLOUD:-false}
+      - NX_CLOUD_ACCESS_TOKEN=${NX_CLOUD_ACCESS_TOKEN}
+    depends_on:
+      web:
+        condition: service_healthy
+      api:
+        condition: service_healthy
+    shm_size: '1gb'
+    volumes:
+      - ../../apps/e2e/test-results:/app/apps/e2e/test-results
+
+  # Nginx 리버스 프록시
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: nginx
+    ports:
+      - '0.0.0.0:${NGINX_PORT:-80}:80'
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      web:
+        condition: service_healthy
+      api:
+        condition: service_healthy
+      admin:
+        condition: service_healthy
     networks:
       - connectwon-network
 

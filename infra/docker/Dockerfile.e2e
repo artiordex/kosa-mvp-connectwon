@@ -36,4 +36,4 @@ ENV CI=true PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
 
 RUN mkdir -p ./apps/e2e/test-results && chmod 777 ./apps/e2e/test-results
 
-CMD ["pnpm", "nx", "run", "e2e:test"]
+CMD ["pnpm", "--filter", "@connectwon/e2e", "test"]
