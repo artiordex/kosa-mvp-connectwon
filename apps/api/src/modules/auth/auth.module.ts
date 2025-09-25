@@ -1,17 +1,22 @@
+/**
+ * Description : auth.controller.ts - 📌 SSO 인증 모듈
+ * Author : Shiwoo Min
+ * Date : 2025-09-26
+ */
+import { BullModule } from '@nestjs/bullmq';
 import { Module } from '@nestjs/common';
-import { JwtModule } from '@nestjs/jwt';
 import { AuthController } from './auth.controller';
+import { AuthProcessor } from './auth.processor';
 import { AuthService } from './auth.service';
-import { JwtStrategy } from './jwt.strategy';
 
 @Module({
   imports: [
-    JwtModule.register({
-      secret: 'your-secret-key', // 환경 변수로 관리하는 것이 좋습니다.
-      signOptions: { expiresIn: '60m' }, // JWT 만료 시간
+    BullModule.registerQueue({
+      name: 'auth-queue',
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy],
+  providers: [AuthService, AuthProcessor],
+  exports: [AuthService],
 })
 export class AuthModule {}
