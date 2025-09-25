@@ -41,7 +41,7 @@ module.exports = {
       ignore_watch: ['node_modules', 'logs', '*.log'],
 
       // 메모리/프로세스 제한
-      max_memory_restart: '2G',
+      max_memory_restart: '4G',
       min_uptime: '10s',
       max_restarts: 10,
       autorestart: true,
