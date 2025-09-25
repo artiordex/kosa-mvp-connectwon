@@ -1,12 +1,12 @@
 /**
  * Description : ProgressChart.tsx - 📌 진행 상황 차트 컴포넌트
  * Author : Shiwoo Min
- * Date : 2025-09-09
+ * Date : 2025-09-25
  */
 import { GAUGE_COLORS, type ProgressChartProps } from '../../ui-types.js';
 
 // 진행 상황 차트 컴포넌트
-export function ProgressChart({
+const ProgressChart = ({
   value,
   max = 100,
   title,
@@ -16,7 +16,7 @@ export function ProgressChart({
   color, // 있으면 강제
   className = '',
   orientation = 'horizontal',
-}: ProgressChartProps) {
+}: ProgressChartProps) => {
   const pct = Math.min(Math.max((value / max) * 100, 0), 100);
   const scheme = color ? 'cw-primary' : pct >= 100 ? 'cw-ok' : pct >= 50 ? 'cw-warn' : 'cw-danger';
 
@@ -25,9 +25,7 @@ export function ProgressChart({
     const w = 20,
       h = 160;
     const filled = (pct / 100) * h;
-    const fillColor =
-      color ??
-      (pct >= 100 ? GAUGE_COLORS.SUCCESS : pct >= 50 ? GAUGE_COLORS.WARNING : GAUGE_COLORS.DANGER);
+    const fillColor = color ?? (pct >= 100 ? GAUGE_COLORS.SUCCESS : pct >= 50 ? GAUGE_COLORS.WARNING : GAUGE_COLORS.DANGER);
 
     return (
       <div className={`flex flex-col items-center ${className}`}>
@@ -55,12 +53,7 @@ export function ProgressChart({
   return (
     <div className={`w-full ${className}`}>
       {title && <div className="mb-2 text-sm font-medium text-gray-700">{title}</div>}
-      <progress
-        className={`cw-progress ${scheme}`}
-        max={max}
-        value={value}
-        {...(color ? { style: undefined } : {})}
-      />
+      <progress className={`cw-progress ${scheme}`} max={max} value={value} {...(color ? { style: undefined } : {})} />
       {(showValue || showPercentage) && (
         <div className="mt-1 flex items-center justify-end gap-2 text-right">
           {showValue && (
@@ -74,4 +67,6 @@ export function ProgressChart({
       )}
     </div>
   );
-}
+};
+
+export default ProgressChart;

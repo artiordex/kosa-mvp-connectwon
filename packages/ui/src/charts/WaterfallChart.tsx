@@ -1,12 +1,12 @@
 /**
  * Description : WaterfallChart.tsx - 📌 누적 영역 차트 컴포넌트
  * Author : Shiwoo Min
- * Date : 2025-09-09
+ * Date : 2025-09-25
  */
 import { type WaterfallChartProps } from '../../ui-types.js';
 
 // 누적 영역 차트 컴포넌트
-export function WaterfallChart({
+const WaterfallChart = ({
   data,
   height = 300,
   positiveColor = '#10b981',
@@ -14,7 +14,7 @@ export function WaterfallChart({
   totalColor = '#3b82f6',
   showValues = true,
   className = '',
-}: WaterfallChartProps) {
+}: WaterfallChartProps) => {
   // 누적 합계 계산
   let running = 0;
   const processed = data.map(d => {
@@ -30,12 +30,11 @@ export function WaterfallChart({
 
   const max = Math.max(...processed.map(p => Math.max(p.start, p.end)));
   const min = Math.min(0, ...processed.map(p => Math.min(p.start, p.end)));
-
   const W = 600; // 고정 뷰박스 가로
   const H = height;
   const n = processed.length;
   const gap = 12;
-  const bw = (W - gap * (n + 1)) / n; // bar width
+  const bw = (W - gap * (n + 1)) / n; 
 
   const yScale = (v: number) => {
     const range = max - min || 1;
@@ -43,13 +42,7 @@ export function WaterfallChart({
   };
 
   const colorOf = (d: (typeof processed)[number]) =>
-    d.color
-      ? d.color
-      : d.type === 'total'
-        ? totalColor
-        : d.end >= d.start
-          ? positiveColor
-          : negativeColor;
+    d.color ? d.color : d.type === 'total' ? totalColor : d.end >= d.start ? positiveColor : negativeColor;
 
   return (
     <div className={`cw-card ${className}`}>
@@ -69,23 +62,15 @@ export function WaterfallChart({
               {/* 막대 */}
               <rect x={x} y={yTop} width={bw} height={h} fill={colorOf(d)} rx="4" />
               {/* 연결 점선(마지막 제외) */}
-              {i < n - 1 && (
-                <line
-                  className="cw-wf-link"
-                  x1={x + bw}
-                  y1={y2}
-                  x2={gap + (i + 1) * (bw + gap)}
-                  y2={y2}
-                />
-              )}
+              {i < n - 1 && <line className="cw-wf-link" x1={x + bw} y1={y2} x2={gap + (i + 1) * (bw + gap)} y2={y2} />}
               {/* 값 라벨 */}
               {showValues && (
-                <text x={x + bw / 2} y={yTop - 6} className="cw-wf-label">
+                <text x={x + bw / 2} y={yTop - 6} className="cw-wf-label" textAnchor="middle">
                   {(d.end - d.start >= 0 ? '+' : '') + (d.end - d.start).toLocaleString()}
                 </text>
               )}
               {/* 아래 이름 */}
-              <text x={x + bw / 2} y={H - 4} className="cw-wf-label">
+              <text x={x + bw / 2} y={H - 4} className="cw-wf-label" textAnchor="middle">
                 {d.name}
               </text>
             </g>
@@ -94,4 +79,6 @@ export function WaterfallChart({
       </svg>
     </div>
   );
-}
+};
+
+export default WaterfallChart;

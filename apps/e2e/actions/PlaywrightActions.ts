@@ -37,10 +37,6 @@ export class PlaywrightActions {
     this.defaultTimeout = opts.defaultTimeout ?? 10_000;
   }
 
-  // ========================================
-  // 🔧 헬퍼 메서드들
-  // ========================================
-
   /**
    * @description 문자열/Locator를 통일된 Locator로 변환
    * @param selector CSS 선택자 문자열 또는 Locator 객체
@@ -549,7 +545,7 @@ export class PlaywrightActions {
       await this.page.mouse.up();
     }
   }
-  
+
   /**
    * @description 전체 페이지 스크린샷 저장
    * @param filePath 저장할 파일 경로

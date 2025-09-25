@@ -5,14 +5,14 @@
   "tags": ["type:app", "layer:backend", "platform:node"],
   "targets": {
     "build": {
-      "executor": "@nestjs/cli:build",
+      "executor": "@nrwl/node:webpack",
       "options": {
         "outputPath": "dist/apps/api",
         "tsConfig": "apps/api/tsconfig.json"
       }
     },
     "serve": {
-      "executor": "@nx/js:node",
+      "executor": "@nestjs/cli:serve",
       "options": {
         "buildTarget": "api:build",
         "port": 8000
@@ -27,7 +27,8 @@
     "test": {
       "executor": "@nx/vite:test",
       "options": {
-        "passWithNoTests": true
+        "passWithNoTests": true,
+        "vitestConfig": "../..vitest.config.ts"
       }
     }
   },

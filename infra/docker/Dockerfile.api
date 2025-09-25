@@ -7,7 +7,6 @@
 FROM node:22-alpine3.22 AS base
 WORKDIR /app
 
-# 필수 패키지 및 corepack 설정
 RUN corepack enable \
   && apk add --no-cache libc6-compat ca-certificates bash \
   && apk upgrade --no-cache \
@@ -21,27 +20,17 @@ RUN corepack enable \
 FROM base AS deps
 WORKDIR /app
 
-# 루트 메타데이터 먼저 복사 (락파일 포함) → 캐시 안정화
+# 루트 메타데이터 복사
 COPY pnpm-lock.yaml pnpm-workspace.yaml package.json nx.json tsconfig.json tsconfig.base.json ./
 
-# api가 사용하는 내부 패키지들의 package.json만 복사 (캐시 최적화)
-COPY packages/api-contract/package.json packages/api-contract/
-COPY packages/database/package.json     packages/database/
-COPY packages/server/package.json       packages/server/
-COPY packages/core/package.json         packages/core/
-COPY packages/logger/package.json       packages/logger/
-COPY apps/api/package.json              apps/api/
+# 전체 프로젝트 복사 (workspace context 유지)
+COPY packages ./packages
+COPY apps ./apps
 
-# pnpm install 시 filter로 범위 제한 → 락파일 불일치 오류 방지
-RUN pnpm install --frozen-lockfile \
-  --filter @connectwon/api-contract \
-  --filter @connectwon/database \
-  --filter @connectwon/server \
-  --filter @connectwon/core \
-  --filter @connectwon/logger \
-  --filter @connectwon/api
+# 전체 workspace 설치
+RUN pnpm install --frozen-lockfile
 
-  # 3. 빌드 단계
+# 3. 빌드 단계
 FROM deps AS build
 WORKDIR /app
 
@@ -50,18 +39,12 @@ ENV NODE_ENV=production \
     NX_CLOUD=false \
     NODE_OPTIONS="--max-old-space-size=4096"
 
-# Prisma schema 먼저 복사
-COPY packages/database/prisma ./packages/database/prisma
-COPY packages ./packages
-COPY apps/api ./apps/api
-
 # Prisma Client 생성
 RUN pnpm --filter @connectwon/database generate
 
-# ------ 까지 성공
-
-# API 빌드)
-RUN pnpm nx build api
+# ---- 
+# API 빌드
+RUN pnpm nx build @connectwon/api
 
 # 4. 런타임 단계
 FROM gcr.io/distroless/nodejs22-debian12:nonroot AS runtime
@@ -69,7 +52,6 @@ WORKDIR /app
 ENV NODE_ENV=production \
     PORT=8000
 
-# 빌드 결과물 복사
 COPY --from=build /app/dist/apps/api ./dist
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/package.json ./package.json

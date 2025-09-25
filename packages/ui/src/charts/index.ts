@@ -3,16 +3,16 @@
  * Author : Shiwoo Min
  * Date : 2025-09-09
  */
-export { AreaChart } from './AreaChart.js';
-export { BarChart } from './BarChart.js';
-export { DonutChart } from './DonutChart.js';
-export { FunnelChart } from './FunnelChart.js';
-export { GaugeChart } from './GaugeChart.js';
-export { LineChart } from './LineChart.js';
-export { PieChart } from './PieChart.js';
-export { ProgressChart } from './ProgressChart.js';
-export { SparklineChart } from './SparklineChart.js';
-export { WaterfallChart } from './WaterfallChart.js';
+export { default as AreaChart } from './AreaChart.js';
+export { default as BarChart } from './BarChart.js';
+export { default as DonutChart } from './DonutChart.js';
+export { default as FunnelChart } from './FunnelChart.js';
+export { default as GaugeChart } from './GaugeChart.js';
+export { default as LineChart } from './LineChart.js';
+export { default as PieChart } from './PieChart.js';
+export { default as ProgressChart } from './ProgressChart.js';
+export { default as SparklineChart } from './SparklineChart.js';
+export { default as WaterfallChart } from './WaterfallChart.js';
 
 // 타입 내보내기
 export type {
