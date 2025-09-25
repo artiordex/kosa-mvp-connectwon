@@ -50,15 +50,21 @@
   },
   "__comment_dev": "개발 의존성",
   "devDependencies": {
+    "@nestjs/bull": "^11.0.3",
     "@nestjs/cli": "^10.0.0",
     "@types/bcryptjs": "^2.4.6",
+    "@types/bull": "^4.10.4",
     "@types/cors": "^2.8.19",
     "@types/express": "^4.17.23",
     "@types/ioredis": "^5.0.0",
     "@types/jsonwebtoken": "^9.0.7",
     "@types/morgan": "^1.9.10",
+    "@types/multer": "^2.0.0",
     "@types/node": "^24.3.1",
-    "@types/swagger-ui-express": "^4.1.8"
+    "@types/swagger-ui-express": "^4.1.8",
+    "bull": "^4.16.5",
+    "install": "^0.13.0",
+    "pnpm": "^10.17.1"
   },
   "__comment_engines": "런타임 요구사항",
   "engines": {

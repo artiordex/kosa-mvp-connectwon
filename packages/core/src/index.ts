@@ -9,13 +9,12 @@
 export * from './adapters/ai/index.js';
 export * from './adapters/notification/index.js';
 // application
-export * from './application/application.module.js';
-export * from './application/guards/require-role.js';
 export * from './application/policies/overbooking.js';
 export * from './application/policies/waitlist.js';
-export * from './application/usecases/program.js';
-export * from './application/usecases/reservation.js';
-export * from './application/usecases/schedule.js';
+// usecases
+export * from './application/usecases/program.usecase.js';
+export * from './application/usecases/reservation.usecase.js';
+export * from './application/usecases/schedule.usecase.js';
 // domain
 export * from './domain/value-objects.js';
 // infrastructure

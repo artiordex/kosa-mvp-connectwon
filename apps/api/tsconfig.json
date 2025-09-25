@@ -55,7 +55,9 @@
     { "path": "../../packages/core" },
     { "path": "../../packages/database" },
     { "path": "../../packages/logger" },
-    { "path": "../../packages/api-contract" }
+    { "path": "../../packages/api-contract" },
+    { "path": "../../packages/server" },
+    { "path": "../../packages/sdk" }
   ],
 
   "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts", "**/*.spec.tsx"]

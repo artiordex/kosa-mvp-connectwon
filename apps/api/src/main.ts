@@ -3,15 +3,15 @@
  * Author : Shiwoo Min
  * Date : 2025-09-12
  * 09-18 : 루트 경로 핸들러 추가
+ * 09-26 : Swagger 플러그인 적용
  */
-import 'reflect-metadata';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import type { Request, Response } from 'express';
-
+import { createConnectWonSwagger } from '@connectwon/server/plugins/swagger';
 import { AppModule } from './app.module.js';
+import type { Request, Response } from 'express';
+import 'reflect-metadata';
 
 /**
  * @function bootstrap
@@ -29,17 +29,11 @@ async function bootstrap() {
   // 환경설정 서비스 가져오기
   const configService = app.get(ConfigService);
 
-  /**
-   * @function enableCors
-   * @description CORS 설정을 추가하여 외부 요청을 허용
-   * @param {Array<string>} origin - 허용할 출처
-   * @param {Array<string>} methods - 허용할 HTTP 메소드
-   * @param {Array<string>} allowedHeaders - 허용할 헤더들
-   */
+  // CORS 설정
   app.enableCors({
     origin: [
-      'http://localhost:3000', // 웹 애플리케이션
-      'http://localhost:3001', // 관리 애플리케이션
+      'http://localhost:3000',
+      'http://localhost:3001',
       configService.get('FRONTEND_URL', 'http://localhost:3000'),
       configService.get('ADMIN_URL', 'http://localhost:3001'),
     ],
@@ -48,57 +42,29 @@ async function bootstrap() {
     allowedHeaders: ['Content-Type', 'Authorization', 'x-api-key'],
   });
 
-  // 글로벌 API 프리픽스 설정
+  // 글로벌 API 프리픽스
   app.setGlobalPrefix('api/v1', {
     exclude: ['/health', '/metrics'],
   });
 
-  // 글로벌 유효성 검사 파이프 설정
+  // 글로벌 유효성 검사 파이프
   app.useGlobalPipes(
     new ValidationPipe({
-      whitelist: true, // DTO에 정의되지 않은 속성 제거
-      forbidNonWhitelisted: true, // 허용되지 않은 속성 있을 시 에러
-      transform: true, // 타입 자동 변환
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
       disableErrorMessages: configService.get('NODE_ENV') === 'production',
     }),
   );
 
-  // Swagger API 문서 설정 (개발 환경에서만 활성화)
+  // Swagger 문서 설정 (개발 환경에서만)
   if (configService.get('NODE_ENV') !== 'production') {
-    const config = new DocumentBuilder()
-      .setTitle('Connectwon API')
-      .setDescription('Connectwon 플랫폼 REST API 문서')
-      .setVersion('1.0')
-      .addBearerAuth(
-        {
-          type: 'http',
-          scheme: 'bearer',
-          bearerFormat: 'JWT',
-        },
-        'access-token',
-      )
-      .addTag('auth', '인증 관련 API')
-      .addTag('users', '사용자 관리 API')
-      .addTag('venues', '장소 관리 API')
-      .addTag('programs', '프로그램 관리 API')
-      .addTag('reservation', '예약 관리 API')
-      .addTag('payments', '결제 관리 API')
-      .addTag('ai', 'AI 서비스 API')
-      .build();
-
-    // Swagger 문서 생성
-    const document = SwaggerModule.createDocument(app, config);
-    // Swagger UI 설정
-    SwaggerModule.setup('api/docs', app, document, {
-      swaggerOptions: {
-        persistAuthorization: true,
-      },
-    });
-
-    console.log('Swagger UI: http://localhost:8000/api/docs');
+    const swagger = createConnectWonSwagger();
+    swagger.setup(app);
+    console.log(`Swagger UI: http://localhost:${configService.get('PORT', 8000)}/api-docs`);
   }
 
-  // 루트 경로 핸들러 설정
+  // 루트 경로 핸들러
   app.use('/', (_req: Request, res: Response) => {
     res.status(200).json({
       message: 'Connectwon API Server',
@@ -106,14 +72,14 @@ async function bootstrap() {
       endpoints: {
         health: '/health',
         docs: '/api/docs',
-        api: '/api/v1'
+        api: '/api/v1',
       },
       environment: configService.get('NODE_ENV', 'development'),
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
   });
 
-  // 헬스체크 엔드포인트 설정
+  // 헬스체크 엔드포인트
   app.use('/health', (_req: Request, res: Response) => {
     res.status(200).json({
       status: 'ok',
@@ -123,17 +89,15 @@ async function bootstrap() {
     });
   });
 
-  // 서버 포트 설정
-  const port = configService.get('PORT', 8000);
-
   // 서버 시작
+  const port = configService.get('PORT', 8000);
   await app.listen(port, '0.0.0.0');
 
   console.log(`API Server running on: http://localhost:${port}`);
   console.log(`Environment: ${configService.get('NODE_ENV', 'development')}`);
   console.log(`Health Check: http://localhost:${port}/health`);
 
-  // Graceful shutdown 설정
+  // Graceful shutdown
   process.on('SIGTERM', async () => {
     console.log('SIGTERM received, shutting down gracefully...');
     await app.close();

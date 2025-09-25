@@ -3,12 +3,6 @@
  * Author : Shiwoo Min
  * Date : 2025-09-10
  */
-/**
- * @description n8n 연동용 Slack 웹훅 어댑터
- * @author Shiwoo Min
- * @date 2025-09-10
- * @summary Slack 웹훅을 통한 메시지 전송 및 n8n 이벤트 연동 기능 제공
- */
 import type { N8nWebhookPayload, NotificationPayload, SlackAttachment, SlackBlock, SlackField, SlackMessage, SlackResult, SlackWebhookConfig } from '../../../core-types.js';
 
 /**

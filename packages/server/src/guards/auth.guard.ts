@@ -3,23 +3,14 @@
  * Author : Shiwoo Min
  * Date  : 2025-09-12
  */
-import {
-  type CanActivate,
-  type ExecutionContext,
-  ForbiddenException,
-  Injectable,
-  SetMetadata,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { type CanActivate, type ExecutionContext, ForbiddenException, Injectable, SetMetadata, UnauthorizedException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 
-import {
-  META_ROLES_KEY,
-  type RequestWithUser,
-  type SessionUser,
-  type UserRole,
-} from '../../server-types.js';
-import { resolveUserFromRequest } from '../middleware/auth.js';
+import { META_ROLES_KEY, type RequestWithUser, type SessionUser, type UserRole } from '../../server-types.js';
+import { resolveUserFromRequest } from '../middleware/auth.middleware.js';
+
+import { META_ROLES_KEY, type RequestWithUser, type SessionUser, type UserRole } from '../../server-types.js';
+import { resolveUserFromRequest } from '../middleware/auth.middleware.js';
 
 // 공개 핸들러/컨트롤러 메타키
 export const IS_PUBLIC_KEY = 'connectwon:isPublic' as const;
@@ -33,10 +24,7 @@ export class AuthGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     // 1. 공개 라우트면 패스
-    const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
-      context.getHandler(),
-      context.getClass(),
-    ]);
+    const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [context.getHandler(), context.getClass()]);
     if (isPublic) return true;
 
     // 2. req.user 없으면 해석/주입
@@ -50,10 +38,7 @@ export class AuthGuard implements CanActivate {
     if (!user) throw new UnauthorizedException('Unauthorized');
 
     // 3. 역할 요구가 있으면 검사
-    const required = this.reflector.getAllAndOverride<UserRole[] | undefined>(META_ROLES_KEY, [
-      context.getHandler(),
-      context.getClass(),
-    ]);
+    const required = this.reflector.getAllAndOverride<UserRole[] | undefined>(META_ROLES_KEY, [context.getHandler(), context.getClass()]);
     if (required && required.length) {
       const has = user.roles?.some(r => required.includes(r));
       if (!has) throw new ForbiddenException('Forbidden');

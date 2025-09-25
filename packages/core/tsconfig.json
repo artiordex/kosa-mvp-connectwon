@@ -5,10 +5,10 @@
  * 09-10 : core 패키지의 domain/authz 참조 추가
  * 09-12 : 선언파일/소스맵/증분빌드/레퍼런스 정리
  * 09-22 : .d.ts 파일 사용으로 변경, declaration 중복 생성 방지
+ * 09-26 : alias(@connectwon/core-types) 추가
  * 빌드 로그 확인 - tsc -p tsconfig.json --listEmittedFiles
  */
 {
-  // 루트의 tsconfig.json 상속
   "extends": "../../tsconfig.base.json",
 
   "compilerOptions": {
@@ -31,7 +31,7 @@
     "sourceMap": true,
     "emitDeclarationOnly": false,
 
-    // 모노레포 증분 빌드 (composite 제거)
+    // 모노레포 증분 빌드
     "incremental": true,
     "tsBuildInfoFile": "./dist/.tsbuildinfo",
 
@@ -41,13 +41,19 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "exactOptionalPropertyTypes": true
+    "exactOptionalPropertyTypes": true,
+
+    // 💡 core 내부 alias
+    "baseUrl": ".",
+    "paths": {
+      "@connectwon/core/*": ["src/*"],
+      "@connectwon/core-types": ["core-types.ts"]
+    }
   },
 
-  // 루트에 존재하는 core-types.d.ts 포함
-  "include": ["core-types.ts", "src/**/*", "core-types.d.ts"],
+  "include": ["core-types.ts", "core-types.d.ts", "src/**/*"],
   "exclude": ["dist", "node_modules", "**/*.test.*", "**/*.spec.*"],
 
-  // 순환 참조 방지: database → core 를 참조할 수 있으므로 core 에서 database 참조는 제거
+  // 순환 참조 방지: database → core 참조만 허용, core → database 금지
   "references": [{ "path": "../api-contract" }]
 }
