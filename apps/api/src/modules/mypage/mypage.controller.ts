@@ -6,7 +6,6 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { MyPageService } from './mypage.service';
-import { Express } from 'express';
 
 @Controller('mypage')
 export class MyPageController {

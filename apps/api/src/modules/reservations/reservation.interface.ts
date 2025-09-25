@@ -20,6 +20,7 @@ type WaitlistEntry = any;
  * @description 예약 서비스 인터페이스
  */
 export interface IReservationService {
+  promoteFromWaitlist(roomId: any, arg1: number): unknown;
   // 기본 예약 관리
   createReservation(userId: string, reservationData: ReservationCreateRequest): Promise<Reservation>;
   updateReservation(userId: string, reservationId: string, updateData: ReservationUpdateRequest): Promise<Reservation>;

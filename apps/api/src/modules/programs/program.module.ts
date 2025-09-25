@@ -1,18 +1,11 @@
 import { Module } from '@nestjs/common';
-
-import { PaymentsController } from './payment.controller';
-import { PaymentProcessor } from './payment.processor';
-import { PaymentsService } from './payment.service';
-
-import { PaymentsController } from './payment.controller';
-import { PaymentProcessor } from './payment.processor';
-import { PaymentsService } from './payment.service';
-
-// 결제 처리 로직
+import { ProgramController } from './program.controller';
+import { ProgramProcessor } from './program.processor';
+import { ProgramService } from './program.service';
 
 @Module({
   imports: [],
-  controllers: [PaymentsController],
-  providers: [PaymentsService, PaymentProcessor], // 결제 서비스와 프로세서 연결
+  controllers: [ProgramController],
+  providers: [ProgramService, ProgramProcessor], // 프로그램 서비스와 프로세서 연결
 })
-export class PaymentsModule {}
+export class ProgramModule {}

@@ -1,18 +1,24 @@
+/**
+ * Description : user.module.ts - 📌 사용자 모듈 정의
+ * Author : Shiwoo Min
+ * Date : 2025-09-26
+ */
 import { Module } from '@nestjs/common';
-
-import { UsersController } from './user.controller';
-import { UsersProcessor } from './user.processor';
-import { UsersService } from './user.service';
-
-import { UsersController } from './user.controller';
-import { UsersProcessor } from './user.processor';
-import { UsersService } from './user.service';
-
-// 사용자 처리 로직
+import { UserController } from './user.controller';
+import { UserService } from './user.service';
 
 @Module({
-  imports: [],
-  controllers: [UsersController],
-  providers: [UsersService, UsersProcessor], // 사용자 서비스와 프로세서 연결
+  imports: [
+    // TODO: TypeOrmModule.forFeature([UserEntity]) 또는 Prisma 등 ORM 연결 추가
+    // TODO: 다른 모듈 (AuthModule, ReservationModule 등) 필요시 imports에 추가
+  ],
+  controllers: [UserController],
+  providers: [
+    UserService,
+    // TODO: 추가 Provider (예: UserRepository, UserProcessor 등) 등록
+  ],
+  exports: [
+    UserService
+  ],
 })
-export class UsersModule {}
+export class UserModule {}
