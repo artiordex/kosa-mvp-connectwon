@@ -1,22 +1,15 @@
 /**
  * Description : AreaChart.tsx - 📌 영역 차트 컴포넌트
  * Author : Shiwoo Min
- * Date : 2025-09-09
+ * Date : 2025-09-25
  */
 import { useMemo } from 'react';
-import {
-  Area,
-  CartesianGrid,
-  AreaChart as RechartsAreaChart,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from 'recharts';
+
 import { type AreaChartProps, CHART_HEIGHTS, DEFAULT_COLORS } from '../../ui-types.js';
+import { Area, CartesianGrid, AreaChart as RechartsAreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
 // 영역 차트 컴포넌트
-export function AreaChart({
+const AreaChart = ({
   data,
   height = CHART_HEIGHTS.MEDIUM,
   color = DEFAULT_COLORS[0],
@@ -27,7 +20,7 @@ export function AreaChart({
   xKey = 'x',
   yKey = 'y',
   className = '',
-}: AreaChartProps) {
+}: AreaChartProps) => {
   // 고유 gradient id (SSR/CSR 모두 안전하게)
   const gradientId = useMemo(() => `area-gradient-${Math.random().toString(36).slice(2)}`, []);
 
@@ -49,16 +42,11 @@ export function AreaChart({
 
           {showTooltip && <Tooltip />}
 
-          <Area
-            type="monotone"
-            dataKey={yKey}
-            stroke={color}
-            strokeWidth={strokeWidth}
-            fill={`url(#${gradientId})`}
-            activeDot={{ r: 5 }}
-          />
+          <Area type="monotone" dataKey={yKey} stroke={color} strokeWidth={strokeWidth} fill={`url(#${gradientId})`} activeDot={{ r: 5 }} />
         </RechartsAreaChart>
       </ResponsiveContainer>
     </div>
   );
-}
+};
+
+export default AreaChart;

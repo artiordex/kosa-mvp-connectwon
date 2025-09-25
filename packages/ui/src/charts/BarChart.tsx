@@ -1,13 +1,13 @@
 /**
  * Description : BarChart.tsx - 📌 막대 차트 컴포넌트
  * Author : Shiwoo Min
- * Date : 2025-09-09
+ * Date : 2025-09-25
  */
 import { type BarChartProps, CHART_HEIGHTS, DEFAULT_COLORS } from '../../ui-types.js';
 import { Bar, CartesianGrid, BarChart as RechartsBarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
 // 막대 차트 컴포넌트
-export function BarChart({
+const BarChart = ({
   data,
   height = CHART_HEIGHTS.MEDIUM,
   color = DEFAULT_COLORS[0],
@@ -17,7 +17,7 @@ export function BarChart({
   yKey = 'y',
   className = '',
   horizontal = false,
-}: BarChartProps) {
+}: BarChartProps) => {
   return (
     <div className={className}>
       <ResponsiveContainer width="100%" height={height}>
@@ -52,4 +52,6 @@ export function BarChart({
       </ResponsiveContainer>
     </div>
   );
-}
+};
+
+export default BarChart;
