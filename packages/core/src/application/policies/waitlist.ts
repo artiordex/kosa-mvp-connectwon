@@ -1,9 +1,8 @@
 /**
- * Description : waitlist.ts - 📌 대기열 정책
+ * Description : waitlist.policy.ts - 📌 대기열 정책
  * Author : Shiwoo Min
- * Date : 2025-09-10
+ * Date   : 2025-09-10
  */
-import { Injectable } from '@nestjs/common';
 
 /**
  * @description 대기열 정책 옵션 인터페이스
@@ -19,7 +18,6 @@ export interface WaitlistPolicyOptions {
  * @description 대기열 정책 서비스
  * @summary 세션 대기열에 대한 가입 규칙과 관리 로직 제공
  */
-@Injectable()
 export class WaitlistPolicyService {
   /**
    * @description 대기열에 새 사용자를 추가 가능한지 판단
@@ -35,14 +33,8 @@ export class WaitlistPolicyService {
    * });
    * ```
    */
-  canJoinWaitlist(
-    waitlist: string[],
-    newUserId: string,
-    options: WaitlistPolicyOptions = {},
-  ): boolean {
-    const max = Number.isFinite(options.maxWaitlist)
-      ? Math.max(0, Math.floor(options.maxWaitlist!))
-      : 10;
+  canJoinWaitlist(waitlist: string[], newUserId: string, options: WaitlistPolicyOptions = {}): boolean {
+    const max = Number.isFinite(options.maxWaitlist) ? Math.max(0, Math.floor(options.maxWaitlist!)) : 10;
     const allowDup = options.allowDuplicates ?? false;
 
     if (!allowDup && waitlist.includes(newUserId)) return false;

@@ -1,18 +1,15 @@
+/**
+ * Description : venue.module.ts - 📌 장소(Venue) 모듈 정의
+ * Author : Shiwoo Min
+ * Date : 2025-09-26
+ */
 import { Module } from '@nestjs/common';
-
-import { VenuesController } from './venue.controller';
-import { VenuesProcessor } from './venue.processor';
-import { VenuesService } from './venue.service';
-
-import { VenuesController } from './venue.controller';
-import { VenuesProcessor } from './venue.processor';
-import { VenuesService } from './venue.service';
-
-// 장소 처리 로직
+import { VenueController } from './venue.controller';
+import { VenueService } from './venue.service';
 
 @Module({
-  imports: [],
-  controllers: [VenuesController],
-  providers: [VenuesService, VenuesProcessor], // 장소 서비스와 프로세서 연결
+  controllers: [VenueController],
+  providers: [VenueService],
+  exports: [VenueService], // 다른 모듈에서 VenueService 사용 가능하도록 export
 })
-export class VenuesModule {}
+export class VenueModule {}

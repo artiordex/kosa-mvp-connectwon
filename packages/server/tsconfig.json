@@ -1,7 +1,7 @@
 /**
- * Description : tsconfig.json - 📌 Nest.js 패키지 (TypeScript 설정)
+ * Description : tsconfig.json - 📌 Nest.js 패키지 (TypeScript 설정 + core 참조)
  * Author : Shiwoo Min
- * Date : 2025-09-12
+ * Date   : 2025-09-12
  */
 {
   // 루트의 tsconfig.base.json 상속
@@ -12,11 +12,10 @@
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
 
-    // 입출력 경로
+     // 입출력 경로
     "rootDir": ".",
     "outDir": "./dist",
     "noEmit": false,
-    // 증분 빌드 캐시
     "tsBuildInfoFile": "./dist/.tsbuildinfo",
 
     // Nest/Express 공통 추천
@@ -33,9 +32,25 @@
     "sourceMap": true,
     "skipLibCheck": true,
     "lib": ["ES2022"],
-    "types": ["node"]
+    "types": ["node"],
+
+    // core alias 연결
+    "baseUrl": ".",
+    "paths": {
+      "@connectwon/core/*": ["../core/src/*"],
+      "@connectwon/core-types": ["../core/core-types.ts"]
+    }
   },
 
-  "include": ["src/**/*", "server-types.ts"],
-  "exclude": ["node_modules", "dist", "**/*.test.*", "**/*.spec.*"]
+  "include": [
+    "src/**/*",
+    "server-types.ts",
+    "../core/src/**/*",
+    "../core/core-types.ts",
+    "../core/core-types.d.ts"
+  ],
+  "exclude": ["node_modules", "dist", "**/*.test.*", "**/*.spec.*"],
+
+  // 모노레포 빌드 순서 보장
+  "references": [{ "path": "../core" }]
 }
