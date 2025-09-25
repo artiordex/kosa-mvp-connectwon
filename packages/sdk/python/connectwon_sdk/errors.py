@@ -3,7 +3,6 @@ Description : errors.py - 📌 SDK 공통 에러와 재시도 규칙
 Author : Shiwoo Min
 Date : 2025-09-20
 """
-
 from typing import Any, Dict, Optional
 
 class ApiError(Exception):
@@ -34,20 +33,17 @@ class ApiError(Exception):
             result["details"] = self.details
         return result
 
-
 class TimeoutError(Exception):
     """네트워크 타임아웃 오류"""
 
     def __init__(self, message: str = "Request timed out"):
         super().__init__(message)
 
-
 class NetworkError(Exception):
     """네트워크 일반 오류"""
 
     def __init__(self, message: str = "Network error"):
         super().__init__(message)
-
 
 def is_retryable_status(status: int) -> bool:
     """429/5xx 재시도 대상 확인"""

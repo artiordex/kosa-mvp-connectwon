@@ -173,7 +173,7 @@
     "typescript": "javascript",
     "typescriptreact": "javascript"
   },
-  "cSpell.ignorePaths": ["pnpm-lock.yaml", "settings.json", "extensions.json", "snippets.code-snippets", "docs/*"],
+  "cSpell.ignorePaths": ["pnpm-lock.yaml", "settings.json", "extensions.json", "snippets.code-snippets", "docs/*", "infra/database/*"],
   // 스펠링 검사에서 제외할 사용자 정의 단어 목록
   "cSpell.userWords": [
     "ShiwooMin",
@@ -376,7 +376,15 @@
     "dxdiag",
     "choco",
     "netpol",
-    "BUILDKIT"
+    "BUILDKIT",
+    "setval",
+    "dummyhash",
+    "trgm",
+    "dynamicprioritypolling",
+    "Turborepo",
+    "CHOKIDAR_USEPOLLING",
+    "mypy",
+    "disp"
   ],
 
   // Nx Console AI 규칙 사용

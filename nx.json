@@ -2,7 +2,7 @@
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "description": "Nx 워크스페이스 설정",
   "extends": "nx/presets/npm.json",
-  "defaultBase": "main",
+  "defaultBase": "origin/main",
 
   "__comment_namedInputs": "namedInputs: 빌드 캐시와 의존성 관리를 위한 입력 파일 집합을 정의",
   "namedInputs": {
@@ -17,7 +17,8 @@
       "!{projectRoot}/**/*.mdx",
       "!{projectRoot}/playwright-report/**",
       "!{projectRoot}/coverage/**",
-      "!{projectRoot}/generated/**"
+      "!{projectRoot}/generated/**",
+      "!{projectRoot}/dist/**/*"
     ],
     "env": ["{workspaceRoot}/.env*", "{workspaceRoot}/infra/docker/.env", "{workspaceRoot}/secrets/**", "{projectRoot}/.env*"]
   },
@@ -79,9 +80,9 @@
       "runner": "nx/tasks-runners/default",
       "options": {
         "cacheableOperations": ["build", "lint", "test", "type-check", "gen:openapi"],
-        "parallel": 2,
-        "maxParallel": 2,
-        "useDaemonProcess": false,
+        "parallel": 8,
+        "maxParallel": 8,
+        "useDaemonProcess": true,
         "skipNxCache": false,
         "cacheDirectory": "node_modules/.cache/nx"
       }

@@ -89,3 +89,6 @@ docker-compose.*.yml
 # Misc
 tmp
 docs
+
+# TypeScript build cache
+*.tsbuildinfo

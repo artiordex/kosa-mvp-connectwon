@@ -3,11 +3,9 @@ Description : models.py - 📌 API 요청/응답 데이터 모델 정의
 Author : Shiwoo Min
 Date : 2025-09-20
 """
-
 from dataclasses import dataclass
 from typing import Any, Dict, List, Optional
 from datetime import datetime
-
 
 @dataclass
 class AnalysisRequest:
@@ -18,7 +16,6 @@ class AnalysisRequest:
     max_tokens: Optional[int] = None
     metadata: Optional[Dict[str, Any]] = None
 
-
 @dataclass
 class AnalysisResult:
     """AI 분석 응답 모델"""
@@ -27,7 +24,6 @@ class AnalysisResult:
     tokens_used: int
     model: str
     metadata: Optional[Dict[str, Any]] = None
-
 
 @dataclass
 class User:
@@ -38,7 +34,6 @@ class User:
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
     metadata: Optional[Dict[str, Any]] = None
-
 
 @dataclass
 class Project:
@@ -52,7 +47,6 @@ class Project:
     updated_at: Optional[datetime] = None
     metadata: Optional[Dict[str, Any]] = None
 
-
 @dataclass
 class ScrapingTask:
     """웹스크래핑 작업 모델"""
@@ -61,7 +55,6 @@ class ScrapingTask:
     headers: Optional[Dict[str, str]] = None
     timeout: int = 30
     retry_count: int = 3
-
 
 @dataclass
 class ScrapingResult:
