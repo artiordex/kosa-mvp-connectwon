@@ -5,10 +5,6 @@
  */
 import { prisma } from '@connectwon/database';
 import { logger } from '@connectwon/logger';
-
-import { recordJobStart } from '../metrics.js';
-import type { Job } from 'bullmq';
-
 import { recordJobStart } from '../metrics.js';
 import type { Job } from 'bullmq';
 

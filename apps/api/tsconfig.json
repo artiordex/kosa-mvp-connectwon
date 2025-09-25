@@ -3,19 +3,12 @@
    * Description : tsconfig.json - 📌 Nest/Express API 모듈 (TypeScript 설정)
    * Author      : Shiwoo Min
    * Date        : 2025-09-06
-   * 09-12 : 소스맵/증분빌드/tsbuildinfo 추가, 라이브러리 스킵체크 활성화
-   * 09-16 : Project References 추가, base 설정 상속으로 중복 제거
-   * 09-18 : ESM 지원 추가
-   * 09-21 : 워크스페이스 패키지 참조 정리 및 dependencies와 일치시킴
-   * 09-22 : moduleResolution bundler → NodeNext (Node ESM 해석과 일치)
-   * 09-23 : 빌드 경로 project.json과 통일, esbuild 호환성 개선
+   * 09-24 : watchOptions 테스트, base 상속 임시 제거
    */
-
-  // 루트의 tsconfig.base.json 상속
   "extends": "../../tsconfig.base.json",
 
   "compilerOptions": {
-    // API 전용 출력 설정 (project.json과 일치)
+    // API 전용 출력 설정
     "outDir": "../../dist/apps/api",
     "rootDir": "./src",
     "tsBuildInfoFile": "../../dist/apps/api/.tsbuildinfo",
@@ -34,41 +27,24 @@
     // NestJS/Express 특화
     "strictPropertyInitialization": false,
 
-    // ESM 호환성
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "isolatedModules": true,
+    // verbatimModuleSyntax 비활성화 (CommonJS 호환성)
     "verbatimModuleSyntax": false,
 
-    // 소스맵 및 빌드 최적화
-    "sourceMap": true,
-    "inlineSources": false,
-    "skipLibCheck": true,
-
-    // Node.js 타입
-    "types": ["node"],
-    "moduleDetection": "force",
-
-    // 모듈 해석 도움
-    "baseUrl": ".",
-    "paths": {
-      "@connectwon/*": ["../../packages/*/src"]
-    },
-
-    // 엄격한 타입 체크
-    "strict": true,
+    // 엄격함 완화 (NestJS 특성상)
+    "exactOptionalPropertyTypes": false,
+    "noPropertyAccessFromIndexSignature": false,
+    "noUncheckedIndexedAccess": false,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
-    "exactOptionalPropertyTypes": false,
-    "noImplicitReturns": false,
-    "noFallthroughCasesInSwitch": true
+
+    // Node.js 타입 추가
+    "types": ["node", "vitest"],
   },
 
-  // ts-node ESM 지원
   "ts-node": {
-    "esm": true,
-    "experimentalSpecifierResolution": "node"
+    "compilerOptions": {
+      "module": "CommonJS"
+    }
   },
 
   // API 소스만 포함
