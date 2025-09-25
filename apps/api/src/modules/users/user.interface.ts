@@ -9,12 +9,12 @@ type User = any;
 type UserCreateRequest = any;
 type UserUpdateRequest = any;
 type UserFilter = any;
-type UserRole = 'user' | 'creator' | 'admin' | 'super_admin';
-type UserStatus = 'active' | 'inactive' | 'suspended' | 'deleted' | 'pending_verification';
+export type UserRole = 'user' | 'creator' | 'admin' | 'super_admin';
+export type UserStatus = 'active' | 'inactive' | 'suspended' | 'deleted' | 'pending_verification';
 type UserPreferences = any;
 type UserActivity = any;
 type UserStats = any;
-type MembershipTier = 'basic' | 'premium' | 'vip' | 'creator';
+export type MembershipTier = 'basic' | 'premium' | 'vip' | 'creator';
 
 /**
  * @description 사용자 서비스 인터페이스
