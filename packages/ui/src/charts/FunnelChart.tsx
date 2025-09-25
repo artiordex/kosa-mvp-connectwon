@@ -1,19 +1,12 @@
 /**
  * Description : FunnelChart.tsx - 📌 깔때기 차트 컴포넌트
  * Author : Shiwoo Min
- * Date : 2025-09-09
+ * Date : 2025-09-25
  */
 import { DEFAULT_COLORS, type FunnelChartProps } from '../../ui-types.js';
 
 // 깔때기 차트 컴포넌트
-export function FunnelChart({
-  data,
-  colors = DEFAULT_COLORS,
-  showLabels = true,
-  showValues = true,
-  height = 300,
-  className = '',
-}: FunnelChartProps) {
+const FunnelChart = ({ data, colors = DEFAULT_COLORS, showLabels = true, showValues = true, height = 300, className = '' }: FunnelChartProps) => {
   const W = 100; // viewBox 가로(상대)
   const H = height; // 세로는 실제 px 사용
   const rows = data.length;
@@ -44,10 +37,10 @@ export function FunnelChart({
             <polygon points={pointsFor(i)} fill={d.color || colors[i % colors.length]} />
             {(showLabels || showValues) && (
               <>
-                <text className="cw-fn-label" x={W / 2} y={i * (H / rows) + segH / 2 - 8}>
+                <text className="cw-fn-label" x={W / 2} y={i * (H / rows) + segH / 2 - 8} textAnchor="middle">
                   {showLabels ? d.name : ''}
                 </text>
-                <text className="cw-fn-value" x={W / 2} y={i * (H / rows) + segH / 2 + 8}>
+                <text className="cw-fn-value" x={W / 2} y={i * (H / rows) + segH / 2 + 8} textAnchor="middle">
                   {showValues ? d.value.toLocaleString() : ''}
                 </text>
               </>
@@ -57,4 +50,6 @@ export function FunnelChart({
       </svg>
     </div>
   );
-}
+};
+
+export default FunnelChart;

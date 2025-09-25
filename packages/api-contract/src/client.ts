@@ -117,11 +117,9 @@ export class ApiClient {
         return await this.performRequest<T>(endpoint, options);
       } catch (error) {
         lastError = error as Error;
-
         if (attempt === this.retries || !this.shouldRetry(error)) {
           throw error;
         }
-
         // 지수적 백오프 대기
         await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempt) * 1000));
       }
@@ -287,13 +285,9 @@ export class ApiClient {
    */
   users = {
     list: (params?: Partial<SearchQuery>) => this.request<{ data: User[]; pagination: PaginationInfo }>('/users', params ? { params } : {}),
-
     create: (data: CreateUserRequest) => this.request<User>('/users', { method: 'POST', body: data }),
-
     get: (id: string) => this.request<User>(`/users/${id}`),
-
     update: (id: string, data: UpdateUserRequest) => this.request<User>(`/users/${id}`, { method: 'PUT', body: data }),
-
     delete: (id: string) => this.request<BaseResponse>(`/users/${id}`, { method: 'DELETE' }),
   };
 
@@ -302,17 +296,11 @@ export class ApiClient {
    */
   programs = {
     list: (params?: Partial<ProgramListQuery>) => this.request<ProgramsListResponse>('/programs', params ? { params } : {}),
-
     create: (data: CreateProgramRequest) => this.request<Program>('/programs', { method: 'POST', body: data }),
-
     get: (id: string) => this.request<Program>(`/programs/${id}`),
-
     update: (id: string, data: UpdateProgramRequest) => this.request<Program>(`/programs/${id}`, { method: 'PUT', body: data }),
-
     delete: (id: string) => this.request<BaseResponse>(`/programs/${id}`, { method: 'DELETE' }),
-
     activate: (id: string) => this.request<Program>(`/programs/${id}/activate`, { method: 'POST' }),
-
     deactivate: (id: string) => this.request<Program>(`/programs/${id}/deactivate`, { method: 'POST' }),
   };
 
@@ -321,13 +309,9 @@ export class ApiClient {
    */
   participants = {
     list: (params?: Partial<ParticipantListQuery>) => this.request<ParticipantsListResponse>('/participants', params ? { params } : {}),
-
     create: (data: CreateParticipantRequest) => this.request<ProgramParticipant>('/participants', { method: 'POST', body: data }),
-
     get: (id: string) => this.request<ProgramParticipant>(`/participants/${id}`),
-
     update: (id: string, data: UpdateParticipantRequest) => this.request<ProgramParticipant>(`/participants/${id}`, { method: 'PUT', body: data }),
-
     delete: (id: string) => this.request<BaseResponse>(`/participants/${id}`, { method: 'DELETE' }),
   };
 
@@ -336,15 +320,10 @@ export class ApiClient {
    */
   venues = {
     list: (params?: { page?: number; limit?: number }) => this.request<VenueListResponse>('/venues', params ? { params } : {}),
-
     create: (data: CreateVenueRequest) => this.request<Venue>('/venues', { method: 'POST', body: data }),
-
     get: (id: string) => this.request<Venue>(`/venues/${id}`),
-
     update: (id: string, data: UpdateVenueRequest) => this.request<Venue>(`/venues/${id}`, { method: 'PATCH', body: data }),
-
     delete: (id: string) => this.request<BaseResponse>(`/venues/${id}`, { method: 'DELETE' }),
-
     getStats: (id: string) => this.request<VenueStatsResponse>(`/venues/${id}/stats`),
   };
 
@@ -353,17 +332,11 @@ export class ApiClient {
    */
   payments = {
     list: (params?: Partial<PaymentListQuery>) => this.request<PaymentsListResponse>('/payments', params ? { params } : {}),
-
     create: (data: CreatePaymentRequest) => this.request<Payment>('/payments', { method: 'POST', body: data }),
-
     get: (id: string) => this.request<Payment>(`/payments/${id}`),
-
     update: (id: string, data: UpdatePaymentRequest) => this.request<Payment>(`/payments/${id}`, { method: 'PUT', body: data }),
-
     process: (data: ProcessPaymentRequest) => this.request<ProcessPaymentResponse>('/payments/process', { method: 'POST', body: data }),
-
     refund: (data: RefundPaymentRequest) => this.request<RefundPaymentResponse>('/payments/refund', { method: 'POST', body: data }),
-
     cancel: (id: string, reason?: string) =>
       this.request<Payment>(`/payments/${id}/cancel`, {
         method: 'POST',
@@ -399,9 +372,7 @@ export function handleApiError(error: unknown): never {
   if (error instanceof Error) throw new ApiError(error.message, 0);
   throw new ApiError('Unknown error occurred', 0);
 }
-
 export const isErrorResponse = (d: unknown): d is ErrorResponse => typeof d === 'object' && d !== null && 'error' in d;
-
 export const isBaseResponse = (d: unknown): d is BaseResponse => typeof d === 'object' && d !== null && 'message' in d;
 
 /**

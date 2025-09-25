@@ -1,16 +1,15 @@
 /**
  * Description : index.ts - 📌 도메인 모듈
  * Author : Shiwoo Min
- * Date : 2025-09-12
+ * Date : 2025-09-24
  */
-// TODO: 실제 모듈 구현 후 import 활성화
-// import { AiModule } from './ai/module.js';
-// import { AuthModule } from './auth/module.js';
-// import { PaymentsModule } from './payments/module.js';
-// import { ProgramsModule } from './programs/module.js';
-// import { ReservationModule } from './reservations/module.js';
-// import { UsersModule } from './users/module.js';
-// import { VenuesModule } from './venues/module.js';
+import { AiModule } from './ai/ai.module.js';
+import { AuthModule } from './auth/auth.module.js';
+import { PaymentsModule } from './payments/payment.module.js';
+import { ProgramsModule } from './programs/program.module.js';
+import { ReservationModule } from './reservations/reservation.module.js';
+import { UsersModule } from './users/user.module.js';
+import { VenuesModule } from './venues/venue.module.js';
 
 // 임시 모듈 대체 (빈 객체 또는 placeholder)
 const AiModule = {};

@@ -67,7 +67,7 @@ module.exports = {
       name: 'connectwon-api-dev',
       script: 'pnpm',
       args: 'nx serve api',
-      cwd: process.cwd(),
+      cwd: process.env.PM2_CWD || '/app/dist/apps/api',
 
       // 개발 모드는 단일 인스턴스
       instances: 1,

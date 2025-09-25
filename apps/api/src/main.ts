@@ -13,7 +13,13 @@ import type { Request, Response } from 'express';
 
 import { AppModule } from './app.module.js';
 
-// 부트스트랩 함수 정의
+/**
+ * @function bootstrap
+ * @description NestJS 애플리케이션을 초기화하고, 서버를 설정하는 부트스트랩 함수
+ *
+ * @async
+ * @returns {Promise<void>}
+ */
 async function bootstrap() {
   // NestJS 애플리케이션 생성
   const app = await NestFactory.create(AppModule, {
@@ -23,11 +29,17 @@ async function bootstrap() {
   // 환경설정 서비스 가져오기
   const configService = app.get(ConfigService);
 
-  // CORS 설정
+  /**
+   * @function enableCors
+   * @description CORS 설정을 추가하여 외부 요청을 허용
+   * @param {Array<string>} origin - 허용할 출처
+   * @param {Array<string>} methods - 허용할 HTTP 메소드
+   * @param {Array<string>} allowedHeaders - 허용할 헤더들
+   */
   app.enableCors({
     origin: [
-      'http://localhost:3000', // web app
-      'http://localhost:3001', // admin app
+      'http://localhost:3000', // 웹 애플리케이션
+      'http://localhost:3001', // 관리 애플리케이션
       configService.get('FRONTEND_URL', 'http://localhost:3000'),
       configService.get('ADMIN_URL', 'http://localhost:3001'),
     ],
@@ -74,7 +86,9 @@ async function bootstrap() {
       .addTag('ai', 'AI 서비스 API')
       .build();
 
+    // Swagger 문서 생성
     const document = SwaggerModule.createDocument(app, config);
+    // Swagger UI 설정
     SwaggerModule.setup('api/docs', app, document, {
       swaggerOptions: {
         persistAuthorization: true,
@@ -84,7 +98,7 @@ async function bootstrap() {
     console.log('Swagger UI: http://localhost:8000/api/docs');
   }
 
-  // 루트 경로 핸들러
+  // 루트 경로 핸들러 설정
   app.use('/', (_req: Request, res: Response) => {
     res.status(200).json({
       message: 'Connectwon API Server',
@@ -99,7 +113,7 @@ async function bootstrap() {
     });
   });
 
-  // 헬스체크 엔드포인트
+  // 헬스체크 엔드포인트 설정
   app.use('/health', (_req: Request, res: Response) => {
     res.status(200).json({
       status: 'ok',

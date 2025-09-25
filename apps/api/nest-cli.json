@@ -4,7 +4,7 @@
   "sourceRoot": "src",
   "compilerOptions": {
     "deleteOutDir": true,
-    "assets": ["**/*.json", "**/*.md"],
+    "assets": ["src/**/*.json", "src/**/*.md"],
     "watchAssets": true
   },
   "generateOptions": {

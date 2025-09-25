@@ -1,15 +1,16 @@
 /**
- * Description : Header.tsx - 📌 ConnectWon UI 헤더 React 컴포넌트
+ * Description : Header.tsx - 📌 ConnectWon UI 헤더 컴포넌트 모음
  * Author : Shiwoo Min
- * Date : 2025-09-19
+ * Date : 2025-09-25
  */
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { forwardRef, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import type { CommonHeaderProps } from '../../ui-types.js';
+import type { CommonHeaderProps, PageHeaderProps } from '../../ui-types.js';
 
-export default function Header({
+// 공통 헤더 (사이트 네비게이션)
+const Header = ({
   logo,
   nav = [],
   activePath,
@@ -22,12 +23,11 @@ export default function Header({
   onLanguageChange,
   className,
   sticky = true,
-}: CommonHeaderProps) {
+}: CommonHeaderProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLanguageOpen, setIsLanguageOpen] = useState(false);
   const langRef = useRef<HTMLDivElement>(null);
 
-  // 바깥 클릭/ESC로 드롭다운/메뉴 닫기
   useEffect(() => {
     const onDown = (e: MouseEvent | PointerEvent) => {
       if (langRef.current && !langRef.current.contains(e.target as Node)) {
@@ -48,12 +48,9 @@ export default function Header({
     };
   }, []);
 
-  const containerCls = [sticky ? 'sticky top-0 z-50' : '', 'bg-white shadow-sm', className ?? '']
-    .filter(Boolean)
-    .join(' ');
+  const containerCls = [sticky ? 'sticky top-0 z-50' : '', 'bg-white shadow-sm', className ?? ''].filter(Boolean).join(' ');
 
-  const currentLangName =
-    languages?.find(l => l.code === currentLanguage)?.name ?? languages?.[0]?.name ?? '한국어';
+  const currentLangName = languages?.find(l => l.code === currentLanguage)?.name ?? languages?.[0]?.name ?? '한국어';
 
   return (
     <header className={containerCls}>
@@ -83,14 +80,10 @@ export default function Header({
 
           {/* 우측 영역 */}
           <div className="flex items-center space-x-4">
-            {/* 데스크톱: 로그인/회원가입/언어/커스텀 */}
             <div className="hidden md:flex items-center space-x-4">
               {showAuth && (
                 <>
-                  <Link
-                    href={loginHref}
-                    className="text-gray-700 hover:text-blue-600 cursor-pointer text-xl font-medium"
-                  >
+                  <Link href={loginHref} className="text-gray-700 hover:text-blue-600 cursor-pointer text-xl font-medium">
                     로그인
                   </Link>
                   <Link
@@ -102,9 +95,8 @@ export default function Header({
                 </>
               )}
 
-              {authRight /* 우측 커스텀 슬롯(알림/아바타 등) */}
+              {authRight}
 
-              {/* 언어 선택 (languages 제공시에만 노출) */}
               {languages && languages.length > 0 && (
                 <div className="relative" ref={langRef}>
                   <button
@@ -115,23 +107,13 @@ export default function Header({
                     aria-expanded={isLanguageOpen}
                     aria-controls="lang-menu"
                   >
-                    <i
-                      aria-hidden="true"
-                      className="ri-global-line w-5 h-5 flex items-center justify-center"
-                    />
+                    <i className="ri-global-line w-5 h-5 flex items-center justify-center" />
                     <span className="text-sm font-medium">{currentLangName}</span>
-                    <i
-                      aria-hidden="true"
-                      className="ri-arrow-down-s-line w-4 h-4 flex items-center justify-center"
-                    />
+                    <i className="ri-arrow-down-s-line w-4 h-4 flex items-center justify-center" />
                   </button>
 
                   {isLanguageOpen && (
-                    <div
-                      id="lang-menu"
-                      role="menu"
-                      className="absolute right-0 mt-2 w-44 bg-white rounded-lg shadow-lg border py-2 z-50"
-                    >
+                    <div id="lang-menu" role="menu" className="absolute right-0 mt-2 w-44 bg-white rounded-lg shadow-lg border py-2 z-50">
                       {languages.map(l => (
                         <button
                           key={l.code}
@@ -141,9 +123,7 @@ export default function Header({
                           aria-checked={currentLanguage === l.code}
                           className={[
                             'block w-full text-left px-4 py-2 text-sm hover:bg-gray-50 cursor-pointer',
-                            currentLanguage === l.code
-                              ? 'text-blue-600 bg-blue-50'
-                              : 'text-gray-700',
+                            currentLanguage === l.code ? 'text-blue-600 bg-blue-50' : 'text-gray-700',
                           ].join(' ')}
                         >
                           {l.name}
@@ -164,10 +144,7 @@ export default function Header({
               aria-controls="mobile-menu"
               aria-expanded={isMenuOpen}
             >
-              <i
-                aria-hidden="true"
-                className="ri-menu-line w-10 h-10 flex items-center justify-center text-2xl"
-              />
+              <i className="ri-menu-line w-10 h-10 flex items-center justify-center text-2xl" />
             </button>
           </div>
         </div>
@@ -175,11 +152,7 @@ export default function Header({
 
       {/* 모바일 메뉴 */}
       {isMenuOpen && (
-        <nav
-          id="mobile-menu"
-          className="bg-white border-t shadow-lg md:hidden"
-          aria-label="모바일 메뉴"
-        >
+        <nav id="mobile-menu" className="bg-white border-t shadow-lg md:hidden" aria-label="모바일 메뉴">
           <div className="px-2 pt-2 pb-3 space-y-1">
             {nav.map(item => (
               <Link
@@ -198,16 +171,10 @@ export default function Header({
             {showAuth && (
               <>
                 <hr className="my-2" />
-                <Link
-                  href={loginHref}
-                  className="block px-3 py-2 text-gray-700 hover:text-blue-600 cursor-pointer text-xl font-medium"
-                >
+                <Link href={loginHref} className="block px-3 py-2 text-gray-700 hover:text-blue-600 cursor-pointer text-xl font-medium">
                   로그인
                 </Link>
-                <Link
-                  href={signupHref}
-                  className="block px-3 py-2 text-gray-700 hover:text-blue-600 cursor-pointer text-xl font-medium"
-                >
+                <Link href={signupHref} className="block px-3 py-2 text-gray-700 hover:text-blue-600 cursor-pointer text-xl font-medium">
                   회원가입
                 </Link>
               </>
@@ -225,9 +192,7 @@ export default function Header({
                       onClick={() => onLanguageChange?.(l.code)}
                       className={[
                         'block w-full text-left px-2 py-1 text-sm rounded cursor-pointer',
-                        currentLanguage === l.code
-                          ? 'text-blue-600 bg-blue-50'
-                          : 'text-gray-600 hover:bg-gray-50',
+                        currentLanguage === l.code ? 'text-blue-600 bg-blue-50' : 'text-gray-600 hover:bg-gray-50',
                       ].join(' ')}
                     >
                       {l.name}
@@ -241,4 +206,29 @@ export default function Header({
       )}
     </header>
   );
-}
+};
+
+// 페이지 헤더 (개별 페이지 타이틀 영역)
+export const PageHeader = forwardRef<HTMLDivElement, PageHeaderProps>(
+  ({ className = '', title, subtitle, description, actions, breadcrumbs, ...props }, ref) => {
+    return (
+      <div ref={ref} className={`space-y-4 ${className}`} {...props}>
+        {breadcrumbs && <div className="text-sm text-text-muted">{breadcrumbs}</div>}
+
+        <div className="flex items-start justify-between">
+          <div className="space-y-1">
+            {subtitle && <p className="text-sm font-medium text-text-muted">{subtitle}</p>}
+            <h1 className="text-2xl font-bold tracking-tight text-text sm:text-3xl">{title}</h1>
+            {description && <p className="text-text-muted max-w-2xl">{description}</p>}
+          </div>
+
+          {actions && <div className="flex items-center space-x-3">{actions}</div>}
+        </div>
+      </div>
+    );
+  },
+);
+
+PageHeader.displayName = 'PageHeader';
+
+export default Header;
