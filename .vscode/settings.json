@@ -112,6 +112,9 @@
   // ESLint 유효성 검사 언어(React TSX 포함)
   "eslint.validate": ["typescript", "typescriptreact", "javascript"],
 
+  // ESLint Flat Config 사용 (eslint.config.mjs)
+  "eslint.useFlatConfig": true,
+
   // Prettier 설정 파일이 있을 때만 포맷(팀 일관성)
   "prettier.requireConfig": true,
 
