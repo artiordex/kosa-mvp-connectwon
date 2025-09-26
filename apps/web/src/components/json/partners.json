@@ -1,0 +1,78 @@
+[
+  {
+    "id": "sk-planet",
+    "name": "SK Planet",
+    "logoType": "text",
+    "logoData": {
+      "elements": [
+        {
+          "type": "text",
+          "content": "SK",
+          "className": "text-red-500 font-bold text-lg mr-1"
+        },
+        {
+          "type": "text",
+          "content": "planet",
+          "className": "text-orange-500 font-medium text-sm"
+        }
+      ]
+    },
+    "minWidth": "min-w-[140px]"
+  },
+  {
+    "id": "guri-hanam",
+    "name": "구리 하남교육지원청",
+    "logoType": "icon-text",
+    "logoData": {
+      "icon": {
+        "type": "emoji",
+        "content": "🌿",
+        "containerClassName": "w-6 h-6 bg-green-400 rounded-full mr-2 flex items-center justify-center",
+        "className": "text-white text-xs"
+      },
+      "text": {
+        "content": "구리 하남교육지원청",
+        "className": "text-gray-700 font-medium"
+      },
+      "containerClassName": "flex items-center text-xs"
+    },
+    "minWidth": "min-w-[180px]"
+  },
+  {
+    "id": "dasol",
+    "name": "다솔세계관",
+    "logoType": "icon-text",
+    "logoData": {
+      "icon": {
+        "type": "emoji",
+        "content": "⭐",
+        "className": "text-blue-500 font-bold text-lg mr-1"
+      },
+      "text": {
+        "content": "다솔세계관",
+        "className": "text-gray-700 font-medium text-sm"
+      },
+      "containerClassName": "flex items-center"
+    },
+    "minWidth": "min-w-[140px]"
+  },
+  {
+    "id": "daegu-edu",
+    "name": "대구교육청연수원",
+    "logoType": "icon-text",
+    "logoData": {
+      "icon": {
+        "type": "emoji",
+        "content": "🏛️",
+        "containerClassName": "w-6 h-6 bg-blue-500 rounded-full mr-2 flex items-center justify-center",
+        "className": "text-white text-xs"
+      },
+      "text": {
+        "content": "대구교육청연수원",
+        "className": "text-gray-700 font-medium text-xs"
+      },
+      "containerClassName": "flex items-center"
+    },
+    "minWidth": "min-w-[160px]"
+  }
+]

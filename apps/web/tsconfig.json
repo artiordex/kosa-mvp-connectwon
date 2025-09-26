@@ -50,6 +50,6 @@
   },
 
   // Next가 추가하라고 했던 경로 포함
-  "include": ["next-env.d.ts", "src", "ui.ts", ".next/types/**/*.ts"],
+  "include": ["next-env.d.ts", "web-types.d.ts", "src", "ui.ts", ".next/types/**/*.ts"],
   "exclude": ["node_modules", "dist"]
 }

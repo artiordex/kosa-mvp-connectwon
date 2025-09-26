@@ -4,7 +4,7 @@
  * Date : 2025-09-17
  * Path : apps/web/src/app/api/auth/[...nextauth]/route.ts
  */
-import NextAuth from 'next-auth';
+import NextAuth, { DefaultSession } from 'next-auth';
 import type { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
@@ -98,17 +98,16 @@ const authOptions: NextAuthOptions = {
     async jwt({ token, user, account }) {
       // 첫 로그인 시 사용자 정보를 토큰에 저장
       if (user && account) {
-        token['id'] = user.id;
-        token['provider'] = account.provider;
+        token['id'] = user['id'];
+        token['provider'] = account['provider'];
       }
       return token;
     },
 
     async session({ session, token }) {
-      // 세션에 추가 정보 포함
-      if (token) {
-        session.user.id = token['id'];
-        session.user.provider = token['provider'];
+      if (session.user && token) {
+        session.user['id'] = token['id'] as string;
+        session.user['provider'] = token['provider'] as string;
       }
       return session;
     },
@@ -128,7 +127,7 @@ const authOptions: NextAuthOptions = {
   // 이벤트 핸들러
   events: {
     async signIn({ user, account, profile, isNewUser }) {
-      console.log('User signed in:', { user: user.email, provider: account?.provider });
+      console.log('User signed in:', { user: user['email'], provider: account?.provider });
     },
 
     async signOut({ session, token }) {

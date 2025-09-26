@@ -1,19 +1,21 @@
 'use client';
 
 import { useState } from 'react';
-
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import Footer from '../../../components/Footer';
+import Header from '../../../components/Header';
 
-export default function Page() {
+export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-
     try {
       console.log('로그인 시도:', { email, password });
       await new Promise(resolve => setTimeout(resolve, 1000));
@@ -25,95 +27,121 @@ export default function Page() {
     }
   };
 
-  const handleGoogleLogin = () => {
-    console.log('구글 로그인 시도');
-    router.push('/');
+  const handleSocialLogin = (provider: string) => {
+    console.log(`${provider} 로그인`);
+    if (provider === 'Google') {
+      router.push('/auth/callback');
+    }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div className="text-center">
-          <div className="mx-auto h-12 w-12 flex items-center justify-center rounded-full bg-blue-100">
-            <svg
-              className="h-6 w-6 text-blue-600"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-              />
-            </svg>
+    <div className="min-h-screen flex flex-col">
+      <Header />
+
+      <main className="flex-grow bg-gray-50 py-12 pt-20">
+        <div className="max-w-md mx-auto px-4">
+          <div className="bg-white rounded-xl shadow-lg p-8">
+            <div className="text-center mb-8">
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">로그인</h1>
+              <p className="text-gray-600">Connectwon에 다시 오신 것을 환영합니다</p>
+            </div>
+
+            {/* 소셜 로그인 */}
+            <div className="space-y-3 mb-6">
+              <button
+                onClick={() => handleSocialLogin('Naver')}
+                className="w-full bg-green-500 text-white py-3 px-4 rounded-lg font-medium hover:bg-green-600 transition-colors"
+              >
+                네이버로 로그인
+              </button>
+              <button
+                onClick={() => handleSocialLogin('Kakao')}
+                className="w-full bg-yellow-400 text-gray-900 py-3 px-4 rounded-lg font-medium hover:bg-yellow-500 transition-colors"
+              >
+                카카오로 로그인
+              </button>
+              <button
+                onClick={() => handleSocialLogin('Google')}
+                className="w-full bg-white border border-gray-300 text-gray-700 py-3 px-4 rounded-lg font-medium hover:bg-gray-50 transition-colors"
+              >
+                구글로 로그인
+              </button>
+            </div>
+
+            <div className="relative mb-6">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-300"></div>
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-white text-gray-500">또는</span>
+              </div>
+            </div>
+
+            {/* 이메일 로그인 */}
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">이메일</label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                  placeholder="이메일을 입력하세요"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">비밀번호</label>
+                <div className="relative">
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    value={password}
+                    onChange={e => setPassword(e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-12 text-sm"
+                    placeholder="비밀번호를 입력하세요"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  >
+                    <i className={`${showPassword ? 'ri-eye-off-line' : 'ri-eye-line'} w-5 h-5`}></i>
+                  </button>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <label className="flex items-center">
+                  <input type="checkbox" className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" />
+                  <span className="ml-2 text-sm text-gray-600">로그인 상태 유지</span>
+                </label>
+                <Link href="/forgot-password" className="text-sm text-blue-600 hover:text-blue-800">
+                  비밀번호 찾기
+                </Link>
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 transition-colors disabled:opacity-50"
+              >
+                {loading ? '로그인 중...' : '로그인'}
+              </button>
+            </form>
+
+            <div className="mt-6 text-center">
+              <span className="text-gray-600">아직 계정이 없으신가요? </span>
+              <Link href="/signup" className="text-blue-600 font-medium hover:text-blue-800">
+                회원가입
+              </Link>
+            </div>
           </div>
-          <h2 className="mt-6 text-3xl font-bold text-gray-900">관리자 로그인</h2>
-          <p className="mt-2 text-sm text-gray-600">
-            관리자 계정으로 로그인하거나 구글 계정을 사용하세요
-          </p>
         </div>
+      </main>
 
-        <div className="space-y-6">
-          <button
-            onClick={handleGoogleLogin}
-            type="button"
-            className="group relative w-full flex justify-center py-3 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
-          >
-            구글로 로그인
-          </button>
-
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-300" />
-            </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-gray-50 text-gray-500">또는 이메일로</span>
-            </div>
-          </div>
-
-          <form className="space-y-4" onSubmit={handleSubmit}>
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                이메일 주소
-              </label>
-              <input
-                id="email"
-                type="email"
-                required
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                placeholder="admin@example.com"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                비밀번호
-              </label>
-              <input
-                id="password"
-                type="password"
-                required
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                placeholder="비밀번호를 입력하세요"
-              />
-            </div>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
-            >
-              {loading ? '로그인 중...' : '로그인'}
-            </button>
-          </form>
-        </div>
-      </div>
+      <Footer />
     </div>
   );
 }
