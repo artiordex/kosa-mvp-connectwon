@@ -14,7 +14,10 @@
     "target": "ES2022",
     "module": "ESNext",
     "moduleResolution": "Bundler",
+
+    // Next가 JSX 변환 담당 → preserve
     "jsx": "preserve",
+    "plugins": [{ "name": "next" }],
 
     // 루트 paths 무력화(모노레포 src 직참조 방지, dist/exports만 사용)
     "paths": {},
@@ -43,10 +46,7 @@
 
     // CI 속도 ↑
     "incremental": true,
-    "tsBuildInfoFile": "./.next/.tsbuildinfo",
-
-    // Next TS 플러그인
-    "plugins": [{ "name": "next" }]
+    "tsBuildInfoFile": "./.next/.tsbuildinfo"
   },
 
   // Next가 추가하라고 했던 경로 포함

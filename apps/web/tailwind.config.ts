@@ -44,6 +44,8 @@ const config: Config = {
           muted: '#f8fafc',
           border: '#e2e8f0',
           accent: '#f1f5f9',
+          footer: '#0f172a',
+          darkBackground: '#111827',
         },
         // 예약 상태별 색상
         booking: {

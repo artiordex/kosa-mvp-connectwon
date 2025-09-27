@@ -1,65 +1,50 @@
 'use client';
 
-import type { Metadata } from 'next';
-import Link from 'next/link';
+import AIChat from '../components/ai/AIChat';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
+import AIViewSection from '../components/home/AIViewSection';
 import CTASection from '../components/home/CTASection';
-import FeaturesSection from '../components/home/FeaturesSection';
+import FeatureSection from '../components/home/FeatureSection';
 import HeroSection from '../components/home/HeroSection';
-import NewsSection from '../components/home/NewsSection';
-import PopularProgramsSection from '../components/home/PopularProgramsSection';
-import QuickAccessSection from '../components/home/QuickAccessSection';
+import InsightSection from '../components/home/InsightSection';
+import PartnerSlideSection from '../components/home/PartnerSlideSection';
+import ProgramSection from '../components/home/ProgramSection';
+import QuickAccessSection from '../components/home/QuickMenuSection';
+import RoomSection from '../components/home/RoomSection';
+import QuickFab from '../components/QuickFab';
 
 export default function HomePage() {
   return (
     <div className="min-h-screen flex flex-col bg-white">
+      {/* 헤더 */}
       <Header />
-
       <main className="flex-grow">
-        {/* Hero / 주요 섹션 */}
+        {/* Hero 섹션 */}
         <HeroSection />
-        <FeaturesSection />
-        <PopularProgramsSection />
+        {/* Quick Access 섹션 */}
         <QuickAccessSection />
-        <NewsSection />
+        {/* Feature 섹션 */}
+        <FeatureSection />
+        {/* AI 활용 섹션 */}
+        <AIViewSection />
+        {/* 최신 프로그램 소개 섹션 */}
+        <ProgramSection />
+        {/* 최신 공간 소개 섹션 */}
+        <RoomSection />
+        {/* 최신 소식 섹션 */}
+        <InsightSection />
+        {/* Footer CTA 섹션 */}
         <CTASection />
-
-        {/* 간단 소개 + 카드 */}
-        <section className="mx-auto max-w-5xl px-6 py-16">
-          <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">ConnectWon</h1>
-          <p className="mt-3 text-base text-gray-600">예약, 결제, 멘토링을 한곳에서. 지금 바로 시작하세요.</p>
-
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Link href="/programs" className="rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium hover:bg-gray-50">
-              프로그램 보기
-            </Link>
-            <Link href="/reservation" className="rounded-lg bg-black px-4 py-2 text-sm font-medium text-white hover:opacity-90">
-              예약하기
-            </Link>
-            <Link href="/(auth)/login" className="rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium hover:bg-gray-50">
-              로그인
-            </Link>
-          </div>
-
-          <div className="mt-10 grid gap-4 sm:grid-cols-2">
-            <Card title="멘토링" desc="경험 많은 멘토와 1:1 세션을 예약하세요." href="/users" />
-            <Card title="마이페이지" desc="내 예약과 결제 내역을 확인하세요." href="/mypage" />
-          </div>
-        </section>
+        {/* Partner Slide 섹션 */}
+        <PartnerSlideSection />
+        {/* AI Assistant 섹션 */}
+        <AIChat />
+        {/* QuickFab 섹션 */}
+        <QuickFab />
       </main>
-
+      {/* 푸터 */}
       <Footer />
     </div>
-  );
-}
-
-function Card({ title, desc, href }: { title: string; desc: string; href: string }) {
-  return (
-    <Link href={href} className="block rounded-2xl border border-gray-200 p-5 transition hover:shadow-sm">
-      <h2 className="text-lg font-semibold">{title}</h2>
-      <p className="mt-1 text-sm text-gray-600">{desc}</p>
-      <span className="mt-3 inline-block text-sm text-gray-900">바로가기 →</span>
-    </Link>
   );
 }

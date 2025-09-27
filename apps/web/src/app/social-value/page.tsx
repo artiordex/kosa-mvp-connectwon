@@ -1,4 +1,3 @@
-
 import Link from 'next/link';
 import Header from '../../components/Header';
 import SocialValueHero from './SocialValueHero';
@@ -16,31 +15,24 @@ export default function SocialValuePage() {
     <div className="min-h-screen bg-white">
       {/* 헤더 */}
       <Header />
-      
-      {/* 히어로 섹션 */}
-      <SocialValueHero />
-      
-      {/* 사회적가치 소개 */}
-      <ValueIntroduction />
-      
-      {/* 가치 영역 */}
-      <ImpactAreas />
-      
-      {/* 장비 및 공간 안내 */}
-      <EquipmentSpaceSection />
-      
-      {/* 프로그램 */}
-      <ProgramsSection />
-      
-      {/* 파트너십 */}
-      <PartnershipsSection />
-      
-      {/* 스토리 */}
-      <StorySection />
-      
-      {/* CTA 섹션 */}
-      <CTASection />
-      
+      <main className="flex-grow">
+        {/* 히어로 섹션 */}
+        <SocialValueHero />
+        {/* 사회적가치 소개 */}
+        <ValueIntroduction />
+        {/* 가치 영역 */}
+        <ImpactAreas />
+        {/* 장비 및 공간 안내 */}
+        <EquipmentSpaceSection />
+        {/* 프로그램 */}
+        <ProgramsSection />
+        {/* 파트너십 */}
+        <PartnershipsSection />
+        {/* 스토리 */}
+        <StorySection />
+        {/* CTA 섹션 */}
+        <CTASection />
+      </main>
       {/* 푸터 */}
       <Footer />
     </div>

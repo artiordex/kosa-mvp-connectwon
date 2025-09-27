@@ -23,17 +23,13 @@
   // Prettier 사용
   "editor.defaultFormatter": "esbenp.prettier-vscode",
 
-  // 저장 시 ESLint 자동 수정(명시적)
-  "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": "explicit"
-  },
-
   // 문자열 입력 시 자동 완성 활성화
   "editor.quickSuggestions": {
     "comments": false,
     "strings": true,
     "other": true
   },
+
   // 120자 길이의 가이드 라인(ESLint max-len과 일치)
   "editor.rulers": [120],
 
@@ -88,11 +84,19 @@
     "**/generated": true
   },
 
-  // 상대/별칭 import 경로 정책(모노레포에 유리한 짧은 경로)
-  "typescript.preferences.importModuleSpecifier": "shortest",
-
   // 파일 이동 시 import 경로 자동 업데이트
   "typescript.updateImportsOnFileMove.enabled": "always",
+
+  // 저장 시 import 자동 정리 (중복 제거 + eslint fix)
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "explicit",
+    "source.fixAll.eslint": "explicit"
+  },
+
+  // TypeScript import 자동 완성 관련 설정
+  "typescript.suggest.autoImports": true,
+  "typescript.preferences.importModuleSpecifier": "non-relative",
+  "typescript.preferences.importModuleSpecifierEnding": "auto",
 
   // 자동 타입 획득 방지(불필요 네트워크 차단)
   "typescript.suggestionActions.enabled": false,
@@ -144,6 +148,7 @@
   "terminal.integrated.profiles.osx": {
     "zsh": { "path": "/bin/zsh" }
   },
+
   // 터미널 글자 크기
   "terminal.integrated.fontSize": 14,
 
@@ -176,7 +181,9 @@
     "typescript": "javascript",
     "typescriptreact": "javascript"
   },
+
   "cSpell.ignorePaths": ["pnpm-lock.yaml", "settings.json", "extensions.json", "snippets.code-snippets", "docs/*", "infra/database/*"],
+
   // 스펠링 검사에서 제외할 사용자 정의 단어 목록
   "cSpell.userWords": [
     "ShiwooMin",
@@ -387,7 +394,8 @@
     "Turborepo",
     "CHOKIDAR_USEPOLLING",
     "mypy",
-    "disp"
+    "disp",
+    "languagedetector"
   ],
 
   // Nx Console AI 규칙 사용

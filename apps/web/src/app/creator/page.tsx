@@ -1,16 +1,15 @@
-
-import Header from '../../components/Header';
 import Footer from '../../components/Footer';
-import FamilyHero from './CreatorHero';
-import FamilyContent from './CreatorContent';
+import Header from '../../components/Header';
+import CreatorHero from './CreatorHero';
+import CreatorSection from './CreatorSection';
 
-export default function FamilyPage() {
+export default function CreatorPage() {
   return (
     <div className="min-h-screen bg-white">
       <Header />
       <div className="pt-20">
-        <FamilyHero />
-        <FamilyContent />
+        <CreatorHero />
+        <CreatorSection />
       </div>
       <Footer />
     </div>

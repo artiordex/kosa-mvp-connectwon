@@ -3,7 +3,6 @@
  * Author : Shiwoo Min
  * Date : 2025-09-09
  */
-
 import type { Config } from 'tailwindcss';
 
 // 기본 Tailwind 설정
@@ -109,15 +108,7 @@ const base = {
           'Arial',
           'sans-serif',
         ],
-        mono: [
-          'JetBrains Mono',
-          'Fira Code',
-          'Monaco',
-          'Consolas',
-          'Liberation Mono',
-          'Courier New',
-          'monospace',
-        ],
+        mono: ['JetBrains Mono', 'Fira Code', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', 'monospace'],
       },
 
       // 폰트 크기 확장
@@ -182,6 +173,10 @@ const base = {
         88: '22rem',
         128: '32rem',
       },
+
+      // 📌 width/height 기본 구조 추가
+      width: {},
+      height: {},
 
       // 트랜지션 설정
       transitionDuration: {

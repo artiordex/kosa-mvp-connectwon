@@ -4,7 +4,6 @@
  * Date : 2025-09-09
  */
 import type { Config } from 'tailwindcss';
-
 const baseConfig = require('../../configs/tailwind/base')
 
 const config: Config = {

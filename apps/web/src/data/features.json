@@ -1,0 +1,17 @@
+[
+  {
+    "title": "공간 및 프로그램 참여",
+    "link": "/spaces",
+    "image": "/images/feature_sp_1.png"
+  },
+  {
+    "title": "공간 및 디바이스 대여",
+    "link": "/devices",
+    "image": "/images/feature_sp_2.png"
+  },
+  {
+    "title": "커넥트원 크리에이터 신청",
+    "link": "/creator",
+    "image": "/images/feature_sp_3.png"
+  }
+]
