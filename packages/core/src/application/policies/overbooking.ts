@@ -3,10 +3,7 @@
  * Author : Shiwoo Min
  * Date : 2025-09-10
  */
-/**
- * @description 초과 예약 모드 타입
- */
-export type OverbookingMode = 'disallow' | 'percent' | 'fixed';
+import type { OverbookingMode } from '../../core-types.js';
 
 /**
  * @description 초과 예약 정책 옵션 인터페이스

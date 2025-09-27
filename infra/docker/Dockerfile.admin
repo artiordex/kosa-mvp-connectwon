@@ -2,11 +2,14 @@
 # Author : Shiwoo Min
 # Date : 2025-09-20
 # 09-20 - deps 단계 filter 설치 + Distroless 런타임
+# 09-28 - --frozen-lockfile → --no-frozen-lockfile 로 변경
 # admin 빌드: docker compose -p connectwon --env-file .env -f infra/docker/docker-compose.yml up -d --build admin
 
 # 1. 베이스 이미지
 FROM node:22-alpine3.22 AS base
 WORKDIR /app
+
+# 필수 패키지 및 corepack 설정
 RUN corepack enable \
   && apk add --no-cache libc6-compat ca-certificates \
   && apk upgrade --no-cache \
@@ -32,7 +35,7 @@ COPY packages/configs/package.json       packages/configs/
 COPY apps/admin/package.json             apps/admin/
 
 # pnpm install 시 filter로 범위 제한 → 락파일 불일치 오류 방지
-RUN pnpm install --frozen-lockfile \
+RUN pnpm install --no-frozen-lockfile \
   --filter @connectwon/api-contract \
   --filter @connectwon/ui \
   --filter @connectwon/client \
@@ -43,10 +46,12 @@ RUN pnpm install --frozen-lockfile \
 # 3. 빌드 단계
 FROM deps AS build
 WORKDIR /app
+
+# 실제 소스 복사
 COPY packages ./packages
 COPY apps/admin ./apps/admin
 
-# Next.js 빌드
+# Next.js 빌드 (standalone 산출)
 ENV NODE_ENV=production \
     NEXT_TELEMETRY_DISABLED=1
 RUN pnpm --filter @connectwon/admin build

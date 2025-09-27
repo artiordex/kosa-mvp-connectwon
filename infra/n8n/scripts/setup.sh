@@ -238,12 +238,6 @@ JWT_EXPIRES_IN=7d
 # API 설정
 API_BASE_URL=http://localhost:3000/api
 
-# 외부 서비스 설정
-# SMTP_HOST=
-# SMTP_PORT=
-# SMTP_USER=
-# SMTP_PASS=
-
 # 파일 업로드 설정
 UPLOAD_MAX_SIZE=10485760
 UPLOAD_ALLOWED_TYPES=image/jpeg,image/png,image/gif,application/pdf
@@ -251,6 +245,12 @@ UPLOAD_ALLOWED_TYPES=image/jpeg,image/png,image/gif,application/pdf
 # 로그 설정
 LOG_LEVEL=debug
 LOG_FILE=./logs/app.log
+
+# n8n Workflow Automation
+N8N_BASIC_AUTH_USER=admin
+N8N_BASIC_AUTH_PASSWORD=changeme
+N8N_ENCRYPTION_KEY=$(openssl rand -hex 16)
+N8N_HOST=http://localhost:5678
 EOF
         log_success ".env 파일 생성됨"
     fi

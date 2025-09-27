@@ -12,9 +12,9 @@
   "extends": "../../tsconfig.base.json",
 
   "compilerOptions": {
-    // 출력/입력 경로
-    "outDir": "./dist",
-    "rootDir": ".",
+    // 출력 설정
+    "rootDir": "./src",
+    "outDir": "../../dist/packages/core",
 
     // 서버 전용 타깃 (브라우저 타입 유입 방지)
     "target": "ES2022",
@@ -33,7 +33,7 @@
 
     // 모노레포 증분 빌드
     "incremental": true,
-    "tsBuildInfoFile": "./dist/.tsbuildinfo",
+    "tsBuildInfoFile": "../../dist/packages/core/.tsbuildinfo",
 
     // 상호운용/편의
     "esModuleInterop": true,
@@ -42,16 +42,9 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "exactOptionalPropertyTypes": true,
-
-    // 💡 core 내부 alias
-    "baseUrl": ".",
-    "paths": {
-      "@connectwon/core/*": ["src/*"],
-      "@connectwon/core-types": ["core-types.ts"]
-    }
   },
 
-  "include": ["core-types.ts", "core-types.d.ts", "src/**/*"],
+  "include": ["src/**/*"],
   "exclude": ["dist", "node_modules", "**/*.test.*", "**/*.spec.*"],
 
   // 순환 참조 방지: database → core 참조만 허용, core → database 금지

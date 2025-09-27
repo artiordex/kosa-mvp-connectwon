@@ -1,10 +1,10 @@
 /**
- * Description : openai.ts - 📌 OpenAI GPT 모델을 통한 채팅 완성 기능 제공
+ * Description : openai-adapter.ts - 📌 OpenAI GPT API 어댑터
  * Author : Shiwoo Min
- * Date : 2025-09-10
+ * Date : 2025-09-27
  */
 import type { ChatCompletionCreateParamsNonStreaming } from 'openai/resources/chat/completions';
-import type { AIChatInput, AIChatResult, AIClient, AIClientOptions } from '../../../core-types.js';
+import type { AIChatInput, AIChatResult, AIClient, AIClientOptions } from '../ports/ai.port.js';
 
 /**
  * @description OpenAI API 어댑터 클래스
@@ -32,9 +32,7 @@ export class OpenAIAdapter implements AIClient {
     const model = input.params?.model ?? this.opts.defaultModel ?? 'gpt-4o-mini';
 
     // system 프롬프트를 선두에 삽입
-    const messages = input.system
-      ? [{ role: 'system', content: input.system }, ...input.messages]
-      : input.messages;
+    const messages = input.system ? [{ role: 'system', content: input.system }, ...input.messages] : input.messages;
 
     // OpenAI SDK의 chat.completions.create() 호출을 위한 파라미터 구성
     const body: ChatCompletionCreateParamsNonStreaming = {
@@ -75,9 +73,7 @@ export class OpenAIAdapter implements AIClient {
         raw: res,
       };
     } catch (error) {
-      throw new Error(
-        `OpenAI API error: ${error instanceof Error ? error.message : 'Unknown error'}`,
-      );
+      throw new Error(`OpenAI API error: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 }

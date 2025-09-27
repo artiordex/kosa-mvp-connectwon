@@ -14,7 +14,7 @@ import type {
   SendEmailRequest,
   SendSlackRequest,
   SlackTemplate,
-} from '../../../core-types.js';
+} from '../../core-types.js';
 
 /**
  * @description 이메일 템플릿 정의 타입 가드
@@ -22,12 +22,7 @@ import type {
  * @returns 이메일 템플릿 정의 여부
  */
 function isEmailTemplateDefinition(x: unknown): x is EmailTemplateDefinition {
-  return (
-    !!x &&
-    typeof x === 'object' &&
-    'subject_template' in (x as any) &&
-    'html_template' in (x as any)
-  );
+  return !!x && typeof x === 'object' && 'subject_template' in (x as any) && 'html_template' in (x as any);
 }
 
 /**
@@ -152,14 +147,10 @@ export class NotificationFactory {
    * @returns 전송된 알림 객체
    * @throws {Error} 제공자가 없거나 사용 불가능한 경우
    */
-  async sendDirectNotification(
-    channel: NotificationChannel,
-    request: SendEmailRequest | SendSlackRequest,
-  ): Promise<BaseNotification> {
+  async sendDirectNotification(channel: NotificationChannel, request: SendEmailRequest | SendSlackRequest): Promise<BaseNotification> {
     const provider = this.providers.get(channel);
     if (!provider) throw new Error(`Provider for channel '${channel}' not found`);
-    if (!provider.isAvailable())
-      throw new Error(`Provider for channel '${channel}' is not available`);
+    if (!provider.isAvailable()) throw new Error(`Provider for channel '${channel}' is not available`);
     return provider.send(request);
   }
 
@@ -170,17 +161,12 @@ export class NotificationFactory {
    * @returns 전송된 알림 객체 배열
    * @throws {Error} 제공자가 없는 경우
    */
-  async sendBulkNotifications(
-    channel: NotificationChannel,
-    requests: (SendEmailRequest | SendSlackRequest)[],
-  ): Promise<BaseNotification[]> {
+  async sendBulkNotifications(channel: NotificationChannel, requests: (SendEmailRequest | SendSlackRequest)[]): Promise<BaseNotification[]> {
     const provider = this.providers.get(channel);
     if (!provider) throw new Error(`Provider for channel '${channel}' not found`);
     // 병렬 전송
     const results = await Promise.allSettled(requests.map(request => provider.send(request)));
-    return results.map(r =>
-      r.status === 'fulfilled' ? r.value : this.createFailedNotification(channel),
-    );
+    return results.map(r => (r.status === 'fulfilled' ? r.value : this.createFailedNotification(channel)));
   }
 
   /**
@@ -190,10 +176,7 @@ export class NotificationFactory {
    * @returns 활성화된 채널 배열
    * @private
    */
-  private getEnabledChannels(
-    eventType: NotificationEventType,
-    preferences: NotificationPreferences,
-  ): NotificationChannel[] {
+  private getEnabledChannels(eventType: NotificationEventType, preferences: NotificationPreferences): NotificationChannel[] {
     const channelMap: Record<NotificationEventType, keyof NotificationPreferences['channels']> = {
       session_reminder: 'session_reminders',
       session_cancelled: 'session_updates',
@@ -219,11 +202,7 @@ export class NotificationFactory {
    * @returns 전송 결과
    * @private
    */
-  private async sendToChannel(
-    channel: NotificationChannel,
-    event: NotificationEvent,
-    userId: string,
-  ): Promise<NotificationResult> {
+  private async sendToChannel(channel: NotificationChannel, event: NotificationEvent, userId: string): Promise<NotificationResult> {
     try {
       let notification: BaseNotification;
       switch (channel) {
@@ -255,17 +234,13 @@ export class NotificationFactory {
    * @throws {Error} 이메일 제공자가 설정되지 않은 경우
    * @private
    */
-  private async sendEmailToUser(
-    userId: string,
-    event: NotificationEvent,
-  ): Promise<BaseNotification> {
+  private async sendEmailToUser(userId: string, event: NotificationEvent): Promise<BaseNotification> {
     const emailProvider = this.providers.get('email');
     if (!emailProvider) throw new Error('Email provider not configured');
 
     const userInfo = await this.getUserInfo(userId);
     const tpl = this.getTemplate(event.template_id);
-    const emailTpl =
-      tpl && isEmailTemplateDefinition(tpl.template_data) ? tpl.template_data : undefined;
+    const emailTpl = tpl && isEmailTemplateDefinition(tpl.template_data) ? tpl.template_data : undefined;
     const request: SendEmailRequest = {
       to: [{ email: userInfo.email, name: userInfo.name }],
       subject: emailTpl?.subject_template ?? this.generateSubject(event),
@@ -283,10 +258,7 @@ export class NotificationFactory {
    * @throws {Error} 슬랙 제공자가 설정되지 않은 경우
    * @private
    */
-  private async sendSlackToUser(
-    userId: string,
-    event: NotificationEvent,
-  ): Promise<BaseNotification> {
+  private async sendSlackToUser(userId: string, event: NotificationEvent): Promise<BaseNotification> {
     const slackProvider = this.providers.get('slack');
     if (!slackProvider) throw new Error('Slack provider not configured');
 
@@ -309,17 +281,13 @@ export class NotificationFactory {
    * @returns 전송 결과
    * @private
    */
-  private async sendEmailDirect(
-    email: string,
-    event: NotificationEvent,
-  ): Promise<NotificationResult> {
+  private async sendEmailDirect(email: string, event: NotificationEvent): Promise<NotificationResult> {
     try {
       const emailProvider = this.providers.get('email');
       if (!emailProvider) throw new Error('Email provider not configured');
 
       const tpl = this.getTemplate(event.template_id);
-      const emailTpl =
-        tpl && isEmailTemplateDefinition(tpl.template_data) ? tpl.template_data : undefined;
+      const emailTpl = tpl && isEmailTemplateDefinition(tpl.template_data) ? tpl.template_data : undefined;
 
       const request: SendEmailRequest = {
         to: [{ email }],
@@ -345,10 +313,7 @@ export class NotificationFactory {
    * @returns 전송 결과
    * @private
    */
-  private async sendSlackDirect(
-    channel: string,
-    event: NotificationEvent,
-  ): Promise<NotificationResult> {
+  private async sendSlackDirect(channel: string, event: NotificationEvent): Promise<NotificationResult> {
     try {
       const slackProvider = this.providers.get('slack');
       if (!slackProvider) throw new Error('Slack provider not configured');

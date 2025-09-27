@@ -1,9 +1,10 @@
 {
   /**
-   * Description : tsconfig.json - 📌 Nest/Express API 모듈 (TypeScript 설정)
-   * Author      : Shiwoo Min
-   * Date        : 2025-09-06
+   * Description : tsconfig.json - 📌 Nest API 모듈 (TypeScript 설정)
+   * Author : Shiwoo Min
+   * Date : 2025-09-06
    * 09-24 : watchOptions 테스트, base 상속 임시 제거
+   * 빌드확인 : pnpm nx build @connectwon/api
    */
   "extends": "../../tsconfig.base.json",
 
@@ -38,7 +39,7 @@
     "noUnusedParameters": false,
 
     // Node.js 타입 추가
-    "types": ["node", "vitest"],
+    "types": ["node", "vitest"]
   },
 
   "ts-node": {

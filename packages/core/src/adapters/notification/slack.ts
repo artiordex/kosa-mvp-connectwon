@@ -3,7 +3,16 @@
  * Author : Shiwoo Min
  * Date : 2025-09-10
  */
-import type { N8nWebhookPayload, NotificationPayload, SlackAttachment, SlackBlock, SlackField, SlackMessage, SlackResult, SlackWebhookConfig } from '../../../core-types.js';
+import type {
+  N8nWebhookPayload,
+  NotificationPayload,
+  SlackAttachment,
+  SlackBlock,
+  SlackField,
+  SlackMessage,
+  SlackResult,
+  SlackWebhookConfig,
+} from '../../core-types.js';
 
 /**
  * @description 값이 정의되어 있을 때만 키 추가하는 헬퍼 함수
@@ -11,10 +20,7 @@ import type { N8nWebhookPayload, NotificationPayload, SlackAttachment, SlackBloc
  * @param value 추가할 값
  * @returns 값이 있으면 키-값 객체, 없으면 빈 객체
  */
-function opt<K extends string, V>(
-  key: K,
-  value: V | undefined,
-): V extends undefined ? {} : { [P in K]: V } {
+function opt<K extends string, V>(key: K, value: V | undefined): V extends undefined ? {} : { [P in K]: V } {
   return (value === undefined ? {} : { [key]: value }) as any;
 }
 
@@ -257,9 +263,7 @@ export class SlackAdapter {
    * @returns 해석된 채널 또는 에러
    * @private
    */
-  private resolveChannel(
-    channel?: string,
-  ): { ok: true; channel: string } | { ok: false; error: string } {
+  private resolveChannel(channel?: string): { ok: true; channel: string } | { ok: false; error: string } {
     const resolved = channel ?? this.config.default_channel;
     if (!resolved || resolved.trim() === '') {
       return {

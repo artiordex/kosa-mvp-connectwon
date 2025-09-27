@@ -7,11 +7,16 @@
  * - BullQueueSystem(고수준 오케스트레이션) 제공
  * - exactOptionalPropertyTypes 안전: 옵션 키는 값이 있을 때만 추가
  */
-
 import { createRequire } from 'node:module';
-
-import type { AIProcessingJob, CleanupJob, EmailJob, JobResult, QueueConfig, ReportJob, SessionReminderJob, SlackJob } from '../../core-types.js';
-import { AIProcessingProcessor, CleanupJobProcessor, EmailJobProcessor, ReportJobProcessor, SessionReminderProcessor, SlackJobProcessor } from './processor.js';
+import type { AIProcessingJob, CleanupJob, EmailJob, JobResult, QueueConfig, ReportJob, SessionReminderJob, SlackJob } from '../core-types.js';
+import {
+  AIProcessingProcessor,
+  CleanupJobProcessor,
+  EmailJobProcessor,
+  ReportJobProcessor,
+  SessionReminderProcessor,
+  SlackJobProcessor,
+} from './processor.js';
 import { type Job, type JobsOptions, type Processor, Queue, QueueEvents, Worker, type WorkerOptions } from 'bullmq';
 import type { RedisOptions } from 'ioredis';
 
@@ -91,16 +96,14 @@ const defaultJobOptions: JobsOptions = {
  * @param name 큐 이름
  * @returns BullMQ Queue 인스턴스
  */
-export const makeQueue = (name: QueueName) =>
-  new Queue(name, { connection: sharedConn, defaultJobOptions });
+export const makeQueue = (name: QueueName) => new Queue(name, { connection: sharedConn, defaultJobOptions });
 
 /**
  * @description 이벤트 리스너 생성 팩토리 함수
  * @param name 큐 이름
  * @returns BullMQ QueueEvents 인스턴스
  */
-export const makeQueueEvents = (name: QueueName) =>
-  new QueueEvents(name, { connection: sharedConn });
+export const makeQueueEvents = (name: QueueName) => new QueueEvents(name, { connection: sharedConn });
 
 /**
  * @description 워커 생성 팩토리 함수
@@ -123,8 +126,7 @@ export function makeWorker<Data = unknown, Result = unknown>(
     concurrency = process.env['QUEUE_CONCURRENCY'] ? Number(process.env['QUEUE_CONCURRENCY']) : 5,
     ...rest
   } = options ?? {};
-  const normalized: Processor<Data, Result, string> = async job =>
-    await Promise.resolve(processor(job));
+  const normalized: Processor<Data, Result, string> = async job => await Promise.resolve(processor(job));
   return new Worker<Data, Result, string>(name, normalized, {
     connection,
     concurrency,
@@ -205,12 +207,8 @@ export class BullQueueSystem {
       defaultJobOptions: {
         attempts: this.config?.defaultJobOptions?.maxAttempts ?? defaultJobOptions.attempts!,
         backoff: {
-          type:
-            this.config?.defaultJobOptions?.backoff?.type ??
-            (defaultJobOptions.backoff as any).type,
-          delay:
-            this.config?.defaultJobOptions?.backoff?.delay ??
-            (defaultJobOptions.backoff as any).delay,
+          type: this.config?.defaultJobOptions?.backoff?.type ?? (defaultJobOptions.backoff as any).type,
+          delay: this.config?.defaultJobOptions?.backoff?.delay ?? (defaultJobOptions.backoff as any).delay,
         },
         removeOnComplete: (defaultJobOptions.removeOnComplete as number | undefined) ?? 50, // fallback 안전망
         removeOnFail: (defaultJobOptions.removeOnFail as number | undefined) ?? 20,
@@ -250,13 +248,8 @@ export class BullQueueSystem {
     }
     // session reminder
     if (this.deps.sessionRepository && this.deps.notificationService) {
-      const p = new SessionReminderProcessor(
-        this.deps.sessionRepository,
-        this.deps.notificationService,
-      );
-      this.setupQueue<SessionReminderPayload>(QUEUES.SESSION_REMINDER, (data, job) =>
-        p.process(data, job),
-      );
+      const p = new SessionReminderProcessor(this.deps.sessionRepository, this.deps.notificationService);
+      this.setupQueue<SessionReminderPayload>(QUEUES.SESSION_REMINDER, (data, job) => p.process(data, job));
     }
     // ai processing
     if (this.deps.aiService) {

@@ -36,7 +36,7 @@
     "dotenv": "^17.2.2"
   },
   "devDependencies": {
-    "prisma": "^6.15.0"
+    "prisma": "^6.16.2"
   },
   "engines": {
     "node": ">=20.11"

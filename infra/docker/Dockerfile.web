@@ -2,6 +2,7 @@
 # Author : Shiwoo Min
 # Date : 2025-09-18
 # 09-20 - deps 단계 filter 설치 + Distroless 런타임
+# 09-28 - --frozen-lockfile → --no-frozen-lockfile 로 변경
 # web 빌드: docker compose -p connectwon --env-file .env -f infra/docker/docker-compose.yml up -d --build web
 
 # 1. 베이스 이미지
@@ -22,7 +23,7 @@ RUN corepack enable \
 FROM base AS deps
 WORKDIR /app
 
-# 루트 메타데이터 먼저 복사 (락파일 포함) → 캐시 안정화
+# 루트 메타데이터 먼저 복사 (락파일 포함)
 COPY pnpm-lock.yaml pnpm-workspace.yaml package.json nx.json tsconfig.json tsconfig.base.json ./
 
 # web이 사용하는 내부 패키지들의 package.json만 복사 (캐시 최적화)
@@ -34,7 +35,7 @@ COPY packages/configs/package.json       packages/configs/
 COPY apps/web/package.json               apps/web/
 
 # pnpm install 시 filter로 범위 제한 → 락파일 불일치 오류 방지
-RUN pnpm install --frozen-lockfile \
+RUN pnpm install --no-frozen-lockfile \
   --filter @connectwon/api-contract \
   --filter @connectwon/ui \
   --filter @connectwon/client \

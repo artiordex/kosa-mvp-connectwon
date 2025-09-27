@@ -8,7 +8,7 @@
       "executor": "@nx/js:tsc",
       "options": {
         "main": "packages/core/src/index.ts",
-        "outputPath": "packages/core/dist",
+        "outputPath": "dist/packages/core",
         "tsConfig": "packages/core/tsconfig.json",
         "assets": [],
         "generatePackageJson": false

@@ -3,7 +3,7 @@
  * Author : Shiwoo Min
  * Date : 2025-09-10
  */
-import type { AIProcessingJob, CleanupJob, EmailJob, JobResult, ReportJob, SessionReminderJob, SlackJob } from '../../core-types.js';
+import type { AIProcessingJob, CleanupJob, EmailJob, JobResult, ReportJob, SessionReminderJob, SlackJob } from '../core-types.js';
 import type { Job as BullJob } from 'bullmq';
 
 /**

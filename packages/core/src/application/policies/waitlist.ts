@@ -1,18 +1,10 @@
 /**
  * Description : waitlist.policy.ts - 📌 대기열 정책
  * Author : Shiwoo Min
- * Date   : 2025-09-10
+ * Date : 2025-09-10
  */
 
-/**
- * @description 대기열 정책 옵션 인터페이스
- */
-export interface WaitlistPolicyOptions {
-  /** @description 대기열 최대 인원(기본 10명) */
-  maxWaitlist?: number;
-  /** @description 중복 가입 허용 여부(기본 false) */
-  allowDuplicates?: boolean;
-}
+import type { WaitlistPolicyOptions } from '../../core-types.js';
 
 /**
  * @description 대기열 정책 서비스
@@ -26,11 +18,6 @@ export class WaitlistPolicyService {
    * @param options 정책 옵션
    * @returns 대기열 가입 가능 여부
    * @example
-   * ```typescript
-   * const canJoin = service.canJoinWaitlist(['user1', 'user2'], 'user3', {
-   *   maxWaitlist: 5,
-   *   allowDuplicates: false
-   * });
    * ```
    */
   canJoinWaitlist(waitlist: string[], newUserId: string, options: WaitlistPolicyOptions = {}): boolean {

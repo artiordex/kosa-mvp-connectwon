@@ -6,9 +6,7 @@
 # 09-24 - 컨테이너간 DB/Redis 연결 수정, 불필요한 환경변수 정리
 # 인프라만 올리기: docker compose -p connectwon --env-file .env -f infra/docker/docker-compose.yml up -d postgres redis redisinsight prometheus grafana n8n
 # 루트에서 빌드: docker compose -p connectwon --env-file .env -f infra/docker/docker-compose.yml up -d
-# Docker 컨테이너 로그 확인: docker compose logs -f --tail=100
-# Docker 컨테이너 중지: docker compose down
-# 주의 도커 다 날리기: docker rm -f $(docker ps -aq)
+
 services:
   # Next.js (웹 프론트엔드)
   web:
@@ -351,6 +349,8 @@ services:
         condition: service_healthy
       api:
         condition: service_healthy
+      admin:
+        condition: service_healthy
     shm_size: '1gb'
     volumes:
       - ../../apps/e2e/test-results:/app/apps/e2e/test-results
@@ -375,7 +375,9 @@ services:
 
 volumes:
   pg_data:
+    driver: local
   redis_data:
+    driver: local
   redisinsight:
   n8n_data:
 

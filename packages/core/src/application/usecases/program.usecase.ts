@@ -4,20 +4,15 @@
  * Date : 2025-09-26
  */
 import { randomUUID } from 'node:crypto';
+import type { Program, ProgramId, SessionId, UserId } from '../../core-types.js';
 
 /**
- * @description 프로그램 도메인 모델 인터페이스
+ * @description CreateProgramUsecase가 반환하는 타입
+ * DB 엔티티 Program에서 필요한 필드만 재활용
  */
-export interface Program {
-  /** @description 프로그램 고유 ID */
-  id: string;
-  /** @description 프로그램 소유자 ID */
-  ownerId: string;
-  /** @description 프로그램 제목 */
-  title: string;
-  /** @description 프로그램에 속한 세션 ID 목록 */
-  sessions: string[];
-}
+export type ProgramDraft = Pick<Program, 'id' | 'title' | 'createdByUserId'> & {
+  sessions: SessionId[];
+};
 
 /**
  * @description 프로그램 생성 유스케이스
@@ -26,10 +21,10 @@ export class CreateProgramUsecase {
   /**
    * @description 새 프로그램 생성 실행
    */
-  execute(ownerId: string, title: string): Program {
+  execute(ownerId: UserId, title: string): ProgramDraft {
     return {
-      id: randomUUID(),
-      ownerId,
+      id: randomUUID() as ProgramId,
+      createdByUserId: ownerId,
       title,
       sessions: [],
     };

@@ -8,7 +8,7 @@
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
-import { createConnectWonSwagger } from '@connectwon/server/plugins/swagger';
+import { createConnectWonSwagger } from '@connectwon/server';
 import { AppModule } from './app.module.js';
 import type { Request, Response } from 'express';
 import 'reflect-metadata';

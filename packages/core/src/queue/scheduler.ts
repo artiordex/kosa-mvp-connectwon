@@ -3,7 +3,6 @@
  * Author : Shiwoo Min
  * Date : 2025-09-10
  */
-
 import type { QueueManager } from './manager.js';
 /**
  * @description 큐 스케줄러 클래스

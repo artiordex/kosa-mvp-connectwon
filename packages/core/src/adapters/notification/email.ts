@@ -3,7 +3,7 @@
  * Author : Shiwoo Min
  * Date : 2025-09-10
  */
-import type { EmailAddress, EmailAttachment, EmailConfig, EmailResult, SendEmailRequest, SendVerificationCodeParams } from '../../../core-types.js';
+import type { EmailAddress, EmailAttachment, EmailConfig, EmailResult, SendEmailRequest, SendVerificationCodeParams } from '../../core-types.js';
 import nodemailer from 'nodemailer';
 
 /**

@@ -9,22 +9,15 @@ import { ConfigModule } from '@nestjs/config';
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 
 // 내부 패키지들
-import * as Core from '@connectwon/core';
-import * as DB from '@connectwon/database';
-import * as Logger from '@connectwon/logger';
-
-// 서버 공통 레이어
-import { HttpExceptionFilter } from '@connectwon/server/filters/http-exception.filter';
-import { AuthGuard } from '@connectwon/server/guards/auth.guard';
-import { ResponseInterceptor } from '@connectwon/server/interceptors/response.interceptor';
-
-// Middleware
-import { AuthMiddleware } from '@connectwon/server/middleware/auth.middleware';
-import { CookiesMiddleware } from '@connectwon/server/middleware/cookie.middleware';
-import { AppValidationPipe } from '@connectwon/server/pipes/validation.pipe';
+// import * as Core from '@connectwon/core';
+// import * as DB from '@connectwon/database';
+// import * as Logger from '@connectwon/logger';
+// 서버 공통 레이어 (엔트리포인트에서 통합 import)
+import { AppValidationPipe, AuthGuard, AuthMiddleware, CookiesMiddleware, HttpExceptionFilter, ResponseInterceptor } from '@connectwon/server';
 
 // 도메인 모듈들
 import { AiModule, AuthModule, MyPageModule, PaymentModule, ProgramModule, ReservationModule, UserModule, VenueModule } from './modules';
+
 
 @Module({
   imports: [

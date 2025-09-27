@@ -2,6 +2,7 @@
  * description : schema.prisma - 📌 Prisma 데이터베이스 스키마
  * author : Shiwoo Min
  * date : 2025-09-24
+ * 09-28 : DDL과 일치하도록 모든 테이블 추가 및 수정
  */
 
 generator client {
@@ -32,7 +33,11 @@ model User {
   createdPrograms      Program[]            @relation("ProgramCreator")
   roomReservations     RoomReservation[]
   programParticipants  ProgramParticipant[]
+  deviceRentals        DeviceRental[]
   aiInteractions       AiInteraction[]
+  userActivities       UserActivity[]
+  reviews              Review[]
+  notifications        Notification[]
 
   @@map("users")
 }
@@ -63,18 +68,17 @@ model AuthProvider {
  * PROGRAMS
  */
 model Program {
-  id              BigInt   @id @default(autoincrement())
-  createdByUserId BigInt   @map("created_by_user_id")
-  type            String?
-  title           String
-  description     String?
-  aiSummaryTags   Json     @default("[]") @map("ai_summary_tags") @db.JsonB
-  isActive        Boolean  @default(true) @map("is_active")
-  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamptz
-  updatedAt       DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+  id               BigInt   @id @default(autoincrement())
+  title            String
+  description      String?
+  createdByUserId  BigInt?  @map("created_by_user_id")
+  category         String?
+  meta             Json     @default("{}") @db.JsonB
+  createdAt        DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt        DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
 
   /// Relations
-  createdBy      User              @relation("ProgramCreator", fields: [createdByUserId], references: [id], onDelete: Restrict)
+  createdBy      User?             @relation("ProgramCreator", fields: [createdByUserId], references: [id], onDelete: SetNull)
   sessions       Session[]
   aiInteractions AiInteraction[]
 
@@ -98,8 +102,8 @@ model Session {
   updatedAt         DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
 
   /// Relations
-  program         Program            @relation(fields: [programId], references: [id], onDelete: Cascade)
-  roomReservation RoomReservation?   @relation(fields: [roomReservationId], references: [id], onDelete: SetNull)
+  program         Program              @relation(fields: [programId], references: [id], onDelete: Cascade)
+  roomReservation RoomReservation?     @relation(fields: [roomReservationId], references: [id], onDelete: SetNull)
   participants    ProgramParticipant[]
   aiInteractions  AiInteraction[]
 
@@ -153,6 +157,7 @@ model RoomReservation {
   userId    BigInt?   @map("user_id")
   startsAt  DateTime  @map("starts_at") @db.Timestamptz
   endsAt    DateTime  @map("ends_at") @db.Timestamptz
+  /// period은 generated column이므로 Prisma에서 제외
   purpose   String?
   status    String    @default("PENDING")
   meta      Json      @default("{}") @db.JsonB
@@ -161,8 +166,8 @@ model RoomReservation {
   updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
 
   /// Relations
-  room    Room    @relation(fields: [roomId], references: [id], onDelete: Cascade)
-  user    User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+  room    Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  user    User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
   session Session?
 
   @@map("room_reservations")
@@ -188,7 +193,49 @@ model ProgramParticipant {
 }
 
 /**
+ * DEVICES
+ * 대여 가능한 장비
+ */
+model Device {
+  id        BigInt   @id @default(autoincrement())
+  name      String
+  type      String?
+  specs     Json     @default("{}") @db.JsonB
+  status    String   @default("AVAILABLE")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  /// Relations
+  rentals DeviceRental[]
+
+  @@map("devices")
+}
+
+/**
+ * DEVICE_RENTALS
+ * 장비 대여 내역
+ */
+model DeviceRental {
+  id        BigInt   @id @default(autoincrement())
+  deviceId  BigInt   @map("device_id")
+  userId    BigInt   @map("user_id")
+  startsAt  DateTime @map("starts_at") @db.Timestamptz
+  endsAt    DateTime @map("ends_at") @db.Timestamptz
+  status    String   @default("PENDING")
+  meta      Json     @default("{}") @db.JsonB
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  /// Relations
+  device Device @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("device_rentals")
+}
+
+/**
  * AI_INTERACTIONS
+ * AI 사용 로그 및 비용 추적
  */
 model AiInteraction {
   id               BigInt    @id @default(autoincrement())
@@ -212,4 +259,63 @@ model AiInteraction {
   session Session? @relation(fields: [sessionId], references: [id], onDelete: SetNull)
 
   @@map("ai_interactions")
+}
+
+/**
+ * USER_ACTIVITIES
+ * 사용자 활동 로그 (AI 추천용)
+ */
+model UserActivity {
+  id         BigInt   @id @default(autoincrement())
+  userId     BigInt?  @map("user_id")
+  action     String
+  entityType String?  @map("entity_type")
+  entityId   BigInt?  @map("entity_id")
+  meta       Json     @default("{}") @db.JsonB
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  /// Relations
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@map("user_activities")
+}
+
+/**
+ * REVIEWS
+ * 리뷰 시스템
+ */
+model Review {
+  id         BigInt   @id @default(autoincrement())
+  userId     BigInt   @map("user_id")
+  targetType String   @map("target_type")
+  targetId   BigInt   @map("target_id")
+  rating     Int
+  comment    String?
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt  DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  /// Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, targetType, targetId], map: "reviews_unique_per_target")
+  @@map("reviews")
+}
+
+/**
+ * NOTIFICATIONS
+ * 알림 시스템
+ */
+model Notification {
+  id        BigInt   @id @default(autoincrement())
+  userId    BigInt   @map("user_id")
+  type      String
+  title     String
+  message   String?
+  isRead    Boolean  @default(false) @map("is_read")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  /// Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
 }
