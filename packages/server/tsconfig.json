@@ -8,17 +8,18 @@
   "extends": "../../tsconfig.base.json",
 
   "compilerOptions": {
-    "target": "ES2022",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-
-    // 입출력 경로
+    // 출력 설정
     "rootDir": "./src",
-    "outDir": "./dist",
-    "noEmit": false,
-    "tsBuildInfoFile": "./dist/.tsbuildinfo",
+    "outDir": "../../dist/packages/server",
+    "tsBuildInfoFile": "../../dist/packages/server/.tsbuildinfo",
 
-    // NestJS 추천 옵션
+    // Project References 필수
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "noEmit": false,
+
+    // NestJS 권장 옵션
     "strict": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
@@ -28,21 +29,14 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
 
+    // 기타 유틸 옵션
     "resolveJsonModule": true,
     "sourceMap": true,
     "skipLibCheck": true,
     "lib": ["ES2022"],
-    "types": ["node"],
-
-    // core alias 연결
-    "baseUrl": ".",
-    "paths": {
-      // core 모듈 경로
-      "@connectwon/core/*": ["../core/src/*"],
-      "@connectwon/core": ["../core/src"],
-      "@connectwon/core-types": ["../core/core-types.ts"]
-    }
+    "types": ["node"]
   },
+
   // server 소스만 포함
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", "**/*.test.*", "**/*.spec.*"],

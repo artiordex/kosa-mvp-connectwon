@@ -6,7 +6,7 @@
 import { ForbiddenException, Injectable, SetMetadata } from '@nestjs/common';
 import type { CanActivate, ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { type UserRole, META_ROLES_KEY } from '../server-types.js';
+import { META_ROLES_KEY, type UserRole } from '../server-types.js';
 
 /**
  * @description 컨트롤러/핸들러에 필요한 역할을 선언하는 데코레이터
@@ -21,10 +21,7 @@ export class RoleGuard implements CanActivate {
   constructor(private readonly reflector: Reflector) {}
 
   canActivate(ctx: ExecutionContext): boolean {
-    const requiredRoles = this.reflector.getAllAndOverride<UserRole[]>(
-      META_ROLES_KEY,
-      [ctx.getHandler(), ctx.getClass()],
-    );
+    const requiredRoles = this.reflector.getAllAndOverride<UserRole[]>(META_ROLES_KEY, [ctx.getHandler(), ctx.getClass()]);
 
     if (!requiredRoles || requiredRoles.length === 0) return true;
 

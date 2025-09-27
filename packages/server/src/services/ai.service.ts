@@ -4,10 +4,10 @@
  * Date : 2025-09-26
  */
 import { Injectable } from '@nestjs/common';
-import type { AIChatInput, AIChatResult } from '@connectwon/core-types';
 import { AnthropicAdapter } from '@connectwon/core/adapters/ai/anthropic.js';
 import { HFAdapter } from '@connectwon/core/adapters/ai/huggingface.js';
 import { OpenAIAdapter } from '@connectwon/core/adapters/ai/openai.js';
+import type { AIChatInput, AIChatResult } from '../server-types.js';
 
 @Injectable()
 export class AiService {

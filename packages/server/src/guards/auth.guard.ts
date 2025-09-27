@@ -5,14 +5,12 @@
  */
 import { type CanActivate, type ExecutionContext, ForbiddenException, Injectable, SetMetadata, UnauthorizedException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-
 import { resolveUserFromRequest } from '../middleware/auth.middleware.js';
 import { META_ROLES_KEY, type RequestWithUser, type SessionUser, type UserRole } from '../server-types.js';
 
 // 공개 핸들러/컨트롤러 메타키
 export const IS_PUBLIC_KEY = 'connectwon:isPublic' as const;
 export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
-export const Roles = (...roles: UserRole[]) => SetMetadata(META_ROLES_KEY, roles);
 
 // 최소 통합 인증 가드
 @Injectable()

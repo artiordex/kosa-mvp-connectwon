@@ -8,11 +8,8 @@ import type { Request } from 'express';
 // 사용자 역할 타입
 export type UserRole = 'admin' | 'creator' | 'user';
 
-export const Roles = {
-  Admin: 'admin',
-  Creator: 'creator',
-  User: 'user',
-} as const;
+// 가드 메타데이터 키
+export const META_ROLES_KEY = 'connectwon:roles' as const;
 
 export type RoleSet = ReadonlyArray<UserRole> | ReadonlySet<UserRole>;
 
@@ -48,9 +45,6 @@ export interface JwtClaims extends Record<string, unknown> {
   iss?: string;
   aud?: string | string[];
 }
-
-// 가드 메타데이터 키
-export const META_ROLES_KEY = 'connectwon:roles' as const;
 
 // API 응답/에러 모델
 export type ErrorCode =
@@ -190,4 +184,41 @@ export interface SwaggerConfig {
   outputFile?: string;
   /** 태그 목록 */
   tags?: string[];
+}
+
+// AI 관련 Core Types
+export type AIRole = 'system' | 'user' | 'assistant';
+
+export interface AIMessage {
+  role: AIRole;
+  content: string;
+}
+
+export interface AIChatParams {
+  model?: string;
+  temperature?: number;
+  maxTokens?: number;
+  topP?: number;
+}
+
+export interface AIChatInput {
+  messages: AIMessage[];
+  system?: string;
+  params?: AIChatParams;
+}
+
+export interface AIUsage {
+  promptTokens?: number;
+  completionTokens?: number;
+  totalTokens?: number;
+  costUSD?: number;
+}
+
+export type FinishReason = 'stop' | 'length' | 'content_filter' | 'tool_calls' | string | undefined;
+
+export interface AIChatResult {
+  content: string;
+  finishReason?: FinishReason;
+  usage?: AIUsage;
+  raw?: unknown;
 }

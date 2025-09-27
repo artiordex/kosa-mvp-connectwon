@@ -1,19 +1,12 @@
 /**
  * Description : auth.middleware.ts - 📌 인증 미들웨어 + 토큰 파싱/검증
- * Author      : Shiwoo Min
- * Date        : 2025-09-12
+ * Author : Shiwoo Min
+ * Date : 2025-09-12
  */
 import type { NestMiddleware } from '@nestjs/common';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import type { HeadersLike, JwtClaims, SessionUser, UserRole } from '../server-types.js';
+import type { HeadersLike, JwtClaims, RequestWithUser, SessionUser, UserRole } from '../server-types.js';
 import type { NextFunction, Request, Response } from 'express';
-
-/**
- * @description Express Request 확장 (req.user 지원)
- */
-export interface RequestWithUser extends Request {
-  user?: SessionUser;
-}
 
 type VerifyFn = (token: string) => Promise<JwtClaims> | JwtClaims;
 
