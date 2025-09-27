@@ -13,7 +13,7 @@ import {
   type ValidationPipeOptions,
 } from '@nestjs/common';
 
-import type { ErrorBody } from '../../server-types.js';
+import type { ErrorBody } from '../server-types.js';
 import type { ZodError, ZodSchema } from 'zod';
 
 // 유틸: 검증 실패 에러 던지기

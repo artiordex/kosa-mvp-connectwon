@@ -3,9 +3,9 @@
  * Author      : Shiwoo Min
  * Date        : 2025-09-12
  */
-import { Injectable, UnauthorizedException } from '@nestjs/common';
 import type { NestMiddleware } from '@nestjs/common';
-import type { HeadersLike, JwtClaims, SessionUser, UserRole } from '../../server-types.js';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import type { HeadersLike, JwtClaims, SessionUser, UserRole } from '../server-types.js';
 import type { NextFunction, Request, Response } from 'express';
 
 /**

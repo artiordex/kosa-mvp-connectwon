@@ -4,13 +4,8 @@
   "description": "ConnectWon NestJS 공통 모듈 및 유틸리티",
   "private": true,
   "type": "module",
-  "sideEffects": false,
   "exports": {
     ".": "./dist/index.js",
-    "./server": "./dist/index.server.js",
-    "./client": "./dist/index.client.js",
-    "./middleware": "./dist/middleware/index.js",
-    "./utils": "./dist/utils/index.js",
     "./package.json": "./package.json"
   },
   "files": [
@@ -33,11 +28,7 @@
   "peerDependencies": {
     "@nestjs/common": "^11.1.6",
     "@nestjs/core": "^11.1.6",
-    "@nestjs/swagger": "^11.2.0",
-    "@tanstack/react-query": "^5.0.0",
-    "next": ">=14",
-    "react": ">=18",
-    "react-dom": ">=18"
+    "@nestjs/swagger": "^11.2.0"
   },
   "peerDependenciesMeta": {
     "@nestjs/common": {
@@ -48,24 +39,9 @@
     },
     "@nestjs/swagger": {
       "optional": true
-    },
-    "@tanstack/react-query": {
-      "optional": true
-    },
-    "next": {
-      "optional": true
-    },
-    "react": {
-      "optional": true
-    },
-    "react-dom": {
-      "optional": true
     }
   },
   "devDependencies": {
-    "@nestjs/common": "^11.1.6",
-    "@nestjs/core": "^11.1.6",
-    "@nestjs/swagger": "^11.2.0",
     "@types/express": "^5.0.3",
     "@types/jsonwebtoken": "^9.0.7",
     "@types/nodemailer": "^7.0.1",

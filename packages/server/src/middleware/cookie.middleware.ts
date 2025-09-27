@@ -6,25 +6,7 @@
 import { Injectable } from '@nestjs/common';
 import type { NestMiddleware } from '@nestjs/common';
 import type { NextFunction, Request, Response } from 'express';
-
-/**
- * @description SameSite 쿠키 속성 타입
- */
-export type SameSite = 'lax' | 'strict' | 'none';
-
-/**
- * @description 쿠키 옵션 인터페이스
- */
-export type CookieOptions = {
-  path?: string;
-  domain?: string;
-  httpOnly?: boolean;
-  secure?: boolean;
-  sameSite?: SameSite;
-  maxAge?: number;
-  expires?: Date;
-  priority?: 'Low' | 'Medium' | 'High';
-};
+import type { CookieOptions, SameSite } from '../server-types.js';
 
 /**
  * @description name=value; ... 형태의 Set-Cookie 문자열 생성
@@ -41,7 +23,7 @@ export function serializeCookie(name: string, value: string, opts: CookieOptions
 
   const httpOnly = opts.httpOnly ?? true;
   const secure = opts.secure ?? process.env['NODE_ENV'] === 'production';
-  const sameSite = opts.sameSite ?? 'lax';
+  const sameSite: SameSite = opts.sameSite ?? 'lax';
 
   if (httpOnly) parts.push('HttpOnly');
   if (secure) parts.push('Secure');

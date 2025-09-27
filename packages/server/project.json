@@ -4,14 +4,6 @@
   "projectType": "library",
   "tags": ["type:lib", "layer:backend"],
   "targets": {
-    "build": {
-      "executor": "@nx/js:tsc",
-      "options": {
-        "main": "packages/server/src/index.ts",
-        "outputPath": "dist/packages/server",
-        "tsConfig": "packages/server/tsconfig.json"
-      }
-    },
     "lint": {
       "executor": "@nx/eslint:lint",
       "options": {

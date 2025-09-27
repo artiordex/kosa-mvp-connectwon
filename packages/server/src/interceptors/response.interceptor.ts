@@ -3,13 +3,11 @@
  * Author : Shiwoo Min
  * Date : 2025-09-12
  */
-import { Injectable } from '@nestjs/common';
 import type { CallHandler, ExecutionContext, NestInterceptor } from '@nestjs/common';
-import { StreamableFile } from '@nestjs/common';
+import { Injectable, StreamableFile } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-
-import type { ApiResponse, ApiSuccess, ResponseMeta } from '../../server-types.js';
 import { RAW_RESPONSE_KEY } from '../decorators/api-response.js';
+import type { ApiResponse, ApiSuccess, ResponseMeta } from '../server-types.js';
 import { map, Observable } from 'rxjs';
 
 function isApiResponseLike(x: any): x is ApiResponse<unknown> {
@@ -33,10 +31,7 @@ export class ResponseInterceptor implements NestInterceptor {
     const http = ctx.switchToHttp();
     const req = http.getRequest<{ headers?: Record<string, any>; id?: string }>();
 
-    const skipWrap = this.reflector.getAllAndOverride<boolean>(RAW_RESPONSE_KEY, [
-      ctx.getHandler(),
-      ctx.getClass(),
-    ]);
+    const skipWrap = this.reflector.getAllAndOverride<boolean>(RAW_RESPONSE_KEY, [ctx.getHandler(), ctx.getClass()]);
 
     return next.handle().pipe(
       map((val: any) => {
