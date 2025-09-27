@@ -1,0 +1,52 @@
+{
+  "spaces": [
+    {
+      "id": 1,
+      "name": "회의실 A (프로젝터 포함)",
+      "type": "space",
+      "category": "회의실",
+      "capacity": 8,
+      "price": "15,000원",
+      "availability": "available",
+      "image": "images/room_sp_1.jpg",
+      "features": ["프로젝터", "화이트보드", "Wi-Fi", "음향시설"],
+      "description": "최신 프로젝터와 음향시설이 완비된 현대적인 회의실입니다."
+    },
+    {
+      "id": 2,
+      "name": "MacBook Pro 16인치 (M3 Pro)",
+      "type": "device",
+      "category": "노트북",
+      "capacity": null,
+      "price": "25,000원",
+      "availability": "available",
+      "image": "images/room_sp_2.jpg",
+      "features": ["M3 Pro 칩", "32GB RAM", "1TB SSD", "전용 어댑터"],
+      "description": "고성능 작업을 위한 최신 MacBook Pro입니다."
+    },
+    {
+      "id": 3,
+      "name": "세미나실 B (50인 수용)",
+      "type": "space",
+      "category": "세미나실",
+      "capacity": 50,
+      "price": "80,000원",
+      "availability": "busy",
+      "image": "images/room_sp_3.jpg",
+      "features": ["대형 스크린", "무선 마이크", "좌석 50개", "음향시설", "조명 제어"],
+      "description": "대규모 세미나와 교육을 위한 전문 시설입니다."
+    },
+    {
+      "id": 4,
+      "name": "4K 웹캠 + 조명 세트",
+      "type": "device",
+      "category": "방송장비",
+      "capacity": null,
+      "price": "12,000원",
+      "availability": "available",
+      "image": "images/room_sp_4.jpg",
+      "features": ["4K 해상도", "링 라이트", "삼각대", "USB 연결"],
+      "description": "전문적인 화상회의와 방송을 위한 장비 세트입니다."
+    }
+  ]
+}

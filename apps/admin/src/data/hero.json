@@ -1,0 +1,20 @@
+[
+  {
+    "title": "도전은 혼자가 아닌,",
+    "highlight": "연결될 때 완성된다!",
+    "description": "사람과 공간, 기술이 함께하는 커넥트원에서 새로운 기회를 경험하세요.",
+    "image": "/images/hero_sp_1.png"
+  },
+  {
+    "title": "아이디어가 현실이 되는 곳,",
+    "highlight": "도전의 무대, 커넥트원!",
+    "description": "창업, 취업, 성장까지. 당신의 도전을 위한 여정이 지금 시작됩니다.",
+    "image": "/images/hero_sp_2.png"
+  },
+  {
+    "title": "크리에이터가 되어, 함께 미래를 이끌어갈",
+    "highlight": "가치를 만들어가다!",
+    "description": "커넥트원에서 원하는 프로그램을 발견하고, 또 직접 만들어가는 경험을 누려보세요.",
+    "image": "/images/hero_sp_3.png"
+  }
+]

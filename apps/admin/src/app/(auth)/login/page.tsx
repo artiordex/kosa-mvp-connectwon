@@ -22,7 +22,7 @@ export default function AdminLoginPage() {
     // if (res.ok) router.push("/dashboard");
 
     // 임시 동작: 로그인 성공 가정 후 리다이렉트
-    router.push('/dashboard');
+    router.push('/');
   };
 
   return (

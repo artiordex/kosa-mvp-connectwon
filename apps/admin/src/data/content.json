@@ -1,0 +1,98 @@
+{
+  "banners": [
+    {
+      "id": 1,
+      "title": "2025 스타트업 부트캠프 모집",
+      "position": "메인 히어로",
+      "status": "active",
+      "startDate": "2024-12-01",
+      "endDate": "2025-01-31",
+      "image": "https://readdy.ai/api/search-image?query=startup%20bootcamp%20banner%20design%20with%20modern%20typography%2C%20professional%20business%20promotion%20banner%2C%20clean%20corporate%20design%20with%20call%20to%20action&width=400&height=200&seq=banner-1&orientation=landscape",
+      "views": 15420,
+      "clicks": 892
+    },
+    {
+      "id": 2,
+      "title": "커넥트원 데모데이 2024",
+      "position": "서브 배너",
+      "status": "scheduled",
+      "startDate": "2024-12-20",
+      "endDate": "2024-12-31",
+      "image": "https://readdy.ai/api/search-image?query=demo%20day%20event%20banner%20with%20stage%20presentation%20graphics%2C%20innovation%20showcase%20promotion%2C%20professional%20event%20marketing%20banner&width=400&height=200&seq=banner-2&orientation=landscape",
+      "views": 8750,
+      "clicks": 456
+    },
+    {
+      "id": 3,
+      "title": "연말 특별 프로그램",
+      "position": "사이드바",
+      "status": "ended",
+      "startDate": "2024-11-01",
+      "endDate": "2024-11-30",
+      "image": "https://readdy.ai/api/search-image?query=year%20end%20special%20program%20banner%20with%20festive%20design%2C%20holiday%20themed%20business%20promotion%2C%20seasonal%20marketing%20banner&width=400&height=200&seq=banner-3&orientation=landscape",
+      "views": 12300,
+      "clicks": 678
+    }
+  ],
+  "pages": [
+    {
+      "id": 1,
+      "title": "회사 소개",
+      "slug": "/about",
+      "status": "published",
+      "lastModified": "2024-12-10",
+      "author": "관리자",
+      "views": 5420
+    },
+    {
+      "id": 2,
+      "title": "서비스 안내",
+      "slug": "/services",
+      "status": "draft",
+      "lastModified": "2024-12-08",
+      "author": "콘텐츠팀",
+      "views": 0
+    },
+    {
+      "id": 3,
+      "title": "이용약관",
+      "slug": "/terms",
+      "status": "published",
+      "lastModified": "2024-11-25",
+      "author": "법무팀",
+      "views": 2150
+    }
+  ],
+  "articles": [
+    {
+      "id": 1,
+      "title": "2025 커넥트원 온라인 창업 성장 프로그램 모집",
+      "category": "공지사항",
+      "author": "운영팀",
+      "status": "published",
+      "publishDate": "2024-12-10",
+      "views": 1247,
+      "comments": 23
+    },
+    {
+      "id": 2,
+      "title": "AI 스타트업 트렌드 분석 보고서",
+      "category": "인사이트",
+      "author": "리서치팀",
+      "status": "scheduled",
+      "publishDate": "2024-12-15",
+      "views": 0,
+      "comments": 0
+    },
+    {
+      "id": 3,
+      "title": "커넥트원 데모데이 2024 성공적 개최",
+      "category": "뉴스",
+      "author": "마케팅팀",
+      "status": "draft",
+      "publishDate": null,
+      "views": 0,
+      "comments": 0
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "programs": [
+    {
+      "id": 1,
+      "title": "2025 제5회 투자상담회 참가기업 모집",
+      "date": "2025-09-26",
+      "image": "images/program_sp_1.png",
+      "category": "investment",
+      "status": "recruiting"
+    },
+    {
+      "id": 2,
+      "title": "AI 모델과 업무자동화를 연결하는 API 개발 실무 교육",
+      "date": "2025-09-25 ~ 2025-10-24",
+      "image": "images/program_sp_2.png",
+      "category": "education",
+      "status": "ongoing"
+    },
+    {
+      "id": 3,
+      "title": "SW개발 공모전 참가자 모집",
+      "date": "2025-09-01 ~ 2025-12-17",
+      "image": "images/program_sp_3.png",
+      "category": "competition",
+      "status": "recruiting"
+    },
+    {
+      "id": 4,
+      "title": "2025 커넥트원 전문가 멘토링 참가 신청",
+      "date": "2025-04-09 ~ 2025-11-30",
+      "image": "images/program_sp_4.png",
+      "category": "mentoring",
+      "status": "recruiting"
+    }
+  ]
+}

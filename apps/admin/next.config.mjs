@@ -8,10 +8,7 @@
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import 'dotenv/config';
-
-/** @constant __filename ESM 환경에서 현재 파일 경로 */
 const __filename = fileURLToPath(import.meta.url);
-/** @constant __dirname ESM 환경에서 현재 디렉터리 경로 */
 const __dirname = path.dirname(__filename);
 
 /** @type {import('next').NextConfig} */
@@ -27,7 +24,7 @@ const nextConfig = {
    * @property transpilePackages
    * @description 내부 패키지(ESM/클라 전용 포함) 트랜스파일
    */
-  transpilePackages: ['@connectwon/ui', '@connectwon/api-contract', '@connectwon/sdk', '@connectwon/client'],
+  transpilePackages: ['@connectwon/ui', '@connectwon/api-contract', '@connectwon/sdk', '@connectwon/client', '@connectwon/configs'],
 
   /**
    * @property reactStrictMode
@@ -64,13 +61,13 @@ const nextConfig = {
     isrMemoryCacheSize: 0,
   },
 
-  /**
-   * @method redirects
-   * @description 기본 루트 → 대시보드 리다이렉트
-   */
-  async redirects() {
-    return [{ source: '/', destination: '/dashboard', permanent: false }];
-  },
+  // /**
+  //  * @method redirects
+  //  * @description 기본 루트 → 대시보드 리다이렉트
+  //  */
+  // async redirects() {
+  //   return [{ source: '/', destination: '/dashboard', permanent: false }];
+  // },
 
   /**
    * @method rewrites

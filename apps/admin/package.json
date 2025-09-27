@@ -15,21 +15,15 @@
   "engines": {
     "node": ">=20.11"
   },
-  "dependencies": {
-    "@auth/prisma-adapter": "^2.10.0",
-    "@stripe/react-stripe-js": "^4.0.2",
-    "@stripe/stripe-js": "^7.9.0",
-    "@supabase/supabase-js": "^2.58.0",
-    "i18next": "^25.5.2",
-    "i18next-browser-languagedetector": "^8.2.0",
+  "peerDependencies": {
+    "@connectwon/api-contract": "workspace:*",
+    "@connectwon/sdk": "workspace:*",
+    "@connectwon/ui": "workspace:*",
+    "clsx": "^2.0.0",
     "next": "^14.2.32",
     "next-auth": "^4.24.11",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-i18next": "^15.7.3",
-    "react-router-dom": "^7.9.2",
-    "react-window": "^2.1.1",
-    "recharts": "^3.2.1"
+    "react-dom": "^18.3.1"
   },
   "devDependencies": {
     "@types/react": "18.3.7",
@@ -38,6 +32,22 @@
     "eslint": "^8.57.0",
     "eslint-config-next": "^14.2.5",
     "postcss": "^8.5.6",
-    "tailwindcss": "^4.1.13"
+    "tailwindcss": "^3.4.13"
+  },
+  "dependencies": {
+    "@auth/prisma-adapter": "^2.10.0",
+    "@stripe/react-stripe-js": "^4.0.2",
+    "@stripe/stripe-js": "^7.9.0",
+    "@supabase/supabase-js": "^2.58.0",
+    "i18next": "^25.5.2",
+    "i18next-browser-languagedetector": "^8.2.0",
+    "next": "14.0.4",
+    "next-auth": "^4.24.11",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-i18next": "^15.7.3",
+    "react-router-dom": "^7.9.2",
+    "react-window": "^2.1.1",
+    "recharts": "^3.2.1"
   }
 }

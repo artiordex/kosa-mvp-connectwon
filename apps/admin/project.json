@@ -11,8 +11,10 @@
       }
     },
     "serve": {
-      "executor": "@nx/next:dev",
+      "executor": "@nx/next:server",
       "options": {
+        "buildTarget": "@connectwon/web:build",
+        "dev": true,
         "port": 3001
       }
     },
