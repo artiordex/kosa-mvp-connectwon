@@ -38,7 +38,7 @@
   },
 
   // 루트에 배치한 타입 파일 포함
-  "include": ["typescript/src/**/*", "sdk-types.ts"],
+  "include": ["typescript/src/**/*", "typescript/src/sdk-types.ts"],
 
   "exclude": ["dist", "node_modules", "../../tools/**/*", "../../tests/**/*", "**/*.test.*"],
 

@@ -35,13 +35,11 @@ class ApiError(Exception):
 
 class TimeoutError(Exception):
     """네트워크 타임아웃 오류"""
-
     def __init__(self, message: str = "Request timed out"):
         super().__init__(message)
 
 class NetworkError(Exception):
     """네트워크 일반 오류"""
-
     def __init__(self, message: str = "Network error"):
         super().__init__(message)
 
