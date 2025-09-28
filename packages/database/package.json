@@ -27,16 +27,17 @@
     "introspect": "prisma db pull",
     "build": "tsc -p tsconfig.json",
     "clean": "rimraf dist",
-    "prepublishOnly": "pnpm run build"
+    "prepublishOnly": "pnpm run generate && pnpm run build"
   },
   "dependencies": {
     "@connectwon/core": "workspace:*",
     "@connectwon/logger": "workspace:*",
     "@prisma/client": "^6.16.2",
-    "dotenv": "^17.2.2"
+    "dotenv": "^16.4.5"
   },
   "devDependencies": {
-    "prisma": "^6.16.2"
+    "prisma": "^6.16.2",
+    "rimraf": "^6.0.1"
   },
   "engines": {
     "node": ">=20.11"

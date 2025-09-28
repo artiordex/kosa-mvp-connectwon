@@ -2,9 +2,11 @@
  * Description : tsconfig.base.json - 📌 루트 TypeScript 공통 설정 (호이스팅 적용)
  * Author : Shiwoo Min
  * Date : 2025-09-06
- * 09-17 - paths에 apps, packages 전체 추가
- * 09-20 - paths를 compilerOptions 내부로 이동, 중복 baseUrl 제거
- * 컴파일러 가능한 상태인지 확인 - pnpm -w exec tsc --noEmit --showConfig > /dev/null
+ * 09-17 : paths에 apps, packages 전체 추가
+ * 09-20 : paths를 compilerOptions 내부로 이동, 중복 baseUrl 제거
+ * 09-28 : paths를 src + dist 이중 매핑으로 변경 (배포/로컬 모두 지원)
+ * 컴파일러 가능한 상태인지 확인:
+ *   pnpm -w exec tsc --noEmit --showConfig > /dev/null
  */
 {
   "compilerOptions": {
@@ -32,7 +34,7 @@
     // JSON 모듈 임포트 허용
     "resolveJsonModule": true,
 
-    // 암묵적 ESM 감지 강화
+    // TS5 ESM 감지 강화
     "moduleDetection": "force",
 
     // CJS/ESM 상호운용
@@ -53,7 +55,7 @@
     "allowJs": true,
     "checkJs": false,
 
-    // Project References
+    // Project References / 빌드 캐시
     "declaration": true,
     "declarationMap": true,
     "isolatedModules": true,
@@ -73,26 +75,40 @@
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
 
-    // 경로 매핑 (packages / apps)
+    /**
+     * 경로 매핑 (packages / apps)
+     * dev 환경(src) + build 환경(dist) 이중 매핑
+     */
     "paths": {
-      // packages
-      "@connectwon/core": ["packages/core/src"],
-      "@connectwon/core/*": ["packages/core/src/*"],
-      "@connectwon/api-contract": ["packages/api-contract/src"],
-      "@connectwon/api-contract/*": ["packages/api-contract/src/*"],
-      "@connectwon/configs": ["packages/configs/src"],
-      "@connectwon/configs/*": ["packages/configs/src/*"],
+      // Core
+      "@connectwon/core": ["packages/core/src/index.ts", "dist/packages/core/index.d.ts"],
+      "@connectwon/core/*": ["packages/core/src/*", "dist/packages/core/*"],
 
-      "@connectwon/logger": ["packages/logger/src"],
-      "@connectwon/logger/*": ["packages/logger/src/*"],
-      "@connectwon/sdk": ["packages/sdk/src"],
-      "@connectwon/sdk/*": ["packages/sdk/src/*"],
-      "@connectwon/client": ["packages/client/src"],
-      "@connectwon/client/*": ["packages/client/src/*"],
-      "@connectwon/ui": ["packages/ui/src"],
-      "@connectwon/ui/*": ["packages/ui/src/*"],
+      // Database
+      "@connectwon/database": ["packages/database/src/index.ts", "dist/packages/database/index.d.ts"],
+      "@connectwon/database/*": ["packages/database/src/*", "dist/packages/database/*"],
 
-      // apps
+      // Logger
+      "@connectwon/logger": ["packages/logger/src/index.ts", "dist/packages/logger/index.d.ts"],
+      "@connectwon/logger/*": ["packages/logger/src/*", "dist/packages/logger/*"],
+
+      // UI
+      "@connectwon/ui": ["packages/ui/src/index.ts", "dist/packages/ui/index.d.ts"],
+      "@connectwon/ui/*": ["packages/ui/src/*", "dist/packages/ui/*"],
+
+      // Client
+      "@connectwon/client": ["packages/client/src/index.ts", "dist/packages/client/index.d.ts"],
+      "@connectwon/client/*": ["packages/client/src/*", "dist/packages/client/*"],
+
+      // SDK
+      "@connectwon/sdk": ["packages/sdk/typescript/src", "dist/packages/sdk/index.d.ts"],
+      "@connectwon/sdk/*": ["packages/sdk/typescript/src/*", "dist/packages/sdk/*"],
+
+      // API Contract
+      "@connectwon/api-contract": ["packages/api-contract/src", "dist/packages/api-contract"],
+      "@connectwon/api-contract/*": ["packages/api-contract/src/*", "dist/packages/api-contract/*"],
+
+      // Apps (웹/관리자/서버/워커)
       "@connectwon/web": ["apps/web/src"],
       "@connectwon/web/*": ["apps/web/src/*"],
       "@connectwon/admin": ["apps/admin/src"],
@@ -104,11 +120,9 @@
       "@connectwon/e2e": ["apps/e2e/src"],
       "@connectwon/e2e/*": ["apps/e2e/src/*"],
 
-      // server 엔트리포인트를 index.ts로 명확히 지정
-      "@connectwon/server": ["packages/server/src/index.ts"],
-      "@connectwon/server/*": ["packages/server/src/*"],
-      "@connectwon/database": ["packages/database/src/index.ts"],
-      "@connectwon/database/*": ["packages/database/src/*"]
+      // Server
+      "@connectwon/server": ["packages/server/src/index.ts", "dist/packages/server/index.d.ts"],
+      "@connectwon/server/*": ["packages/server/src/*", "dist/packages/server/*"]
     }
   }
 }

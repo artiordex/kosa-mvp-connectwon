@@ -22,8 +22,7 @@ packages:
 
   # Shared Packages
   - 'packages/api-contract' # API 스키마 정의 (API Schema & Types)
-  - 'packages/configs' # 환경설정 관리 (Configuration Management)
-  - 'packages/core' # 핵심 비즈니스 로직 (Core Business Logic)
+  - 'packages/core' # 핵심 비즈니스 로직 + 환경설정 관리 (Core Business Logic)
   - 'packages/logger' # 로깅 시스템 (Logging System)
   - 'packages/sdk' # 클라이언트 SDK (Client SDK)
   - 'packages/client' # 클라이언트 유틸리티 (Client Utilities)

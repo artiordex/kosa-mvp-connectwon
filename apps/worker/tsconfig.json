@@ -37,19 +37,6 @@
 
     // 모노레포 패키지 경로 매핑
     "paths": {
-      "@connectwon/core": ["../../packages/core/src"],
-      "@connectwon/core/*": ["../../packages/core/src/*"],
-      "@connectwon/database": ["../../packages/database/src"],
-      "@connectwon/database/*": ["../../packages/database/src/*"],
-      "@connectwon/logger": ["../../packages/logger/src"],
-      "@connectwon/logger/*": ["../../packages/logger/src/*"],
-      "@connectwon/api-contract": ["../../packages/api-contract/src"],
-      "@connectwon/api-contract/*": ["../../packages/api-contract/src/*"],
-      "@connectwon/sdk": ["../../packages/sdk/src"],
-      "@connectwon/sdk/*": ["../../packages/sdk/src/*"],
-      "@connectwon/ui": ["../../packages/ui/src"],
-      "@connectwon/ui/*": ["../../packages/ui/src/*"],
-      "~/*": ["./src/*"]
     },
 
     // 경로 해석 기준점

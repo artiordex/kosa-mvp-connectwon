@@ -4,7 +4,6 @@
  * Date : 2025-09-28
  */
 import { PrismaClient } from '@prisma/client';
-
 import type {
   CreateProgram,
   CursorPaginatedResponse,
@@ -13,19 +12,8 @@ import type {
   Program,
   ProgramWithCreator,
   UpdateProgram,
-} from '../../../core/src/core-types.js';
-import type { ProgramRepository } from '../../../core/src/ports/program.port.js';
-
-import type {
-  CreateProgram,
-  CursorPaginatedResponse,
-  CursorPaginationQuery,
-  Id,
-  Program,
-  ProgramWithCreator,
-  UpdateProgram,
-} from '../../../core/src/core-types.js';
-import type { ProgramRepository } from '../../../core/src/ports/program.port.js';
+} from '@connectwon/core/core-types';
+import type { ProgramRepository } from '@connectwon/core/ports/program.port.js';
 
 /**
  * @class ProgramPrismaAdapter

@@ -29,5 +29,5 @@
       }
     }
   },
-  "implicitDependencies": ["@connectwon/ui", "@connectwon/client", "@connectwon/api-contract", "@connectwon/configs", "@connectwon/sdk"]
+  "implicitDependencies": ["@connectwon/ui", "@connectwon/client", "@connectwon/api-contract", "@connectwon/core", "@connectwon/sdk"]
 }

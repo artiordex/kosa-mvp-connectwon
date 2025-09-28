@@ -26,7 +26,6 @@ COPY pnpm-lock.yaml pnpm-workspace.yaml package.json nx.json tsconfig*.json ./
 COPY packages/core/package.json         packages/core/
 COPY packages/logger/package.json       packages/logger/
 COPY packages/database/package.json     packages/database/
-COPY packages/configs/package.json      packages/configs/
 COPY packages/api-contract/package.json packages/api-contract/
 COPY apps/worker/package.json           apps/worker/
 
@@ -35,7 +34,6 @@ RUN pnpm install --frozen-lockfile \
   --filter @connectwon/core \
   --filter @connectwon/logger \
   --filter @connectwon/database \
-  --filter @connectwon/configs \
   --filter @connectwon/api-contract \
   --filter @connectwon/worker
 

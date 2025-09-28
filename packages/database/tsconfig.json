@@ -7,7 +7,7 @@
  * 09-12 : 선언파일/소스맵/증분빌드/레퍼런스 정리
  */
 {
-  // 루트의 tsconfig.json 상속
+  // 루트의 tsconfig.base.json 상속
   "extends": "../../tsconfig.base.json",
 
   "compilerOptions": {
@@ -39,20 +39,11 @@
     // 엄격 모드
     "strict": true,
     "noUnusedLocals": true,
-    "noUnusedParameters": true
+    "noUnusedParameters": true,
   },
-  "include": [
-    "src/**/*",
-    "prisma/seed.ts"
-  ],
-  "exclude": [
-    "dist",
-    "node_modules",
-    "src/generated",
-    "prisma/migrations",
-    "**/*.test.ts",
-    "**/*.spec.ts"
-  ],
+  "include": ["src/**/*", "prisma/seed.ts"],
+  "exclude": ["dist", "node_modules", "src/generated", "prisma/migrations", "**/*.test.ts", "**/*.spec.ts"],
+
   // 프로젝트 레퍼런스 (DB가 core/logger 타입을 참조한다면 빌드 순서 보장)
   "references": [{ "path": "../core" }, { "path": "../logger" }]
 }

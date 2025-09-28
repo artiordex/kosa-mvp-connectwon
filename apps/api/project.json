@@ -33,5 +33,5 @@
       }
     }
   },
-  "implicitDependencies": ["@connectwon/core", "@connectwon/database", "@connectwon/logger", "@connectwon/api-contract", "@connectwon/configs"]
+  "implicitDependencies": ["@connectwon/core", "@connectwon/database", "@connectwon/logger", "@connectwon/api-contract", "@connectwon/core"]
 }

@@ -13,8 +13,8 @@ import type {
   ProgramWithCreator,
   UpdateProgram,
   User,
-} from '../../../core/src/core-types.js';
-import type { ProgramRepository } from '../../../core/src/ports/program.port.js';
+} from '@connectwon/core/core-types';
+import type { ProgramRepository } from '@connectwon/core/ports/program.port.js';
 
 /**
  * @description 데이터베이스 연결 인터페이스 (추상화)

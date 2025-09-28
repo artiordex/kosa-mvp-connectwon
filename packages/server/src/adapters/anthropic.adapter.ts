@@ -4,9 +4,6 @@
  * Date : 2025-09-27
  */
 import type { Message, MessageCreateParamsNonStreaming } from '@anthropic-ai/sdk/resources/messages';
-
-import type { AIChatInput, AIChatResult, AIClient, AIClientOptions, AIMessage } from '../../../core/src/ports/ai.port.js';
-
 import type { AIChatInput, AIChatResult, AIClient, AIClientOptions, AIMessage } from '../../../core/src/ports/ai.port.js';
 
 /**
