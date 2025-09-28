@@ -1,5 +1,5 @@
 /**
- * Description : venue.port.ts - 📌 장소 저장소 포트 인터페이스
+ * Description : venue.port.ts - 📌 장소 저장소 포트 인터페이스 (MVP 최소 버전)
  * Author : Shiwoo Min
  * Date : 2025-09-30
  */
@@ -39,7 +39,7 @@ export interface UpdateVenue {
 }
 
 /**
- * @description 장소 저장소 포트
+ * @description 장소 저장소 포트 (MVP용 최소 기능)
  */
 export interface VenueRepository {
   /** ID로 조회 */
@@ -62,20 +62,4 @@ export interface VenueRepository {
 
   /** 이름 검색 */
   searchByName(term: string, query: CursorPaginationQuery): Promise<CursorPaginatedResponse<Venue>>;
-
-  /** 특정 시간에 열려 있는 장소 조회 */
-  findOpenAt(dateTime: ISODateTime): Promise<Venue[]>;
-
-  /** 운영 시간 데이터가 있는 장소 조회 */
-  findWithOpeningHours(): Promise<Venue[]>;
-
-  /** 예약 가능한 장소 조회 */
-  findAvailable(startTime: ISODateTime, endTime: ISODateTime): Promise<Venue[]>;
-
-  /** 총 개수 */
-  count(): Promise<number>;
-
-  /** 존재 여부 */
-  exists(id: Id): Promise<boolean>;
-  existsByName(name: string): Promise<boolean>;
 }
