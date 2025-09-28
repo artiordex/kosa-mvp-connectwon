@@ -4,7 +4,7 @@
  * Date : 2025-09-04
  * 09-17 - 클래스 -> 간단한 유틸구조로 변경
  */
-import { logger } from '../../packages/logger/src/index.js';
+import { logger } from '@connectwon/logger';
 import dotenv from 'dotenv';
 import * as fs from 'fs/promises';
 import path, { dirname } from 'path';

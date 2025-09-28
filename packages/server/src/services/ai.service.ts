@@ -4,16 +4,16 @@
  * Date : 2025-09-26
  */
 import { Injectable } from '@nestjs/common';
-import { AnthropicAdapter } from '@connectwon/core/adapters/ai/anthropic.js';
-import { HFAdapter } from '@connectwon/core/adapters/ai/huggingface.js';
-import { OpenAIAdapter } from '@connectwon/core/adapters/ai/openai.js';
-import type { AIChatInput, AIChatResult } from '../server-types.js';
+import { AnthropicAdapter } from '@connectwon/server/adapters/anthropic.adapter.js';
+import { HuggingFaceAdapter } from '@connectwon/server/adapters/huggingface.adapter.js';
+import { OpenAIAdapter } from '@connectwon/server/adapters/openai.adapter.js';
+import type { AIChatInput, AIChatResult } from '@connectwon/server/server-types.js';
 
 @Injectable()
 export class AiService {
   private readonly openai: OpenAIAdapter;
   private readonly anthropic: AnthropicAdapter;
-  private readonly huggingface: HFAdapter;
+  private readonly huggingface: HuggingFaceAdapter;
 
   constructor() {
     this.openai = new OpenAIAdapter({
@@ -26,7 +26,7 @@ export class AiService {
       defaultModel: 'claude-3-5-sonnet-20241022',
     });
 
-    this.huggingface = new HFAdapter({
+    this.huggingface = new HuggingFaceAdapter({
       apiKey: process.env['HF_API_KEY']!,
       defaultModel: 'mistralai/Mixtral-8x7B-Instruct-v0.1',
     });

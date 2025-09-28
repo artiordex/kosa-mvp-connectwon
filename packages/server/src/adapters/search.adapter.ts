@@ -3,7 +3,7 @@
  * Author : Shiwoo Min
  * Date : 2025-09-27
  */
-import type { SearchDocument, SearchDocumentType, SearchFilters, SearchOptions, SearchResult, SearchService } from '../../../core/src/ports/search.port.js';
+import type { SearchDocument, SearchDocumentType, SearchFilters, SearchOptions, SearchResult, SearchService } from '@connectwon/core/ports/search.port.js';
 
 // PGVECTOR SEARCH IMPLEMENTATION
 export class PgVectorSearchService implements SearchService {

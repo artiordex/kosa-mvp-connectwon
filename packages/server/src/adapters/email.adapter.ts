@@ -1,42 +1,35 @@
 /**
- * Description : email.adapter.ts - 📧 Gmail SMTP 기반 이메일 알림 어댑터
+ * Description : email.adapter.ts - 📌 Nodemailer 기반 이메일 알림 어댑터
  * Author : Shiwoo Min
- * Date : 2025-09-28
+ * Date : 2025-09-30
  */
-import type {
-  EmailConfig,
-  EmailRequest,
-  EmailResult,
-  NotificationEvent,
-  NotificationResult,
-  NotificationService,
-  SendEmailRequest,
-  SendVerificationCodeParams,
-  SlackFileRequest,
-  SlackFileResult,
-  SlackRequest,
-  SlackResult,
-  TemplateEmailRequest,
-  TemplateManager,
-} from '../../../core/src/ports/notification.port.js';
-import nodemailer from 'nodemailer';
+import type { EmailConfig, EmailRequest, EmailResult, NotificationEvent, NotificationResult, NotificationService, SendEmailRequest, SendVerificationCodeParams, SlackFileRequest, SlackFileResult, SlackRequest, SlackResult, TemplateEmailRequest, TemplateManager } from '@connectwon/core/ports/notification.port.js';
+import nodemailer, { type Transporter, type TransportOptions } from 'nodemailer';
 
+/**
+ * @description Nodemailer 기반 이메일 알림 어댑터
+ * @implements {NotificationService}
+ */
 export class EmailNotificationAdapter implements NotificationService {
-  private transporter;
-
+  private transporter: Transporter;
   constructor(
     private readonly config: EmailConfig,
     private readonly templateManager?: TemplateManager,
   ) {
-    this.transporter = nodemailer.createTransport({
-      host: config.host,
-      port: config.port,
-      secure: config.secure,
+    const options: TransportOptions = {
+      host: this.config.host,
+      port: this.config.port,
+      secure: this.config.secure,
       auth: {
-        user: config.auth.user,
-        pass: config.auth.pass,
+        user: this.config.auth.user,
+        pass: this.config.auth.pass,
       },
-    });
+      pool: this.config.pool ?? false,
+      maxConnections: this.config.maxConnections,
+      maxMessages: this.config.maxMessages,
+    } as any;
+
+    this.transporter = nodemailer.createTransport(options);
   }
 
   async sendEmail(request: EmailRequest): Promise<EmailResult> {
@@ -85,7 +78,9 @@ export class EmailNotificationAdapter implements NotificationService {
 
   async sendVerificationCodeExtended(params: SendVerificationCodeParams): Promise<EmailResult> {
     const subject = `[${params.purpose ?? '인증'}] 인증번호 안내`;
-    const html = `<p>${params.app_name ?? '서비스'} 인증번호는 <strong>${params.code}</strong> 입니다. ${params.expires_in_minutes ? `(${params.expires_in_minutes}분 후 만료)` : ''}</p>`;
+    const html = `<p>${params.appName ?? '서비스'} 인증번호는 <strong>${params.code}</strong> 입니다. ${
+      params.expiresInMinutes ? `(${params.expiresInMinutes}분 후 만료)` : ''
+    }</p>`;
     const text = `인증번호: ${params.code}`;
     const sendRequest: SendEmailRequest = {
       to: [{ email: params.email }],
@@ -122,6 +117,9 @@ export class EmailNotificationAdapter implements NotificationService {
     return false;
   }
 
+  /**
+   * @description 실제 이메일 발송 처리
+   */
   private async sendEmailInternal(request: SendEmailRequest): Promise<EmailResult> {
     try {
       const mailOptions = {
@@ -135,23 +133,17 @@ export class EmailNotificationAdapter implements NotificationService {
         attachments: request.attachments?.map(att => ({
           filename: att.filename,
           content: att.content,
-          contentType: att.contentType ?? att.content_type,
+          contentType: att.contentType,
           disposition: att.disposition,
-          cid: att.content_id,
+          cid: att.contentId,
         })),
       };
 
       const info = await this.transporter.sendMail(mailOptions);
-      return {
-        success: true,
-        messageId: info.messageId,
-      };
+      return { success: true, messageId: info.messageId };
     } catch (error: any) {
       console.error('이메일 전송 실패:', error);
-      return {
-        success: false,
-        error: error.message,
-      };
+      return { success: false, error: error.message };
     }
   }
 }

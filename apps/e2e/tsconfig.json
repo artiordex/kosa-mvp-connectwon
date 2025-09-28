@@ -9,8 +9,6 @@
   "extends": "../../tsconfig.base.json",
 
   "compilerOptions": {
-    "baseUrl": ".",
-
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
 
@@ -38,8 +36,11 @@
   },
 
   // e2e 프로젝트 내부만 포함
-  "include": ["playwright.config.ts", "e2e-types.ts", "setup.ts", "teardown.ts", "actions/**/*.ts", "locators/**/*.ts", "tests/**/*.ts", "../../packages/logger/src/**/*.ts"],
+  "include": ["playwright.config.ts", "e2e-types.ts", "setup.ts", "teardown.ts", "actions/**/*.ts", "locators/**/*.ts", "tests/**/*.ts"],
 
   // 산출물/리포트/노드모듈 제외
-  "exclude": ["node_modules", "dist", "test-results", "playwright-report"]
+  "exclude": ["node_modules", "dist", "test-results", "playwright-report"],
+  "references": [
+    { "path": "../../packages/logger" }
+  ]
 }

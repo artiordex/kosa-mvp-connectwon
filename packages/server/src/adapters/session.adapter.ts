@@ -1,262 +1,184 @@
 /**
- * Description : session.adapter.ts - 📌 세션 저장소 어댑터 구현체
+ * Description : session.adapter.ts - 📌 Redis 기반 세션/락/레이트리밋 어댑터
  * Author : Shiwoo Min
- * Date : 2025-09-28
+ * Date : 2025-09-30
  */
-import type { CreateSession, CursorPaginatedResponse, CursorPaginationQuery, Id, Session, SessionRepository, SessionWithParticipants, SessionWithProgram, SessionWithProgramAndVenue, UpdateSession } from '../../../core/src/ports/session.port.js';
-import { prisma } from '../lib/prisma';
-
-export class SessionRepositoryAdapter implements SessionRepository {
-  /** ID로 세션 조회 */
-  async findById(id: Id): Promise<Session | null> {
-    return prisma.session.findUnique({ where: { id } });
-  }
-
-  /** 프로그램 포함 세션 조회 */
-  async findByIdWithProgram(id: Id): Promise<SessionWithProgram | null> {
-    return prisma.session.findUnique({
-      where: { id },
-      include: { program: true },
-    });
-  }
-
-  /** 프로그램 + 장소 + 방 포함 상세 조회 */
-  async findByIdWithDetails(id: Id): Promise<SessionWithProgramAndVenue | null> {
-    return prisma.session.findUnique({
-      where: { id },
-      include: {
-        program: true,
-        venue: true,
-        room: true,
-      },
-    });
-  }
-
-  /** 참가자 포함 세션 조회 */
-  async findByIdWithParticipants(id: Id): Promise<SessionWithParticipants | null> {
-    return prisma.session.findUnique({
-      where: { id },
-      include: { participants: true },
-    });
-  }
-
-  /** 세션 생성 */
-  async create(session: CreateSession): Promise<Session> {
-    return prisma.session.create({ data: session });
-  }
-
-  /** 세션 업데이트 */
-  async update(id: Id, updates: UpdateSession): Promise<Session> {
-    return prisma.session.update({ where: { id }, data: updates });
-  }
-
-  /** 세션 삭제 */
-  async delete(id: Id): Promise<void> {
-    await prisma.session.delete({ where: { id } });
-  }
-
-  /** 페이징 목록 조회 */
-  async findMany(query: CursorPaginationQuery): Promise<CursorPaginatedResponse<Session>> {
-    const items = await prisma.session.findMany({
-      take: query.limit,
-      skip: query.cursor ? 1 : 0,
-      cursor: query.cursor ? { id: query.cursor } : undefined,
-      orderBy: { startsAt: 'asc' },
-    });
-    const nextCursor = items.length > 0 ? items[items.length - 1].id : null;
-    return { items, nextCursor };
-  }
-
-  /** 프로그램 포함 페이징 목록 조회 */
-  async findManyWithProgram(query: CursorPaginationQuery): Promise<CursorPaginatedResponse<SessionWithProgram>> {
-    const items = await prisma.session.findMany({
-      take: query.limit,
-      skip: query.cursor ? 1 : 0,
-      cursor: query.cursor ? { id: query.cursor } : undefined,
-      orderBy: { startsAt: 'asc' },
-      include: { program: true },
-    });
-    const nextCursor = items.length > 0 ? items[items.length - 1].id : null;
-    return { items, nextCursor };
-  }
-
-  /** 특정 프로그램의 세션 목록 조회 */
-  async findByProgramId(programId: Id, query: CursorPaginationQuery): Promise<CursorPaginatedResponse<Session>> {
-    const items = await prisma.session.findMany({
-      where: { programId },
-      take: query.limit,
-      skip: query.cursor ? 1 : 0,
-      cursor: query.cursor ? { id: query.cursor } : undefined,
-      orderBy: { startsAt: 'asc' },
-    });
-    const nextCursor = items.length > 0 ? items[items.length - 1].id : null;
-    return { items, nextCursor };
-  }
-
-  /** 상태별 세션 목록 조회 */
-  async findByStatus(status: string, query: CursorPaginationQuery): Promise<CursorPaginatedResponse<Session>> {
-    const items = await prisma.session.findMany({
-      where: { status },
-      take: query.limit,
-      skip: query.cursor ? 1 : 0,
-      cursor: query.cursor ? { id: query.cursor } : undefined,
-      orderBy: { startsAt: 'asc' },
-    });
-    const nextCursor = items.length > 0 ? items[items.length - 1].id : null;
-    return { items, nextCursor };
-  }
-
-  /** 날짜 범위 내 세션 목록 조회 */
-  async findByDateRange(startDate: string, endDate: string, query: CursorPaginationQuery): Promise<CursorPaginatedResponse<Session>> {
-    const items = await prisma.session.findMany({
-      where: {
-        startsAt: { gte: new Date(startDate) },
-        endsAt: { lte: new Date(endDate) },
-      },
-      take: query.limit,
-      skip: query.cursor ? 1 : 0,
-      cursor: query.cursor ? { id: query.cursor } : undefined,
-      orderBy: { startsAt: 'asc' },
-    });
-    const nextCursor = items.length > 0 ? items[items.length - 1].id : null;
-    return { items, nextCursor };
-  }
-
-  /** 예정된 세션 목록 조회 */
-  async findUpcoming(query: CursorPaginationQuery): Promise<CursorPaginatedResponse<SessionWithProgram>> {
-    const now = new Date();
-    const items = await prisma.session.findMany({
-      where: { startsAt: { gt: now } },
-      take: query.limit,
-      skip: query.cursor ? 1 : 0,
-      cursor: query.cursor ? { id: query.cursor } : undefined,
-      orderBy: { startsAt: 'asc' },
-      include: { program: true },
-    });
-    const nextCursor = items.length > 0 ? items[items.length - 1].id : null;
-    return { items, nextCursor };
-  }
-
-  /** 완료된 세션 목록 조회 */
-  async findCompleted(query: CursorPaginationQuery): Promise<CursorPaginatedResponse<SessionWithProgram>> {
-    const now = new Date();
-    const items = await prisma.session.findMany({
-      where: { endsAt: { lt: now }, status: 'completed' },
-      take: query.limit,
-      skip: query.cursor ? 1 : 0,
-      cursor: query.cursor ? { id: query.cursor } : undefined,
-      orderBy: { endsAt: 'desc' },
-      include: { program: true },
-    });
-    const nextCursor = items.length > 0 ? items[items.length - 1].id : null;
-    return { items, nextCursor };
-  }
-
-  /** 취소된 세션 목록 조회 */
-  async findCancelled(query: CursorPaginationQuery): Promise<CursorPaginatedResponse<SessionWithProgram>> {
-    const items = await prisma.session.findMany({
-      where: { status: 'cancelled' },
-      take: query.limit,
-      skip: query.cursor ? 1 : 0,
-      cursor: query.cursor ? { id: query.cursor } : undefined,
-      orderBy: { startsAt: 'desc' },
-      include: { program: true },
-    });
-    const nextCursor = items.length > 0 ? items[items.length - 1].id : null;
-    return { items, nextCursor };
-  }
-
-  /** 방 예약 ID로 세션 조회 */
-  async findByRoomReservationId(roomReservationId: Id): Promise<Session | null> {
-    return prisma.session.findFirst({ where: { roomReservationId } });
-  }
-
-  /** 세션 상태 변경 */
-  async updateStatus(id: Id, status: string): Promise<void> {
-    await prisma.session.update({ where: { id }, data: { status } });
-  }
-
-  /** 방 예약 연결 */
-  async linkRoomReservation(sessionId: Id, roomReservationId: Id): Promise<void> {
-    await prisma.session.update({ where: { id: sessionId }, data: { roomReservationId } });
-  }
-
-  /** 방 예약 해제 */
-  async unlinkRoomReservation(sessionId: Id): Promise<void> {
-    await prisma.session.update({ where: { id: sessionId }, data: { roomReservationId: null } });
-  }
-
-  /** 시간 충돌 체크 */
-  async checkTimeConflict(startsAt: string, endsAt: string, excludeSessionId?: Id): Promise<Session[]> {
-    return prisma.session.findMany({
-      where: {
-        startsAt: { lt: new Date(endsAt) },
-        endsAt: { gt: new Date(startsAt) },
-        ...(excludeSessionId ? { NOT: { id: excludeSessionId } } : {}),
-      },
-    });
-  }
-
-  /** 리마인더 대상 세션 조회 */
-  async findForReminder(beforeMinutes: number): Promise<SessionWithProgramAndVenue[]> {
-    const now = new Date();
-    const targetTime = new Date(now.getTime() + beforeMinutes * 60000);
-    return prisma.session.findMany({
-      where: {
-        startsAt: {
-          lte: targetTime,
-          gte: now,
-        },
-      },
-      include: {
-        program: true,
-        venue: true,
-      },
-    });
-  }
+import type { CacheService, CacheUserSession, RateLimitInfo, RateLimitResult, SessionCache, VerificationCode } from '@connectwon/core/ports/cache.port.js';
+import * as Redis from 'ioredis';
 
 /**
-   * 세션 존재 여부 확인
-   * @param id 세션 ID
-   * @returns 존재 여부 (true/false)
-   */
-  async exists(id: Id): Promise<boolean> {
-    const count = await prisma.session.count({ where: { id } });
-    return count > 0;
+ * @class RedisSessionAdapter
+ * @description Redis를 이용한 세션/락/레이트리밋/코드 캐시 어댑터 구현체
+ */
+export class RedisSessionAdapter implements CacheService, SessionCache {
+  private client: Redis.Redis;
+
+  constructor(redisUrl: string) {
+    this.client = new Redis.Redis(redisUrl);
   }
 
-  /**
-   * 전체 세션 수 조회
-   * @returns 세션 총 개수
-   */
-  async count(): Promise<number> {
-    return prisma.session.count();
+  async get<T = unknown>(key: string): Promise<T | null> {
+    const val = await this.client.get(key);
+    return val ? (JSON.parse(val) as T) : null;
   }
 
-  /**
-   * 특정 프로그램의 세션 수 조회
-   * @param programId 프로그램 ID
-   * @returns 해당 프로그램의 세션 개수
-   */
-  async countByProgram(programId: Id): Promise<number> {
-    return prisma.session.count({ where: { programId } });
+  async set<T = unknown>(key: string, value: T, ttlSeconds?: number): Promise<void> {
+    const str = JSON.stringify(value);
+    if (ttlSeconds) {
+      await this.client.set(key, str, 'EX', ttlSeconds);
+    } else {
+      await this.client.set(key, str);
+    }
   }
 
-  /**
-   * 특정 상태의 세션 수 조회
-   * @param status 세션 상태 (예: 'completed', 'cancelled')
-   * @returns 해당 상태의 세션 개수
-   */
-  async countByStatus(status: string): Promise<number> {
-    return prisma.session.count({ where: { status } });
+  async delete(key: string): Promise<void> {
+    await this.client.del(key);
   }
 
-  /**
-   * 예정된 세션 수 조회
-   * @returns 현재 이후로 예정된 세션 개수
-   */
-  async countUpcoming(): Promise<number> {
-    const now = new Date();
-    return prisma.session.count({ where: { startsAt: { gt: now } } });
+  async exists(key: string): Promise<boolean> {
+    return (await this.client.exists(key)) > 0;
+  }
+
+  async expire(key: string, ttlSeconds: number): Promise<boolean> {
+    return (await this.client.expire(key, ttlSeconds)) === 1;
+  }
+
+  async ttl(key: string): Promise<number | null> {
+    const ttl = await this.client.ttl(key);
+    if (ttl === -1) return null; // 만료 없음
+    if (ttl === -2) return -2; // 키 없음
+    return ttl;
+  }
+
+  async ping(): Promise<string> {
+    return this.client.ping();
+  }
+
+  async info(): Promise<string> {
+    return this.client.info();
+  }
+
+  async getUserSession(userId: string): Promise<CacheUserSession | null> {
+    return this.get<CacheUserSession>(`session:user:${userId}`);
+  }
+
+  async setUserSession(userId: string, session: CacheUserSession, ttlSeconds?: number): Promise<void> {
+    return this.set(`session:user:${userId}`, session, ttlSeconds);
+  }
+
+  async deleteUserSession(userId: string): Promise<void> {
+    return this.delete(`session:user:${userId}`);
+  }
+
+  async getVerificationCode(email: string, purpose: string): Promise<VerificationCode | null> {
+    return this.get<VerificationCode>(`verify:${purpose}:${email}`);
+  }
+
+  async setVerificationCode(email: string, purpose: string, code: VerificationCode, ttlSeconds?: number): Promise<void> {
+    return this.set(`verify:${purpose}:${email}`, code, ttlSeconds);
+  }
+
+  async deleteVerificationCode(email: string, purpose: string): Promise<void> {
+    return this.delete(`verify:${purpose}:${email}`);
+  }
+
+  async getTempData<T = unknown>(key: string): Promise<T | null> {
+    return this.get<T>(`temp:${key}`);
+  }
+
+  async setTempData<T = unknown>(key: string, data: T, ttlSeconds?: number): Promise<void> {
+    return this.set(`temp:${key}`, data, ttlSeconds);
+  }
+
+  async deleteTempData(key: string): Promise<void> {
+    return this.delete(`temp:${key}`);
+  }
+
+  async getRateLimit(identifier: string, action: string): Promise<RateLimitInfo> {
+    const key = `rate:${action}:${identifier}`;
+    const val = await this.get<{ current: number; max: number; windowEnd: string }>(key);
+
+    if (!val) {
+      return {
+        current: 0,
+        max: 0,
+        windowStart: new Date().toISOString(),
+        windowEnd: new Date().toISOString(),
+        blocked: false,
+      };
+    }
+
+    return {
+      current: val.current,
+      max: val.max,
+      windowStart: new Date().toISOString(),
+      windowEnd: val.windowEnd,
+      blocked: val.current >= val.max,
+    };
+  }
+
+  async incrementRateLimit(
+    identifier: string,
+    action: string,
+    windowSeconds: number,
+    maxAttempts: number,
+  ): Promise<RateLimitResult> {
+    const key = `rate:${action}:${identifier}`;
+    const current = await this.client.incr(key);
+
+    if (current === 1) {
+      await this.client.expire(key, windowSeconds);
+    }
+
+    const ttl = await this.ttl(key);
+    const resetTime = new Date(Date.now() + (ttl ?? windowSeconds) * 1000).toISOString();
+
+    return {
+      allowed: current <= maxAttempts,
+      current,
+      remaining: Math.max(0, maxAttempts - current),
+      resetTime,
+      ...(current > maxAttempts ? { retryAfter: ttl ?? windowSeconds } : {}),
+    };
+  }
+
+  async resetRateLimit(identifier: string, action: string): Promise<void> {
+    await this.delete(`rate:${action}:${identifier}`);
+  }
+
+  async acquireLock(resource: string, ttlSeconds: number, lockId?: string): Promise<string | null> {
+    const key = `lock:${resource}`;
+    const value = lockId ?? Math.random().toString(36).substring(2);
+
+    // 타입 정의 버그 때문에 as any 필요
+    const result = await (this.client.set as any)(key, value, "NX", "EX", ttlSeconds);
+
+    return result ? value : null;
+  }
+
+  async releaseLock(resource: string, lockId: string): Promise<boolean> {
+    const key = `lock:${resource}`;
+    const script = `
+      if redis.call("get", KEYS[1]) == ARGV[1] then
+        return redis.call("del", KEYS[1])
+      else
+        return 0
+      end
+    `;
+    const result = await this.client.eval(script, 1, key, lockId);
+    return result === 1;
+  }
+
+  async renewLock(resource: string, lockId: string, ttlSeconds: number): Promise<boolean> {
+    const key = `lock:${resource}`;
+    const script = `
+      if redis.call("get", KEYS[1]) == ARGV[1] then
+        return redis.call("expire", KEYS[1], ARGV[2])
+      else
+        return 0
+      end
+    `;
+    const result = await this.client.eval(script, 1, key, lockId, ttlSeconds);
+    return result === 1;
   }
 }
