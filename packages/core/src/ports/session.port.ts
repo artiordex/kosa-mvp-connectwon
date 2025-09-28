@@ -1,77 +1,92 @@
 /**
- * Description : session.port.ts - 📌 세션 저장소 포트 인터페이스
+ * Description : session.port.ts - 📌 세션(프로그램 일정) 저장소 포트 인터페이스
  * Author : Shiwoo Min
- * Date : 2025-09-10
+ * Date : 2025-09-30
  */
-import type { CreateSession, CursorPaginatedResponse, CursorPaginationQuery, Id, Session, SessionWithParticipants, SessionWithProgram, SessionWithProgramAndVenue, UpdateSession } from '@connectwon/core/core-types';
+import type { CursorPaginatedResponse, CursorPaginationQuery, Id, ISODateTime } from '@connectwon/core/core-types';
+
+/**
+ * @description 세션 상태
+ */
+export type SessionStatus = 'SCHEDULED' | 'CONFIRMED' | 'CANCELLED' | 'COMPLETED';
+
+/**
+ * @description 세션 엔터티
+ */
+export interface Session {
+  id: Id;
+  programId: Id;
+  startsAt: ISODateTime;
+  endsAt: ISODateTime;
+  capacity?: number;
+  participantFee?: number;
+  status: SessionStatus;
+  roomReservationId?: Id;
+  locationText?: string;
+  createdAt: ISODateTime;
+  updatedAt: ISODateTime;
+}
+
+/**
+ * @description 세션 생성 입력
+ */
+export interface CreateSession {
+  programId: Id;
+  startsAt: ISODateTime;
+  endsAt: ISODateTime;
+  capacity?: number;
+  participantFee?: number;
+  locationText?: string;
+  roomReservationId?: Id;
+}
+
+/**
+ * @description 세션 수정 입력
+ */
+export interface UpdateSession {
+  startsAt?: ISODateTime;
+  endsAt?: ISODateTime;
+  capacity?: number;
+  participantFee?: number;
+  status?: SessionStatus;
+  locationText?: string;
+  roomReservationId?: Id;
+}
 
 /**
  * @description 세션 저장소 포트
  */
 export interface SessionRepository {
-  /** @description ID로 조회 */
+  /** ID로 조회 */
   findById(id: Id): Promise<Session | null>;
 
-  /** @description 프로그램 조인 포함 조회 */
-  findByIdWithProgram(id: Id): Promise<SessionWithProgram | null>;
-
-  /** @description 프로그램/장소/방 등 상세 조인 조회 */
-  findByIdWithDetails(id: Id): Promise<SessionWithProgramAndVenue | null>;
-
-  /** @description 참가자 조인 포함 조회 */
-  findByIdWithParticipants(id: Id): Promise<SessionWithParticipants | null>;
-
-  /** @description 생성/갱신/삭제 */
-  create(session: CreateSession): Promise<Session>;
-  update(id: Id, updates: UpdateSession): Promise<Session>;
-  delete(id: Id): Promise<void>;
-
-  /** @description 페이징 목록 */
-  findMany(query: CursorPaginationQuery): Promise<CursorPaginatedResponse<Session>>;
-
-  /** @description 페이징 목록(프로그램 조인) */
-  findManyWithProgram(query: CursorPaginationQuery): Promise<CursorPaginatedResponse<SessionWithProgram>>;
-
-  /** @description 프로그램별 목록 */
+  /** 프로그램 기준 조회 */
   findByProgramId(programId: Id, query: CursorPaginationQuery): Promise<CursorPaginatedResponse<Session>>;
 
-  /** @description 상태별 목록 */
-  findByStatus(status: string, query: CursorPaginationQuery): Promise<CursorPaginatedResponse<Session>>;
+  /** 생성 */
+  create(data: CreateSession): Promise<Session>;
 
-  /** @description 날짜 범위별 목록 */
-  findByDateRange(startDate: string, endDate: string, query: CursorPaginationQuery): Promise<CursorPaginatedResponse<Session>>;
+  /** 수정 */
+  update(id: Id, updates: UpdateSession): Promise<Session>;
 
-  /** @description 예정(Upcoming) 세션 목록 */
-  findUpcoming(query: CursorPaginationQuery): Promise<CursorPaginatedResponse<SessionWithProgram>>;
+  /** 삭제 */
+  delete(id: Id): Promise<void>;
 
-  /** @description 완료 세션 목록 */
-  findCompleted(query: CursorPaginationQuery): Promise<CursorPaginatedResponse<SessionWithProgram>>;
+  /** 페이징 목록 조회 */
+  findMany(query: CursorPaginationQuery): Promise<CursorPaginatedResponse<Session>>;
 
-  /** @description 취소 세션 목록 */
-  findCancelled(query: CursorPaginationQuery): Promise<CursorPaginatedResponse<SessionWithProgram>>;
+  /** 상태별 조회 */
+  findByStatus(status: SessionStatus, query: CursorPaginationQuery): Promise<CursorPaginatedResponse<Session>>;
 
-  /** @description 방 예약 ID로 세션 조회 */
-  findByRoomReservationId(roomReservationId: Id): Promise<Session | null>;
+  /** 기간 내 조회 */
+  findInRange(startTime: ISODateTime, endTime: ISODateTime, query: CursorPaginationQuery): Promise<CursorPaginatedResponse<Session>>;
 
-  /** @description 세션 상태 변경 */
-  updateStatus(id: Id, status: string): Promise<void>;
+  /** 활성 세션(시작/종료 기준) */
+  findActive(at: ISODateTime): Promise<Session[]>;
 
-  /** @description 방 예약과 링크/해제 */
-  linkRoomReservation(sessionId: Id, roomReservationId: Id): Promise<void>;
-  unlinkRoomReservation(sessionId: Id): Promise<void>;
-
-  /** @description 시간 충돌 체크(예: 동일 시간대) */
-  checkTimeConflict(startsAt: string, endsAt: string, excludeSessionId?: Id): Promise<Session[]>;
-
-  /** @description 리마인더 대상 세션 조회 */
-  findForReminder(beforeMinutes: number): Promise<SessionWithProgramAndVenue[]>;
-
-  /** @description 존재 여부 */
-  exists(id: Id): Promise<boolean>;
-
-  /** @description 통계 */
+  /** 총 개수 */
   count(): Promise<number>;
-  countByProgram(programId: Id): Promise<number>;
-  countByStatus(status: string): Promise<number>;
-  countUpcoming(): Promise<number>;
+
+  /** 존재 여부 */
+  exists(id: Id): Promise<boolean>;
 }
