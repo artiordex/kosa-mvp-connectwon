@@ -7,7 +7,7 @@
 
 import { useCallback, useContext, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation.js';
-import type { SessionUser, UserRole } from '../client-types.js';
+import type { SessionUser, UserRole } from '@connectwon/client/client-types';
 import { AuthContext, type AuthContextValue } from '../providers/AuthProvider.js';
 
 /**

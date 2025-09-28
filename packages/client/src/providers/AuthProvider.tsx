@@ -3,16 +3,8 @@
  * Author : Shiwoo Min
  * Date : 2025-09-12
  */
-'use client';
-
 import React, { createContext, useCallback, useEffect, useMemo, useState } from 'react';
-import type { SessionUser, UserRole } from '../client-types.js';
-
-/**
- * Description : AuthProvider.tsx - 📌 클라이언트 측 인증 컨텍스트 제공자
- * Author : Shiwoo Min
- * Date : 2025-09-12
- */
+import type { SessionUser, UserRole } from '@connectwon/client/client-types';
 
 /**
  * @description 인증 컨텍스트 값 타입 (클라이언트 전용)
