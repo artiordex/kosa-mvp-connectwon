@@ -23,8 +23,8 @@ export interface CacheService {
  */
 export interface SessionCache {
   // 사용자 세션
-  getUserSession(userId: string): Promise<UserSession | null>;
-  setUserSession(userId: string, session: UserSession, ttlSeconds?: number): Promise<void>;
+  getUserSession(userId: string): Promise<CacheUserSession | null>;
+  setUserSession(userId: string, session: CacheUserSession, ttlSeconds?: number): Promise<void>;
   deleteUserSession(userId: string): Promise<void>;
 
   // 이메일 인증 코드
@@ -51,7 +51,7 @@ export interface SessionCache {
 /**
  * @description 사용자 세션 페이로드
  */
-export interface UserSession {
+export interface CacheUserSession {
   userId: string;
   email: string;
   name: string;

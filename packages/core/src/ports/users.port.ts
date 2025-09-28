@@ -16,16 +16,15 @@ export interface AuthService {
   verifyCode(email: string, code: string, purpose: VerificationPurpose): Promise<boolean>;
   registerUser(userData: CreateUser): Promise<User>;
   loginUser(email: string): Promise<AuthResult>;
-  createSession(user: User): Promise<UserSession>;
-  verifySession(sessionToken: string): Promise<UserSession | null>;
-  refreshSession(sessionToken: string): Promise<UserSession>;
+  createSession(user: User): Promise<AuthUserSession>;
+  verifySession(sessionToken: string): Promise<AuthUserSession | null>;
+  refreshSession(sessionToken: string): Promise<AuthUserSession>;
   revokeSession(sessionToken: string): Promise<void>;
   revokeAllSessions(userId: Id): Promise<void>;
   generateAccessToken(user: User): Promise<string>;
   generateRefreshToken(user: User): Promise<string>;
   verifyAccessToken(token: string): Promise<TokenPayload | null>;
   verifyRefreshToken(token: string): Promise<TokenPayload | null>;
-  checkRateLimit(identifier: string, action: string): Promise<RateLimitResult>;
   logSecurityEvent(event: SecurityEvent): Promise<void>;
   activateUser(userId: Id): Promise<void>;
   deactivateUser(userId: Id): Promise<void>;
@@ -117,7 +116,7 @@ export interface UserRepository {
 export interface AuthResult {
   success: boolean;
   user?: User;
-  session?: UserSession;
+  session?: AuthUserSession;
   tokens?: TokenPair;
   error?: string;
   requiresVerification?: boolean;
@@ -126,7 +125,7 @@ export interface AuthResult {
 /**
  * @description 사용자 세션
  */
-export interface UserSession {
+export interface AuthUserSession {
   id: string;
   userId: Id;
   accessToken: string;
@@ -174,16 +173,6 @@ export interface GoogleTokenPayload {
  * @description 이메일 인증 용도
  */
 export type VerificationPurpose = 'signup' | 'login' | 'email_change' | 'password_reset';
-
-/**
- * @description 레이트 리밋 결과
- */
-export interface RateLimitResult {
-  allowed: boolean;
-  remaining: number;
-  resetTime: string;
-  retryAfter?: number;
-}
 
 /**
  * @description 보안 이벤트

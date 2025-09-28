@@ -1,11 +1,12 @@
 /**
- * Description : tsconfig.json - 📌 Core 패키지 (TypeScript 설정)
+ * Description : tsconfig.json - 📌 Core 패키지
  * Author : Shiwoo Min
- * Date : 2025-09-10
+ * Date : 2025-09-28
  * 09-10 : core 패키지의 domain/authz 참조 추가
  * 09-12 : 선언파일/소스맵/증분빌드/레퍼런스 정리
  * 09-22 : .d.ts 파일 사용으로 변경, declaration 중복 생성 방지
  * 09-26 : alias(@connectwon/core-types) 추가
+ * 09-28 : configs(ts/json) 통합 반영 (resolveJsonModule, include 패턴 확장)
  * 빌드 로그 확인 - tsc -p tsconfig.json --listEmittedFiles
  */
 {
@@ -19,7 +20,7 @@
     // 서버 전용 타깃 (브라우저 타입 유입 방지)
     "target": "ES2022",
     "lib": ["ES2022"],
-    "types": ["node"],
+    "types": ["node", "eslint"],
 
     // Node ESM 해석
     "module": "NodeNext",
@@ -38,15 +39,14 @@
     // 상호운용/편의
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
+    "allowArbitraryExtensions": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "exactOptionalPropertyTypes": true
   },
 
-  "include": [
-    "src/**/*",
-  ],
+  "include": ["src/**/*", "src/configs/**/*.ts", "src/configs/**/*.json"],
   "exclude": ["dist", "node_modules", "**/*.test.*", "**/*.spec.*"],
 
   // 순환 참조 방지: database → core 참조만 허용, core → database 금지

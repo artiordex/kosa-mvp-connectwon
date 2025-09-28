@@ -1,12 +1,20 @@
 {
   "name": "@connectwon/core",
   "version": "1.0.0",
-  "description": "ConnectWon 핵심 라이브러리",
+  "description": "ConnectWon 핵심 라이브러리 + 공통 설정",
   "private": true,
   "type": "module",
   "sideEffects": false,
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "author": "Shiwoo Min <artiordex@gmail.com>",
+  "files": [
+    "dist",
+    "configs/eslint/*",
+    "configs/tailwind/*",
+    "configs/testing/*",
+    "configs/typescript/*"
+  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -40,11 +48,14 @@
       "types": "./dist/domain/*.d.ts",
       "import": "./dist/domain/*.js"
     },
+    "./configs/eslint/base": "./configs/eslint/base.ts",
+    "./configs/tailwind/base": "./configs/tailwind/base.ts",
+    "./configs/tailwind/web": "./configs/tailwind/web.ts",
+    "./configs/tailwind/admin": "./configs/tailwind/admin.ts",
+    "./configs/testing/vitest": "./configs/testing/vitest.ts",
+    "./configs/tsconfig/base": "./configs/typescript/base.json",
     "./package.json": "./package.json"
   },
-  "files": [
-    "dist"
-  ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "dev": "tsc -p tsconfig.json -w",
@@ -73,7 +84,12 @@
   },
   "peerDependencies": {
     "@nestjs/common": "^11",
-    "@nestjs/core": "^11"
+    "@nestjs/core": "^11",
+    "eslint": ">=8.57",
+    "tailwindcss": ">=3.4",
+    "typescript": ">=5.4",
+    "vite-tsconfig-paths": ">=4.3",
+    "vitest": ">=1.5"
   },
   "peerDependenciesMeta": {
     "@nestjs/common": {
@@ -84,14 +100,15 @@
     }
   },
   "devDependencies": {
-    "@connectwon/configs": "workspace:*",
     "@connectwon/database": "workspace:*",
+    "@eslint/eslintrc": "^3.3.1",
     "@nestjs/common": "^11.0.0",
     "@nestjs/core": "^11.0.0",
     "@types/node": "^24.0.0",
     "@types/node-fetch": "^2.6.13",
     "@types/nodemailer": "^7.0.1",
     "rimraf": "^6.0.1",
-    "typescript": "^5.6.0"
+    "typescript": "^5.6.0",
+    "vite-tsconfig-paths": "^5.1.4"
   }
 }
