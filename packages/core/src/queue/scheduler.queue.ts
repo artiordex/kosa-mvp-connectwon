@@ -1,9 +1,10 @@
 /**
- * Description : queue/scheduler.ts - 📌 큐 매니저의 작업 처리를 주기적으로 실행하는 스케줄러
+ * Description : scheduler.queue.ts - 📌 큐 매니저의 작업 처리를 주기적으로 실행하는 스케줄러
  * Author : Shiwoo Min
  * Date : 2025-09-10
  */
-import type { QueueManager } from './manager.js';
+import type { QueueManager } from './manager.queue.js';
+
 /**
  * @description 큐 스케줄러 클래스
  * @summary QueueManager의 processNextJob을 주기적으로 호출하여 작업 처리를 자동화

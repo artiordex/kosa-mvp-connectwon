@@ -1,5 +1,5 @@
 /**
- * Description : bull.ts - 📌 BullMQ 기반 큐 시스템
+ * Description : bull.queue.ts - 📌 BullMQ 기반 큐 시스템
  * Author : Shiwoo Min
  * Date : 2025-09-12
  * - ioredis 인스턴스 기반 공유/블로킹 커넥션 단일화
@@ -16,7 +16,7 @@ import {
   ReportJobProcessor,
   SessionReminderProcessor,
   SlackJobProcessor,
-} from './processor.js';
+} from './processor.queue.js';
 import { type Job, type JobsOptions, type Processor, Queue, QueueEvents, Worker, type WorkerOptions } from 'bullmq';
 import type { RedisOptions } from 'ioredis';
 

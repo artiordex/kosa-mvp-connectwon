@@ -1,9 +1,9 @@
 /**
- * Description : clock.ts - 📌 시스템 시계 구현체
+ * Description : clock.adapter.ts - 📌 시스템 시계 구현체
  * Author : Shiwoo Min
  * Date : 2025-09-10
  */
-import type { Clock } from '../ports/time.port.js';
+import type { Clock } from '../../../core/src/ports/time.port.js';
 
 /**
  * @description 런타임의 실제 시간을 반환하는 시스템 시계

@@ -1,5 +1,5 @@
 /**
- * Description : db.ts - 📌 데이터베이스 포트 및 Prisma 어댑터
+ * Description : db.adapter.ts - 📌 데이터베이스 포트 및 Prisma 어댑터
  * Author : Shiwoo Min
  * Date : 2025-09-27
  */

@@ -4,7 +4,10 @@
  * Date : 2025-09-27
  */
 import type { Message, MessageCreateParamsNonStreaming } from '@anthropic-ai/sdk/resources/messages';
-import type { AIChatInput, AIChatResult, AIClient, AIClientOptions, AIMessage } from '../ports/ai.port.js';
+
+import type { AIChatInput, AIChatResult, AIClient, AIClientOptions, AIMessage } from '../../../core/src/ports/ai.port.js';
+
+import type { AIChatInput, AIChatResult, AIClient, AIClientOptions, AIMessage } from '../../../core/src/ports/ai.port.js';
 
 /**
  * @description Anthropic Claude API 어댑터 클래스
@@ -19,10 +22,8 @@ export class AnthropicAdapter implements AIClient {
 
     const model = input.params?.model ?? this.opts.defaultModel ?? 'claude-3-5-sonnet-20241022';
 
-    // system 메시지
     const systemMessage = input.messages.find((m: AIMessage) => m.role === 'system')?.content || input.system;
 
-    // user/assistant 만 추출
     type ClaudeMsg = { role: 'user' | 'assistant'; content: string };
     const messages: ClaudeMsg[] = input.messages
       .filter((m: AIMessage) => m.role !== 'system')
@@ -31,37 +32,33 @@ export class AnthropicAdapter implements AIClient {
         content: m.content,
       }));
 
-    // Anthropic 메시지 포맷 변환
-    const baseParams: MessageCreateParamsNonStreaming = {
+    const createParams: MessageCreateParamsNonStreaming = {
       model,
       max_tokens: input.params?.maxTokens ?? 1024,
       messages,
-    };
-
-    const createParams: MessageCreateParamsNonStreaming = {
-      ...baseParams,
       ...(input.params?.temperature !== undefined ? { temperature: input.params.temperature } : {}),
       ...(systemMessage ? { system: systemMessage } : {}),
     };
 
     const res: Message = await client.messages.create(createParams);
 
-    const content = res.content;
-    const text = Array.isArray(content)
-      ? (content as Array<{ type: string; text?: string }>)
+    const text = Array.isArray(res.content)
+      ? (res.content as Array<{ type: string; text?: string }>)
           .filter(block => block.type === 'text')
           .map(block => block.text ?? '')
           .join('')
       : '';
 
+    const usage = {
+      promptTokens: (res as any).usage?.input_tokens ?? 0,
+      completionTokens: (res as any).usage?.output_tokens ?? 0,
+      totalTokens: ((res as any).usage?.input_tokens ?? 0) + ((res as any).usage?.output_tokens ?? 0),
+    };
+
     return {
       content: text,
-      finishReason: (res as any).stop_reason || 'stop',
-      usage: {
-        promptTokens: (res as any).usage?.input_tokens ?? 0,
-        completionTokens: (res as any).usage?.output_tokens ?? 0,
-        totalTokens: ((res as any).usage?.input_tokens ?? 0) + ((res as any).usage?.output_tokens ?? 0),
-      },
+      finishReason: (res as any).stop_reason ?? 'stop',
+      usage,
       raw: res,
     };
   }

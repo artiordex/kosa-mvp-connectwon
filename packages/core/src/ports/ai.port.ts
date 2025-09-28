@@ -1,10 +1,14 @@
 /**
- * Description : ai.port.ts - 📌 AI 서비스 포트 인터페이스 (core-types에서 이동)
+ * Description : ai.port.ts - 📌 AI 서비스 포트 인터페이스 (OpenAI / Anthropic / HuggingFace 지원)
  * Author : Shiwoo Min
  * Date : 2025-09-27
  */
-import type { AIProvider, AIUsage } from '../core-types.js';
 import type { TimeRange } from '../domain/value-objects.js';
+
+/**
+ * @description 지원되는 AI Provider
+ */
+export type AIProvider = 'openai' | 'anthropic' | 'huggingface';
 
 /**
  * @description AI 메시지 역할
@@ -44,6 +48,15 @@ export interface AIChatInput {
 export type FinishReason = 'stop' | 'length' | 'content_filter' | 'tool_calls' | string | undefined;
 
 /**
+ * @description 토큰 사용량
+ */
+export interface AIUsage {
+  promptTokens: number;
+  completionTokens: number;
+  totalTokens: number;
+}
+
+/**
  * @description AI 채팅 결과
  */
 export interface AIChatResult {
@@ -54,7 +67,7 @@ export interface AIChatResult {
 }
 
 /**
- * @description AI 클라이언트 추상화
+ * @description AI 클라이언트 추상화 (Provider별 Adapter가 구현)
  */
 export interface AIClient {
   chat(input: AIChatInput): Promise<AIChatResult>;
@@ -67,6 +80,7 @@ export interface AIClientOptions {
   apiKey: string;
   baseURL?: string;
   defaultModel?: string;
+  provider?: AIProvider;
 }
 
 // AI SERVICE INTERFACE
@@ -267,9 +281,9 @@ export interface AIUsageStats {
   totalRequests: number;
   totalTokens: number;
   totalCost: number;
-  byProvider: Record<AIProvider, { requests: number; tokens: number; cost: number }>;
+  byProvider: Partial<Record<AIProvider, { requests: number; tokens: number; cost: number }>>;
   byModel: Record<string, { requests: number; tokens: number; cost: number }>;
-  byCapability: Record<AICapability, { requests: number; tokens: number; cost: number }>;
+  byCapability: Partial<Record<AICapability, { requests: number; tokens: number; cost: number }>>;
   timeRange: TimeRange;
 }
 

@@ -1,5 +1,5 @@
 /**
- * Description : queue/manager.ts - 📌 큐 매니저
+ * Description : manager.queue.ts - 📌 큐 매니저
  * Author : Shiwoo Min
  * Date : 2025-09-10
  */

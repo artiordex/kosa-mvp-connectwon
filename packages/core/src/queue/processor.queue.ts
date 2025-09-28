@@ -1,5 +1,5 @@
 /**
- * Description : processor.ts - 📌 BullMQ 프로세서 모음
+ * Description : processor.queue.ts - 📌 BullMQ 프로세서 모음
  * Author : Shiwoo Min
  * Date : 2025-09-10
  */

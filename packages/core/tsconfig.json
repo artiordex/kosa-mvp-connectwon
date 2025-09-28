@@ -41,10 +41,12 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "exactOptionalPropertyTypes": true,
+    "exactOptionalPropertyTypes": true
   },
 
-  "include": ["src/**/*"],
+  "include": [
+    "src/**/*",
+  ],
   "exclude": ["dist", "node_modules", "**/*.test.*", "**/*.spec.*"],
 
   // 순환 참조 방지: database → core 참조만 허용, core → database 금지

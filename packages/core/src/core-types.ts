@@ -4,6 +4,7 @@
  * Date : 2025-09-10
  * 09-17 : core 패키지의 domain/authz 참조 추가, Repository 임포트 에러 해결
  */
+
 /**
  * @description 식별자 공통 타입
  */
@@ -54,21 +55,6 @@ export interface Page<T> {
   page: number; // 1-base
   /** @description 페이지 크기 */
   pageSize: number;
-}
-
-/**
- * @description 이메일 송신 서버 설정
- */
-export interface EmailConfig {
-  host: string;
-  port: number;
-  secure: boolean;
-  auth: {
-    user: string;
-    pass: string;
-  };
-  from: EmailAddress;
-  replyTo?: EmailAddress;
 }
 
 /**
@@ -454,13 +440,7 @@ export interface UpdateParticipant {
 /**
  * @description 결제 상태
  */
-export type PaymentStatus =
-  | 'PENDING'
-  | 'PROCESSING'
-  | 'COMPLETED'
-  | 'FAILED'
-  | 'REFUNDED'
-  | 'CANCELLED';
+export type PaymentStatus = 'PENDING' | 'PROCESSING' | 'COMPLETED' | 'FAILED' | 'REFUNDED' | 'CANCELLED';
 
 /**
  * @description 결제 수단
@@ -567,313 +547,6 @@ export interface UpdateAIInteraction {
 }
 
 /**
- * @description 이메일 주소 객체
- */
-export interface EmailAddress {
-  email: string;
-  name?: string;
-}
-
-/**
- * @description 이메일 첨부파일
- */
-export interface EmailAttachment {
-  filename: string;
-  content: Uint8Array | string; // Node Buffer도 Uint8Array 호환
-  content_type: string;
-  disposition?: 'attachment' | 'inline';
-  content_id?: string;
-}
-
-/**
- * @description 이메일 템플릿 정의
- */
-export interface EmailTemplateDefinition {
-  id: string;
-  name: string;
-  subject_template: string;
-  html_template: string;
-  text_template?: string;
-  required_variables: string[];
-  optional_variables?: string[];
-  created_at: string;
-  updated_at: string;
-}
-
-/**
- * @description 알림 채널 종류
- */
-export type NotificationChannel = 'email' | 'slack' | 'sms' | 'push';
-
-/**
- * @description 알림 우선순위
- */
-export type NotificationPriority = 'low' | 'normal' | 'high' | 'urgent';
-
-/**
- * @description 알림 상태
- */
-export type NotificationStatus = 'pending' | 'sent' | 'failed' | 'delivered' | 'read';
-
-/**
- * @description 모든 알림의 공통 속성
- */
-export interface BaseNotification {
-  id: string;
-  channel: NotificationChannel;
-  priority: NotificationPriority;
-  status: NotificationStatus;
-  created_at: string;
-  sent_at?: string;
-  delivered_at?: string;
-  error_message?: string;
-  retry_count: number;
-  max_retries: number;
-}
-
-/**
- * @description 이메일 알림
- */
-export interface EmailNotification extends BaseNotification {
-  channel: 'email';
-  to: EmailAddress[];
-  cc?: EmailAddress[];
-  bcc?: EmailAddress[];
-  from: EmailAddress;
-  reply_to?: EmailAddress;
-  subject: string;
-  html?: string;
-  text?: string;
-  template?: EmailTemplate;
-  attachments?: EmailAttachment[];
-  headers?: Record<string, string>;
-  tags?: string[];
-}
-
-/**
- * @description 이메일 발송 요청
- */
-export interface SendEmailRequest {
-  to: EmailAddress[];
-  cc?: EmailAddress[];
-  bcc?: EmailAddress[];
-  subject: string;
-  html?: string;
-  text?: string;
-  template?: EmailTemplate;
-  attachments?: EmailAttachment[];
-  priority?: NotificationPriority;
-  tags?: string[];
-  scheduled_at?: string;
-}
-
-/**
- * @description Slack 필드(첨부 내 key-value)
- */
-export interface SlackField {
-  title: string;
-  value: string;
-  short?: boolean;
-}
-
-/**
- * @description Slack Block Kit 블록 (최소 스펙)
- */
-export interface SlackBlock {
-  type: string;
-  text?: { type: string; text: string };
-  elements?: unknown[];
-  accessory?: unknown;
-  [k: string]: unknown;
-}
-
-/**
- * @description Slack 첨부 객체
- */
-export interface SlackAttachment {
-  color?: string;
-  pretext?: string;
-  author_name?: string;
-  author_link?: string;
-  author_icon?: string;
-  title?: string;
-  title_link?: string;
-  text?: string;
-  fields?: SlackField[];
-  image_url?: string;
-  thumb_url?: string;
-  footer?: string;
-  footer_icon?: string;
-  ts?: number;
-}
-
-/**
- * @description Slack 알림
- */
-export interface SlackNotification extends BaseNotification {
-  channel: 'slack';
-  channel_id?: string;
-  channel_name?: string;
-  user_id?: string;
-  username?: string;
-  text: string;
-  blocks?: SlackBlock[];
-  attachments?: SlackAttachment[];
-  thread_ts?: string;
-  reply_broadcast?: boolean;
-  link_names?: boolean;
-  parse?: 'full' | 'none';
-  unfurl_links?: boolean;
-  unfurl_media?: boolean;
-  icon_emoji?: string;
-  icon_url?: string;
-  username_override?: string;
-}
-
-/**
- * @description Slack 발송 요청
- */
-export interface SendSlackRequest {
-  channel_id?: string;
-  channel_name?: string;
-  user_id?: string;
-  text: string;
-  blocks?: SlackBlock[];
-  attachments?: SlackAttachment[];
-  thread_ts?: string;
-  priority?: NotificationPriority;
-  scheduled_at?: string;
-}
-
-/**
- * @description Slack 웹훅 기본 설정
- */
-export interface SlackWebhookConfig {
-  webhook_url: string;
-  default_channel?: string;
-  default_username?: string;
-  default_icon?: string;
-}
-
-/**
- * @description Slack 메시지 페이로드
- */
-export interface SlackMessage {
-  channel: string;
-  text: string;
-  username?: string;
-  icon_emoji?: string;
-  icon_url?: string;
-  attachments?: SlackAttachment[];
-  blocks?: SlackBlock[];
-  thread_ts?: string;
-}
-
-/**
- * @description Slack 발송 결과
- */
-export interface SlackResult {
-  success: boolean;
-  error?: string;
-  response?: unknown;
-}
-
-/**
- * @description 알림 템플릿 메타데이터
- */
-export interface NotificationTemplate {
-  id: string;
-  name: string;
-  description?: string;
-  channel: NotificationChannel;
-  template_data: EmailTemplateDefinition | SlackTemplate;
-  is_active: boolean;
-  created_at: string;
-  updated_at: string;
-}
-
-/**
- * @description Slack 템플릿 정의
- */
-export interface SlackTemplate {
-  text_template: string;
-  blocks_template?: unknown;
-  required_variables: string[];
-  optional_variables?: string[];
-}
-
-/**
- * @description 알림 이벤트 유형
- */
-export type NotificationEventType =
-  | 'session_reminder'
-  | 'session_cancelled'
-  | 'session_confirmed'
-  | 'program_created'
-  | 'program_updated'
-  | 'participant_joined'
-  | 'participant_left'
-  | 'room_reservation_confirmed'
-  | 'room_reservation_cancelled'
-  | 'payment_completed'
-  | 'payment_failed';
-
-/**
- * @description 알림 이벤트 페이로드
- */
-export interface NotificationEvent {
-  event_type: NotificationEventType;
-  entity_id: string;
-  entity_type: 'session' | 'program' | 'user' | 'reservation' | 'payment';
-  recipients: {
-    user_ids?: string[];
-    email_addresses?: string[];
-    slack_channels?: string[];
-    slack_users?: string[];
-  };
-  template_id?: string;
-  variables: Record<string, unknown>;
-  priority?: NotificationPriority;
-  scheduled_at?: string;
-}
-
-/**
- * @description 사용자별 알림 환경설정
- */
-export interface NotificationPreferences {
-  user_id: string;
-  email_enabled: boolean;
-  slack_enabled: boolean;
-  sms_enabled: boolean;
-  push_enabled: boolean;
-  channels: {
-    session_reminders: NotificationChannel[];
-    session_updates: NotificationChannel[];
-    program_updates: NotificationChannel[];
-    payment_notifications: NotificationChannel[];
-    marketing: NotificationChannel[];
-  };
-  quiet_hours?: { start: string; end: string; timezone: string };
-  frequency_limits?: { daily_max: number; weekly_max: number };
-}
-
-/**
- * @description 알림 통계 집계
- */
-export interface NotificationStats {
-  total_sent: number;
-  total_delivered: number;
-  total_failed: number;
-  delivery_rate: number;
-  by_channel: Record<
-    NotificationChannel,
-    { sent: number; delivered: number; failed: number; delivery_rate: number }
-  >;
-  by_template: Record<string, { sent: number; delivered: number; failed: number }>;
-  time_period: { start: string; end: string };
-}
-
-/**
  * @description 지원하는 AI 제공자
  */
 export type AIProvider = 'openai' | 'anthropic' | 'huggingface';
@@ -893,8 +566,6 @@ export interface AIChatParams {
   topP?: number;
 }
 
-
-
 /**
  * @description 토큰/비용 사용량
  */
@@ -911,6 +582,11 @@ export interface AIUsage {
 export type FinishReason = 'stop' | 'length' | 'content_filter' | 'tool_calls' | string | undefined;
 
 /**
+ * @description 알림 채널 종류 (최소한 유지)
+ */
+export type NotificationChannel = 'email' | 'slack' | 'sms' | 'push';
+
+/**
  * @description n8n 웹훅 페이로드
  */
 export interface N8nWebhookPayload {
@@ -920,66 +596,6 @@ export interface N8nWebhookPayload {
   data: Record<string, unknown>;
   timestamp: string;
 }
-
-/**
- * @description 범용 알림 페이로드(프런트/봇 전달 등)
- */
-export interface NotificationPayload {
-  type: 'info' | 'success' | 'warning' | 'error';
-  title: string;
-  message: string;
-  data?: Record<string, unknown>;
-  user_id?: string;
-  channel?: string;
-}
-
-/**
- * @description 간편 이메일 전송 파라미터 (단축용)
- */
-export interface SendEmailParams {
-  to: string;
-  subject: string;
-  html?: string;
-  text?: string;
-}
-
-/**
- * @description 간편 이메일 전송 결과
- */
-export interface EmailResult {
-  success: boolean;
-  message_id?: string;
-  error?: string;
-}
-
-/**
- * @description 이메일 인증 목적
- */
-export type VerificationPurpose = 'signup' | 'email_change' | 'password_reset' | 'login';
-
-/**
- * @description 인증 코드 전송 파라미터
- */
-export interface SendVerificationCodeParams {
-  email: string;
-  code: string;
-  purpose: VerificationPurpose;
-  expires_in_minutes?: number;
-}
-
-/**
- * @description 이메일 템플릿(단축형)
- */
-export interface EmailTemplate {
-  subject: string;
-  html: string;
-  text: string;
-}
-
-/**
- * @description 이메일 템플릿 종류
- */
-export type EmailTemplateType = 'verification_code' | 'password_reset' | 'welcome' | 'notification';
 
 /**
  * @description 잡(작업) 상태
@@ -1030,9 +646,7 @@ export interface QueueStats {
 /**
  * @description 잡 처리 결과
  */
-export type JobResult<T = unknown> =
-  | { success: true; data?: T }
-  | { success: false; error: string };
+export type JobResult<T = unknown> = { success: true; data?: T } | { success: false; error: string };
 
 /**
  * @description 잡(작업) 공통 포맷

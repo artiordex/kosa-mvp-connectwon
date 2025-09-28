@@ -1,9 +1,9 @@
 /**
- * Description : search.ts - 📌 PgVector 기반 검색 서비스 구현체
+ * Description : search.adapter.ts - 📌 PgVector 기반 검색 서비스 구현체
  * Author : Shiwoo Min
  * Date : 2025-09-27
  */
-import type { SearchDocument, SearchDocumentType, SearchFilters, SearchOptions, SearchResult, SearchService } from '../ports/search.port.js';
+import type { SearchDocument, SearchDocumentType, SearchFilters, SearchOptions, SearchResult, SearchService } from '../../../core/src/ports/search.port.js';
 
 // PGVECTOR SEARCH IMPLEMENTATION
 export class PgVectorSearchService implements SearchService {

@@ -55,20 +55,6 @@ export interface PasswordService {
 }
 
 /**
- * @description 2단계 인증 서비스 포트
- */
-export interface TwoFactorService {
-  generateTOTPSecret(userId: Id): Promise<TOTPSetup>;
-  verifyTOTPSetup(userId: Id, secret: string, token: string): Promise<boolean>;
-  enableTOTP(userId: Id, secret: string): Promise<string[]>;
-  verifyTOTP(userId: Id, token: string): Promise<boolean>;
-  generateBackupCodes(userId: Id): Promise<string[]>;
-  verifyBackupCode(userId: Id, code: string): Promise<boolean>;
-  disable2FA(userId: Id): Promise<void>;
-  get2FAStatus(userId: Id): Promise<TwoFactorStatus>;
-}
-
-/**
  * @description 권한/역할 서비스 포트
  */
 export interface PermissionService {

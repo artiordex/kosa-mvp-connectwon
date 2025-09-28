@@ -82,19 +82,13 @@
       "@connectwon/api-contract/*": ["packages/api-contract/src/*"],
       "@connectwon/configs": ["packages/configs/src"],
       "@connectwon/configs/*": ["packages/configs/src/*"],
-      "@connectwon/database": ["packages/database/src"],
-      "@connectwon/database/*": ["packages/database/src/*"],
+
       "@connectwon/logger": ["packages/logger/src"],
       "@connectwon/logger/*": ["packages/logger/src/*"],
       "@connectwon/sdk": ["packages/sdk/src"],
       "@connectwon/sdk/*": ["packages/sdk/src/*"],
       "@connectwon/client": ["packages/client/src"],
       "@connectwon/client/*": ["packages/client/src/*"],
-
-      // server 엔트리포인트를 index.ts로 명확히 지정
-      "@connectwon/server": ["packages/server/src/index.ts"],
-      "@connectwon/server/*": ["packages/server/src/*"],
-
       "@connectwon/ui": ["packages/ui/src"],
       "@connectwon/ui/*": ["packages/ui/src/*"],
 
@@ -108,7 +102,13 @@
       "@connectwon/worker": ["apps/worker/src"],
       "@connectwon/worker/*": ["apps/worker/src/*"],
       "@connectwon/e2e": ["apps/e2e/src"],
-      "@connectwon/e2e/*": ["apps/e2e/src/*"]
+      "@connectwon/e2e/*": ["apps/e2e/src/*"],
+
+      // server 엔트리포인트를 index.ts로 명확히 지정
+      "@connectwon/server": ["packages/server/src/index.ts"],
+      "@connectwon/server/*": ["packages/server/src/*"],
+      "@connectwon/database": ["packages/database/src/index.ts"],
+      "@connectwon/database/*": ["packages/database/src/*"]
     }
   }
 }
