@@ -3,15 +3,15 @@
  * Author : Shiwoo Min
  * Date : 2025-09-10
  * 09-22 : .d.ts 파일 사용으로 변경, declaration 중복 생성 방지
+ * 09-30 : outDir 경로 Nx outputPath와 맞춤, include 패턴 명확화
  */
 {
-  // 루트의 tsconfig.base.json 상속
   "extends": "../../tsconfig.base.json",
 
   "compilerOptions": {
     // I/O 경로
-    "rootDir": ".",
-    "outDir": "dist",
+    "rootDir": "./src",
+    "outDir": "../../dist/packages/logger",
 
     // Node ESM 권장
     "module": "NodeNext",
@@ -28,9 +28,9 @@
     "declarationMap": true,
     "sourceMap": true,
 
-    // 모노레포 최적화 (composite 제거)
+    // 모노레포 최적화
     "incremental": true,
-    "tsBuildInfoFile": "dist/.tsbuildinfo",
+    "tsBuildInfoFile": "../../dist/packages/logger/.tsbuildinfo",
 
     // CJS 호환
     "esModuleInterop": true,
@@ -43,6 +43,6 @@
     "noImplicitAny": false
   },
 
-  "include": ["logger-types.ts", "src/**/*", "logger-types.d.ts"],
-  "exclude": ["dist", "node_modules"]
+  "include": ["src/**/*"],
+  "exclude": ["dist", "node_modules", "**/*.test.*", "**/*.spec.*"]
 }

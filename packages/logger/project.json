@@ -9,7 +9,8 @@
       "options": {
         "main": "packages/logger/src/index.ts",
         "outputPath": "dist/packages/logger",
-        "tsConfig": "packages/logger/tsconfig.json"
+        "tsConfig": "packages/logger/tsconfig.json",
+        "assets": ["packages/logger/package.json", "packages/logger/README.md", "packages/logger/LICENSE"]
       }
     },
     "lint": {
@@ -21,7 +22,8 @@
     "test": {
       "executor": "@nx/vite:test",
       "options": {
-        "passWithNoTests": true
+        "passWithNoTests": true,
+        "configFile": "packages/logger/vitest.config.ts"
       }
     }
   }

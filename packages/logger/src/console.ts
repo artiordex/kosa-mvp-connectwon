@@ -3,8 +3,8 @@
  * Author : Shiwoo Min
  * Date : 2025-09-10
  */
-import type { ConsoleTransportOptions, LogLevel, LogRecord, Transport } from '../logger-types.js';
-import { levelWeight } from '../logger-types.js';
+import type { ConsoleTransportOptions, LogLevel, LogRecord, Transport } from './logger-types.js';
+import { levelWeight } from './logger-types.js';
 
 /**
  * @description 콘솔 출력용 트랜스포트 생성 함수
@@ -28,8 +28,23 @@ export function ConsoleTransport(opts: ConsoleTransportOptions = {}): Transport 
       const line = toLine(rec) + '\n';
       (w >= errMin ? process.stderr : process.stdout).write(line); // 에러 레벨 이상은 stderr
     },
+
+    // stdout/stderr 버퍼가 비워질 때까지 보장 (운영환경 flush 대응)
     async flush() {
-      /* noop */
+      return new Promise<void>((resolve, reject) => {
+        let pending = 2;
+
+        const done = (err?: Error | null) => {
+          if (err) {
+            reject(err);
+            return;
+          }
+          if (--pending === 0) resolve();
+        };
+
+        process.stdout.write('', done);
+        process.stderr.write('', done);
+      });
     },
   };
 }
