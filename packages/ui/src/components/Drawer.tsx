@@ -3,11 +3,10 @@
  * Author : Shiwoo Min
  * Date : 2025-09-09
  */
-
-import { createPortal } from 'react-dom';
-import { cva } from 'class-variance-authority';
 import { useEffect } from 'react';
-import type { DrawerProps } from '../../ui-types.js';
+import { createPortal } from 'react-dom';
+import type { DrawerProps } from '@connectwon/ui/ui-types';
+import { cva } from 'class-variance-authority';
 
 // 드로어 variant 스타일 정의
 const drawerVariants = cva(

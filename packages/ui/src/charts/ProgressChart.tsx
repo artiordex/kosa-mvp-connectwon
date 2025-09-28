@@ -3,7 +3,7 @@
  * Author : Shiwoo Min
  * Date : 2025-09-25
  */
-import { GAUGE_COLORS, type ProgressChartProps } from '../../ui-types.js';
+import { GAUGE_COLORS, type ProgressChartProps } from '@connectwon/ui/ui-types';
 
 // 진행 상황 차트 컴포넌트
 const ProgressChart = ({

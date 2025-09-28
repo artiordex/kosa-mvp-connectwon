@@ -3,7 +3,7 @@
  * Author : Shiwoo Min
  * Date : 2025-09-25
  */
-import { DEFAULT_COLORS, type SparklineChartProps } from '../../ui-types.js';
+import { DEFAULT_COLORS, type SparklineChartProps } from '@connectwon/ui/ui-types';
 import { Line, LineChart } from 'recharts';
 
 // 스파크라인 차트 컴포넌트

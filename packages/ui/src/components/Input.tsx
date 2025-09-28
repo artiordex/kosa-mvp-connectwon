@@ -3,10 +3,9 @@
  * Author : Shiwoo Min
  * Date : 2025-09-09
  */
-import { cva } from 'class-variance-authority';
 import { forwardRef } from 'react';
-
-import { type InputProps } from '../../ui-types.js';
+import { type InputProps } from '@connectwon/ui/ui-types';
+import { cva } from 'class-variance-authority';
 
 // 입력 필드 variant 스타일 정의
 const inputVariants = cva(

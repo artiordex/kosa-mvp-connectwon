@@ -3,10 +3,9 @@
  * Author : Shiwoo Min
  * Date : 2025-09-09
  */
-import { cva } from 'class-variance-authority';
 import { forwardRef } from 'react';
-
-import { type TextareaProps } from '../../ui-types.js';
+import { type TextareaProps } from '@connectwon/ui/ui-types';
+import { cva } from 'class-variance-authority';
 
 // 텍스트 영역 variant 스타일 정의
 const textareaVariants = cva(

@@ -4,11 +4,7 @@
  * Date : 2025-09-25
  */
 import { forwardRef } from 'react';
-
-import type { StackProps } from '../ui-types.js';
-import { cva } from 'class-variance-authority';
-
-import type { StackProps } from '../ui-types.js';
+import type { StackProps } from '@connectwon/ui/ui-types';
 import { cva } from 'class-variance-authority';
 
 // 스택 variant 스타일 정의

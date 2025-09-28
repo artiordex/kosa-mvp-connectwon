@@ -3,10 +3,9 @@
  * Author : Shiwoo Min
  * Date : 2025-09-19
  */
-'use client';
-
 import type { ReactNode } from 'react';
-import type { SidebarItem, SidebarNavProps } from '../../ui-types.js';
+import type { SidebarItem, SidebarNavProps } from '@connectwon/ui/ui-types';
+
 const renderIcon = (icon?: ReactNode | string, collapsed?: boolean) => {
   if (!icon) return null;
   if (typeof icon === 'string') {

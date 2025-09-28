@@ -3,8 +3,7 @@
  * Author : Shiwoo Min
  * Date : 2025-09-09
  */
-
-import { type LoadingSpinnerProps } from '../../ui-types.js';
+import { type LoadingSpinnerProps } from '@connectwon/ui/ui-types';
 
 // 로딩 스피너 컴포넌트
 export function LoadingSpinner({

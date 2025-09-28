@@ -3,10 +3,9 @@
  * Author : Shiwoo Min
  * Date : 2025-09-09
  */
-import { cva } from 'class-variance-authority';
 import { forwardRef, useState } from 'react';
-
-import { type RadioGroupProps } from '../../ui-types.js';
+import { type RadioGroupProps } from '@connectwon/ui/ui-types';
+import { cva } from 'class-variance-authority';
 
 // 라디오 버튼 variant 스타일 정의
 const radioVariants = cva(

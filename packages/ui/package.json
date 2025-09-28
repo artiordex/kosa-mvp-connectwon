@@ -8,6 +8,10 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
+    "./ui-types": {
+    "import": "./src/ui-types.ts",
+    "types": "./src/ui-types.ts"
+    },
     "./styles/*": "./src/styles/*",
     "./package.json": "./package.json"
   },

@@ -4,19 +4,7 @@
  * Date : 2025-09-16
  */
 import React, { useCallback, useEffect, useState } from 'react';
-import type {
-  AnimatedListProps,
-  CircularProgressProps,
-  ErrorCrossProps,
-  FadeProps,
-  FloatingNotificationProps,
-  HeartbeatProps,
-  ProgressBarProps,
-  PulseLoaderProps,
-  SkeletonLoaderProps,
-  SuccessCheckProps,
-  TypingIndicatorProps,
-} from '../ui-types.js';
+import type { AnimatedListProps, CircularProgressProps, ErrorCrossProps, FadeProps, FloatingNotificationProps, HeartbeatProps, ProgressBarProps, PulseLoaderProps, SkeletonLoaderProps, SuccessCheckProps, TypingIndicatorProps } from '@connectwon/ui/ui-types';
 
 /**
  * 딜레이 클래스 변환 유틸

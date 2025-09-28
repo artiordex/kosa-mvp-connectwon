@@ -4,8 +4,7 @@
  * Date : 2025-09-09
  */
 import { forwardRef } from 'react';
-
-import { type FieldProps } from '../../ui-types.js';
+import { type FieldProps } from '@connectwon/ui/ui-types';
 
 // 폼 필드 래퍼 컴포넌트 정의
 export const Field = forwardRef<HTMLDivElement, FieldProps>(

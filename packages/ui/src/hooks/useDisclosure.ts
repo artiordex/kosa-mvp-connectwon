@@ -4,7 +4,7 @@
  * Date : 2025-09-09
  */
 import { useCallback, useState } from 'react';
-import type { UseDisclosureOptions } from '../ui-types.js';
+import type { UseDisclosureOptions } from '@connectwon/ui/ui-types';
 
 // 모달/드롭다운 열림 상태 관리 훅
 export function useDisclosure(opts: UseDisclosureOptions = {}) {

@@ -3,7 +3,7 @@
  * Author : Shiwoo Min
  * Date : 2025-09-25
  */
-import { CHART_HEIGHTS, DEFAULT_COLORS, type DonutChartProps } from '../../ui-types.js';
+import { CHART_HEIGHTS, DEFAULT_COLORS, type DonutChartProps } from '@connectwon/ui/ui-types';
 import { Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts';
 
 // 도넛 차트 컴포넌트

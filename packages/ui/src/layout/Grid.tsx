@@ -4,7 +4,7 @@
  * Date : 2025-09-25
  */
 import { forwardRef } from 'react';
-import type { GridProps } from '../../ui-types.js';
+import type { GridProps } from '@connectwon/ui/ui-types';
 import { cva } from 'class-variance-authority';
 
 const gridVariants = cva('grid', {

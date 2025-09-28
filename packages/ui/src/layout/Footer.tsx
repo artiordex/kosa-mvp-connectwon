@@ -3,11 +3,8 @@
  * Author : Shiwoo Min
  * Date : 2025-09-19
  */
-'use client';
-
 import Link from 'next/link';
-import type { FooterProps } from '../../ui-types.js';
-
+import type { FooterProps } from '@connectwon/ui/ui-types';
 
 export default function Footer({
   brand,

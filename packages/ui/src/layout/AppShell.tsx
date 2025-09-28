@@ -3,7 +3,8 @@
  * Author : Shiwoo Min
  * Date : 2025-09-19
  */
-import type { AppShellProps } from '../../ui-types.js';
+import type { AppShellProps } from '@connectwon/ui/ui-types';
+
 /**
  * variant별 화면 구분:
  * - default : 일반 사용자 페이지 (흰 배경, 사이드바 없음)

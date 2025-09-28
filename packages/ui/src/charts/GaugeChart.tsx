@@ -3,7 +3,7 @@
  * Author : Shiwoo Min
  * Date : 2025-09-25
  */
-import { GAUGE_COLORS, type GaugeChartProps } from '../../ui-types.js';
+import { GAUGE_COLORS, type GaugeChartProps } from '@connectwon/ui/ui-types';
 
 // 게이지 차트 컴포넌트
 const GaugeChart = ({
