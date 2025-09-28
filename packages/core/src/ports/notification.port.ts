@@ -3,7 +3,7 @@
  * Author : Shiwoo Min
  * Date : 2025-09-10
  */
-import type { NotificationChannel } from '../core-types.js';
+import type { NotificationChannel } from '@connectwon/core/core-types';
 
 /** @description 이벤트 기반 알림 요청 */
 export interface NotificationEvent {

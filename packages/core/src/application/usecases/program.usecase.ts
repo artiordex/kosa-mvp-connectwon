@@ -4,7 +4,7 @@
  * Date : 2025-09-26
  */
 import { randomUUID } from 'node:crypto';
-import type { Program, ProgramId, SessionId, UserId } from '../../core-types.js';
+import type { Program, ProgramId, SessionId, UserId } from '@connectwon/core/core-types';
 
 /**
  * @description CreateProgramUsecase가 반환하는 타입

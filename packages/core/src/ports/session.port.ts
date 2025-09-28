@@ -3,18 +3,7 @@
  * Author : Shiwoo Min
  * Date : 2025-09-10
  */
-
-import type {
-  CreateSession,
-  CursorPaginatedResponse,
-  CursorPaginationQuery,
-  Id,
-  Session,
-  SessionWithParticipants,
-  SessionWithProgram,
-  SessionWithProgramAndVenue,
-  UpdateSession,
-} from '../core-types.js';
+import type { CreateSession, CursorPaginatedResponse, CursorPaginationQuery, Id, Session, SessionWithParticipants, SessionWithProgram, SessionWithProgramAndVenue, UpdateSession } from '@connectwon/core/core-types';
 
 /**
  * @description 세션 저장소 포트

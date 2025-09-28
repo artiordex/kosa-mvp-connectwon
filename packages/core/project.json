@@ -10,7 +10,10 @@
         "main": "packages/core/src/index.ts",
         "outputPath": "dist/packages/core",
         "tsConfig": "packages/core/tsconfig.json",
-        "assets": ["packages/core/src/configs/**/*.json"],
+        "assets": [
+          "packages/core/package.json",
+          "packages/core/src/configs/**/*"
+        ],
         "generatePackageJson": false
       },
       "outputs": ["{options.outputPath}"]

@@ -4,7 +4,7 @@
  * Date : 2025-09-10
  */
 import { randomUUID } from 'node:crypto';
-import type { ScheduledSession } from '../../core-types.js';
+import type { ScheduledSession } from '@connectwon/core/core-types';
 
 /**
  * @description 세션 스케줄링 유스케이스

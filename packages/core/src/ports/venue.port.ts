@@ -3,21 +3,7 @@
  * Author : Shiwoo Min
  * Date : 2025-09-27
  */
-import type {
-  CreateRoom,
-  CreateVenue,
-  CursorPaginatedResponse,
-  CursorPaginationQuery,
-  Id,
-  // Room
-  Room,
-  RoomReservation,
-  RoomWithVenue,
-  UpdateRoom,
-  UpdateVenue,
-  // Venue
-  Venue,
-} from '../core-types.js';
+import type { CreateRoom, CreateVenue, CursorPaginatedResponse, CursorPaginationQuery, Id, Room, RoomReservation, RoomWithVenue, UpdateRoom, UpdateVenue, Venue } from '@connectwon/core/core-types';
 
 /**
  * @description 장소 저장소 포트

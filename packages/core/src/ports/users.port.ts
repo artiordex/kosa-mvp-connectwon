@@ -3,7 +3,7 @@
  * Author : Shiwoo Min
  * Date : 2025-09-28
  */
-import type { CreateUser, CursorPaginatedResponse, CursorPaginationQuery, Id, UpdateUser, User } from '../core-types.js';
+import type { CreateUser, CursorPaginatedResponse, CursorPaginationQuery, Id, UpdateUser, User } from '@connectwon/core/core-types';
 import type { TimeRange } from '../domain/value-objects.js';
 
 /**

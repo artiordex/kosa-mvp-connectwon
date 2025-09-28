@@ -8,15 +8,17 @@
  * - exactOptionalPropertyTypes 안전: 옵션 키는 값이 있을 때만 추가
  */
 import { createRequire } from 'node:module';
-import type { AIProcessingJob, CleanupJob, EmailJob, JobResult, QueueConfig, ReportJob, SessionReminderJob, SlackJob } from '../core-types.js';
-import {
-  AIProcessingProcessor,
-  CleanupJobProcessor,
-  EmailJobProcessor,
-  ReportJobProcessor,
-  SessionReminderProcessor,
-  SlackJobProcessor,
-} from './processor.queue.js';
+import type {
+  AIProcessingJob,
+  CleanupJob,
+  EmailJob,
+  JobResult,
+  QueueConfig,
+  ReportJob,
+  SessionReminderJob,
+  SlackJob,
+} from '@connectwon/core/core-types';
+import { AIProcessingProcessor, CleanupJobProcessor, EmailJobProcessor, ReportJobProcessor, SessionReminderProcessor, SlackJobProcessor } from './processor.queue.js';
 import { type Job, type JobsOptions, type Processor, Queue, QueueEvents, Worker, type WorkerOptions } from 'bullmq';
 import type { RedisOptions } from 'ioredis';
 

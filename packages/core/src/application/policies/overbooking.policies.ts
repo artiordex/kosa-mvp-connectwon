@@ -3,7 +3,7 @@
  * Author : Shiwoo Min
  * Date : 2025-09-10
  */
-import type { OverbookingMode } from '../../core-types.js';
+import type { OverbookingMode } from '@connectwon/core/core-types';
 
 /**
  * @description 초과 예약 정책 옵션 인터페이스

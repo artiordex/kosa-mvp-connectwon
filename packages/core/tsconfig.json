@@ -43,7 +43,7 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "exactOptionalPropertyTypes": true
+    "exactOptionalPropertyTypes": true,
   },
 
   "include": ["src/**/*", "src/configs/**/*.ts", "src/configs/**/*.json"],

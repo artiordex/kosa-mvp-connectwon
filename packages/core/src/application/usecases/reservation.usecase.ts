@@ -3,9 +3,10 @@
  * Author : Shiwoo Min
  * Date : 2025-09-10
  */
-import type { Session, UserId } from '../../core-types.js';
-import type { OverbookingPolicyService } from '../policies/overbooking.policies.js';
-import type { WaitlistPolicyService } from '../policies/waitlist.policy.js';
+import type { OverbookingPolicyService } from '@connectwon/core/application/policies/overbooking.policies';
+import type { WaitlistPolicyService } from '@connectwon/core/application/policies/waitlist.policy';
+import type { Session, UserId } from '@connectwon/core/core-types';
+
 /**
  * @description 예약 유스케이스에서만 사용하는 확장 세션 타입
  */
