@@ -2,23 +2,24 @@
  * Description : tsconfig.json - 📌 Nest.js 패키지 (TypeScript 설정)
  * Author : Shiwoo Min
  * Date : 2025-09-12
+ * 09-29 : rootDir=src 로 정리, TSX 지원 추가
  */
 {
-  // 루트의 tsconfig.base.json 상속
   "extends": "../../tsconfig.base.json",
 
   "compilerOptions": {
+    // I/O 경로
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "tsBuildInfoFile": "./dist/.tsbuildinfo",
+    "noEmit": false,
+
+    // 서버 전용 타깃
     "target": "ES2022",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
-    "rootDir": ".",
-    "outDir": "./dist",
-    "noEmit": false,
-    "tsBuildInfoFile": "./dist/.tsbuildinfo",
-
-    // JSX 설정
-    "jsx": "react-jsx",
-    "jsxImportSource": "react",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "types": ["node", "next"],
 
     // Nest/Express 공통 추천
     "strict": true,
@@ -30,13 +31,20 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
 
+    // TSX/JSX 지원
+    "jsx": "react-jsx",
+    "jsxImportSource": "react",
+
+    // 품질/편의
     "resolveJsonModule": true,
     "sourceMap": true,
     "skipLibCheck": true,
-    // DOM 라이브러리 포함
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
-    "types": ["node"]
+    "declaration": true,
+    "declarationMap": true,
+    "incremental": true,
+    "forceConsistentCasingInFileNames": true
   },
-  "include": ["src/**/*", "client-types.ts"],
+
+  "include": ["src/**/*", "src/client-types.ts"],
   "exclude": ["node_modules", "dist", "**/*.test.*", "**/*.spec.*"]
 }

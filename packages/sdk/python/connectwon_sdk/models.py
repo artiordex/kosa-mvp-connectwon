@@ -4,8 +4,9 @@ Author : Shiwoo Min
 Date : 2025-09-20
 """
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Optional
 from datetime import datetime
+
 @dataclass
 class AnalysisRequest:
     """AI 분석 요청 모델"""
@@ -39,8 +40,8 @@ class Project:
     """프로젝트 모델"""
     id: str
     name: str
-    description: Optional[str] = None
     owner_id: str
+    description: Optional[str] = None
     status: str = "active"
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None

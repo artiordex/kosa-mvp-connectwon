@@ -3,10 +3,9 @@
  * Author : Shiwoo Min
  * Date : 2025-09-09
  */
-import { cva } from 'class-variance-authority';
 import { forwardRef } from 'react';
-
-import { type SelectProps } from '../../ui-types.js';
+import { type SelectProps } from '@connectwon/ui/ui-types';
+import { cva } from 'class-variance-authority';
 
 // 선택 드롭다운 variant 스타일 정의
 const selectVariants = cva(

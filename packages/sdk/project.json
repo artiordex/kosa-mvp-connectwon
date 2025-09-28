@@ -9,13 +9,14 @@
       "options": {
         "main": "packages/sdk/src/index.ts",
         "outputPath": "dist/packages/sdk",
-        "tsConfig": "packages/sdk/tsconfig.json"
+        "tsConfig": "packages/sdk/tsconfig.json",
+        "assets": ["packages/sdk/README.md", "packages/sdk/package.json"]
       }
     },
     "lint": {
       "executor": "@nx/eslint:lint",
       "options": {
-        "lintFilePatterns": ["packages/sdk/**/*.ts"]
+        "lintFilePatterns": ["packages/sdk/**/*.{ts,tsx}"]
       }
     },
     "test": {
@@ -25,5 +26,5 @@
       }
     }
   },
-  "implicitDependencies": ["@connectwon/api-contract"]
+  "implicitDependencies": ["@connectwon/api-contract", "@connectwon/logger"]
 }

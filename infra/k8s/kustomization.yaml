@@ -25,7 +25,6 @@ secretGenerator:
 - name: connectwon-secrets
   envs:
   - ../../../.env
-  type: Opaque
 
 # 민감하지 않은 설정용 ConfigMap 생성
 configMapGenerator:
@@ -36,11 +35,11 @@ configMapGenerator:
   - COMPANY_NAME=ConnectWon
   - DEFAULT_LANGUAGE=ko
 
-# 이미지 태그 관리
+# 이미지 태그 관리 (GHCR 풀 경로)
 images:
-- name: connectwon-web
+- name: ghcr.io/artiordex/kosa-mvp-connectwon/web
   newTag: latest
-- name: connectwon-api
+- name: ghcr.io/artiordex/kosa-mvp-connectwon/api
   newTag: latest
-- name: connectwon-admin
+- name: ghcr.io/artiordex/kosa-mvp-connectwon/admin
   newTag: latest

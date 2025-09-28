@@ -76,7 +76,6 @@
   // TypeScript Project References로 의존성 관리
   "references": [
     { "path": "./packages/api-contract" },
-    { "path": "./packages/configs" },
     { "path": "./packages/core" },
     { "path": "./packages/database" },
     { "path": "./packages/logger" },

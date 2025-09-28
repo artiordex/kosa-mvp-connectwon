@@ -3,26 +3,27 @@
  * Author : Shiwoo Min
  * Date : 2025-09-10
  */
-import type { LogLevel, LogRecord, PrettyTransportOptions, Transport } from '../logger-types.js';
-import { levelWeight } from '../logger-types.js';
+import type { LogLevel, LogRecord, PrettyTransportOptions, Transport } from '@connectwon/logger/logger-types';
+import { levelWeight } from '@connectwon/logger/logger-types';
 
 /**
- * @description ANSI 컬러 함수 모음
+ * @description ANSI 컬러 유틸
  */
+const wrap = (code: number) => (s: string) => `\x1b[${code}m${s}\x1b[0m`;
 const C = {
-  dim: (s: string) => `\x1b[2m${s}\x1b[0m`,
-  gray: (s: string) => `\x1b[90m${s}\x1b[0m`,
-  blue: (s: string) => `\x1b[34m${s}\x1b[0m`,
-  green: (s: string) => `\x1b[32m${s}\x1b[0m`,
-  yellow: (s: string) => `\x1b[33m${s}\x1b[0m`,
-  red: (s: string) => `\x1b[31m${s}\x1b[0m`,
-  magenta: (s: string) => `\x1b[35m${s}\x1b[0m`,
+  dim: wrap(2),
+  gray: wrap(90),
+  blue: wrap(34),
+  green: wrap(32),
+  yellow: wrap(33),
+  red: wrap(31),
+  magenta: wrap(35),
 };
 
 /**
- * @description 로그 레벨별 컬러 맵핑
+ * @description 로그 레벨별 컬러 매핑
  */
-const colorByLevel: Record<LogLevel, (s: string) => string> = {
+const colorByLevel: Record<string, (s: string) => string> = {
   trace: C.gray,
   debug: C.blue,
   info: C.green,
@@ -35,14 +36,12 @@ const colorByLevel: Record<LogLevel, (s: string) => string> = {
 };
 
 /**
- * @description 콘솔에 색상 및 형식 꾸며서 출력하는 트랜스포트 생성 함수
- * @param opts 옵션 (레벨, 타임스탬프 출력 여부, 한줄 출력 여부 등)
- * @returns Transport 구현체
+ * @description 콘솔에 색상 및 형식 꾸며서 출력하는 트랜스포트 (개발 전용)
  */
 export function PrettyTransport(opts: PrettyTransportOptions = {}): Transport {
   const min = levelWeight(opts.level ?? 'info');
 
-  // 타임스탬프 문자열 생성 (ANSI 'dim' 적용)
+  // 타임스탬프 문자열 생성
   const ts = (r: LogRecord) => {
     const t = typeof r.time === 'number' ? new Date(r.time).toISOString() : (r.time ?? new Date().toISOString());
     return C.dim(t);
@@ -52,8 +51,8 @@ export function PrettyTransport(opts: PrettyTransportOptions = {}): Transport {
     log(rec) {
       if (levelWeight(rec.level as LogLevel) < min) return;
 
-      const levelStr = String(rec.level).toUpperCase();
-      const colorFn = colorByLevel[rec.level as LogLevel] ?? ((s: string) => s);
+      const levelStr = String(rec.level ?? '').toUpperCase();
+      const colorFn = colorByLevel[rec.level as string] ?? ((s: string) => s);
       const lvl = colorFn(levelStr);
 
       const head = `${opts.withTimestamp !== false ? `[${ts(rec)}] ` : ''}${lvl}`;
@@ -61,29 +60,40 @@ export function PrettyTransport(opts: PrettyTransportOptions = {}): Transport {
       const svc = rec.service ? C.dim(` (${rec.service})`) : '';
       const err = rec.error?.message ? ` - ${rec.error.message}` : '';
 
+      // 단일 라인 모드
       if (opts.singleLine) {
         process.stdout.write(`${head} ${msg}${svc}${err}\n`);
-      } else {
-        process.stdout.write(`${head} ${msg}${svc}${err}\n`);
+        return;
+      }
 
-        if (rec.error?.stack) {
-          process.stdout.write(C.gray(rec.error.stack) + '\n');
-        }
+      // 기본 출력
+      process.stdout.write(`${head} ${msg}${svc}${err}\n`);
 
-        const rest = { ...rec };
-        delete (rest as any).msg;
-        delete (rest as any).message;
-        delete (rest as any).error;
-        delete (rest as any).level;
-        delete (rest as any).time;
-        delete (rest as any).service;
+      // 에러 스택 (회색 처리, 줄바꿈 포함)
+      if (rec.error?.stack) {
+        const indented = rec.error.stack
+          .split('\n')
+          .map(line => C.gray('  ' + line))
+          .join('\n');
+        process.stdout.write(indented + '\n');
+      }
 
-        const body = Object.keys(rest).length ? ' ' + C.dim(JSON.stringify(rest)) : '';
-        if (body.trim()) process.stdout.write(body + '\n');
+      // 나머지 필드 출력
+      const rest = { ...rec };
+      delete (rest as any).msg;
+      delete (rest as any).message;
+      delete (rest as any).error;
+      delete (rest as any).level;
+      delete (rest as any).time;
+      delete (rest as any).service;
+
+      if (Object.keys(rest).length) {
+        process.stdout.write(' ' + C.dim(JSON.stringify(rest)) + '\n');
       }
     },
     async flush() {
-      /* noop */
+      if (!process.stdout.writableNeedDrain) return;
+      await new Promise<void>(res => process.stdout.once('drain', res));
     },
   };
 }

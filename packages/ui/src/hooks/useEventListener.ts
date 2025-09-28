@@ -4,8 +4,7 @@
  * Date : 2025-09-09
  */
 import { useEffect, useRef } from 'react';
-
-import type { TargetLike } from '../../ui-types.js';
+import type { TargetLike } from '@connectwon/ui/ui-types';
 
 // 대상이 함수일 경우 호출하여 실제 대상을 반환
 function getTarget(target: TargetLike) {

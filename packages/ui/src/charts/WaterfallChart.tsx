@@ -3,7 +3,7 @@
  * Author : Shiwoo Min
  * Date : 2025-09-25
  */
-import { type WaterfallChartProps } from '../../ui-types.js';
+import { type WaterfallChartProps } from '@connectwon/ui/ui-types';
 
 // 누적 영역 차트 컴포넌트
 const WaterfallChart = ({
@@ -34,7 +34,7 @@ const WaterfallChart = ({
   const H = height;
   const n = processed.length;
   const gap = 12;
-  const bw = (W - gap * (n + 1)) / n; 
+  const bw = (W - gap * (n + 1)) / n;
 
   const yScale = (v: number) => {
     const range = max - min || 1;

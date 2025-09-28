@@ -5,16 +5,17 @@
   "tags": ["type:app", "layer:backend", "platform:node"],
   "targets": {
     "build": {
-      "executor": "@nrwl/node:webpack",
+      "executor": "@nx/js:tsc",
       "options": {
+        "main": "apps/api/src/main.ts",
         "outputPath": "dist/apps/api",
         "tsConfig": "apps/api/tsconfig.json"
       }
     },
     "serve": {
-      "executor": "@nestjs/cli:serve",
+      "executor": "@nx/js:node",
       "options": {
-        "buildTarget": "api:build",
+        "buildTarget": "@connectwon/api:build",
         "port": 8000
       }
     },
@@ -28,9 +29,9 @@
       "executor": "@nx/vite:test",
       "options": {
         "passWithNoTests": true,
-        "vitestConfig": "../..vitest.config.ts"
+        "vitestConfig": "../../vitest.config.ts"
       }
     }
   },
-  "implicitDependencies": ["@connectwon/core", "@connectwon/database", "@connectwon/logger", "@connectwon/api-contract", "@connectwon/configs"]
+  "implicitDependencies": ["@connectwon/core", "@connectwon/database", "@connectwon/logger", "@connectwon/api-contract", "@connectwon/core"]
 }

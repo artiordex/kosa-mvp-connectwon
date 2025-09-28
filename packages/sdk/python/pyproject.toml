@@ -1,10 +1,18 @@
 [tool.poetry]
 name = "connectwon-sdk"
 version = "1.0.0"
-description = "ConnectWon Python SDK for web scraping, AI integration, and data analysis"
-authors = ["Shiwoo Min <shiwoo@connectwon.com>"]
+description = "ConnectWon Python SDK - 웹 스크래핑, AI 연동, 데이터 분석을 위한 통합 라이브러리"
+authors = ["Shiwoo Min"]
 readme = "README.md"
-packages = [{include = "connectwon_sdk"}]
+license = "MIT"
+packages = [{ include = "connectwon_sdk" }]
+classifiers = [
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
 
 [tool.poetry.dependencies]
 python = "^3.8"
@@ -19,6 +27,9 @@ huggingface-hub = "^0.16.0"
 black = "^23.0.0"
 isort = "^5.12.0"
 mypy = "^1.0.0"
+pytest = "^7.4.0"
+pytest-asyncio = "^0.21.0"
+ruff = "^0.3.0"
 
 [build-system]
 requires = ["poetry-core"]
@@ -37,3 +48,5 @@ python_version = "3.8"
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = true
+check_untyped_defs = true
+no_implicit_optional = true

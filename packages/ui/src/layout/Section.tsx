@@ -4,8 +4,7 @@
  * Date : 2025-09-25
  */
 import { forwardRef } from 'react';
-
-import type { SectionProps } from '../../ui-types.js';
+import type { SectionProps } from '@connectwon/ui/ui-types';
 import { cva } from 'class-variance-authority';
 
 // 섹션 variant 스타일 정의

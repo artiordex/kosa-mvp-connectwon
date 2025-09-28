@@ -2,19 +2,21 @@
   "name": "@connectwon/logger",
   "version": "1.0.0",
   "description": "ConnectWon 로거 모듈 (Winston 기반)",
-  "private": false,
+  "private": true,
   "type": "module",
-  "sideEffects": false,
+  "sideEffects": [
+    "./dist/**/*.js"
+  ],
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
     },
     "./logger-types": {
-      "types": "./dist/logger-types.d.ts",
-      "import": "./dist/logger-types.js"
+      "import": "./src/logger-types.ts",
+      "types": "./src/logger-types.ts"
     },
     "./package.json": "./package.json"
   },
@@ -23,19 +25,24 @@
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "dev": "tsc --watch -p tsconfig.json",
+    "dev": "tsc -p tsconfig.json --watch",
     "clean": "rimraf dist",
-    "prepublishOnly": "pnpm run build"
+    "prepublishOnly": "pnpm run clean && pnpm run build",
+    "lint": "eslint src --ext .ts",
+    "test": "vitest run"
   },
   "dependencies": {
     "logform": "^2.7.0",
     "winston": "^3.17.0",
-    "winston-daily-rotate-file": "^5.0.0"
+    "winston-daily-rotate-file": "^5.0.0",
+    "winston-transport": "^4.9.0"
   },
   "devDependencies": {
-    "typescript": "^5.6.0",
     "@types/node": "^20.11.0",
-    "rimraf": "^6.0.1"
+    "eslint": "^9.0.0",
+    "rimraf": "^6.0.1",
+    "typescript": "^5.6.0",
+    "vitest": "^2.0.0"
   },
   "engines": {
     "node": ">=20.11",

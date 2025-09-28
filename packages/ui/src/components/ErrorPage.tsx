@@ -3,7 +3,7 @@
  * Author : Shiwoo Min
  * Date : 2025-09-09
  */
-import { type ErrorPageProps } from '../../ui-types.js';
+import { type ErrorPageProps } from '@connectwon/ui/ui-types';
 
 // 범용 에러 페이지 컴포넌트
 export function ErrorPage({

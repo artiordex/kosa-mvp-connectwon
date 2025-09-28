@@ -1,7 +1,7 @@
 {
   "name": "@connectwon/sdk",
   "version": "1.0.0",
-  "description": "ConnectWon SDK 라이브러리",
+  "description": "ConnectWon SDK - 웹 스크래핑 및 AI 연동 클라이언트/유틸리티",
   "private": true,
   "type": "module",
   "sideEffects": false,
@@ -11,25 +11,49 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
-    }
+    },
+    "./auth": {
+      "types": "./dist/auth.d.ts",
+      "import": "./dist/auth.js"
+    },
+    "./http": {
+      "types": "./dist/http.d.ts",
+      "import": "./dist/http.js"
+    },
+    "./errors": {
+      "types": "./dist/errors.d.ts",
+      "import": "./dist/errors.js"
+    },
+    "./middleware": {
+      "types": "./dist/middleware.d.ts",
+      "import": "./dist/middleware.js"
+    },
+    "./pagination": {
+      "types": "./dist/pagination.d.ts",
+      "import": "./dist/pagination.js"
+    },
+    "./tracing": {
+      "types": "./dist/tracing.d.ts",
+      "import": "./dist/tracing.js"
+    },
+    "./package.json": "./package.json"
   },
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "tsc -p tsconfig.json",
-    "dev": "tsc --watch -p tsconfig.json",
-    "clean": "rimraf dist",
+    "build": "pnpm -w exec tsc -p tsconfig.json",
+    "dev": "pnpm -w exec tsc --watch -p tsconfig.json",
+    "clean": "pnpm -w exec rimraf dist",
     "prepublishOnly": "pnpm run build"
   },
   "dependencies": {
     "@connectwon/api-contract": "workspace:*",
-    "@connectwon/logger": "workspace:*"
-  },
-  "devDependencies": {
-    "@connectwon/configs": "workspace:*"
+    "@connectwon/logger": "workspace:*",
+    "@connectwon/core": "workspace:*"
   },
   "engines": {
-    "node": ">=20.11"
+    "node": ">=20.11",
+    "pnpm": ">=9.0.0"
   }
 }

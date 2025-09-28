@@ -7,9 +7,8 @@ import * as fsSync from 'node:fs';
 import { promises as fsp } from 'node:fs';
 import type { WriteStream } from 'node:fs';
 import path from 'node:path';
-
-import type { FileTransportOptions, LogRecord, Transport } from '../logger-types.js';
-import { levelWeight } from '../logger-types.js';
+import type { FileTransportOptions, LogRecord, Transport } from '@connectwon/logger/logger-types';
+import { levelWeight } from '@connectwon/logger/logger-types';
 
 /**
  * @description 디렉터리 존재 확인 및 없으면 생성
@@ -41,16 +40,35 @@ export function FileTransport(opts: FileTransportOptions): Transport {
     const key = keyForNow();
     const filename = rotate === 'daily' ? `${prefix}-${key}.ndjson` : `${prefix}.ndjson`;
     const full = path.join(opts.dir, filename);
+
+    // 이미 같은 파일 쓰고 있으면 유지
     if (stream && currentPath === full) return;
+
+    // 이전 스트림 종료
     stream?.end();
+
+    // 새 스트림 열기 (에러 핸들링)
     stream = fsSync.createWriteStream(full, { flags: 'a' });
+    stream.on('error', err => {
+      console.error(`[FileTransport] stream error: ${err.message}`);
+    });
+
     currentPath = full;
   }
 
-  // 안전한 플러시: drain 이벤트 대기 및 파일 동기화
+  // 안전한 flush: drain 이벤트 대기 + 파일 동기화
   async function flushImpl() {
     if (!stream) return;
-    await new Promise<void>(res => (stream!.writableNeedDrain ? stream!.once('drain', res) : res()));
+    await new Promise<void>((resolve, reject) => {
+      if (stream!.writableNeedDrain) {
+        stream!.once('drain', (err?: Error) => {
+          if (err) reject(err);
+          else resolve();
+        });
+      } else {
+        resolve();
+      }
+    });
     if (currentPath) {
       const fh = await fsp.open(currentPath, 'a');
       try {
@@ -65,14 +83,23 @@ export function FileTransport(opts: FileTransportOptions): Transport {
     log(rec: LogRecord) {
       if (levelWeight(rec.level as string) < min) return;
       ensureStream();
-      stream!.write(JSON.stringify(rec) + '\n');
+      try {
+        stream!.write(JSON.stringify(rec) + '\n');
+      } catch (err) {
+        console.error(`[FileTransport] write error: ${(err as Error).message}`);
+      }
     },
+
     async flush() {
       await flushImpl();
     },
-    close() {
-      stream?.end();
-      stream = null;
+
+    async close() {
+      if (stream) {
+        await flushImpl();
+        stream.end();
+        stream = null;
+      }
     },
   };
 }

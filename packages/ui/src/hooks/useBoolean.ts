@@ -4,8 +4,7 @@
  * Date : 2025-09-09
  */
 import { useCallback, useState } from 'react';
-
-import type { UseBooleanActions } from '../../ui-types.js';
+import type { UseBooleanActions } from '@connectwon/ui/ui-types';
 
 // boolean 상태 토글 훅
 export function useBoolean(initial = false): [boolean, UseBooleanActions] {

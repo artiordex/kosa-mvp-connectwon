@@ -3,7 +3,7 @@
  * Author : Shiwoo Min
  * Date : 2025-09-25
  */
-import { CHART_HEIGHTS, DEFAULT_COLORS, type LineChartProps } from '../../ui-types.js';
+import { CHART_HEIGHTS, DEFAULT_COLORS, type LineChartProps } from '@connectwon/ui/ui-types';
 import { CartesianGrid, Line, LineChart as RechartsLineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
 // 선 차트 컴포넌트

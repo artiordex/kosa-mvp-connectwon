@@ -2,15 +2,18 @@
   "name": "@connectwon/core",
   "sourceRoot": "packages/core/src",
   "projectType": "library",
-  "tags": ["type:lib", "layer:backend"],
+  "tags": ["type:lib", "layer:backend", "layer:tooling"],
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
       "options": {
         "main": "packages/core/src/index.ts",
-        "outputPath": "packages/core/dist",
+        "outputPath": "dist/packages/core",
         "tsConfig": "packages/core/tsconfig.json",
-        "assets": [],
+        "assets": [
+          "packages/core/package.json",
+          "packages/core/src/configs/**/*"
+        ],
         "generatePackageJson": false
       },
       "outputs": ["{options.outputPath}"]

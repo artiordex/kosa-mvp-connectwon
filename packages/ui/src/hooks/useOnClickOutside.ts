@@ -4,8 +4,7 @@
  * Date : 2025-09-09
  */
 import { type RefObject, useCallback } from 'react';
-
-import type { MaybeRef } from '../../ui-types.js';
+import type { MaybeRef } from '@connectwon/ui/ui-types';
 import { useEventListener } from './useEventListener.js';
 
 // 여러 요소 중 하나라도 타겟에 포함되는지 확인

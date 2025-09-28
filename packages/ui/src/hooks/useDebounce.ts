@@ -1,26 +1,34 @@
 /**
- * Description : useDisclosure.ts - 📌 모달/드롭다운 열림 상태 관리
+ * Description : useDebounce.ts - 📌 입력/상태값 디바운스 훅
  * Author : Shiwoo Min
- * Date : 2025-09-09
+ * Date : 2025-09-28
  */
-import { useCallback, useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import type { UseDisclosureOptions } from '../../ui-types.js';
+/**
+ * @function useDebounce
+ * @description
+ * 특정 값(value)이 바뀔 때마다 일정 시간(delay) 대기 후 반영하는 디바운스 훅.
+ * 입력 필터링, API 호출 최적화 등에 유용.
+ * @param value - 디바운스 처리할 원본 값
+ * @param delay - 지연 시간(ms), 기본 300ms
+ * @returns {T} 디바운스된 값
+ */
+export function useDebounce<T>(value: T, delay: number = 300): T {
+  const [debouncedValue, setDebouncedValue] = useState<T>(value);
 
-// 모달/드롭다운 열림 상태 관리 훅
-export function useDisclosure(opts: UseDisclosureOptions = {}) {
-  const { defaultOpen = false, onOpenChange } = opts;
-  const [open, setOpen] = useState<boolean>(defaultOpen);
-  const set = useCallback(
-    (v: boolean) => {
-      setOpen(v);
-      onOpenChange?.(v);
-    },
-    [onOpenChange],
-  );
-  const openFn = useCallback(() => set(true), [set]);
-  const closeFn = useCallback(() => set(false), [set]);
-  const toggle = useCallback(() => set(!open), [open, set]);
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
 
-  return { isOpen: open, open: openFn, close: closeFn, toggle, set };
+    // cleanup: 값이 바뀌면 이전 타이머 취소
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
 }
+
+export default useDebounce;

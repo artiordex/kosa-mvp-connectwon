@@ -3,27 +3,23 @@
  * Author : Shiwoo Min
  * Date : 2025-09-10
  */
-import type { OverbookingPolicyService } from '../policies/overbooking.js';
-import type { WaitlistPolicyService } from '../policies/waitlist.js';
+import type { OverbookingPolicyService } from '@connectwon/core/application/policies/overbooking.policies';
+import type { WaitlistPolicyService } from '@connectwon/core/application/policies/waitlist.policy';
+import type { Session, UserId } from '@connectwon/core/core-types';
 
 /**
- * @description 세션 도메인 모델 인터페이스
+ * @description 예약 유스케이스에서만 사용하는 확장 세션 타입
  */
-export interface Session {
-  id: string;
-  capacity: number;
-  participants: string[];
-  waitlist: string[];
+export interface ReservableSession extends Session {
+  participants: UserId[];
+  waitlist: UserId[];
+  capacity: number; // core-types의 maxParticipants 대신 명확히 사용
 }
 
 /**
  * @description 예약 상태 타입
  */
 export type BookStatus = 'booked' | 'overbooked' | 'waitlisted' | 'full';
-
-/**
- * @description 예약 취소 결과 타입
- */
 export type CancelStatus = 'not_found' | 'cancelled' | 'cancelled_and_promoted';
 
 /**
@@ -38,7 +34,7 @@ export class ReservationUsecase {
   /**
    * @description 세션 예약
    */
-  book(userId: string, session: Session): { status: BookStatus; session: Session } {
+  book(userId: UserId, session: ReservableSession): { status: BookStatus; session: ReservableSession } {
     if (session.participants.includes(userId)) {
       return { status: 'booked', session };
     }
@@ -69,7 +65,7 @@ export class ReservationUsecase {
   /**
    * @description 세션 예약 취소 + 대기열 승급
    */
-  cancel(userId: string, session: Session): { status: CancelStatus; session: Session } {
+  cancel(userId: UserId, session: ReservableSession): { status: CancelStatus; session: ReservableSession } {
     const before = session.participants.length;
     session.participants = session.participants.filter(id => id !== userId);
 

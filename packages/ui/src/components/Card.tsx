@@ -4,14 +4,7 @@
  * Date : 2025-09-09
  */
 import { forwardRef, type HTMLAttributes } from 'react';
-
-import type {
-  CardContentProps,
-  CardDescriptionProps,
-  CardFooterProps,
-  CardProps,
-  CardTitleProps,
-} from '../../ui-types.js';
+import type { CardContentProps, CardDescriptionProps, CardFooterProps, CardProps, CardTitleProps } from '@connectwon/ui/ui-types';
 
 // Card 컴포넌트
 export const Card = forwardRef<HTMLDivElement, CardProps>(({ className = '', ...props }, ref) => (

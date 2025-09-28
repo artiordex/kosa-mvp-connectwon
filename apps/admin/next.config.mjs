@@ -24,7 +24,7 @@ const nextConfig = {
    * @property transpilePackages
    * @description 내부 패키지(ESM/클라 전용 포함) 트랜스파일
    */
-  transpilePackages: ['@connectwon/ui', '@connectwon/api-contract', '@connectwon/sdk', '@connectwon/client', '@connectwon/configs'],
+  transpilePackages: ['@connectwon/ui', '@connectwon/api-contract', '@connectwon/sdk', '@connectwon/client', '@connectwon/core'],
 
   /**
    * @property reactStrictMode

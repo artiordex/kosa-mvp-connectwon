@@ -3,16 +3,8 @@
  * Author : Shiwoo Min
  * Date : 2025-09-12
  */
-'use client';
-
-import {
-  type DehydratedState,
-  HydrationBoundary,
-  QueryClient,
-  type QueryClientConfig,
-  QueryClientProvider
-} from '@tanstack/react-query';
 import React, { useState } from 'react';
+import { type DehydratedState, HydrationBoundary, QueryClient, type QueryClientConfig, QueryClientProvider } from '@tanstack/react-query';
 
 // Props 타입 정의
 interface QueryProviderProps {
@@ -22,20 +14,22 @@ interface QueryProviderProps {
   clientConfig?: QueryClientConfig;
 }
 
-// 기본 QueryClient 설정
+/**
+ * @description 기본 QueryClient 설정
+ */
 const defaultQueryClientConfig: QueryClientConfig = {
   defaultOptions: {
     queries: {
       staleTime: 1000 * 60 * 5, // 5분
       retry: (failureCount, error) => {
         // 4xx 에러는 재시도하지 않음
-        if (error && typeof error === 'object' && 'status' in error) {
-          const status = error.status as number;
-          if (status >= 400 && status < 500) return false;
+        const maybeErr = error as any;
+        if (maybeErr?.status && typeof maybeErr.status === 'number') {
+          if (maybeErr.status >= 400 && maybeErr.status < 500) return false;
         }
         return failureCount < 3;
       },
-      retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000),
+      retryDelay: (attemptIndex: number) => Math.min(1000 * 2 ** attemptIndex, 30_000), // 최대 30초
     },
     mutations: {
       retry: false,
@@ -43,26 +37,15 @@ const defaultQueryClientConfig: QueryClientConfig = {
   },
 };
 
-// QueryProvider 컴포넌트
-export function QueryProvider({
-  children,
-  dehydratedState,
-  client,
-  clientConfig
-}: QueryProviderProps) {
-  const [queryClient] = useState(() =>
-    client ?? new QueryClient({ ...defaultQueryClientConfig, ...clientConfig })
-  );
+/**
+ * @description React Query 프로바이더 (HydrationBoundary 포함)
+ */
+export function QueryProvider({ children, dehydratedState, client, clientConfig }: QueryProviderProps) {
+  const [queryClient] = useState(() => client ?? new QueryClient({ ...defaultQueryClientConfig, ...clientConfig }));
 
   return (
     <QueryClientProvider client={queryClient}>
-      {dehydratedState ? (
-        <HydrationBoundary state={dehydratedState}>
-          {children}
-        </HydrationBoundary>
-      ) : (
-        children
-      )}
+      {dehydratedState ? <HydrationBoundary state={dehydratedState}>{children}</HydrationBoundary> : children}
     </QueryClientProvider>
   );
 }

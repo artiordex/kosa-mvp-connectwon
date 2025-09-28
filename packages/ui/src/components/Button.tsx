@@ -3,10 +3,9 @@
  * Author : Shiwoo Min
  * Date : 2025-09-09
  */
-import { cva } from 'class-variance-authority';
 import { forwardRef } from 'react';
-
-import { type ButtonProps } from '../../ui-types.js';
+import { type ButtonProps } from '@connectwon/ui/ui-types';
+import { cva } from 'class-variance-authority';
 
 // 버튼 variant 스타일 정의
 const buttonVariants = cva(

@@ -3,8 +3,6 @@
  * Author : Shiwoo Min
  * Date : 2025-09-25
  */
-'use client';
-
 import { useState } from 'react';
 
 type Message = {

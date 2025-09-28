@@ -3,11 +3,9 @@
  * Author : Shiwoo Min
  * Date : 2025-09-25
  */
-'use client';
-
 import { forwardRef, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import type { CommonHeaderProps, PageHeaderProps } from '../../ui-types.js';
+import type { CommonHeaderProps, PageHeaderProps } from '@connectwon/ui/ui-types';
 
 // 공통 헤더 (사이트 네비게이션)
 const Header = ({

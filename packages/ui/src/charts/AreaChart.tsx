@@ -4,8 +4,7 @@
  * Date : 2025-09-25
  */
 import { useMemo } from 'react';
-
-import { type AreaChartProps, CHART_HEIGHTS, DEFAULT_COLORS } from '../../ui-types.js';
+import { type AreaChartProps, CHART_HEIGHTS, DEFAULT_COLORS } from '@connectwon/ui/ui-types';
 import { Area, CartesianGrid, AreaChart as RechartsAreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
 // 영역 차트 컴포넌트

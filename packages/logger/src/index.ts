@@ -9,4 +9,3 @@ export * from './file.js';
 export * from './http.js';
 export * from './slack.js';
 export * from './logger.js';
-export * from '../logger-types.js';

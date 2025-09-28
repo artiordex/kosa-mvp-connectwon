@@ -4,18 +4,7 @@
  * Date : 2025-09-10
  */
 import { randomUUID } from 'node:crypto';
-
-/**
- * @description 스케줄 세션 인터페이스
- */
-export interface ScheduledSession {
-  id: string;
-  programId: string;
-  date: string;
-  capacity: number;
-  participants: string[];
-  waitlist: string[];
-}
+import type { ScheduledSession } from '@connectwon/core/core-types';
 
 /**
  * @description 세션 스케줄링 유스케이스

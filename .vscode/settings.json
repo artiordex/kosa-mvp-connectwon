@@ -395,7 +395,8 @@
     "CHOKIDAR_USEPOLLING",
     "mypy",
     "disp",
-    "languagedetector"
+    "languagedetector",
+    "ZSET"
   ],
 
   // Nx Console AI 규칙 사용
