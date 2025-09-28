@@ -6,11 +6,6 @@
 import type { Session, UserId } from '../../core-types.js';
 import type { OverbookingPolicyService } from '../policies/overbooking.policies.js';
 import type { WaitlistPolicyService } from '../policies/waitlist.policy.js';
-
-import type { Session, UserId } from '../../core-types.js';
-import type { OverbookingPolicyService } from '../policies/overbooking.policies.js';
-import type { WaitlistPolicyService } from '../policies/waitlist.policy.js';
-
 /**
  * @description 예약 유스케이스에서만 사용하는 확장 세션 타입
  */

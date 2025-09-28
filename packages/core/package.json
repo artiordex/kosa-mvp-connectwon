@@ -24,6 +24,18 @@
       "types": "./dist/core-types.d.ts",
       "import": "./dist/core-types.js"
     },
+    "./configs/tailwind/base": {
+      "import": "./dist/configs/tailwind/base.js",
+      "types": "./dist/configs/tailwind/base.d.ts"
+    },
+    "./configs/tailwind/web": {
+      "import": "./dist/configs/tailwind/web.js",
+      "types": "./dist/configs/tailwind/web.d.ts"
+    },
+    "./configs/tailwind/admin": {
+      "import": "./dist/configs/tailwind/admin.js",
+      "types": "./dist/configs/tailwind/admin.d.ts"
+    },
     "./queue": {
       "types": "./dist/queue/index.d.ts",
       "import": "./dist/queue/index.js"
@@ -48,11 +60,14 @@
       "types": "./dist/domain/*.d.ts",
       "import": "./dist/domain/*.js"
     },
-    "./configs/eslint/base": "./configs/eslint/base.ts",
-    "./configs/tailwind/base": "./configs/tailwind/base.ts",
-    "./configs/tailwind/web": "./configs/tailwind/web.ts",
-    "./configs/tailwind/admin": "./configs/tailwind/admin.ts",
-    "./configs/testing/vitest": "./configs/testing/vitest.ts",
+    "./configs/eslint/base": {
+      "import": "./dist/configs/eslint/base.js",
+      "types": "./dist/configs/eslint/base.d.ts"
+    },
+    "./configs/testing/vitest": {
+      "import": "./dist/configs/testing/vitest.js",
+      "types": "./dist/configs/testing/vitest.d.ts"
+    },
     "./configs/tsconfig/base": "./configs/typescript/base.json",
     "./package.json": "./package.json"
   },
