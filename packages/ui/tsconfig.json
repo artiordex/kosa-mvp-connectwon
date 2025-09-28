@@ -3,16 +3,15 @@
  * Author : Shiwoo Min
  * Date : 2025-09-12
  */
-
 {
-  // 루트의 tsconfig.json 상속
+  // 루트의 tsconfig.base.json 상속
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    // dist 출력
-    "outDir": "./dist",
+    // dist 출력 (src 기준)
+    "outDir": "../../dist/packages/ui",
 
-    // UI 패키지는 루트( . ) 기준으로 컴파일
-    "rootDir": ".",
+    // UI 패키지는 src 기준으로 컴파일
+    "rootDir": "src",
 
     // 프로젝트 레퍼런스 대상
     "composite": true,
@@ -30,8 +29,8 @@
     // Node 전역 타입 유입 방지 (웹 라이브러리는 비우는 게 안전)
     "types": []
   },
-  // 루트에 있는 타입 파일도 포함
-  "include": ["src/**/*", "src/**/index.ts", "ui-types.ts", "../configs/tailwind/tailwind-animations.ts"],
+  // src 기준으로 포함
+  "include": ["src/**/*", "src/ui-types.ts"],
   "exclude": ["dist", "node_modules"],
   "references": []
 }

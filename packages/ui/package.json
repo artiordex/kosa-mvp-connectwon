@@ -15,16 +15,13 @@
     "dist",
     "src/styles"
   ],
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
   "sideEffects": [
-    "**/*.css"
+    "./src/styles/**/*.css"
   ],
-  "__comment_scripts": "pnpm scripts 명령어",
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "clean": "rimraf dist",
-    "prepublishOnly": "pnpm run build",
+    "prepublishOnly": "pnpm run clean && pnpm run build",
     "type-check": "tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {
@@ -35,14 +32,14 @@
     "clsx": "^2.1.1",
     "dayjs": "^1.11.10",
     "lucide-react": "^0.544.0",
-    "next": "^15.5.3",
     "react-icons": "^5.5.0",
     "tailwind-merge": "^2.6.0"
   },
   "peerDependencies": {
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
-    "recharts": "^3.0.0"
+    "recharts": "^3.0.0",
+    "next": "^15.0.0"
   },
   "peerDependenciesMeta": {
     "recharts": {

@@ -5,8 +5,7 @@
  */
 import { cva } from 'class-variance-authority';
 import { forwardRef } from 'react';
-
-import { type ButtonProps } from '../../ui-types.js';
+import { type ButtonProps } from '../ui-types.js';
 
 // 버튼 variant 스타일 정의
 const buttonVariants = cva(

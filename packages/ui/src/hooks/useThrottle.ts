@@ -4,8 +4,7 @@
  * Date : 2025-09-09
  */
 import { useEffect, useMemo, useRef, useState } from 'react';
-
-import type { ThrottleOptions } from '../../ui-types.js';
+import type { ThrottleOptions } from '../ui-types.js';
 
 // 스로틀 값 훅
 export function useThrottle<T>(value: T, delay = 300, opts: ThrottleOptions = {}): T {

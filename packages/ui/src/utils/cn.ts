@@ -16,18 +16,20 @@ import { twMerge } from 'tailwind-merge';
  * cn('px-2', 'py-1', isActive && 'bg-blue-500'); // => 'py-1 px-2 bg-blue-500'
  */
 export function cn(...inputs: ClassValue[]): string {
-  // spread를 써서 clsx에 가변 인자로 넘기는 편이 타입 추론에 더 유리
   return twMerge(clsx(...inputs));
 }
 
-/** @typedef {(string|number|boolean|null|undefined)} ClassPrimitive */
-type ClassPrimitive = string | number | boolean | null | undefined;
-/** @typedef {Record<string, boolean|null|undefined>} ClassMap */
-type ClassMap = Record<string, boolean | null | undefined>;
 /** @typedef {[cond: boolean, className: string]} ClassTuple */
 type ClassTuple = [cond: boolean, className: string];
-/** @typedef {(ClassPrimitive | ClassMap | ClassTuple | ClassInput[])} ClassInput */
-export type ClassInput = ClassPrimitive | ClassMap | ClassTuple | ClassInput[];
+/** @typedef {(ClassValue | ClassTuple | ClassInput[])} ClassInput */
+export type ClassInput = ClassValue | ClassTuple | ClassInput[];
+
+/**
+ * tuple type guard
+ */
+function isTuple(v: unknown): v is ClassTuple {
+  return Array.isArray(v) && v.length === 2 && typeof v[0] === 'boolean' && typeof v[1] === 'string';
+}
 
 /**
  * @function cnPure
@@ -39,33 +41,36 @@ export type ClassInput = ClassPrimitive | ClassMap | ClassTuple | ClassInput[];
  */
 export function cnPure(...classes: ClassInput[]): string {
   const out: string[] = [];
+
   const push = (v: ClassInput): void => {
     if (!v) return;
 
-    if (Array.isArray(v)) {
-      // 조건부 튜플 [boolean, string]
-      if (v.length === 2 && typeof v[0] === 'boolean' && typeof v[1] === 'string') {
-        if (v[0] && v[1]) out.push(v[1]);
-        return;
-      }
-      // 일반 중첩 배열
-      for (const item of v) push(item as ClassInput);
+    if (isTuple(v)) {
+      if (v[0] && v[1]) out.push(v[1]);
       return;
     }
+
+    if (Array.isArray(v)) {
+      v.forEach(item => push(item as ClassInput));
+      return;
+    }
+
     if (typeof v === 'string' || typeof v === 'number') {
       if (v !== '') out.push(String(v));
       return;
     }
+
     if (typeof v === 'boolean' || v == null) {
-      // true 단독은 의미 없음. false/null/undefined는 무시.
-      return;
+      return; // 무시
     }
+
     // 객체 맵 { 'class-a': true, 'class-b': false }
-    for (const [key, cond] of Object.entries(v as ClassMap)) {
+    for (const [key, cond] of Object.entries(v as Record<string, unknown>)) {
       if (cond) out.push(key);
     }
   };
-  for (const it of classes) push(it);
+
+  classes.forEach(push);
   return out.join(' ');
 }
 
@@ -82,10 +87,7 @@ export function cnPure(...classes: ClassInput[]): string {
  *   [isDisabled, 'opacity-50 cursor-not-allowed']
  * );
  */
-export function conditionalClass(
-  baseClass: string,
-  ...pairs: ReadonlyArray<Readonly<[boolean, ClassValue]>>
-): string {
+export function conditionalClass(baseClass: string, ...pairs: ReadonlyArray<Readonly<[boolean, ClassValue]>>): string {
   const enabled = pairs.filter(([cond]) => cond).map(([, klass]) => klass);
   return cn(baseClass, ...enabled);
 }
@@ -106,11 +108,7 @@ export function conditionalClass(
  *   outline: 'border border-blue-500 text-blue-500'
  * });
  */
-export function variantClass<T extends string>(
-  baseClass: ClassValue,
-  variant: T | undefined,
-  variants: Partial<Record<T, ClassValue>>
-): string {
+export function variantClass<T extends string>(baseClass: ClassValue, variant: T | undefined, variants: Partial<Record<T, ClassValue>>): string {
   return variant ? cn(baseClass, variants[variant]) : cn(baseClass);
 }
 
@@ -130,11 +128,7 @@ export function variantClass<T extends string>(
  *   lg: 'px-4 py-3 text-lg'
  * });
  */
-export function sizeClass<T extends string>(
-  baseClass: ClassValue,
-  size: T | undefined,
-  sizes: Partial<Record<T, ClassValue>>
-): string {
+export function sizeClass<T extends string>(baseClass: ClassValue, size: T | undefined, sizes: Partial<Record<T, ClassValue>>): string {
   return size ? cn(baseClass, sizes[size]) : cn(baseClass);
 }
 
@@ -147,8 +141,7 @@ export const examples = {
   basic: () => cn('px-4 py-2', 'bg-blue-500', 'text-white'),
 
   /** @function conditional */
-  conditional: (isActive: boolean) =>
-    cn('btn', 'px-4 py-2', [isActive, 'bg-blue-500'], [!isActive, 'bg-gray-300']),
+  conditional: (isActive: boolean) => cn('btn', 'px-4 py-2', [isActive, 'bg-blue-500'], [!isActive, 'bg-gray-300']),
 
   /** @function object */
   object: (variant: string) =>

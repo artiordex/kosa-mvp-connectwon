@@ -6,19 +6,17 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import type {
   AnimatedListProps,
-  AnimationModalProps,
   CircularProgressProps,
   ErrorCrossProps,
   FadeProps,
   FloatingNotificationProps,
   HeartbeatProps,
-  LoadingSpinnerProps,
   ProgressBarProps,
   PulseLoaderProps,
   SkeletonLoaderProps,
   SuccessCheckProps,
   TypingIndicatorProps,
-} from '../../ui-types.js';
+} from '../ui-types.js';
 
 /**
  * 딜레이 클래스 변환 유틸
@@ -63,25 +61,6 @@ function createCSSProps(props: Record<string, string | number | undefined>): Rec
   });
   return result;
 }
-
-/**
- * 로딩 스피너 컴포넌트
- * @param size - 크기 ('small', 'medium', 'large' 또는 숫자)
- * @param color - 색상
- * @param thickness - 두께
- * @param className - 추가 클래스명
- */
-export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ size = 'medium', color, thickness, className = '', ...props }) => {
-  const sizeCls = typeof size === 'string' ? (size === 'small' ? 'w-4 h-4' : size === 'large' ? 'w-12 h-12' : 'w-8 h-8') : 'w-8 h-8';
-
-  const customProps = createCSSProps({
-    'spinner-size': typeof size === 'number' ? size : undefined,
-    'spinner-color': color,
-    'spinner-thickness': thickness,
-  });
-
-  return <div className={`loading-spinner ${sizeCls} ${className}`} {...customProps} {...props} />;
-};
 
 /**
  * 펄스 로더 컴포넌트
@@ -271,28 +250,28 @@ export const AnimatedList: React.FC<AnimatedListProps> = ({ children, direction 
  * @param className - 추가 클래스명
  */
 export const ProgressBar: React.FC<ProgressBarProps> = ({
-  progress,
+  progress = 0,
   animated = true,
-  color,
-  backgroundColor,
-  height,
+  color = '#3b82f6', // Tailwind blue-500
+  backgroundColor = '#e5e7eb', // Tailwind gray-200
+  height = 8,
   showLabel = false,
   className = '',
   ...props
 }) => {
-  const customProps = createCSSProps({
-    'progress-height': height,
-    'progress-bg': backgroundColor,
-    'progress-color': color,
-    'progress-value': progress ? `${progress}%` : undefined,
-  });
-
   return (
-    <div className={className} {...customProps} {...props}>
-      {showLabel && <div className="progress-label">Loading…</div>}
-      <div className="progress-container h-2 bg-gray-200 rounded">
-        <div className={`progress-bar ${animated ? 'animate' : ''} bg-blue-500 h-full rounded`} />
-      </div>
+    <div className={`progress-wrapper ${className}`} style={{ backgroundColor, height }} {...props}>
+      <div
+        className={`progress-bar ${animated ? 'animate' : ''}`}
+        style={{
+          width: `${Math.min(100, Math.max(0, progress))}%`,
+          backgroundColor: color,
+          height: '100%',
+          borderRadius: 'inherit',
+          transition: animated ? 'width 0.3s ease' : undefined,
+        }}
+      />
+      {showLabel && <span className="progress-label">{Math.round(progress)}%</span>}
     </div>
   );
 };
@@ -308,28 +287,40 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
  * @param className - 추가 클래스명
  */
 export const CircularProgress: React.FC<CircularProgressProps> = ({
-  progress,
+  progress = 0,
   size = 60,
   strokeWidth = 4,
-  color,
-  backgroundColor,
+  color = '#3b82f6', // blue-500
+  backgroundColor = '#e5e7eb', // gray-200
   showLabel = false,
   className = '',
   ...props
 }) => {
   const radius = (size - strokeWidth) / 2;
-  const customProps = createCSSProps({
-    'circle-color': color,
-    'circle-bg': backgroundColor,
-  });
+  const circumference = 2 * Math.PI * radius;
+  const offset = circumference - (progress / 100) * circumference;
 
   return (
-    <div className={className} {...customProps} {...props}>
-      <svg width={size} height={size} className="circular-progress" role="progressbar" aria-label={showLabel ? 'Loading…' : undefined}>
-        <circle className="track stroke-gray-200" cx={size / 2} cy={size / 2} r={radius} strokeWidth={strokeWidth} />
-        <circle className="progress stroke-blue-500" cx={size / 2} cy={size / 2} r={radius} strokeWidth={strokeWidth} />
+    <div className={`circular-progress-wrapper ${className}`} {...props}>
+      <svg width={size} height={size}>
+        {/* background track */}
+        <circle className="track" cx={size / 2} cy={size / 2} r={radius} stroke={backgroundColor} strokeWidth={strokeWidth} fill="transparent" />
+        {/* progress */}
+        <circle
+          className="progress"
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          stroke={color}
+          strokeWidth={strokeWidth}
+          fill="transparent"
+          strokeDasharray={circumference}
+          strokeDashoffset={offset}
+          strokeLinecap="round"
+          style={{ transition: 'stroke-dashoffset 0.3s ease' }}
+        />
       </svg>
-      {showLabel && <div className="circular-progress-label">Loading…</div>}
+      {showLabel && <div className="circular-progress-label">{Math.round(progress)}%</div>}
     </div>
   );
 };
@@ -366,59 +357,6 @@ export const TypingIndicator: React.FC<TypingIndicatorProps> = ({ dotCount = 3, 
       {Array.from({ length: dots }, (_, i) => (
         <div key={i} className="typing-dot" />
       ))}
-    </div>
-  );
-};
-
-/**
- * 모달 컴포넌트
- * @param isOpen - 모달 열림 여부
- * @param onClose - 모달 닫기 콜백
- * @param children - 모달 내용
- * @param closeOnBackdrop - 배경 클릭 시 닫기 여부
- * @param closeOnEscape - Escape 키로 닫기 여부
- * @param className - 추가 클래스명
- */
-export const Modal: React.FC<AnimationModalProps> = ({
-  isOpen,
-  onClose,
-  children,
-  closeOnBackdrop = true,
-  closeOnEscape = true,
-  className = '',
-  ...props
-}) => {
-  const [isClosing, setIsClosing] = useState(false);
-
-  const handleClose = useCallback(() => {
-    setIsClosing(true);
-    setTimeout(() => {
-      onClose();
-      setIsClosing(false);
-    }, 300);
-  }, [onClose]);
-
-  useEffect(() => {
-    const handleEsc = (e: KeyboardEvent) => {
-      if (closeOnEscape && e.key === 'Escape') handleClose();
-    };
-    if (isOpen) {
-      document.addEventListener('keydown', handleEsc);
-      document.body.style.overflow = 'hidden';
-    }
-    return () => {
-      document.removeEventListener('keydown', handleEsc);
-      document.body.style.overflow = 'unset';
-    };
-  }, [isOpen, closeOnEscape, handleClose]);
-
-  if (!isOpen) return null;
-
-  return (
-    <div className={`modal-backdrop ${isClosing ? 'closing' : ''}`} onClick={closeOnBackdrop ? handleClose : undefined} {...props}>
-      <div className={`modal-content ${isClosing ? 'closing' : ''} ${className}`} onClick={e => e.stopPropagation()}>
-        {children}
-      </div>
     </div>
   );
 };
@@ -493,7 +431,6 @@ export const useIntersectionAnimation = (options: IntersectionObserverInit = {})
 };
 
 export default {
-  LoadingSpinner,
   PulseLoader,
   SkeletonLoader,
   SuccessCheck,
@@ -505,7 +442,6 @@ export default {
   CircularProgress,
   Heartbeat,
   TypingIndicator,
-  Modal,
   withAnimation,
   useIntersectionAnimation,
 };
