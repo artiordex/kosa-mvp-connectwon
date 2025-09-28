@@ -3,8 +3,8 @@
  * Author : Shiwoo Min
  * Date : 2025-09-10
  */
-import { levelWeight } from './logger-types.js';
-import type { HttpTransportOptions, LogLevel, LogRecord, Transport } from './logger-types.js';
+import { levelWeight } from '@connectwon/logger/logger-types';
+import type { HttpTransportOptions, LogLevel, LogRecord, Transport } from '@connectwon/logger/logger-types';
 
 /**
  * @description HTTP 엔드포인트로 로그를 배치 전송하는 트랜스포트 생성 함수

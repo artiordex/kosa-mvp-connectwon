@@ -7,8 +7,8 @@ import * as fsSync from 'node:fs';
 import { promises as fsp } from 'node:fs';
 import type { WriteStream } from 'node:fs';
 import path from 'node:path';
-import type { FileTransportOptions, LogRecord, Transport } from './logger-types.js';
-import { levelWeight } from './logger-types.js';
+import type { FileTransportOptions, LogRecord, Transport } from '@connectwon/logger/logger-types';
+import { levelWeight } from '@connectwon/logger/logger-types';
 
 /**
  * @description 디렉터리 존재 확인 및 없으면 생성

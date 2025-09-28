@@ -10,7 +10,7 @@
         "main": "packages/logger/src/index.ts",
         "outputPath": "dist/packages/logger",
         "tsConfig": "packages/logger/tsconfig.json",
-        "assets": ["packages/logger/package.json", "packages/logger/README.md", "packages/logger/LICENSE"]
+        "assets": ["packages/logger/package.json"]
       }
     },
     "lint": {

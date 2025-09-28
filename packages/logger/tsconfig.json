@@ -2,8 +2,6 @@
  * Description : tsconfig.json - 📌 Logger 패키지 (TypeScript 설정)
  * Author : Shiwoo Min
  * Date : 2025-09-10
- * 09-22 : .d.ts 파일 사용으로 변경, declaration 중복 생성 방지
- * 09-30 : outDir 경로 Nx outputPath와 맞춤, include 패턴 명확화
  */
 {
   "extends": "../../tsconfig.base.json",
@@ -40,7 +38,7 @@
     // 품질/편의
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "noImplicitAny": false
+    "noImplicitAny": true
   },
 
   "include": ["src/**/*"],

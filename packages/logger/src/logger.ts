@@ -5,7 +5,7 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
-import type { LogConfig, LogError, LoggerOptions, LogLevel } from './logger-types.js';
+import type { LogConfig, LogError, LoggerOptions, LogLevel } from '@connectwon/logger/logger-types';
 import type { TransformableInfo } from 'logform';
 import winston from 'winston';
 import DailyRotateFile from 'winston-daily-rotate-file';
