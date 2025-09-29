@@ -10,7 +10,7 @@
         "main": "packages/sdk/src/index.ts",
         "outputPath": "dist/packages/sdk",
         "tsConfig": "packages/sdk/tsconfig.json",
-        "assets": ["packages/sdk/README.md", "packages/sdk/package.json"]
+        "assets": ["packages/sdk/package.json"]
       }
     },
     "lint": {
@@ -26,5 +26,9 @@
       }
     }
   },
-  "implicitDependencies": ["@connectwon/api-contract", "@connectwon/logger"]
+  "implicitDependencies": [
+    "@connectwon/api-contract",
+    "@connectwon/logger",
+    "@connectwon/core"
+  ]
 }

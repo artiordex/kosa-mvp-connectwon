@@ -2,15 +2,16 @@
  * Description : tsconfig.json - 📌 SDK 패키지 (TypeScript 설정)
  * Author : Shiwoo Min
  * Date : 2025-09-12
+ * 09-30 : src 디렉토리 구조 단순화 (typescript/src → src)
  */
 {
   // 루트의 tsconfig.base.json 상속
   "extends": "../../tsconfig.base.json",
-
   "compilerOptions": {
-    // 출력 설정
-    "rootDir": "typescript/src",
+    // I/O 경로
+    "rootDir": "./src",
     "outDir": "../../dist/packages/sdk",
+    "declarationDir": "../../dist/packages/sdk/types",
 
     // Node ESM 권장
     "target": "ES2022",
@@ -32,14 +33,22 @@
     // 프로젝트 레퍼런스 활성화
     "composite": true,
 
-    // Node 전역 타입 유입 방지 (isomorphic 충돌 예방)
+    // Node 전역 타입 유입 방지
     "types": ["node"]
   },
 
-  // 루트에 배치한 타입 파일 포함
-  "include": ["typescript/src/**/*", "typescript/src/sdk-types.ts"],
-  "exclude": ["dist", "node_modules", "../../tools/**/*", "../../tests/**/*", "**/*.test.*"],
+  // 포함 범위
+  "include": ["src/**/*"],
 
-  // 의존 패키지 참조
-  "references": [{ "path": "../api-contract" }, { "path": "../logger" }]
+  // 불필요한 폴더 및 파일 제외
+  "exclude": [
+    "dist",
+    "node_modules"
+  ],
+
+  // 의존 패키지 참조 (api-contract, logger 사용)
+  "references": [
+    { "path": "../api-contract" },
+    { "path": "../logger" }
+  ]
 }

@@ -5,36 +5,10 @@
   "private": true,
   "type": "module",
   "sideEffects": false,
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
-    },
-    "./auth": {
-      "types": "./dist/auth.d.ts",
-      "import": "./dist/auth.js"
-    },
-    "./http": {
-      "types": "./dist/http.d.ts",
-      "import": "./dist/http.js"
-    },
-    "./errors": {
-      "types": "./dist/errors.d.ts",
-      "import": "./dist/errors.js"
-    },
-    "./middleware": {
-      "types": "./dist/middleware.d.ts",
-      "import": "./dist/middleware.js"
-    },
-    "./pagination": {
-      "types": "./dist/pagination.d.ts",
-      "import": "./dist/pagination.js"
-    },
-    "./tracing": {
-      "types": "./dist/tracing.d.ts",
-      "import": "./dist/tracing.js"
+      "types": "./dist/packages/sdk/index.d.ts",
+      "import": "./dist/packages/sdk/index.js"
     },
     "./package.json": "./package.json"
   },
@@ -42,15 +16,13 @@
     "dist"
   ],
   "scripts": {
-    "build": "pnpm -w exec tsc -p tsconfig.json",
-    "dev": "pnpm -w exec tsc --watch -p tsconfig.json",
-    "clean": "pnpm -w exec rimraf dist",
-    "prepublishOnly": "pnpm run build"
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsc --watch -p tsconfig.json",
+    "clean": "rimraf dist",
+    "prepublishOnly": "pnpm run clean && pnpm run build"
   },
   "dependencies": {
-    "@connectwon/api-contract": "workspace:*",
-    "@connectwon/logger": "workspace:*",
-    "@connectwon/core": "workspace:*"
+    "@connectwon/api-contract": "workspace:*"
   },
   "engines": {
     "node": ">=20.11",
