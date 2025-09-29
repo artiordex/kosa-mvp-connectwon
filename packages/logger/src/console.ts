@@ -3,8 +3,8 @@
  * Author : Shiwoo Min
  * Date : 2025-09-10
  */
-import type { ConsoleTransportOptions, LogLevel, LogRecord, Transport } from '@connectwon/logger/logger-types';
-import { levelWeight } from '@connectwon/logger/logger-types';
+import type { ConsoleTransportOptions, LogLevel, LogRecord, Transport } from './logger-types.js';
+import { levelWeight } from './logger-types.js';
 
 /**
  * @description 콘솔 출력용 트랜스포트 생성 함수

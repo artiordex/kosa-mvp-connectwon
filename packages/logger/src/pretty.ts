@@ -3,8 +3,8 @@
  * Author : Shiwoo Min
  * Date : 2025-09-10
  */
-import type { LogLevel, LogRecord, PrettyTransportOptions, Transport } from '@connectwon/logger/logger-types';
-import { levelWeight } from '@connectwon/logger/logger-types';
+import type { LogLevel, LogRecord, PrettyTransportOptions, Transport } from './logger-types.js';
+import { levelWeight } from './logger-types.js';
 
 /**
  * @description ANSI 컬러 유틸

@@ -7,22 +7,20 @@
   "sideEffects": [
     "./dist/**/*.js"
   ],
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "exports": {
-    ".": {
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
-    },
-    "./logger-types": {
-      "import": "./src/logger-types.ts",
-      "types": "./src/logger-types.ts"
-    },
-    "./package.json": "./package.json"
-  },
   "files": [
     "dist"
   ],
+  "exports": {
+    ".": {
+      "types": "./dist/packages/logger/index.d.ts",
+      "import": "./dist/packages/logger/index.js"
+    },
+    "./logger-types": {
+      "types": "./dist/packages/logger/logger-types.d.ts",
+      "import": "./dist/packages/logger/logger-types.ts"
+    },
+    "./package.json": "./package.json"
+  },
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "dev": "tsc -p tsconfig.json --watch",

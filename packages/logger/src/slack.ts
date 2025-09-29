@@ -3,8 +3,8 @@
  * Author : Shiwoo Min
  * Date : 2025-09-10
  */
-import type { LogLevel, SlackTransportOptions, Transport } from '@connectwon/logger/logger-types';
-import { levelWeight } from '@connectwon/logger/logger-types';
+import type { LogLevel, SlackTransportOptions, Transport } from './logger-types.js';
+import { levelWeight } from './logger-types.js';
 
 /**
  * @description Slack Incoming Webhook으로 로그 전송하는 트랜스포트 생성 함수
