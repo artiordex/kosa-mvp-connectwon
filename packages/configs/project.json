@@ -1,0 +1,28 @@
+{
+  "name": "@connectwon/configs",
+  "sourceRoot": "packages/configs/src",
+  "projectType": "library",
+  "tags": ["type:lib", "layer:tooling"],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "options": {
+        "main": "packages/configs/index.ts",
+        "outputPath": "dist/packages/configs",
+        "tsConfig": "packages/configs/tsconfig.json"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "options": {
+        "lintFilePatterns": ["packages/configs/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "options": {
+        "passWithNoTests": true
+      }
+    }
+  }
+}

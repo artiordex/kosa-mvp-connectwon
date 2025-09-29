@@ -1,7 +1,7 @@
 {
   "name": "@connectwon/core",
   "version": "1.0.0",
-  "description": "ConnectWon 핵심 라이브러리 + 공통 설정",
+  "description": "ConnectWon 핵심 라이브러리",
   "private": true,
   "type": "module",
   "sideEffects": false,
@@ -9,11 +9,7 @@
   "types": "./dist/index.d.ts",
   "author": "Shiwoo Min <artiordex@gmail.com>",
   "files": [
-    "dist",
-    "configs/eslint/*",
-    "configs/tailwind/*",
-    "configs/testing/*",
-    "configs/typescript/*"
+    "dist"
   ],
   "exports": {
     ".": {
@@ -24,55 +20,6 @@
       "types": "./src/core-types.ts",
       "import": "./src/core-types.ts"
     },
-    "./configs/tailwind/base": {
-      "import": "./dist/configs/tailwind/base.js",
-      "types": "./dist/configs/tailwind/base.d.ts"
-    },
-    "./configs/tailwind/web": {
-      "import": "./dist/configs/tailwind/web.js",
-      "types": "./dist/configs/tailwind/web.d.ts"
-    },
-    "./configs/tailwind/admin": {
-      "import": "./dist/configs/tailwind/admin.js",
-      "types": "./dist/configs/tailwind/admin.d.ts"
-    },
-    "./queue": {
-      "types": "./dist/queue/index.d.ts",
-      "import": "./dist/queue/index.js"
-    },
-    "./application/*": {
-      "types": "./src/application/*.ts",
-      "import": "./src/application/*.ts"
-    },
-    "./policies/*": {
-      "types": "./src/application/policies/*.ts",
-      "import": "./src/application/policies/*.ts"
-    },
-    "./infrastructure/*": {
-      "types": "./dist/infrastructure/*.d.ts",
-      "import": "./dist/infrastructure/*.js"
-    },
-    "./ports/*": {
-      "types": "./dist/ports/*.d.ts",
-      "import": "./dist/ports/*.js"
-    },
-    "./adapters/*": {
-      "types": "./dist/adapters/*.d.ts",
-      "import": "./dist/adapters/*.js"
-    },
-    "./domain/*": {
-      "types": "./dist/domain/*.d.ts",
-      "import": "./dist/domain/*.js"
-    },
-    "./configs/eslint/base": {
-      "import": "./dist/configs/eslint/base.js",
-      "types": "./dist/configs/eslint/base.d.ts"
-    },
-    "./configs/testing/vitest": {
-      "import": "./dist/configs/testing/vitest.js",
-      "types": "./dist/configs/testing/vitest.d.ts"
-    },
-    "./configs/tsconfig/base": "./configs/typescript/base.json",
     "./package.json": "./package.json"
   },
   "scripts": {

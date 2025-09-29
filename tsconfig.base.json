@@ -90,6 +90,16 @@
         "dist/packages/core/src/*"
       ],
 
+      // Config
+      "@connectwon/configs": [
+        // "packages/configs/src/index.ts",
+        "dist/packages/configs/src/index.d.ts"
+      ],
+      "@connectwon/configs/*": [
+        // "packages/configs/src/*",
+        "dist/packages/configs/src/*"
+      ],
+
       // Database
       "@connectwon/database": [
         // "packages/database/src/index.ts",

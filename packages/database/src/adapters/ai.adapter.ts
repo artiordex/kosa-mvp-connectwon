@@ -33,7 +33,7 @@ export class PrismaAIInteractionRepository implements AIInteractionRepository {
         provider: data.provider,
         model: data.model,
         kind: data.kind,
-        meta: (data.metadata ?? {}) as Prisma.InputJsonValue, 
+        meta: (data.metadata ?? {}) as Prisma.InputJsonValue,
         userId: data.userId ? BigInt(data.userId) : null,
         programId: data.programId ? BigInt(data.programId) : null,
         sessionId: data.sessionId ? BigInt(data.sessionId) : null,

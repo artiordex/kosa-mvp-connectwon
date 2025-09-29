@@ -6,10 +6,6 @@
 import type { CursorPaginatedResponse, CursorPaginationQuery, Id, ISODateTime } from '@connectwon/core/core-types';
 import type { CreateVenue, UpdateVenue, Venue, VenueRepository } from '@connectwon/core/ports/venue.port.js';
 
-
-
-
-
 function nowISO(): ISODateTime {
   return new Date().toISOString();
 }

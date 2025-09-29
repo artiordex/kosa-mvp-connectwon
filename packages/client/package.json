@@ -16,14 +16,6 @@
       "import": "./src/client-types.ts",
       "types": "./src/client-types.ts"
     },
-    "./hooks": {
-      "types": "./dist/hooks/index.d.ts",
-      "import": "./dist/hooks/index.js"
-    },
-    "./providers": {
-      "types": "./dist/providers/index.d.ts",
-      "import": "./dist/providers/index.js"
-    },
     "./package.json": "./package.json"
   },
   "files": [

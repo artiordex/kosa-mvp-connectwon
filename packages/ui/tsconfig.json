@@ -10,6 +10,7 @@
     // I/O 경로
     "rootDir": "./src",
     "outDir": "../../dist/packages/ui",
+    "declarationDir": "../../dist/packages/ui",
 
     // 프로젝트 레퍼런스 대상
     "composite": true,
@@ -35,13 +36,10 @@
     // 모노레포 최적화
     "incremental": true,
     "tsBuildInfoFile": "../../dist/packages/ui/.tsbuildinfo",
-
-    // 타입 정의 파일 위치 설정
-    "declarationDir": "../../dist/packages/ui/types"
   },
 
   // src 기준으로 포함
-  "include": ["src/**/*", "src/ui-types.ts"],
+  "include": ["src/**/*"],
 
   // 제외할 파일/폴더
   "exclude": ["dist", "node_modules"],

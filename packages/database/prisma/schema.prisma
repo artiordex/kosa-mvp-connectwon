@@ -3,6 +3,7 @@
  * author : Shiwoo Min
  * date : 2025-09-24
  * 09-28 : DDL과 일치하도록 모든 테이블 추가 및 수정
+ * 명령어 : pnpm prisma generate
  */
 
 generator client {

@@ -4,23 +4,6 @@
  * Date : 2025-09-21
  * 빌드 로그 확인 - tsc -p tsconfig.json --listEmittedFiles
  */
-// configs/eslint
-export { default as eslint } from './configs/eslint/base.js';
-
-// configs/tailwind
-export { default as tailwindAdmin } from './configs/tailwind/admin.js';
-export { default as tailwindBase } from './configs/tailwind/base.js';
-export { default as tailwindWeb } from './configs/tailwind/web.js';
-
-// configs/testing
-export { default as testingPlaywright } from './configs/testing/playwright.js';
-export { default as testingVitest } from './configs/testing/vitest.js';
-
-// configs/typescript
-export { default as tsconfigBase } from './configs/typescript/base.json';
-export { default as tsconfigNode } from './configs/typescript/node.json';
-export { default as tsconfigWeb } from './configs/typescript/web.json';
-
 
 // application
 export * from './application/policies/overbooking.policies.js';
