@@ -83,141 +83,141 @@
       // Core
       "@connectwon/core": [
         // "packages/core/src/index.ts",
-        "dist/packages/core/src/index.d.ts"
+        "dist/packages/core/index.d.ts"
       ],
       "@connectwon/core/*": [
         // "packages/core/src/*",
-        "dist/packages/core/src/*"
+        "dist/packages/core/*"
       ],
 
       // Config
       "@connectwon/configs": [
         // "packages/configs/src/index.ts",
-        "dist/packages/configs/src/index.d.ts"
+        "dist/packages/configs/index.d.ts"
       ],
       "@connectwon/configs/*": [
         // "packages/configs/src/*",
-        "dist/packages/configs/src/*"
+        "dist/packages/configs/*"
       ],
 
       // Database
       "@connectwon/database": [
         // "packages/database/src/index.ts",
-        "dist/packages/database/src/index.d.ts"
+        "dist/packages/database/index.d.ts"
       ],
       "@connectwon/database/*": [
         // "packages/database/src/*",
-        "dist/packages/database/src/*"
+        "dist/packages/database/*"
       ],
 
       // Logger
       "@connectwon/logger": [
         // "packages/logger/src/index.ts",
-        "dist/packages/logger/src/index.d.ts"
+        "dist/packages/logger/index.d.ts"
       ],
       "@connectwon/logger/*": [
         // "packages/logger/src/*",
-        "dist/packages/logger/src/*"
+        "dist/packages/logger/*"
       ],
 
       // UI
       "@connectwon/ui": [
         // "packages/ui/src/index.ts",
-        "dist/packages/ui/src/index.d.ts"
+        "dist/packages/ui/index.d.ts"
       ],
       "@connectwon/ui/*": [
         // "packages/ui/src/*",
-        "dist/packages/ui/src/*"
+        "dist/packages/ui/*"
       ],
 
       // Client
       "@connectwon/client": [
         // "packages/client/src/index.ts",
-        "dist/packages/client/src/index.d.ts"
+        "dist/packages/client/index.d.ts"
       ],
       "@connectwon/client/*": [
         // "packages/client/src/*",
-        "dist/packages/client/src/*"
+        "dist/packages/client/*"
       ],
 
       // SDK
       "@connectwon/sdk": [
         // "packages/sdk/typescript/src",
-        "dist/packages/sdk/src/index.d.ts"
+        "dist/packages/sdk/index.d.ts"
       ],
       "@connectwon/sdk/*": [
         // "packages/sdk/typescript/src/*",
-        "dist/packages/sdk/src/*"
+        "dist/packages/sdk/*"
       ],
 
       // API Contract
       "@connectwon/api-contract": [
         // "packages/api-contract/src",
-        "dist/packages/api-contract/src/index.d.ts"
+        "dist/packages/api-contract/index.d.ts"
       ],
       "@connectwon/api-contract/*": [
         // "packages/api-contract/src/*",
-        "dist/packages/api-contract/src/*"
+        "dist/packages/api-contract/*"
       ],
 
       // Server
       "@connectwon/server": [
         // "packages/server/src/index.ts",
-        "dist/packages/server/src/index.d.ts"
+        "dist/packages/server/index.d.ts"
       ],
       "@connectwon/server/*": [
         // "packages/server/src/*",
-        "dist/packages/server/src/*"
+        "dist/packages/server/*"
       ],
 
       // Web
       "@connectwon/web": [
         // "apps/web/src",
-        "dist/apps/web/src"
+        "dist/apps/web"
       ],
       "@connectwon/web/*": [
         // "apps/web/src/*",
-        "dist/apps/web/src/*"
+        "dist/apps/web/*"
       ],
 
       // Admin
       "@connectwon/admin": [
         // "apps/admin/src",
-        "dist/apps/admin/src"
+        "dist/apps/admin"
       ],
       "@connectwon/admin/*": [
         // "apps/admin/src/*",
-        "dist/apps/admin/src/*"
+        "dist/apps/admin/*"
       ],
 
       // Api
       "@connectwon/api": [
         // "apps/api/src",
-        "dist/apps/api/src"
+        "dist/apps/api"
       ],
       "@connectwon/api/*": [
         // "apps/api/src/*",
-        "dist/apps/api/src/*"
+        "dist/apps/api/*"
       ],
 
       // Worker
       "@connectwon/worker": [
         // "apps/worker/src",
-        "dist/apps/worker/src"
+        "dist/apps/worker"
       ],
       "@connectwon/worker/*": [
         // "apps/worker/src/*",
-        "dist/apps/worker/src/*"
+        "dist/apps/worker/*"
       ],
 
       // E2E
       "@connectwon/e2e": [
         // "apps/e2e/src",
-        "dist/apps/e2e/src"
+        "dist/apps/e2e"
       ],
       "@connectwon/e2e/*": [
         // "apps/e2e/src/*",
-        "dist/apps/e2e/src/*"
+        "dist/apps/e2e/*"
       ]
     }
   }

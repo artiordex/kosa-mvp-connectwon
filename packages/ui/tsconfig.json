@@ -39,7 +39,7 @@
   },
 
   // src 기준으로 포함
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "../tailwind.config.*"],
 
   // 제외할 파일/폴더
   "exclude": ["dist", "node_modules"],

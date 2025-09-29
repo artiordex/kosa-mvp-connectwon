@@ -3,7 +3,7 @@
  * Author : Shiwoo Min
  * Date : 2025-09-29
  */
-import type { CreateProgram, CursorPaginatedResponse, CursorPaginationQuery, Id, Program } from '@connectwon/core/core-types';
+import type { CreateProgram, CursorPaginatedResponse, CursorPaginationQuery, Id, Program } from '@connectwon/core/core-types.js';
 import type { ProgramRepository } from '@connectwon/core/ports/program.port.js';
 import { PrismaClient } from '@prisma/client';
 

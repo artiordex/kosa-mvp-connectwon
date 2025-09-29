@@ -75,14 +75,21 @@
 
   // TypeScript Project References로 의존성 관리
   "references": [
+    // packages
     { "path": "./packages/api-contract" },
     { "path": "./packages/core" },
+    { "path": "./packages/configs" },
     { "path": "./packages/database" },
     { "path": "./packages/logger" },
     { "path": "./packages/sdk" },
     { "path": "./packages/server" },
     { "path": "./packages/client" },
-    { "path": "./packages/ui" }
-    // Removed reference to './packages/types' as it does not exist
+    { "path": "./packages/ui" },
+    // apps
+    { "path": "./apps/web" },
+    { "path": "./apps/admin" },
+    { "path": "./apps/api" },
+    { "path": "./apps/worker" },
+    { "path": "./apps/e2e" }
   ]
 }

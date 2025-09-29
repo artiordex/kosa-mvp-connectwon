@@ -7,11 +7,6 @@
 // eslint
 export { default as eslint } from './eslint/base.js';
 
-// tailwind
-export { default as tailwindAdmin } from './tailwind/admin.js';
-export { default as tailwindBase } from './tailwind/base.js';
-export { default as tailwindWeb } from './tailwind/web.js';
-
 // testing
 export { default as testingPlaywright } from './testing/playwright.js';
 export { default as testingVitest } from './testing/vitest.js';

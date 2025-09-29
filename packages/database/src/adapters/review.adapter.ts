@@ -1,4 +1,4 @@
-import type { CursorPaginatedResponse, CursorPaginationQuery, Id } from '@connectwon/core/core-types';
+import type { CursorPaginatedResponse, CursorPaginationQuery, Id } from '@connectwon/core/core-types.js';
 import { PrismaClient } from '@prisma/client';
 import type { CreateReview, Review, ReviewRepository, ReviewStats, ReviewTargetType, UpdateReview } from '@connectwon/core/ports/review.port.js';
 

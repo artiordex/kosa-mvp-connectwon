@@ -13,6 +13,9 @@
   "packageManager": "pnpm@10.7.0",
   "__comment_scripts": "pnpm scripts 명령어",
   "scripts": {
+    "clean": "rimraf dist",
+    "build": "pnpm run clean && tsc -p tsconfig.json",
+    "build:configs": "pnpm --filter @connectwon/configs run build",
     "dev:compose": "docker compose -p connectwon --env-file .env -f infra/docker/docker-compose.yml up -d --build",
     "dev:web": "pnpm --filter @connectwon/web dev",
     "dev:admin": "pnpm --filter @connectwon/admin dev",
@@ -115,7 +118,7 @@
       "path": "./node_modules/cz-customizable"
     },
     "cz-customizable": {
-      "config": "./.cz-config.mjs"
+      "config": "./.cz-config.cjs"
     }
   },
   "__comment_pnpmOverrides": "pnpm 패키지 버전 강제 override 설정",

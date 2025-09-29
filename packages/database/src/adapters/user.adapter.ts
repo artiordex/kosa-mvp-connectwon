@@ -3,7 +3,7 @@
  * Author : Shiwoo Min
  * Date : 2025-09-29
  */
-import type { CreateUser, CursorPaginatedResponse, CursorPaginationQuery, Id, UpdateUser, User } from '@connectwon/core/core-types';
+import type { CreateUser, CursorPaginatedResponse, CursorPaginationQuery, Id, UpdateUser, User } from '@connectwon/core/core-types.js';
 import type { UserRepository } from '@connectwon/core/ports/user.port.js';
 import { Prisma, PrismaClient } from '@prisma/client';
 

@@ -9,11 +9,11 @@
 {
   // 루트의 tsconfig.base.json 상속
   "extends": "../../tsconfig.base.json",
-
   "compilerOptions": {
     // I/O 경로
     "rootDir": "./src",
     "outDir": "../../dist/packages/database",
+    "declarationDir": "../../dist/packages/database",
 
     // Node ESM 권장
     "target": "ES2022",

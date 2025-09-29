@@ -3,12 +3,8 @@
  * Author : Shiwoo Min
  * Date : 2025-09-30
  */
-import type { CursorPaginatedResponse, CursorPaginationQuery, Id, ISODateTime } from '@connectwon/core/core-types';
+import type { CursorPaginatedResponse, CursorPaginationQuery, Id, ISODateTime } from '@connectwon/core/core-types.js';
 import type { UserActivity, UserActivityRepository } from '@connectwon/core/ports/user.port.js';
-
-
-
-
 
 function nowISO(): ISODateTime {
   return new Date().toISOString();

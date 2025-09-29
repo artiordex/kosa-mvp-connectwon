@@ -5,7 +5,7 @@
  */
 import { Injectable } from '@nestjs/common';
 import { OpenAIAdapter } from '../adapters/openai.adapter.js';
-import type { AIChatInput, AIChatResult } from '@connectwon/server/server-types';
+import type { AIChatInput, AIChatResult } from '../server-types.js';
 import { AnthropicAdapter } from '../adapters/anthropic.adapter.js';
 import { HuggingFaceAdapter } from '../adapters/huggingface.adapter.js';
 

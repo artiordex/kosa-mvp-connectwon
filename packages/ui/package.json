@@ -19,6 +19,10 @@
       "types": "./dist/packages/ui/ui-types.d.ts",
       "import": "./dist/packages/ui/ui-types.js"
     },
+    "./tailwind-config": {
+      "import": "./dist/packages/ui/tailwind.config.js",
+      "types": "./dist/packages/ui/tailwind.config.d.ts"
+    },
     "./styles/*": "./dist/packages/ui/styles/*",
     "./package.json": "./package.json"
   },
