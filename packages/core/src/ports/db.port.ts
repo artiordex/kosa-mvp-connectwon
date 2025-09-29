@@ -3,7 +3,6 @@
  * Author : Shiwoo Min
  * Date : 2025-09-29
  */
-
 export interface DatabaseConnection {
   connect(): Promise<void>;
   disconnect(): Promise<void>;

@@ -3,7 +3,7 @@
  * Author : Shiwoo Min
  * Date : 2025-09-30
  */
-import type { CursorPaginatedResponse, CursorPaginationQuery, Id, ISODateTime } from '@connectwon/core/core-types';
+import type { CursorPaginatedResponse, CursorPaginationQuery, Id, ISODateTime } from '../core-types.js';
 
 /** @description 알림 채널 종류 */
 export type NotificationChannel = 'system' | 'email' | 'slack' | 'sms' | 'push';

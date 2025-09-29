@@ -16,15 +16,14 @@
     // 출력 설정
     "rootDir": "./src",
     "outDir": "../../dist/packages/core",
+    "declarationDir": "../../dist/packages/core",
 
-    // 서버 전용 타깃 (브라우저 타입 유입 방지)
+    // Node ESM 해석 (config TS 파일 import 시 일관성↑)
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "target": "ES2022",
     "lib": ["ES2022"],
     "types": ["node", "eslint"],
-
-    // Node ESM 해석
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
 
     // 선언 파일 및 디버깅
     "declaration": true,
@@ -46,9 +45,12 @@
     "exactOptionalPropertyTypes": true
   },
 
+  // 포함 범위
   "include": ["src/**/*"],
+
+  // 불필요한 폴더 제외
   "exclude": ["dist", "node_modules", "**/*.test.*", "**/*.spec.*"],
 
   // 순환 참조 방지: database → core 참조만 허용, core → database 금지
-  "references": [{ "path": "../api-contract" }]
+  "references": []
 }

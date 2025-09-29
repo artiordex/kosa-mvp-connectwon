@@ -3,7 +3,7 @@
  * Author : Shiwoo Min
  * Date : 2025-09-30
  */
-import type { CursorPaginatedResponse, CursorPaginationQuery, Id, ISODateTime } from '@connectwon/core/core-types';
+import type { CursorPaginatedResponse, CursorPaginationQuery, Id, ISODateTime } from '../core-types.js';
 
 /**
  * @description 리뷰 대상 종류

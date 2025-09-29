@@ -3,13 +3,8 @@
  * Author : Shiwoo Min
  * Date : 2025-09-29
  */
-import type { CursorPaginatedResponse, CursorPaginationQuery, Id } from '@connectwon/core/core-types';
+import type { CursorPaginatedResponse, CursorPaginationQuery, Id } from '../core-types.js';
 import type { TimeRange } from '../domain/value-objects.js';
-
-/**
- * @description CursorPaginationQuery / CursorPaginatedResponse 타입 재-export
- */
-export type { CursorPaginationQuery, CursorPaginatedResponse } from '@connectwon/core/core-types';
 
 /**
  * @description 지원되는 AI Provider

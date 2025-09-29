@@ -3,7 +3,7 @@
  * Author : Shiwoo Min
  * Date : 2025-09-30
  */
-import type { CursorPaginatedResponse, CursorPaginationQuery, Id, ISODateTime, JsonObject } from '@connectwon/core/core-types';
+import type { CursorPaginatedResponse, CursorPaginationQuery, Id, ISODateTime, JsonObject } from '../core-types.js';
 
 /**
  * @description 장소 엔터티

@@ -17,7 +17,7 @@ import type {
   ReportJob,
   SessionReminderJob,
   SlackJob,
-} from '@connectwon/core/core-types';
+} from '../core-types.js';
 import { AIProcessingProcessor, CleanupJobProcessor, EmailJobProcessor, ReportJobProcessor, SessionReminderProcessor, SlackJobProcessor } from './processor.queue.js';
 import { type Job, type JobsOptions, type Processor, Queue, QueueEvents, Worker, type WorkerOptions } from 'bullmq';
 import type { RedisOptions } from 'ioredis';

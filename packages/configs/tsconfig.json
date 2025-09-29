@@ -23,15 +23,13 @@
     "moduleResolution": "NodeNext",
     "target": "ES2022",
     "lib": ["ES2022"],
+    "types": ["node"],
 
     // configs는 TS 전용으로 운용
     "allowJs": false,
 
     // JSON 설정을 TS에서 참조할 수 있게
     "resolveJsonModule": true,
-
-    // 일부 툴이 Node 전역타입을 기대할 수 있어 명시
-    "types": ["node"],
 
     // 편의/안전
     "skipLibCheck": true,
@@ -53,6 +51,6 @@
   // 불필요한 폴더 제외
   "exclude": ["dist", "node_modules"],
 
-  // Project References 필요 없음 (다른 패키지를 참조하지 않음)
+  // Project References
   "references": []
 }

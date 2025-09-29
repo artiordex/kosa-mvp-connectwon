@@ -4,14 +4,7 @@
  * Date : 2025-09-10
  */
 import { randomUUID } from 'node:crypto';
-
-
-
-import type { Job, JobPriority, JobProcessor, JobResult, QueueConfig, QueueStats } from '@connectwon/core/core-types';
-
-
-
-
+import type { Job, JobPriority, JobProcessor, JobResult, QueueConfig, QueueStats } from '../core-types.js';
 
 /**
  * @description 큐 매니저 클래스

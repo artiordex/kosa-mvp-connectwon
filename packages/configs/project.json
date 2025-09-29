@@ -2,6 +2,7 @@
   "name": "@connectwon/configs",
   "sourceRoot": "packages/configs/src",
   "projectType": "library",
+  "version": "1.0.0",
   "tags": ["type:lib", "layer:tooling"],
   "targets": {
     "build": {

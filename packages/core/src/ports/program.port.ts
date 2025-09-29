@@ -3,7 +3,7 @@
  * Author : Shiwoo Min
  * Date : 2025-09-29
  */
-import type { CreateProgram, CursorPaginatedResponse, CursorPaginationQuery, Id, Program } from '@connectwon/core/core-types';
+import type { CreateProgram, CursorPaginatedResponse, CursorPaginationQuery, Id, Program } from '../core-types.js';
 
 /**
  * @description 프로그램 저장소 포트

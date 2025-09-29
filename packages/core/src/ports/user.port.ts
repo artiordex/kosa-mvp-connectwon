@@ -12,7 +12,7 @@ import type {
   JsonObject,
   UpdateUser,
   User,
-} from '@connectwon/core/core-types';
+} from '../core-types.js';
 
 /**
  * @description 사용자 저장소 포트

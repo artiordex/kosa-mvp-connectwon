@@ -3,7 +3,7 @@
  * Author : Shiwoo Min
  * Date : 2025-09-10
  */
-import type { WaitlistPolicyOptions } from '@connectwon/core/core-types';
+import type { WaitlistPolicyOptions } from '../../core-types.js';
 
 /**
  * @description 대기열 정책 서비스

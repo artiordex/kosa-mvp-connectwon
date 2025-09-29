@@ -17,8 +17,8 @@
       "import": "./dist/index.js"
     },
     "./core-types": {
-      "types": "./src/core-types.ts",
-      "import": "./src/core-types.ts"
+      "types": "./dist/packages/core/core-types.d.ts",
+      "import": "./dist/packages/core/core-types.ts"
     },
     "./package.json": "./package.json"
   },
