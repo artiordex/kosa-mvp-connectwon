@@ -17,6 +17,7 @@
   },
   "peerDependencies": {
     "@connectwon/api-contract": "workspace:*",
+    "@connectwon/core": "workspace:*",
     "@connectwon/sdk": "workspace:*",
     "@connectwon/ui": "workspace:*",
     "clsx": "^2.0.0",
