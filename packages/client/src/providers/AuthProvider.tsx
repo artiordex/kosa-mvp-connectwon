@@ -4,7 +4,7 @@
  * Date : 2025-09-12
  */
 import React, { createContext, useCallback, useEffect, useMemo, useState } from 'react';
-import type { SessionUser, UserRole } from '@connectwon/client/client-types';
+import type { SessionUser, UserRole } from '../client-types.js';
 
 /**
  * @description 인증 컨텍스트 값 타입 (클라이언트 전용)

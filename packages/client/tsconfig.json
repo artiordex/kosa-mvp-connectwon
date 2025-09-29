@@ -10,8 +10,8 @@
   "compilerOptions": {
     // I/O 경로
     "rootDir": "./src",
-    "outDir": "../../dist/packages/server",
-    "tsBuildInfoFile": "../../dist/packages/server/.tsbuildinfo",
+    "outDir": "../../dist/packages/client",
+    "tsBuildInfoFile": "../../dist/packages/client/.tsbuildinfo",
     "noEmit": false,
 
     // 서버 전용 타깃
@@ -44,7 +44,11 @@
     "incremental": true,
     "forceConsistentCasingInFileNames": true
   },
+  // 포함 범위
+  "include": [
+    "src/**/*",
+  ],
 
-  "include": ["src/**/*", "src/client-types.ts"],
+  // 불필요한 폴더 제외
   "exclude": ["node_modules", "dist", "**/*.test.*", "**/*.spec.*"]
 }
