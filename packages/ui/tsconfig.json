@@ -7,11 +7,9 @@
   // 루트의 tsconfig.base.json 상속
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    // dist 출력 (src 기준)
+    // I/O 경로
+    "rootDir": "./src",
     "outDir": "../../dist/packages/ui",
-
-    // UI 패키지는 src 기준으로 컴파일
-    "rootDir": "src",
 
     // 프로젝트 레퍼런스 대상
     "composite": true,
@@ -27,10 +25,27 @@
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
 
     // Node 전역 타입 유입 방지 (웹 라이브러리는 비우는 게 안전)
-    "types": []
+    "types": [],
+
+    // 타입 선언 및 소스맵
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+
+    // 모노레포 최적화
+    "incremental": true,
+    "tsBuildInfoFile": "../../dist/packages/ui/.tsbuildinfo",
+
+    // 타입 정의 파일 위치 설정
+    "declarationDir": "../../dist/packages/ui/types"
   },
+
   // src 기준으로 포함
   "include": ["src/**/*", "src/ui-types.ts"],
+
+  // 제외할 파일/폴더
   "exclude": ["dist", "node_modules"],
+
+  // 프로젝트 참조 (필요시 추가)
   "references": []
 }

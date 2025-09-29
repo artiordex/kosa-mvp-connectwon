@@ -22,7 +22,7 @@
     "down:infra": "docker compose -f infra/docker/docker-compose.yml down",
     "dev:all": "concurrently \"pnpm run dev:web\" \"pnpm run dev:admin\" \"pnpm run dev:api\" \"pnpm run dev:worker\"",
     "dev:stack": "run-s dev:infra prisma:generate db:migrate db:seed dev:all",
-    "build:tsc": "tsc -b -v tsconfig.build.json",
+    "build:tsc": "tsc -b -v tsconfig.json",
     "build:packages": "pnpm -r --filter \"./packages/*\" run build",
     "build:api": "pnpm --filter @connectwon/api run build",
     "build:all": "nx run-many -t build",

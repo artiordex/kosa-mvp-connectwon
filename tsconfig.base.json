@@ -81,48 +81,134 @@
      */
     "paths": {
       // Core
-      "@connectwon/core": ["packages/core/src/index.ts", "dist/packages/core/index.d.ts"],
-      "@connectwon/core/*": ["packages/core/src/*", "dist/packages/core/*"],
+      "@connectwon/core": [
+        // "packages/core/src/index.ts",
+        "dist/packages/core/src/index.d.ts"
+      ],
+      "@connectwon/core/*": [
+        // "packages/core/src/*",
+        "dist/packages/core/src/*"
+      ],
 
       // Database
-      "@connectwon/database": ["packages/database/src/index.ts", "dist/packages/database/index.d.ts"],
-      "@connectwon/database/*": ["packages/database/src/*", "dist/packages/database/*"],
+      "@connectwon/database": [
+        // "packages/database/src/index.ts",
+        "dist/packages/database/src/index.d.ts"
+      ],
+      "@connectwon/database/*": [
+        // "packages/database/src/*",
+        "dist/packages/database/src/*"
+      ],
 
       // Logger
-      "@connectwon/logger": ["packages/logger/src/index.ts", "dist/packages/logger/index.d.ts"],
-      "@connectwon/logger/*": ["packages/logger/src/*", "dist/packages/logger/*"],
+      "@connectwon/logger": [
+        // "packages/logger/src/index.ts",
+        "dist/packages/logger/src/index.d.ts"
+      ],
+      "@connectwon/logger/*": [
+        // "packages/logger/src/*",
+        "dist/packages/logger/src/*"
+      ],
 
       // UI
-      "@connectwon/ui": ["packages/ui/src/index.ts", "dist/packages/ui/index.d.ts"],
-      "@connectwon/ui/*": ["packages/ui/src/*", "dist/packages/ui/*"],
+      "@connectwon/ui": [
+        // "packages/ui/src/index.ts",
+        "dist/packages/ui/src/index.d.ts"
+      ],
+      "@connectwon/ui/*": [
+        // "packages/ui/src/*",
+        "dist/packages/ui/src/*"
+      ],
 
       // Client
-      "@connectwon/client": ["packages/client/src/index.ts", "dist/packages/client/index.d.ts"],
-      "@connectwon/client/*": ["packages/client/src/*", "dist/packages/client/*"],
+      "@connectwon/client": [
+        // "packages/client/src/index.ts",
+        "dist/packages/client/src/index.d.ts"
+      ],
+      "@connectwon/client/*": [
+        // "packages/client/src/*",
+        "dist/packages/client/src/*"
+      ],
 
       // SDK
-      "@connectwon/sdk": ["packages/sdk/typescript/src", "dist/packages/sdk/index.d.ts"],
-      "@connectwon/sdk/*": ["packages/sdk/typescript/src/*", "dist/packages/sdk/*"],
+      "@connectwon/sdk": [
+        // "packages/sdk/typescript/src",
+        "dist/packages/sdk/src/index.d.ts"
+      ],
+      "@connectwon/sdk/*": [
+        // "packages/sdk/typescript/src/*",
+        "dist/packages/sdk/src/*"
+      ],
 
       // API Contract
-      "@connectwon/api-contract": ["packages/api-contract/src", "dist/packages/api-contract"],
-      "@connectwon/api-contract/*": ["packages/api-contract/src/*", "dist/packages/api-contract/*"],
-
-      // Apps (웹/관리자/서버/워커)
-      "@connectwon/web": ["apps/web/src"],
-      "@connectwon/web/*": ["apps/web/src/*"],
-      "@connectwon/admin": ["apps/admin/src"],
-      "@connectwon/admin/*": ["apps/admin/src/*"],
-      "@connectwon/api": ["apps/api/src"],
-      "@connectwon/api/*": ["apps/api/src/*"],
-      "@connectwon/worker": ["apps/worker/src"],
-      "@connectwon/worker/*": ["apps/worker/src/*"],
-      "@connectwon/e2e": ["apps/e2e/src"],
-      "@connectwon/e2e/*": ["apps/e2e/src/*"],
+      "@connectwon/api-contract": [
+        // "packages/api-contract/src",
+        "dist/packages/api-contract/src/index.d.ts"
+      ],
+      "@connectwon/api-contract/*": [
+        // "packages/api-contract/src/*",
+        "dist/packages/api-contract/src/*"
+      ],
 
       // Server
-      "@connectwon/server": ["packages/server/src/index.ts", "dist/packages/server/index.d.ts"],
-      "@connectwon/server/*": ["packages/server/src/*", "dist/packages/server/*"]
+      "@connectwon/server": [
+        // "packages/server/src/index.ts",
+        "dist/packages/server/src/index.d.ts"
+      ],
+      "@connectwon/server/*": [
+        // "packages/server/src/*",
+        "dist/packages/server/src/*"
+      ],
+
+      // Web
+      "@connectwon/web": [
+        // "apps/web/src",
+        "dist/apps/web/src"
+      ],
+      "@connectwon/web/*": [
+        // "apps/web/src/*",
+        "dist/apps/web/src/*"
+      ],
+
+      // Admin
+      "@connectwon/admin": [
+        // "apps/admin/src",
+        "dist/apps/admin/src"
+      ],
+      "@connectwon/admin/*": [
+        // "apps/admin/src/*",
+        "dist/apps/admin/src/*"
+      ],
+
+      // Api
+      "@connectwon/api": [
+        // "apps/api/src",
+        "dist/apps/api/src"
+      ],
+      "@connectwon/api/*": [
+        // "apps/api/src/*",
+        "dist/apps/api/src/*"
+      ],
+
+      // Worker
+      "@connectwon/worker": [
+        // "apps/worker/src",
+        "dist/apps/worker/src"
+      ],
+      "@connectwon/worker/*": [
+        // "apps/worker/src/*",
+        "dist/apps/worker/src/*"
+      ],
+
+      // E2E
+      "@connectwon/e2e": [
+        // "apps/e2e/src",
+        "dist/apps/e2e/src"
+      ],
+      "@connectwon/e2e/*": [
+        // "apps/e2e/src/*",
+        "dist/apps/e2e/src/*"
+      ]
     }
   }
 }

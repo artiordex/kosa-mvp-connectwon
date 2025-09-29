@@ -10,8 +10,8 @@
 
   "compilerOptions": {
     // API 전용 출력 설정
-    "outDir": "../../dist/apps/api",
     "rootDir": "./src",
+    "outDir": "../../dist/apps/api",
     "tsBuildInfoFile": "../../dist/apps/api/.tsbuildinfo",
 
     // ESM 모듈 설정

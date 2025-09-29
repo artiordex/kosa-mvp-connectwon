@@ -7,11 +7,10 @@
 {
   // 루트의 tsconfig.json 상속
   "extends": "../../tsconfig.base.json",
-
   "compilerOptions": {
-    // 라이브러리 산출물
-    "outDir": "dist",
-    "rootDir": "src",
+    // I/O 경로
+    "rootDir": "./src",
+    "outDir": "../../dist/packages/api-contract",
 
     // 번들러/Node 모두 수월한 isomorphic 설정
     "target": "ES2022",

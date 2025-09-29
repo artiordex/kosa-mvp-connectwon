@@ -4,14 +4,18 @@
   "description": "ConnectWon NestJS 공통 모듈 및 유틸리티",
   "private": true,
   "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": "./dist/index.js",
-    "./package.json": "./package.json"
+    "./server-types": {
+      "types": "./src/server-types.d.ts",
+      "import": "./src/server-types.js"
+    }
   },
   "files": [
     "dist"
   ],
-  "types": "./dist/index.d.ts",
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "clean": "rimraf dist",

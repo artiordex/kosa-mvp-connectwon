@@ -14,8 +14,9 @@
     },
     "build": {
       "executor": "nx:run-script",
-      "options": { "script": "build" },
-      "dependsOn": []
+      "options": {
+        "script": "build"
+      }
     },
     "test:ui": {
       "executor": "nx:run-commands",

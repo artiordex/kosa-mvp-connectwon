@@ -8,7 +8,7 @@
   "extends": "../../tsconfig.base.json",
 
   "compilerOptions": {
-    // 출력 설정
+    // I/O 경로
     "rootDir": "./src",
     "outDir": "../../dist/packages/server",
     "tsBuildInfoFile": "../../dist/packages/server/.tsbuildinfo",
@@ -42,5 +42,7 @@
   "exclude": ["node_modules", "dist", "**/*.test.*", "**/*.spec.*"],
 
   // 모노레포 빌드 순서 보장
-  "references": [{ "path": "../core" }]
+  "references": [
+    { "path": "../core" }
+  ]
 }

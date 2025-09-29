@@ -13,6 +13,8 @@ export const VenueSchema = z.object({
   id: z.string(),
   name: z.string(),
   address: z.string().nullable().optional(),
+  opening_hours: z.record(z.any()).nullable().optional(), // opening_hours 추가
+  blackout_rules: z.record(z.any()).nullable().optional(), // blackout_rules 추가
   created_at: z.string(),
   updated_at: z.string(),
 });
