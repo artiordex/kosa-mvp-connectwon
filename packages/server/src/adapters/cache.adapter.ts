@@ -1,211 +1,384 @@
 /**
- * Description : cache.adapter.ts - 📌 Redis 기반 CacheService/SessionCache 어댑터 구현
+ * Description : cache.adapter.ts - 📌 Redis 기반 캐시 어댑터 구현
  * Author : Shiwoo Min
- * Date : 2025-09-28
+ * Date : 2025-09-29
  */
-import { CacheKeys } from '../../../core/src/ports/cache.port.js';
-import type { CacheService, RateLimitInfo, RateLimitResult, SessionCache, UserSession, VerificationCode } from '../../../core/src/ports/cache.port.js';
-import Redis from 'ioredis';
+import { CacheKeys, type CacheService, type CacheUserSession, type RateLimitInfo, type RateLimitResult, type SessionCache, type VerificationCode } from '@connectwon/core/ports/cache.port.js';
+import { randomUUID } from 'crypto';
+import type { Redis as RedisType } from 'ioredis';
 
 /**
- * @class RedisCacheAdapter
- * @description CacheService / SessionCache 인터페이스를 Redis로 구현
+ * @description Redis 연결 설정
  */
-export class RedisCacheAdapter implements CacheService, SessionCache {
-  private client: Redis; // ✅ import Redis from 'ioredis' → 타입 정상 인식
+export interface RedisConfig {
+  host: string;
+  port: number;
+  password?: string;
+  db?: number;
+  retryDelayOnFailover?: number;
+  maxRetriesPerRequest?: number;
+  lazyConnect?: boolean;
+  keepAlive?: number;
+  keyPrefix?: string;
+}
 
-  /**
-   * @param redisUrl Redis 연결 URL (예: redis://localhost:6379)
-   */
-  constructor(redisUrl: string) {
-    this.client = new Redis(redisUrl);
-  }
-
-  /** ---------------- CacheService 구현 ---------------- */
+/**
+ * @description Redis 기반 범용 캐시 서비스
+ */
+export class RedisCacheService implements CacheService {
+  constructor(private readonly redis: RedisType) {}
 
   async get<T = unknown>(key: string): Promise<T | null> {
-    const value = await this.client.get(key);
-    return value ? (JSON.parse(value) as T) : null;
+    try {
+      const value = await this.redis.get(key);
+      if (value === null) return null;
+      return JSON.parse(value) as T;
+    } catch (error) {
+      console.error('Redis get error:', error);
+      return null;
+    }
   }
 
   async set<T = unknown>(key: string, value: T, ttlSeconds?: number): Promise<void> {
-    const str = JSON.stringify(value);
-    if (ttlSeconds) {
-      await this.client.set(key, str, 'EX', ttlSeconds);
-    } else {
-      await this.client.set(key, str);
+    try {
+      const serialized = JSON.stringify(value);
+      if (ttlSeconds && ttlSeconds > 0) {
+        await this.redis.setex(key, ttlSeconds, serialized);
+      } else {
+        await this.redis.set(key, serialized);
+      }
+    } catch (error) {
+      console.error('Redis set error:', error);
+      throw new Error(`Failed to set cache key: ${key}`);
     }
   }
 
   async delete(key: string): Promise<void> {
-    await this.client.del(key);
+    try {
+      await this.redis.del(key);
+    } catch (error) {
+      console.error('Redis delete error:', error);
+      throw new Error(`Failed to delete cache key: ${key}`);
+    }
   }
 
   async exists(key: string): Promise<boolean> {
-    return (await this.client.exists(key)) === 1;
-  }
-
-  async expire(key: string, ttlSeconds: number): Promise<void> {
-    await this.client.expire(key, ttlSeconds);
-  }
-
-  async ttl(key: string): Promise<number> {
-    return await this.client.ttl(key);
-  }
-
-  async mget<T = unknown>(keys: string[]): Promise<(T | null)[]> {
-    const values = await this.client.mget(keys);
-    return values.map(v => (v ? JSON.parse(v) : null));
-  }
-
-  async mset<T = unknown>(keyValues: Record<string, T>, ttlSeconds?: number): Promise<void> {
-    const pipeline = this.client.pipeline();
-    for (const [key, value] of Object.entries(keyValues)) {
-      const str = JSON.stringify(value);
-      if (ttlSeconds) {
-        pipeline.set(key, str, 'EX', ttlSeconds);
-      } else {
-        pipeline.set(key, str);
-      }
+    try {
+      const result = await this.redis.exists(key);
+      return result === 1;
+    } catch (error) {
+      console.error('Redis exists error:', error);
+      return false;
     }
-    await pipeline.exec();
   }
 
-  async mdel(keys: string[]): Promise<number> {
-    return await this.client.del(...keys);
+  async expire(key: string, ttlSeconds: number): Promise<boolean> {
+    try {
+      const result = await this.redis.expire(key, ttlSeconds);
+      return result === 1;
+    } catch (error) {
+      console.error('Redis expire error:', error);
+      return false;
+    }
   }
 
-  async deleteByPattern(pattern: string): Promise<number> {
-    const keys = await this.client.keys(pattern);
-    return keys.length > 0 ? await this.client.del(...keys) : 0;
-  }
-
-  async hget<T = unknown>(key: string, field: string): Promise<T | null> {
-    const value = await this.client.hget(key, field);
-    return value ? (JSON.parse(value) as T) : null;
-  }
-
-  async hset<T = unknown>(key: string, field: string, value: T): Promise<void> {
-    await this.client.hset(key, field, JSON.stringify(value));
-  }
-
-  async hdel(key: string, field: string): Promise<void> {
-    await this.client.hdel(key, field);
-  }
-
-  async hgetall<T = unknown>(key: string): Promise<Record<string, T>> {
-    const raw = await this.client.hgetall(key);
-    return Object.fromEntries(Object.entries(raw).map(([k, v]) => [k, JSON.parse(v)]));
+  async ttl(key: string): Promise<number | null> {
+    try {
+      const ttl = await this.redis.ttl(key);
+      if (ttl === -1) return null; // 만료 없음
+      if (ttl === -2) return -2; // 키 없음
+      return ttl;
+    } catch (error) {
+      console.error('Redis ttl error:', error);
+      return -2;
+    }
   }
 
   async ping(): Promise<string> {
-    return await this.client.ping();
+    try {
+      return await this.redis.ping();
+    } catch (error) {
+      console.error('Redis ping error:', error);
+      throw new Error('Redis connection failed');
+    }
   }
 
   async info(): Promise<string> {
-    return await this.client.info();
+    try {
+      return await this.redis.info();
+    } catch (error) {
+      console.error('Redis info error:', error);
+      throw new Error('Failed to get Redis info');
+    }
+  }
+}
+
+/**
+ * @description Redis 기반 세션/코드/락/레이트리밋 캐시 서비스
+ */
+export class RedisSessionCache implements SessionCache {
+  constructor(private readonly redis: RedisType) {}
+  async getUserSession(userId: string): Promise<CacheUserSession | null> {
+    try {
+      const key = CacheKeys.USER_SESSION(userId);
+      const value = await this.redis.get(key);
+      if (value === null) return null;
+      return JSON.parse(value) as CacheUserSession;
+    } catch (error) {
+      console.error('Get user session error:', error);
+      return null;
+    }
   }
 
-  /** ---------------- SessionCache 구현 ---------------- */
-
-  async getUserSession(userId: string): Promise<UserSession | null> {
-    return this.get<UserSession>(CacheKeys.USER_SESSION(userId));
-  }
-
-  async setUserSession(userId: string, session: UserSession, ttlSeconds?: number): Promise<void> {
-    await this.set(CacheKeys.USER_SESSION(userId), session, ttlSeconds);
+  async setUserSession(userId: string, session: CacheUserSession, ttlSeconds?: number): Promise<void> {
+    try {
+      const key = CacheKeys.USER_SESSION(userId);
+      const serialized = JSON.stringify(session);
+      if (ttlSeconds && ttlSeconds > 0) {
+        await this.redis.setex(key, ttlSeconds, serialized);
+      } else {
+        await this.redis.set(key, serialized);
+      }
+    } catch (error) {
+      console.error('Set user session error:', error);
+      throw new Error(`Failed to set user session: ${userId}`);
+    }
   }
 
   async deleteUserSession(userId: string): Promise<void> {
-    await this.delete(CacheKeys.USER_SESSION(userId));
+    try {
+      const key = CacheKeys.USER_SESSION(userId);
+      await this.redis.del(key);
+    } catch (error) {
+      console.error('Delete user session error:', error);
+      throw new Error(`Failed to delete user session: ${userId}`);
+    }
   }
 
   async getVerificationCode(email: string, purpose: string): Promise<VerificationCode | null> {
-    return this.get<VerificationCode>(CacheKeys.VERIFICATION_CODE(email, purpose));
+    try {
+      const key = CacheKeys.VERIFICATION_CODE(email, purpose);
+      const value = await this.redis.get(key);
+      if (value === null) return null;
+      return JSON.parse(value) as VerificationCode;
+    } catch (error) {
+      console.error('Get verification code error:', error);
+      return null;
+    }
   }
 
   async setVerificationCode(email: string, purpose: string, code: VerificationCode, ttlSeconds?: number): Promise<void> {
-    await this.set(CacheKeys.VERIFICATION_CODE(email, purpose), code, ttlSeconds);
+    try {
+      const key = CacheKeys.VERIFICATION_CODE(email, purpose);
+      const serialized = JSON.stringify(code);
+
+      if (ttlSeconds && ttlSeconds > 0) {
+        await this.redis.setex(key, ttlSeconds, serialized);
+      } else {
+        await this.redis.set(key, serialized);
+      }
+    } catch (error) {
+      console.error('Set verification code error:', error);
+      throw new Error(`Failed to set verification code: ${email}:${purpose}`);
+    }
   }
 
   async deleteVerificationCode(email: string, purpose: string): Promise<void> {
-    await this.delete(CacheKeys.VERIFICATION_CODE(email, purpose));
+    try {
+      const key = CacheKeys.VERIFICATION_CODE(email, purpose);
+      await this.redis.del(key);
+    } catch (error) {
+      console.error('Delete verification code error:', error);
+      throw new Error(`Failed to delete verification code: ${email}:${purpose}`);
+    }
   }
 
   async getTempData<T = unknown>(key: string): Promise<T | null> {
-    return this.get<T>(CacheKeys.TEMP_DATA(key));
+    try {
+      const cacheKey = CacheKeys.TEMP_DATA(key);
+      const value = await this.redis.get(cacheKey);
+      if (value === null) return null;
+      return JSON.parse(value) as T;
+    } catch (error) {
+      console.error('Get temp data error:', error);
+      return null;
+    }
   }
 
   async setTempData<T = unknown>(key: string, data: T, ttlSeconds?: number): Promise<void> {
-    await this.set(CacheKeys.TEMP_DATA(key), data, ttlSeconds);
+    try {
+      const cacheKey = CacheKeys.TEMP_DATA(key);
+      const serialized = JSON.stringify(data);
+
+      if (ttlSeconds && ttlSeconds > 0) {
+        await this.redis.setex(cacheKey, ttlSeconds, serialized);
+      } else {
+        await this.redis.set(cacheKey, serialized);
+      }
+    } catch (error) {
+      console.error('Set temp data error:', error);
+      throw new Error(`Failed to set temp data: ${key}`);
+    }
   }
 
   async deleteTempData(key: string): Promise<void> {
-    await this.delete(CacheKeys.TEMP_DATA(key));
+    try {
+      const cacheKey = CacheKeys.TEMP_DATA(key);
+      await this.redis.del(cacheKey);
+    } catch (error) {
+      console.error('Delete temp data error:', error);
+      throw new Error(`Failed to delete temp data: ${key}`);
+    }
   }
 
   async getRateLimit(identifier: string, action: string): Promise<RateLimitInfo> {
-    const key = CacheKeys.RATE_LIMIT(identifier, action);
-    const current = parseInt((await this.client.get(key)) ?? '0', 10);
-    return {
-      current,
-      max: 0,
-      windowStart: new Date().toISOString(),
-      windowEnd: new Date().toISOString(),
-      blocked: false,
-    };
+    try {
+      const key = CacheKeys.RATE_LIMIT(identifier, action);
+      const value = await this.redis.get(key);
+
+      if (value === null) {
+        return {
+          current: 0,
+          max: 0,
+          windowStart: new Date().toISOString(),
+          windowEnd: new Date().toISOString(),
+          blocked: false,
+        };
+      }
+
+      return JSON.parse(value) as RateLimitInfo;
+    } catch (error) {
+      console.error('Get rate limit error:', error);
+      return {
+        current: 0,
+        max: 0,
+        windowStart: new Date().toISOString(),
+        windowEnd: new Date().toISOString(),
+        blocked: false,
+      };
+    }
   }
 
   async incrementRateLimit(identifier: string, action: string, windowSeconds: number, maxAttempts: number): Promise<RateLimitResult> {
-    const key = CacheKeys.RATE_LIMIT(identifier, action);
-    const current = await this.client.incr(key);
-    if (current === 1) {
-      await this.client.expire(key, windowSeconds);
+    try {
+      const key = CacheKeys.RATE_LIMIT(identifier, action);
+      const now = new Date();
+      const windowStart = now;
+      const windowEnd = new Date(now.getTime() + windowSeconds * 1000);
+
+      // Redis pipeline을 사용한 원자적 연산
+      const pipeline = this.redis.pipeline();
+      pipeline.incr(key);
+      pipeline.expire(key, windowSeconds);
+      const results = await pipeline.exec();
+
+      if (!results || results.length === 0) {
+        throw new Error('Redis pipeline failed');
+      }
+
+      const [incrResult] = results;
+      if (incrResult?.[0]) {
+        throw new Error('Failed to increment rate limit counter');
+      }
+
+      const current = (incrResult?.[1] as number) || 1;
+      const allowed = current <= maxAttempts;
+      const remaining = Math.max(0, maxAttempts - current);
+
+      // 레이트리밋 정보 저장
+      const rateLimitInfo: RateLimitInfo = {
+        current,
+        max: maxAttempts,
+        windowStart: windowStart.toISOString(),
+        windowEnd: windowEnd.toISOString(),
+        blocked: !allowed,
+      };
+
+      await this.redis.setex(`${key}:info`, windowSeconds, JSON.stringify(rateLimitInfo));
+
+      const result: RateLimitResult = {
+        allowed,
+        current,
+        remaining,
+        resetTime: windowEnd.toISOString(),
+      };
+
+      // retryAfter는 blocked 상태일 때만 추가
+      if (!allowed) {
+        result.retryAfter = windowSeconds;
+      }
+
+      return result;
+    } catch (error) {
+      console.error('Increment rate limit error:', error);
+      throw new Error(`Failed to increment rate limit: ${identifier}:${action}`);
     }
-    const ttl = await this.client.ttl(key);
-    return {
-      allowed: current <= maxAttempts,
-      current,
-      remaining: Math.max(0, maxAttempts - current),
-      resetTime: new Date(Date.now() + ttl * 1000).toISOString(),
-      retryAfter: current > maxAttempts ? ttl : undefined,
-    };
   }
 
   async resetRateLimit(identifier: string, action: string): Promise<void> {
-    await this.delete(CacheKeys.RATE_LIMIT(identifier, action));
+    try {
+      const key = CacheKeys.RATE_LIMIT(identifier, action);
+      await this.redis.del(key, `${key}:info`);
+    } catch (error) {
+      console.error('Reset rate limit error:', error);
+      throw new Error(`Failed to reset rate limit: ${identifier}:${action}`);
+    }
   }
 
-  async acquireLock(resource: string, ttlSeconds: number): Promise<string | null> {
-    const lockId = Math.random().toString(36).slice(2);
-    const key = CacheKeys.LOCK(resource);
-    const res = await this.client.set(key, lockId, 'NX', 'EX', ttlSeconds);
-    return res ? lockId : null;
+  async acquireLock(resource: string, ttlSeconds: number, lockId?: string): Promise<string | null> {
+    try {
+      const key = CacheKeys.LOCK(resource);
+      const id = lockId || randomUUID();
+
+      // 타입 정의 버그 우회 (as any)
+      const result = await (this.redis.set as any)(key, id, 'NX', 'EX', ttlSeconds);
+
+      return result === 'OK' ? id : null;
+    } catch (error) {
+      console.error('Acquire lock error:', error);
+      return null;
+    }
   }
 
   async releaseLock(resource: string, lockId: string): Promise<boolean> {
-    const key = CacheKeys.LOCK(resource);
-    const script = `
-      if redis.call("get", KEYS[1]) == ARGV[1] then
-        return redis.call("del", KEYS[1])
-      else
-        return 0
-      end
-    `;
-    const res = await this.client.eval(script, 1, key, lockId);
-    return res === 1;
+    try {
+      const key = CacheKeys.LOCK(resource);
+
+      // Lua 스크립트로 원자적 락 해제 (올바른 락 ID인지 확인 후 삭제)
+      const luaScript = `
+        if redis.call("GET", KEYS[1]) == ARGV[1] then
+          return redis.call("DEL", KEYS[1])
+        else
+          return 0
+        end
+      `;
+
+      const result = (await this.redis.eval(luaScript, 1, key, lockId)) as number;
+      return result === 1;
+    } catch (error) {
+      console.error('Release lock error:', error);
+      return false;
+    }
   }
 
   async renewLock(resource: string, lockId: string, ttlSeconds: number): Promise<boolean> {
-    const key = CacheKeys.LOCK(resource);
-    const script = `
-      if redis.call("get", KEYS[1]) == ARGV[1] then
-        return redis.call("expire", KEYS[1], ARGV[2])
-      else
-        return 0
-      end
-    `;
-    const res = await this.client.eval(script, 1, key, lockId, ttlSeconds.toString());
-    return res === 1;
+    try {
+      const key = CacheKeys.LOCK(resource);
+
+      // Lua 스크립트로 원자적 락 갱신 (올바른 락 ID인지 확인 후 TTL 갱신)
+      const luaScript = `
+        if redis.call("GET", KEYS[1]) == ARGV[1] then
+          return redis.call("EXPIRE", KEYS[1], ARGV[2])
+        else
+          return 0
+        end
+      `;
+
+      const result = (await this.redis.eval(luaScript, 1, key, lockId, ttlSeconds)) as number;
+      return result === 1;
+    } catch (error) {
+      console.error('Renew lock error:', error);
+      return false;
+    }
   }
 }

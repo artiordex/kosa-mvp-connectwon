@@ -8,8 +8,8 @@ import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 
 // Core Layer imports
-import { OverbookingPolicyService } from '@connectwon/core/application/policies/overbooking.js';
-import { WaitlistPolicyService } from '@connectwon/core/application/policies/waitlist.js';
+import { OverbookingPolicyService } from '@connectwon/core/application/policies/overbooking.policies.js';
+import { WaitlistPolicyService } from '@connectwon/core/application/policies/waitlist.policy.js';
 import { CreateProgramUsecase } from '@connectwon/core/application/usecases/program.usecase.js';
 import { ReservationUsecase } from '@connectwon/core/application/usecases/reservation.usecase.js';
 import { ScheduleSessionUsecase } from '@connectwon/core/application/usecases/schedule.usecase.js';

@@ -5,13 +5,13 @@
  * 09-29 : rootDir=src 로 정리, TSX 지원 추가
  */
 {
+  // 루트의 tsconfig.base.json 상속
   "extends": "../../tsconfig.base.json",
-
   "compilerOptions": {
     // I/O 경로
     "rootDir": "./src",
-    "outDir": "./dist",
-    "tsBuildInfoFile": "./dist/.tsbuildinfo",
+    "outDir": "../../dist/packages/server",
+    "tsBuildInfoFile": "../../dist/packages/server/.tsbuildinfo",
     "noEmit": false,
 
     // 서버 전용 타깃

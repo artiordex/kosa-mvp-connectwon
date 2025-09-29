@@ -7,8 +7,8 @@
     "build": {
       "executor": "@nx/js:tsc",
       "options": {
-        "outputPath": "dist/packages/server",
         "main": "packages/server/src/index.ts",
+        "outputPath": "dist/packages/server",
         "tsConfig": "packages/server/tsconfig.json"
       }
     },

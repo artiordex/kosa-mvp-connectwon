@@ -20,8 +20,6 @@
     "jsx": "preserve",
     "plugins": [{ "name": "next" }],
 
-    // 패키지명(@connectwon/*)으로 임포트
-    "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
     },

@@ -1,5 +1,5 @@
 /**
- * Description : cache.port.ts - 📌 캐시/세션/락/레이트리밋 포트 인터페이스
+ * Description : cache.port.ts - 📌 캐시/세션/락/레이트리밋 포트 인터페이스 (안전성 보강 버전)
  * Author : Shiwoo Min
  * Date : 2025-09-10
  */
@@ -12,8 +12,17 @@ export interface CacheService {
   set<T = unknown>(key: string, value: T, ttlSeconds?: number): Promise<void>;
   delete(key: string): Promise<void>;
   exists(key: string): Promise<boolean>;
-  expire(key: string, ttlSeconds: number): Promise<void>;
-  ttl(key: string): Promise<number>;
+
+  /** @returns 성공 여부 */
+  expire(key: string, ttlSeconds: number): Promise<boolean>;
+
+  /**
+   * @returns TTL (초 단위)
+   * - null = 만료 없음
+   * - -2 = 키 없음
+   */
+  ttl(key: string): Promise<number | null>;
+
   ping(): Promise<string>;
   info(): Promise<string>;
 }
@@ -43,7 +52,7 @@ export interface SessionCache {
   resetRateLimit(identifier: string, action: string): Promise<void>;
 
   // 분산 락
-  acquireLock(resource: string, ttlSeconds: number): Promise<string | null>;
+  acquireLock(resource: string, ttlSeconds: number, lockId?: string): Promise<string | null>;
   releaseLock(resource: string, lockId: string): Promise<boolean>;
   renewLock(resource: string, lockId: string, ttlSeconds: number): Promise<boolean>;
 }
@@ -57,6 +66,7 @@ export interface CacheUserSession {
   name: string;
   roleFlags: number;
   lastActivity: string;
+  createdAt: string; 
   ipAddress?: string;
   userAgent?: string;
 }
@@ -100,9 +110,9 @@ export interface RateLimitResult {
  * @description 캐시 키 네임스페이스
  */
 export class CacheKeys {
-  static readonly USER_SESSION = (userId: string) => `session:user:${userId}`;
-  static readonly VERIFICATION_CODE = (email: string, purpose: string) => `verify:${purpose}:${email}`;
-  static readonly TEMP_DATA = (key: string) => `temp:${key}`;
-  static readonly RATE_LIMIT = (identifier: string, action: string) => `rate:${action}:${identifier}`;
-  static readonly LOCK = (resource: string) => `lock:${resource}`;
+  static readonly USER_SESSION = (userId: string) => `session:user:${encodeURIComponent(userId)}`;
+  static readonly VERIFICATION_CODE = (email: string, purpose: string) => `verify:${purpose}:${encodeURIComponent(email)}`;
+  static readonly TEMP_DATA = (key: string) => `temp:${encodeURIComponent(key)}`;
+  static readonly RATE_LIMIT = (identifier: string, action: string) => `rate:${action}:${encodeURIComponent(identifier)}`;
+  static readonly LOCK = (resource: string) => `lock:${encodeURIComponent(resource)}`;
 }

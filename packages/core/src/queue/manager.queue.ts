@@ -4,7 +4,14 @@
  * Date : 2025-09-10
  */
 import { randomUUID } from 'node:crypto';
-import type { Job, JobProcessor, JobResult, QueueConfig, QueueStats } from '@connectwon/core/core-types';
+
+
+
+import type { Job, JobPriority, JobProcessor, JobResult, QueueConfig, QueueStats } from '@connectwon/core/core-types';
+
+
+
+
 
 /**
  * @description 큐 매니저 클래스
@@ -12,16 +19,14 @@ import type { Job, JobProcessor, JobResult, QueueConfig, QueueStats } from '@con
  */
 export class QueueManager {
   /** @description 모든 작업들을 저장하는 맵 (ID -> Job) */
-  private jobs: Map<string, Job> = new Map();
+  private jobs: Map<string, Job<any>> = new Map();
+
   /** @description 현재 처리 중인 작업 ID 집합 */
   private processing: Set<string> = new Set();
+
   /** @description 작업 타입별 프로세서 맵 */
   private processors: Map<string, JobProcessor<any>> = new Map();
 
-  /**
-   * @description QueueManager 생성자
-   * @param config 큐 설정
-   */
   constructor(private readonly config: QueueConfig) {}
 
   /**
@@ -42,8 +47,9 @@ export class QueueManager {
    * @param priority 작업 우선순위 (기본값: normal)
    * @returns 생성된 작업 객체
    */
-  async addJob<T>(type: string, data: T, priority: Job['priority'] = 'normal'): Promise<Job<T>> {
+  async addJob<T>(type: string, data: T, priority: JobPriority = 'normal'): Promise<Job<T>> {
     const id = randomUUID();
+
     const job: Job<T> = {
       id,
       type,
@@ -51,10 +57,11 @@ export class QueueManager {
       priority,
       status: 'pending',
       attempts: 0,
-      maxAttempts: this.config.defaultJobOptions.maxAttempts,
+      maxAttempts: this.config.defaultJobOptions?.maxAttempts ?? 3,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
+
     this.jobs.set(id, job);
     return job;
   }
@@ -64,7 +71,7 @@ export class QueueManager {
    * @summary 대기 중인 작업을 찾아서 해당 프로세서로 처리
    */
   async processNextJob(): Promise<void> {
-    if (this.processing.size >= this.config.concurrency) return;
+    if (this.processing.size >= (this.config.concurrency ?? 1)) return;
 
     const next = [...this.jobs.values()].find(j => j.status === 'pending');
     if (!next) return;
@@ -84,7 +91,7 @@ export class QueueManager {
       } else {
         next.status = 'failed';
         next.failedAt = new Date().toISOString();
-        next.error = result.error;
+        next.error = result.error ?? '';
       }
     } catch (err) {
       next.status = 'failed';

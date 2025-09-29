@@ -8,17 +8,17 @@
   "extends": "../../tsconfig.base.json",
 
   "compilerOptions": {
+    // 출력 설정
+    "rootDir": "typescript/src",
+    "outDir": "../../dist/packages/sdk",
+
+    // Node ESM 권장
     "target": "ES2022",
     "module": "ESNext",
-    // 번들러 소비(Next/Vite/Webpack) 기준 해석
     "moduleResolution": "Bundler",
 
     // d.ts 생성 (루트 base에도 있지만 명시 유지)
     "declaration": true,
-
-    // 출력/입력 경로
-    "outDir": "./dist",
-    "rootDir": ".",
 
     // 엄격 모드 및 성능
     "strict": true,
@@ -27,7 +27,6 @@
     "resolveJsonModule": true,
 
     // 브라우저 타깃 (Iterable API 사용 시 DOM.Iterable 포함)
-    // 기존: ["ES2022", "DOM"]
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
 
     // 프로젝트 레퍼런스 활성화
@@ -39,7 +38,6 @@
 
   // 루트에 배치한 타입 파일 포함
   "include": ["typescript/src/**/*", "typescript/src/sdk-types.ts"],
-
   "exclude": ["dist", "node_modules", "../../tools/**/*", "../../tests/**/*", "**/*.test.*"],
 
   // 의존 패키지 참조

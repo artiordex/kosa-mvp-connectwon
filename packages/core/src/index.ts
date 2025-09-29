@@ -49,7 +49,7 @@ export * from './ports/program.port.js';
 export * from './ports/search.port.js';
 export * from './ports/session.port.js';
 export * from './ports/time.port.js';
-export * from './ports/users.port.js';
+export * from './ports/user.port.js';
 export * from './ports/venue.port.js';
 
 // env

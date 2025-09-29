@@ -1,7 +1,8 @@
 /**
  * Description : tailwind.config.ts - 📌 Admin 앱 Tailwind CSS 설정
  */
-import baseConfig from '../../packages/configs/tailwind/base.js';
+//import baseConfig from '../../packages/configs/tailwind/base.js';
+import baseConfig from '@connectwon/core/configs/tailwind/base.js';
 import type { Config } from 'tailwindcss';
 
 const config: Config = {

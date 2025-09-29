@@ -119,7 +119,6 @@
     }
   },
   "devDependencies": {
-    "@connectwon/database": "workspace:*",
     "@eslint/eslintrc": "^3.3.1",
     "@nestjs/common": "^11.0.0",
     "@nestjs/core": "^11.0.0",

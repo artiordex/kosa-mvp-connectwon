@@ -41,6 +41,7 @@ export type VenueListResponse = z.infer<typeof VenueListResponse>;
  */
 export const VenueStatsResponse = VenueStatsResponseSchema;
 export type VenueStatsResponse = z.infer<typeof VenueStatsResponse>;
+
 /**
  * @description 장소 관련 스키마 일괄 내보내기
  */

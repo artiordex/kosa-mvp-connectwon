@@ -6,17 +6,17 @@
  * 09-22 - Black-box: Project References 제거(불필요한 빌드 의존 차단), allowJs 기본 off
  */
 {
+  // 루트의 tsconfig.json 상속
   "extends": "../../tsconfig.base.json",
-
   "compilerOptions": {
-    "baseUrl": ".",
+    // I/O 경로
+    "rootDir": "./src",
+    "outDir": "../../dist/apps/e2e",
 
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-
-    // 테스트 러너는 Node, 자동화 대상은 브라우저 → ES + DOM 타입 병행
     "target": "ES2022",
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
 
     // 상호운용/편의
     "allowSyntheticDefaultImports": true,
@@ -25,7 +25,10 @@
 
     // 타입 전용(산출물 없음)
     "strict": true,
-    "noEmit": true,
+    "noEmit": false,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
 
     // Playwright/Node 타입
     "types": ["node", "@playwright/test"],
@@ -37,9 +40,13 @@
     "isolatedModules": true
   },
 
-  // e2e 프로젝트 내부만 포함
-  "include": ["playwright.config.ts", "e2e-types.ts", "setup.ts", "teardown.ts", "actions/**/*.ts", "locators/**/*.ts", "tests/**/*.ts", "../../packages/logger/src/**/*.ts"],
+  "include": [
+    "src/**/*"
+  ],
 
   // 산출물/리포트/노드모듈 제외
-  "exclude": ["node_modules", "dist", "test-results", "playwright-report"]
+  "exclude": ["node_modules", "dist", "test-results", "playwright-report"],
+  "references": [
+    { "path": "../../packages/logger" }
+  ]
 }

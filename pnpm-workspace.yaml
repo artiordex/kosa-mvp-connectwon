@@ -4,10 +4,11 @@
 # pnpm nx run-many -t build - 모든 패키지 빌드
 # npx tsc --noEmit - 모든 패키지 타입체크
 # pnpm nx graph - 의존성 그래프 시각화
-# API 서버 (포트 8000) - pnpm --filter @connectwon/api dev
-# 관리자 대시보드 (포트 3001) - pnpm --filter @connectwon/admin dev
+# 빌드 - pnpm --filter @connectwon/* build
+# 개발 - pnpm --filter @connectwon/* dev
 # 워커 (백그라운드 작업) - pnpm --filter @connectwon/worker start
 # 전체 의존성 확인 - pnpm list -r
+# cd E:/kosa-mvp-connectwon/dist/packages
 
 packages:
   - 'apps/*'

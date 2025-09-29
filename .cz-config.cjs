@@ -32,7 +32,6 @@ module.exports = {
     { name: 'apps/worker' },
     // Packages
     { name: 'packages/api-contract' },
-    { name: 'packages/configs' },
     { name: 'packages/core' },
     { name: 'packages/database' },
     { name: 'packages/logger' },

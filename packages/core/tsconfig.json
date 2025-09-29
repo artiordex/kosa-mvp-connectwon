@@ -10,8 +10,8 @@
  * 빌드 로그 확인 - tsc -p tsconfig.json --listEmittedFiles
  */
 {
+  // 루트의 tsconfig.base.json 상속
   "extends": "../../tsconfig.base.json",
-
   "compilerOptions": {
     // 출력 설정
     "rootDir": "./src",
@@ -43,7 +43,7 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "exactOptionalPropertyTypes": true,
+    "exactOptionalPropertyTypes": true
   },
 
   "include": ["src/**/*", "src/configs/**/*.ts", "src/configs/**/*.json"],
