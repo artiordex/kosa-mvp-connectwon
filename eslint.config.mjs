@@ -3,6 +3,7 @@
  * Description : eslint.config.mjs - 📌 모노레포 ESLint Flat Config 설정
  * Author : Shiwoo Min
  * Date : 2025-09-25
+ * 명령어 : pnpm eslint .
  */
 import eslint from '@eslint/js';
 import nextPlugin from '@next/eslint-plugin-next';
@@ -159,7 +160,21 @@ export default [
 
   // 파일별 무시 패턴
   {
-    ignores: ['node_modules/', 'dist/', 'build/', '.next/', '.nx/', 'coverage/', 'generated/'],
+    ignores: [
+      'node_modules/',
+      'dist/',
+      'build/',
+      'coverage/',
+      '*.config.js',
+      '*.config.ts',
+      'package-lock.json',
+      'yarn.lock',
+      'pnpm-lock.yaml',
+      '*.snap',
+      'test-results/',
+      'vite.config.ts',
+      'eslintrc.cjs',
+    ],
   },
 
   // TypeScript 파일 전용 설정

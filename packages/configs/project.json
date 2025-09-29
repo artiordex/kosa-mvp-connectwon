@@ -7,9 +7,12 @@
     "build": {
       "executor": "@nx/js:tsc",
       "options": {
-        "main": "packages/configs/index.ts",
+        "main": "packages/configs/src/index.ts",
         "outputPath": "dist/packages/configs",
-        "tsConfig": "packages/configs/tsconfig.json"
+        "tsConfig": "packages/configs/tsconfig.json",
+        "assets": [
+          "packages/configs/package.json"
+        ]
       }
     },
     "lint": {

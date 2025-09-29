@@ -4,17 +4,19 @@
  * Date : 2025-09-05
  * 09-09 : noEmit=true, include 범위 축소, JS 제외(TS 전용)
  * 09-12 : NodeNext 해석/JSON 모듈/Node 타입 추가
+ * 09-30 : Project References 대응 → composite: true / noEmit 제거
+ * 명령어 : ls -l dist/packages/configs/index.*
  */
 {
   // 루트의 tsconfig.base.json 상속
   "extends": "../../tsconfig.base.json",
-
   "compilerOptions": {
-    // 설정/팩토리 코드만 제공하므로 실제 출력물 생성 안 함
-    "noEmit": true,
+    "composite": true,
 
-    // composite 비활성(프로젝트 레퍼런스 타깃 아님)
-    "composite": false,
+    // 출력 경로 (dist로 내보내도록 수정)
+    "rootDir": "./src",
+    "outDir": "../../dist/packages/configs",
+    "declarationDir": "../../dist/packages/configs",
 
     // Node ESM 해석 (config TS 파일 import 시 일관성↑)
     "module": "NodeNext",
@@ -33,10 +35,24 @@
 
     // 편의/안전
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+
+    // 선언 파일 및 소스맵 생성
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+
+    // 증분 빌드 캐시
+    "incremental": true,
+    "tsBuildInfoFile": "../../dist/packages/configs/.tsbuildinfo"
   },
 
-  // 포함 범위를 정확히 지정(탐색/타입체크 성능↑)
-  "include": ["eslint/**/*.ts", "tailwind/**/*.ts", "testing/**/*.ts", "typescript/**/*.json"],
-  "exclude": ["dist", "node_modules"]
+  // 포함 범위
+  "include": ["src/**/*", "src/**/*.json"],
+
+  // 불필요한 폴더 제외
+  "exclude": ["dist", "node_modules"],
+
+  // Project References 필요 없음 (다른 패키지를 참조하지 않음)
+  "references": []
 }

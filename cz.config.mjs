@@ -1,13 +1,12 @@
 /**
- * Description : .cz-config.cjs - 📌 Commitizen 커밋 메시지 규칙 정의 파일
+ * Description : .cz-config.mjs - 📌 Commitizen 커밋 메시지 규칙 정의 (ESM 버전)
  * Author : Shiwoo Min
  * Date : 2025-09-05
- * 09-21 - 커밋 메시지 규칙 세분화
- * Note : ESM 프로젝트에서도 이 파일만 CommonJS(.cjs)를 사용
- *        (commitizen은 내부적으로 CommonJS 방식으로 구성되어 있어 ESM을 지원하지 않음)
+ * Note : Commitizen은 기본적으로 CommonJS만 지원.
+ *        Node 실행 환경에 따라 ESM이 동작하지 않을 수 있음.
  */
 
-module.exports = {
+export default {
   // 커밋 타입 정의
   types: [
     { value: 'feat', name: 'feat: 새로운 기능 추가' },
@@ -22,15 +21,14 @@ module.exports = {
     { value: 'chore', name: 'chore: 그 외 잡다한 변경사항 (코드 수정 아님)' },
     { value: 'revert', name: 'revert: 이전 커밋 되돌리기' },
   ],
+
   // 작업 범위(scope) 선택 항목
   scopes: [
-    // Apps
     { name: 'apps/admin' },
     { name: 'apps/api' },
     { name: 'apps/web' },
     { name: 'apps/e2e' },
     { name: 'apps/worker' },
-    // Packages
     { name: 'packages/api-contract' },
     { name: 'packages/core' },
     { name: 'packages/database' },
@@ -39,24 +37,15 @@ module.exports = {
     { name: 'packages/client' },
     { name: 'packages/sdk' },
     { name: 'packages/ui' },
-    // Root or config 영역
     { name: 'root' },
     { name: 'config' },
   ],
 
-  // 커스텀 범위 직접 입력 허용
   allowCustomScopes: true,
-
-  // BREAKING CHANGES 메시지를 작성할 수 있는 타입
   allowBreakingChanges: ['feat', 'fix'],
-
-  // 질문 스킵할 항목 (본문, footer는 생략 가능)
   skipQuestions: ['body', 'footer'],
-
-  // subject 최대 길이 제한 (100자 권장)
   subjectLimit: 100,
 
-  // 사용자에게 보여질 메시지 정의
   messages: {
     type: '변경유형 선택 (취소하려면 Ctrl+C):',
     scope: '변경 범위 선택 (취소하려면 Ctrl+C):',

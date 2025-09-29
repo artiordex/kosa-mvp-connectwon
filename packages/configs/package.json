@@ -5,42 +5,20 @@
   "private": true,
   "type": "module",
   "sideEffects": false,
-  "author": "Shiwoo Min <artiordex@gmail.com>",
   "files": [
-    "dist",
-    "configs/eslint/*",
-    "configs/tailwind/*",
-    "configs/testing/*",
-    "configs/typescript/*"
+    "dist"
   ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
-    },
-    "./configs/tailwind/base": {
-      "import": "./dist/configs/tailwind/base.js",
-      "types": "./dist/configs/tailwind/base.d.ts"
-    },
-    "./configs/tailwind/web": {
-      "import": "./dist/configs/tailwind/web.js",
-      "types": "./dist/configs/tailwind/web.d.ts"
-    },
-    "./configs/tailwind/admin": {
-      "import": "./dist/configs/tailwind/admin.js",
-      "types": "./dist/configs/tailwind/admin.d.ts"
-    },
-    "./configs/eslint/base": {
-      "import": "./dist/configs/eslint/base.js",
-      "types": "./dist/configs/eslint/base.d.ts"
-    },
-    "./configs/testing/vitest": {
-      "import": "./dist/configs/testing/vitest.js",
-      "types": "./dist/configs/testing/vitest.d.ts"
-    },
-    "./configs/tsconfig/base": "./configs/typescript/base.json",
-    "./testing/vitest": "./testing/vitest.ts",
-    "./tsconfig/base": "./typescript/base.json"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "clean": "rimraf dist",
+    "prepublishOnly": "pnpm run clean && pnpm run build",
+    "type-check": "tsc --noEmit -p tsconfig.json"
   },
   "peerDependencies": {
     "eslint": ">=8.57",
@@ -50,6 +28,7 @@
     "vitest": ">=1.5"
   },
   "devDependencies": {
+    "tailwindcss": "^3.4.13",
     "vite-tsconfig-paths": "^5.1.4"
   }
 }

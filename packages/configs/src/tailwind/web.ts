@@ -3,7 +3,6 @@
  * Author : Shiwoo Min
  * Date   : 2025-09-09
  */
-
 import type { Config } from 'tailwindcss';
 import base from './base.js';
 

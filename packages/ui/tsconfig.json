@@ -1,5 +1,5 @@
 /**
- * Description : tsconfig.json - 📌 UI 패키지 (TypeScript 설정)
+ * Description : ui/tsconfig.json - 📌 UI 패키지 (TypeScript 설정)
  * Author : Shiwoo Min
  * Date : 2025-09-12
  */
@@ -35,7 +35,7 @@
 
     // 모노레포 최적화
     "incremental": true,
-    "tsBuildInfoFile": "../../dist/packages/ui/.tsbuildinfo",
+    "tsBuildInfoFile": "../../dist/packages/ui/.tsbuildinfo"
   },
 
   // src 기준으로 포함
@@ -44,6 +44,9 @@
   // 제외할 파일/폴더
   "exclude": ["dist", "node_modules"],
 
-  // 프로젝트 참조 (필요시 추가)
-  "references": []
+  // 프로젝트 참조
+  "references": [
+    { "path": "../core" },
+    { "path": "../logger" }
+  ]
 }

@@ -3,8 +3,7 @@
  * Author : Shiwoo Min
  * Date : 2025-09-09
  */
-// import baseConfig from '../core/src/configs/tailwind/base.js';
-import baseConfig from '@connectwon/core/configs/tailwind/base.js';
+import baseConfig from '@connectwon/';
 import type { Config } from 'tailwindcss';
 
 const config: Config = {
