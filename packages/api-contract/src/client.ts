@@ -42,7 +42,7 @@ import {
   Venue,
   VenueListResponse,
   VenueStatsResponse,
-} from './schemas/index.js';
+} from './index.js';
 
 /**
  * @description API 클라이언트 설정용 인터페이스

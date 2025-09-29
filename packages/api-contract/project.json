@@ -12,7 +12,10 @@
       "options": {
         "main": "packages/api-contract/src/index.ts",
         "outputPath": "dist/packages/api-contract",
-        "tsConfig": "packages/api-contract/tsconfig.json"
+        "tsConfig": "packages/api-contract/tsconfig.json",
+        "assets": [
+          "packages/api-contract/package.json"
+        ]
       }
     },
     "gen:openapi": {

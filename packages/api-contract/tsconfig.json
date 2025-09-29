@@ -3,16 +3,20 @@
  * Author : Shiwoo Min
  * Date  : 2025-09-24
  * 09-12 : ESNext/Bundler 해석, d.ts/소스맵/증분빌드, Node 타입 차단(types: [])
+ * 09-30 : Config 패키지와 경로 일관화, outDir/declarationDir 정리
+ * 명령어 : ls -l dist/packages/api-contract/index.*
  */
 {
-  // 루트의 tsconfig.json 상속
+  // 루트의 tsconfig.base.json 상속
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
+    "composite": true,
     // I/O 경로
     "rootDir": "./src",
     "outDir": "../../dist/packages/api-contract",
+    "declarationDir": "../../dist/packages/api-contract",
 
-    // 번들러/Node 모두 수월한 isomorphic 설정
+    // 서버 전용 타깃
     "target": "ES2022",
     "module": "ESNext",
     "moduleResolution": "Bundler",
@@ -22,11 +26,10 @@
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
-    "composite": true,
     "incremental": true,
-    "tsBuildInfoFile": "dist/.tsbuildinfo",
+    "tsBuildInfoFile": "../../dist/packages/api-contract/.tsbuildinfo",
 
-    // 브라우저/서버 공통을 위해 Node 전역타입 유입 차단
+    // 브라우저/서버 공통을 위해 Node 전역타입 최소화
     "lib": ["ES2022"],
     "types": ["node"],
 
@@ -42,6 +45,14 @@
     "forceConsistentCasingInFileNames": true
   },
 
+  // 포함 범위
   "include": ["src/**/*"],
-  "exclude": ["dist", "node_modules"]
+
+  // 불필요한 폴더 제외
+  "exclude": ["dist", "node_modules"],
+
+  // Project References
+  "references": [
+    { "path": "../core" }
+  ]
 }

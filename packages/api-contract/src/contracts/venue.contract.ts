@@ -3,7 +3,7 @@
  * Author : Shiwoo Min
  * Date : 2025-09-24
  */
-import { PaginationInfoSchema } from '../contracts/common.contract.js';
+import { PaginationInfoSchema } from './common.contract.js';
 import { z } from 'zod';
 
 /**

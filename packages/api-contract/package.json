@@ -5,40 +5,32 @@
   "private": true,
   "type": "module",
   "sideEffects": false,
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
   "files": [
     "dist"
   ],
-  "__comment_exports": "경로별로 타입 선언 및 JS 모듈 경로 지정",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+      "types": "./dist/packages/api-contract/index.d.ts",
+      "import": "./dist/packages/api-contract/index.js"
     },
-    "./schemas/*": {
-      "types": "./dist/schemas/*.d.ts",
-      "import": "./dist/schemas/*.js"
-    },
-    "./openapi/*": {
-      "types": "./dist/openapi/*.d.ts",
-      "import": "./dist/openapi/*.js"
+    "./api-contract-types": {
+      "types": "./dist/packages/api-contract/api-contract-types.d.ts",
+      "import": "./dist/packages/api-contract/api-contract-types.js"
     },
     "./package.json": "./package.json"
   },
-  "__comment_scripts": "pnpm scripts 명령어",
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "dev": "tsc --watch -p tsconfig.json",
-    "clean": "rimraf dist"
+    "clean": "rimraf dist",
+    "prepublishOnly": "pnpm run clean && pnpm run build",
+    "type-check": "tsc --noEmit -p tsconfig.json"
   },
-  "__comment_dependencies": "런타임 의존성 목록",
   "dependencies": {
     "@ts-rest/core": "^3.52.1",
     "swagger-ui-dist": "^5.29.0",
     "zod": "^3.23.8"
   },
-  "__comment_devDependencies": "개발 의존성 목록",
   "devDependencies": {
     "@types/node": "^24.3.1",
     "openapi-types": "^12.1.3"
