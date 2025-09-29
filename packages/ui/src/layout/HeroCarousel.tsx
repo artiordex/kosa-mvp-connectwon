@@ -4,7 +4,7 @@
  * Date : 2025-09-19
  */
 import { useEffect, useMemo, useRef, useState } from 'react';
-import type { HeroCarouselProps } from '@connectwon/ui/ui-types';
+import type { HeroCarouselProps } from '../ui-types.js';
 
 export default function HeroCarousel({
   slides,

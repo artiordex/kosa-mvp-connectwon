@@ -4,7 +4,7 @@
  * Date : 2025-09-19
  */
 import type { ReactNode } from 'react';
-import type { SidebarItem, SidebarNavProps } from '@connectwon/ui/ui-types';
+import type { SidebarItem, SidebarNavProps } from '../ui-types.js';
 
 const renderIcon = (icon?: ReactNode | string, collapsed?: boolean) => {
   if (!icon) return null;

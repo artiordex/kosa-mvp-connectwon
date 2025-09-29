@@ -4,7 +4,7 @@
  * Date : 2025-09-09
  */
 import { forwardRef } from 'react';
-import { type CheckboxProps } from '@connectwon/ui/ui-types';
+import { type CheckboxProps } from '../ui-types.js';
 import { cva } from 'class-variance-authority';
 
 // 체크박스 variant 스타일 정의

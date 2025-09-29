@@ -3,7 +3,7 @@
  * Author : Shiwoo Min
  * Date : 2025-09-25
  */
-import { type WaterfallChartProps } from '@connectwon/ui/ui-types';
+import { type WaterfallChartProps } from '../ui-types.js';
 
 // 누적 영역 차트 컴포넌트
 const WaterfallChart = ({

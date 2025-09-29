@@ -4,7 +4,7 @@
  * Date : 2025-09-09
  */
 import { forwardRef } from 'react';
-import { type SelectProps } from '@connectwon/ui/ui-types';
+import { type SelectProps } from '../ui-types.js';
 import { cva } from 'class-variance-authority';
 
 // 선택 드롭다운 variant 스타일 정의

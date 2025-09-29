@@ -4,7 +4,7 @@
  * Date : 2025-09-19
  */
 import Link from 'next/link';
-import type { FooterProps } from '@connectwon/ui/ui-types';
+import type { FooterProps } from '../ui-types.js';
 
 export default function Footer({
   brand,

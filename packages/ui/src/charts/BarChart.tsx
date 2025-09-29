@@ -3,7 +3,7 @@
  * Author : Shiwoo Min
  * Date : 2025-09-25
  */
-import { type BarChartProps, CHART_HEIGHTS, DEFAULT_COLORS } from '@connectwon/ui/ui-types';
+import { type BarChartProps, CHART_HEIGHTS, DEFAULT_COLORS } from '../ui-types.js';
 import { Bar, CartesianGrid, BarChart as RechartsBarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
 // 막대 차트 컴포넌트

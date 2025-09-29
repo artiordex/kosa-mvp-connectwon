@@ -3,7 +3,7 @@
  * Author : Shiwoo Min
  * Date : 2025-09-19
  */
-import type { AppShellProps } from '@connectwon/ui/ui-types';
+import type { AppShellProps } from '../ui-types.js';
 
 /**
  * variant별 화면 구분:

@@ -3,7 +3,7 @@
  * Author : Shiwoo Min
  * Date : 2025-09-25
  */
-import { DEFAULT_COLORS, type FunnelChartProps } from '@connectwon/ui/ui-types';
+import { DEFAULT_COLORS, type FunnelChartProps } from '../ui-types.js';
 
 // 깔때기 차트 컴포넌트
 const FunnelChart = ({ data, colors = DEFAULT_COLORS, showLabels = true, showValues = true, height = 300, className = '' }: FunnelChartProps) => {

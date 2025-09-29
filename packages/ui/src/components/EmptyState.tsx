@@ -3,7 +3,7 @@
  * Author : Shiwoo Min
  * Date : 2025-09-09
  */
-import { type EmptyStateProps } from '@connectwon/ui/ui-types';
+import { type EmptyStateProps } from '../ui-types.js';
 
 // 빈 상태 페이지 컴포넌트
 export function EmptyState({

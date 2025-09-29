@@ -4,7 +4,7 @@
  * Date : 2025-09-25
  */
 import { forwardRef } from 'react';
-import type { ContainerProps } from '@connectwon/ui/ui-types';
+import type { ContainerProps } from '../ui-types.js';
 import { cva } from 'class-variance-authority';
 
 // 컨테이너 variant 스타일 정의

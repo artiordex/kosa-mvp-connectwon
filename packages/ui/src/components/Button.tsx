@@ -4,7 +4,7 @@
  * Date : 2025-09-09
  */
 import { forwardRef } from 'react';
-import { type ButtonProps } from '@connectwon/ui/ui-types';
+import { type ButtonProps } from '../ui-types.js';
 import { cva } from 'class-variance-authority';
 
 // 버튼 variant 스타일 정의

@@ -4,7 +4,7 @@
  * Date : 2025-09-09
  */
 import { forwardRef } from 'react';
-import type { DividerProps } from '@connectwon/ui/ui-types';
+import type { DividerProps } from '../ui-types.js';
 import { cva } from 'class-variance-authority';
 
 // 구분선 variant 스타일 정의

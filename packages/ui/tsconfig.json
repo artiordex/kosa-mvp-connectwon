@@ -47,6 +47,7 @@
   // 프로젝트 참조
   "references": [
     { "path": "../core" },
+    { "path": "../configs" },
     { "path": "../logger" }
   ]
 }

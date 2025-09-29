@@ -4,7 +4,7 @@
  * Date : 2025-09-09
  */
 import { forwardRef, useState } from 'react';
-import { type RadioGroupProps } from '@connectwon/ui/ui-types';
+import { type RadioGroupProps } from '../ui-types.js';
 import { cva } from 'class-variance-authority';
 
 // 라디오 버튼 variant 스타일 정의

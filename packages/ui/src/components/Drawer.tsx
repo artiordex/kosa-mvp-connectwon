@@ -5,7 +5,7 @@
  */
 import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import type { DrawerProps } from '@connectwon/ui/ui-types';
+import type { DrawerProps } from '../ui-types.js';
 import { cva } from 'class-variance-authority';
 
 // 드로어 variant 스타일 정의

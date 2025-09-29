@@ -3,7 +3,7 @@
  * Author : Shiwoo Min
  * Date : 2025-09-25
  */
-import { CHART_HEIGHTS, DEFAULT_COLORS, type PieChartProps } from '@connectwon/ui/ui-types';
+import { CHART_HEIGHTS, DEFAULT_COLORS, type PieChartProps } from '../ui-types.js';
 import { Cell, Legend, Pie, PieChart as RechartsPieChart, ResponsiveContainer, Tooltip } from 'recharts';
 
 // 파이 차트 컴포넌트

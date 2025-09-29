@@ -4,7 +4,7 @@
  * Date : 2025-09-09
  */
 import { forwardRef } from 'react';
-import { type FormProps } from '@connectwon/ui/ui-types';
+import { type FormProps } from '../ui-types.js';
 
 // 폼 컴포넌트 정의
 export const Form = forwardRef<HTMLFormElement, FormProps>(

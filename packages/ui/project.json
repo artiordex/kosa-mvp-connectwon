@@ -10,7 +10,10 @@
         "main": "packages/ui/src/index.ts",
         "outputPath": "dist/packages/ui",
         "tsConfig": "packages/ui/tsconfig.json",
-        "assets": ["packages/ui/package.json", "packages/ui/src/styles/**/*"]
+        "assets": [
+          "packages/ui/package.json",
+          "packages/ui/src/styles/**/*"
+        ]
       }
     },
     "lint": {

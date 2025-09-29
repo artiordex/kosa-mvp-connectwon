@@ -4,7 +4,7 @@
  * Date : 2025-09-09
  */
 import { forwardRef } from 'react';
-import { type TextareaProps } from '@connectwon/ui/ui-types';
+import { type TextareaProps } from '../ui-types.js';
 import { cva } from 'class-variance-authority';
 
 // 텍스트 영역 variant 스타일 정의

@@ -5,7 +5,7 @@
  */
 import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import type { ModalProps } from '@connectwon/ui/ui-types';
+import type { ModalProps } from '../ui-types.js';
 
 // 모달 컴포넌트 인터페이스
 export function Modal({
