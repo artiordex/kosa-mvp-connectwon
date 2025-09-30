@@ -46,5 +46,7 @@
       }
     }
   },
-  "implicitDependencies": []
+  "implicitDependencies": [
+    "@connectwon/logger"
+  ]
 }

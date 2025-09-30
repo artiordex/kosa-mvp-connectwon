@@ -45,9 +45,7 @@
     "forceConsistentCasingInFileNames": true
   },
   // 포함 범위
-  "include": [
-    "src/**/*",
-  ],
+  "include": ["src/**/*"],
 
   // 불필요한 폴더 제외
   "exclude": ["node_modules", "dist", "**/*.test.*", "**/*.spec.*"]

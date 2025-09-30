@@ -13,7 +13,7 @@
   "compilerOptions": {
     "composite": true,
 
-    // 출력 경로 (dist로 내보내도록 수정)
+    // I/O 경로
     "rootDir": "./src",
     "outDir": "../../dist/packages/configs",
     "declarationDir": "../../dist/packages/configs",

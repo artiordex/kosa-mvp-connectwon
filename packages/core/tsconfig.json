@@ -13,7 +13,7 @@
   // 루트의 tsconfig.base.json 상속
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    // 출력 설정
+    // I/O 경로
     "rootDir": "./src",
     "outDir": "../../dist/packages/core",
     "declarationDir": "../../dist/packages/core",

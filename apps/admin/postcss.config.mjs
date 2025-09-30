@@ -3,7 +3,7 @@
  * Author : Shiwoo Min
  * Date : 2025-09-25
  */
-import tailwindConfig from '@connectwon/ui/tailwind.config';
+import tailwindConfig from '@connectwon/ui/tailwind-config';
 
 export default {
   plugins: {
