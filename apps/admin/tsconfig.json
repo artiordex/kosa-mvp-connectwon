@@ -20,10 +20,6 @@
     "jsx": "preserve",
     "plugins": [{ "name": "next" }],
 
-    "paths": {
-      "@/*": ["./src/*"]
-    },
-
     // DOM 및 ES2022 API 사용
     "lib": ["dom", "dom.iterable", "ES2022"],
     "types": ["node"],

@@ -25,12 +25,15 @@ const nextConfig = {
   //   optimizePackageImports: ['lucide-react', 'date-fns'],
   // },
 
-  // 모노레포 패키지 트랜스파일
+  /**
+   * @property transpilePackages
+   * @description 내부 패키지(ESM/클라 전용 포함) 트랜스파일
+   */
   transpilePackages: [
     '@connectwon/ui',
     '@connectwon/api-contract',
     '@connectwon/sdk',
-    '@connectwon/client',
+    '@connectwon/configs'
   ],
 
   images: {

@@ -3,10 +3,11 @@
  * Author : Shiwoo Min
  * Date : 2025-09-25
  */
-const config = {
+import tailwindConfig from '@connectwon/ui/tailwind.config';
+
+export default {
   plugins: {
-    tailwindcss: {},
+    tailwindcss: { config: tailwindConfig },
     autoprefixer: {},
   },
 };
-export default config;

@@ -16,7 +16,7 @@
     "install:browsers": "playwright install --with-deps",
     "clean": "rimraf playwright-report test-results"
   },
-  "peerDependencies": {
+  "dependencies": {
     "@connectwon/api-contract": "workspace:*",
     "@connectwon/logger": "workspace:*"
   },

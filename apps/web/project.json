@@ -11,8 +11,10 @@
       }
     },
     "serve": {
-      "executor": "@nx/next:dev",
+      "executor": "@nx/next:server",
       "options": {
+        "buildTarget": "@connectwon/web:build",
+        "dev": true,
         "port": 3000
       }
     },
@@ -29,5 +31,11 @@
       }
     }
   },
-  "implicitDependencies": ["@connectwon/ui", "@connectwon/client", "@connectwon/api-contract", "@connectwon/core", "@connectwon/sdk"]
+  "implicitDependencies": [
+    "@connectwon/ui",
+    "@connectwon/client",
+    "@connectwon/api-contract",
+    "@connectwon/configs",
+    "@connectwon/sdk"
+  ]
 }

@@ -12,7 +12,8 @@
         "tsConfig": "packages/ui/tsconfig.json",
         "assets": [
           "packages/ui/package.json",
-          "packages/ui/src/styles/**/*"
+          "packages/ui/src/styles/**/*",
+          "packages/ui/tailwind.config.*"
         ]
       }
     },

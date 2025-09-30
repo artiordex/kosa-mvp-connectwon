@@ -3,8 +3,9 @@
  * Author : Shiwoo Min
  * Date : 2025-09-16
  */
-import http, { IncomingMessage, ServerResponse } from 'http';
+import tailwindConfig from '../../packages/ui/tailwind.config.mjs';
 import next from 'next';
+import http, { IncomingMessage, ServerResponse } from 'http';
 
 const PORT = Number(process.env.PORT || process.env.ADMIN_PORT || 3001);
 const HOST = process.env.HOST || '0.0.0.0';

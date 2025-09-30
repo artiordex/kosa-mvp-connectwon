@@ -41,7 +41,8 @@
   },
 
   "include": [
-    "src/**/*"
+    "src/**/*",
+    "../playwright.config.ts"
   ],
 
   // 산출물/리포트/노드모듈 제외
