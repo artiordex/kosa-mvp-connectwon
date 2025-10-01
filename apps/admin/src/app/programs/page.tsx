@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 
-import AppShell from '../../components/AppShell';
-import Header from '../../components/Header';
+import AppShell from 'components/AppShell';
+import Header from 'components/Header';
 
 export default function AdminPrograms() {
   const [programs] = useState([
@@ -98,7 +98,7 @@ export default function AdminPrograms() {
   return (
     <AppShell>
       <div className="min-h-screen bg-gray-50">
-        <Header />
+        <Header isSidebarCollapsed={false} onToggleSidebar={() => {}} />
 
         <main className="py-8">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

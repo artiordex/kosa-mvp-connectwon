@@ -16,10 +16,11 @@
     },
     "./core-types": {
       "types": "./dist/packages/core/core-types.d.ts",
-      "import": "./dist/packages/core/core-types.ts"
+      "import": "./dist/packages/core/core-types.js"
     },
     "./package.json": "./package.json"
   },
+  "__comment_scripts": "빌드/개발/배포 스크립트",
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "dev": "tsc -p tsconfig.json -w",
@@ -29,6 +30,7 @@
   "engines": {
     "node": ">=20.11"
   },
+  "__comment_dependencies": "런타임 핵심 의존성",
   "dependencies": {
     "@anthropic-ai/sdk": "^0.61.0",
     "@huggingface/inference": "^4.7.1",
@@ -46,14 +48,12 @@
     "openapi3-ts": "^4.5.0",
     "zod": "^3.23.8"
   },
+  "__comment_peerDependencies": "외부에서 설치 필요 (NestJS/TS/Eslint)",
   "peerDependencies": {
     "@nestjs/common": "^11",
     "@nestjs/core": "^11",
-    "eslint": ">=8.57",
-    "tailwindcss": ">=3.4",
-    "typescript": ">=5.4",
-    "vite-tsconfig-paths": ">=4.3",
-    "vitest": ">=1.5"
+    "eslint": ">=9.0.0",
+    "typescript": "5.6.3"
   },
   "peerDependenciesMeta": {
     "@nestjs/common": {
@@ -63,15 +63,15 @@
       "optional": true
     }
   },
+  "__comment_devDependencies": "개발 및 빌드 도구",
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",
     "@nestjs/common": "^11.0.0",
     "@nestjs/core": "^11.0.0",
-    "@types/node": "^24.0.0",
+    "@types/node": "^24.3.1",
     "@types/node-fetch": "^2.6.13",
     "@types/nodemailer": "^7.0.1",
     "rimraf": "^6.0.1",
-    "typescript": "^5.6.0",
-    "vite-tsconfig-paths": "^5.1.4"
+    "typescript": "5.6.3"
   }
 }

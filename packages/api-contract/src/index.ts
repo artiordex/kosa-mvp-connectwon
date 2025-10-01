@@ -22,3 +22,5 @@ export * from './schemas/auth.schema.js';
 export * from './schemas/payment.schema.js';
 export * from './schemas/program.schema.js';
 export * from './schemas/venue.schema.js';
+// client
+export * from './client.js';

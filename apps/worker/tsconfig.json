@@ -14,10 +14,10 @@
     "outDir": "../../dist/apps/worker",
 
     // ES2022 타겟 및 NodeNext 모듈
-    "target": "ES2022",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-    "lib": ["ES2022"],
+    "target": "es2022",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "lib": ["es2022"],
     "types": ["node"],
 
     // 선언 파일 생성
@@ -36,11 +36,8 @@
     "forceConsistentCasingInFileNames": true,
 
     // 모노레포 패키지 경로 매핑
-    "paths": {
-    },
+    "paths": {},
 
-    // 경로 해석 기준점
-    "baseUrl": ".",
     "exactOptionalPropertyTypes": false
   },
 

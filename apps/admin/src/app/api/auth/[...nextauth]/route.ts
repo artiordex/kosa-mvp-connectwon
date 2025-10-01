@@ -105,10 +105,11 @@ const authOptions: NextAuthOptions = {
     },
 
     async session({ session, token }) {
-      // 세션에 추가 정보 포함
       if (token) {
-        session.user.id = token['id'];
-        session.user.provider = token['provider'];
+        Object.assign(session.user ?? {}, {
+          id: token["id"],
+          provider: token["provider"],
+        });
       }
       return session;
     },

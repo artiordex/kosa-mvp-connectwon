@@ -35,7 +35,6 @@
     "@connectwon/ui",
     "@connectwon/client",
     "@connectwon/api-contract",
-    "@connectwon/configs",
-    "@connectwon/sdk"
+    "@connectwon/configs"
   ]
 }

@@ -1,10 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import PeriodFilter from '../components/PeriodFilter';
-import PredictionAnalysis from '../components/ai/PredictionAnalysis';
-import RealTimeStats from '../components/RealTimeStats';
-import SentimentAnalysis from '../components/ai/SentimentAnalysis';
+import PeriodFilter from 'components/PeriodFilter';
+import PredictionAnalysis from 'components/ai/PredictionAnalysis';
+import RealTimeStats from 'components/RealTimeStats';
+import SentimentAnalysis from 'components/ai/SentimentAnalysis';
 
 export default function AdminDashboard() {
   const [selectedPeriod, setSelectedPeriod] = useState('week');

@@ -15,24 +15,28 @@
   "engines": {
     "node": ">=20.11"
   },
+  "__comment_peerDependencies": "런타임 환경에서 호스트 앱이 제공해야 하는 패키지",
   "peerDependencies": {
     "clsx": "^2.0.0",
-    "next": "^14.2.32",
+    "next": "15.1.6",
     "next-auth": "^4.24.11",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
+  "__comment_devDependencies": "개발 도구 및 Tailwind 관련 의존성",
   "devDependencies": {
-    "@types/react": "^18.3.0",
-    "@types/react-dom": "^18.3.0",
+    "@types/react": "18.3.7",
+    "@types/react-dom": "18.3.0",
     "@types/stripe": "^8.0.417",
-    "autoprefixer": "^10.4.20",
-    "postcss": "^8.4.47",
+    "autoprefixer": "^10.4.21",
+    "eslint": "^9.36.0",
+    "eslint-config-next": "15.1.6",
+    "postcss": "^8.5.6",
     "tailwindcss": "^3.4.13"
   },
+  "__comment_dependencies": "직접 사용되는 앱 런타임 의존성",
   "dependencies": {
     "@connectwon/api-contract": "workspace:*",
-    "@connectwon/sdk": "workspace:*",
     "@connectwon/ui": "workspace:*",
     "framer-motion": "^12.23.15",
     "react-big-calendar": "^1.19.4",

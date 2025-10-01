@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import AppShell from '../../components/AppShell';
+import AppShell from 'components/AppShell';
 
 export default function AdminSettings() {
   // 테마 설정

@@ -15,10 +15,10 @@
     "noEmit": false,
 
     // 서버 전용 타깃
-    "target": "ES2022",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "target": "es2022",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "lib": ["es2022", "dom", "dom.iterable"],
     "types": ["node", "next"],
 
     // Nest/Express 공통 추천

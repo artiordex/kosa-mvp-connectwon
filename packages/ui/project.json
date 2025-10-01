@@ -2,7 +2,7 @@
   "name": "@connectwon/ui",
   "sourceRoot": "packages/ui/src",
   "projectType": "library",
-  "tags": ["type:lib", "layer:frontend"],
+  "tags": ["scope:ui", "type:library", "layer:frontend"],
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
@@ -12,8 +12,21 @@
         "tsConfig": "packages/ui/tsconfig.json",
         "assets": [
           "packages/ui/package.json",
-          "packages/ui/src/styles/**/*",
-          "packages/ui/tailwind.config.*"
+          {
+            "glob": "*.css",
+            "input": "packages/ui/src/styles",
+            "output": "styles"
+          },
+          {
+            "glob": "tailwind.config.*",
+            "input": "packages/ui",
+            "output": "."
+          },
+          {
+            "glob": "**/*",
+            "input": "packages/ui/public",
+            "output": "public"
+          }
         ]
       }
     },

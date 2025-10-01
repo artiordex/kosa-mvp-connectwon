@@ -13,10 +13,10 @@
     "rootDir": "./src",
     "outDir": "../../dist/apps/e2e",
 
-    "target": "ES2022",
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "target": "es2022",
+    "lib": ["es2022", "dom", "dom.iterable"],
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
 
     // 상호운용/편의
     "allowSyntheticDefaultImports": true,

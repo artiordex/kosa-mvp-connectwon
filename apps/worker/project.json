@@ -7,8 +7,9 @@
     "build": {
       "executor": "@nx/js:tsc",
       "options": {
+        "main": "apps/worker/src/main.ts",
         "tsConfig": "apps/worker/tsconfig.json",
-        "assets": ["apps/worker/src/templates/*.hbs", "apps/worker/src/templates/*.mjml"]
+        "assets": []
       },
       "outputs": ["{workspaceRoot}/dist/apps/worker"]
     },

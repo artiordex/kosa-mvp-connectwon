@@ -19,11 +19,11 @@
     "jsx": "react-jsx",
 
     // 번들러 친화 ESM 해석 (Next/webpack/vite 등 소비자 기준)
-    "module": "ESNext",
+    "module": "esnext",
     "moduleResolution": "Bundler",
 
     // 브라우저 타깃
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "lib": ["es2022", "dom", "dom.iterable"],
 
     // Node 전역 타입 유입 방지 (웹 라이브러리는 비우는 게 안전)
     "types": [],
@@ -39,15 +39,11 @@
   },
 
   // src 기준으로 포함
-  "include": ["src/**/*", "../tailwind.config.*"],
+  "include": ["src/**/*"],
 
   // 제외할 파일/폴더
   "exclude": ["dist", "node_modules"],
 
   // 프로젝트 참조
-  "references": [
-    { "path": "../core" },
-    { "path": "../configs" },
-    { "path": "../logger" }
-  ]
+  "references": [{ "path": "../core" }, { "path": "../configs" }, { "path": "../logger" }]
 }

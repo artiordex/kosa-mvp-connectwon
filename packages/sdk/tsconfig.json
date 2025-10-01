@@ -14,8 +14,8 @@
     "declarationDir": "../../dist/packages/sdk/types",
 
     // Node ESM 권장
-    "target": "ES2022",
-    "module": "ESNext",
+    "target": "es2022",
+    "module": "esnext",
     "moduleResolution": "Bundler",
 
     // d.ts 생성 (루트 base에도 있지만 명시 유지)
@@ -28,7 +28,7 @@
     "resolveJsonModule": true,
 
     // 브라우저 타깃 (Iterable API 사용 시 DOM.Iterable 포함)
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "lib": ["es2022", "dom", "dom.iterable"],
 
     // 프로젝트 레퍼런스 활성화
     "composite": true,

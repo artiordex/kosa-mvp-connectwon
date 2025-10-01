@@ -1,11 +1,10 @@
-
 'use client';
 
-import Header from '../../../../components/Header';
-import Footer from '../../../../components/Footer';
-import TermsModal from '../../../../components/TermsModal';
-import { useState, Suspense } from 'react';
+import { Suspense, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
+import Footer from '../../../../../components/Footer';
+import Header from '../../../../../components/Header';
+import TermsModal from '../../../../../components/TermsModal';
 
 function BookingForm() {
   const searchParams = useSearchParams();
@@ -102,7 +101,7 @@ function BookingForm() {
     return selectedEquipment.reduce((total, equipmentId) => {
       const equipment = availableEquipment.find(eq => eq.id === equipmentId);
       if (!equipment) return total;
-      
+
       if (equipmentId === 'computer') {
         return total + (equipment.cost * duration);
       }
@@ -120,24 +119,24 @@ function BookingForm() {
       alert('사용 목적을 입력해주세요.');
       return;
     }
-    
+
     const equipmentCost = calculateEquipmentCost();
-    console.log('룸 예약 신청:', { 
-      ...formData, 
-      date, 
-      time, 
-      duration, 
+    console.log('룸 예약 신청:', {
+      ...formData,
+      date,
+      time,
+      duration,
       roomId: room.id,
       selectedEquipment,
       equipmentCost
     });
-    
+
     if (equipmentCost > 0) {
       alert(`룸 예약 신청이 완료되었습니다.\n기기 대여 비용: ${equipmentCost.toLocaleString()}원\n승인 결과는 이메일로 알려드리겠습니다.`);
     } else {
       alert('룸 예약 신청이 완료되었습니다. 승인 결과는 이메일로 알려드리겠습니다.');
     }
-    
+
     window.location.href = '/rooms';
   };
 
@@ -161,7 +160,7 @@ function BookingForm() {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      
+
       <main className="flex-grow bg-gray-50 py-8">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-8">
@@ -302,7 +301,7 @@ function BookingForm() {
                 <div className="bg-white rounded-xl p-6 shadow-sm">
                   <h2 className="text-xl font-semibold text-gray-900 mb-4">기기 대여 (선택사항)</h2>
                   <p className="text-sm text-gray-600 mb-6">필요한 기기를 선택하시면 예약과 함께 준비해드립니다</p>
-                  
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {availableEquipment.map((equipment) => (
                       <div key={equipment.id} className="relative">
@@ -341,9 +340,9 @@ function BookingForm() {
                         {selectedEquipment.map(equipmentId => {
                           const equipment = availableEquipment.find(eq => eq.id === equipmentId);
                           if (!equipment) return null;
-                          
+
                           const cost = equipment.id === 'computer' ? equipment.cost * duration : equipment.cost;
-                          
+
                           return (
                             <div key={equipmentId} className="flex items-center justify-between text-sm text-blue-800">
                               <span>• {equipment.name}</span>
@@ -413,7 +412,7 @@ function BookingForm() {
                       </div>
                     </label>
                   </div>
-                  
+
                   <div className="mt-4 p-4 bg-yellow-50 rounded-lg">
                     <h4 className="font-medium text-yellow-900 mb-2">룸 이용 수칙</h4>
                     <ul className="text-sm text-yellow-800 space-y-1">
@@ -439,9 +438,9 @@ function BookingForm() {
             <div className="lg:col-span-1">
               <div className="bg-white rounded-xl p-6 shadow-sm sticky top-4">
                 <h2 className="text-xl font-semibold text-gray-900 mb-4">예약 정보</h2>
-                
+
                 <div className="mb-4">
-                  <img 
+                  <img
                     src={room.image}
                     alt={room.name}
                     className="w-full h-32 object-cover object-top rounded-lg"
@@ -450,27 +449,27 @@ function BookingForm() {
 
                 <div className="space-y-3 mb-6">
                   <h3 className="text-lg font-semibold text-gray-900">{room.name}</h3>
-                  
+
                   <div className="flex items-center text-gray-600">
                     <i className="ri-building-line mr-2 w-4 h-4 flex items-center justify-center"></i>
                     <span className="text-sm">{room.location}</span>
                   </div>
-                  
+
                   <div className="flex items-center text-gray-600">
                     <i className="ri-calendar-line mr-2 w-4 h-4 flex items-center justify-center"></i>
                     <span className="text-sm">{date}</span>
                   </div>
-                  
+
                   <div className="flex items-center text-gray-600">
                     <i className="ri-time-line mr-2 w-4 h-4 flex items-center justify-center"></i>
                     <span className="text-sm">{time} ({duration}시간)</span>
                   </div>
-                  
+
                   <div className="flex items-center text-gray-600">
                     <i className="ri-map-pin-line mr-2 w-4 h-4 flex items-center justify-center"></i>
                     <span className="text-sm">{room.address}</span>
                   </div>
-                  
+
                   <div className="flex items-center text-gray-600">
                     <i className="ri-group-line mr-2 w-4 h-4 flex items-center justify-center"></i>
                     <span className="text-sm">최대 {room.capacity}명</span>
@@ -533,8 +532,8 @@ function BookingForm() {
       </main>
 
       <Footer />
-      
-      <TermsModal 
+
+      <TermsModal
         isOpen={isTermsModalOpen}
         onClose={() => setIsTermsModalOpen(false)}
         type={termsModalType}

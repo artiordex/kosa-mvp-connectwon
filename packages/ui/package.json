@@ -20,18 +20,21 @@
       "import": "./dist/packages/ui/ui-types.js"
     },
     "./tailwind-config": {
-      "types": "./dist/packages/ui/tailwind.config.d.ts",
-      "import": "./dist/packages/ui/tailwind.config.js"
+      "types": "./tailwind.config.d.ts",
+      "import": "./tailwind.config.mjs"
     },
     "./styles/*": "./dist/packages/ui/styles/*",
     "./package.json": "./package.json"
   },
+  "__comment_scripts": "빌드 및 타입체크 스크립트",
   "scripts": {
     "build": "tsc -p tsconfig.json",
+    "postbuild": "shx mv dist/packages/ui/src/* dist/packages/ui/ && shx rm -rf dist/packages/ui/src",
     "clean": "rimraf dist",
     "prepublishOnly": "pnpm run clean && pnpm run build",
     "type-check": "tsc --noEmit -p tsconfig.json"
   },
+  "__comment_dependencies": "UI 패키지가 직접 사용하는 런타임 의존성",
   "dependencies": {
     "@connectwon/configs": "workspace:*",
     "@fontsource/inter": "^5.2.7",
@@ -44,10 +47,11 @@
     "react-icons": "^5.5.0",
     "tailwind-merge": "^2.6.0"
   },
+  "__comment_peerDependencies": "호스트 앱이 제공해야 하는 의존성",
   "peerDependencies": {
-    "next": "^15.0.0",
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0",
+    "next": "15.1.6",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "recharts": "^3.0.0"
   },
   "peerDependenciesMeta": {
@@ -55,16 +59,21 @@
       "optional": true
     }
   },
+  "__comment_devDependencies": "개발/빌드 도구 및 Tailwind 플러그인",
   "devDependencies": {
     "@tailwindcss/aspect-ratio": "^0.4.2",
     "@tailwindcss/container-queries": "^0.1.1",
     "@tailwindcss/forms": "^0.5.10",
     "@tailwindcss/line-clamp": "^0.4.4",
     "@tailwindcss/typography": "^0.5.19",
+    "@types/node": "^24.3.1",
     "@types/react": "18.3.7",
-    "@types/react-dom": "^18.3.0",
+    "@types/react-dom": "18.3.0",
     "@types/recharts": "^2.0.1",
-    "tailwindcss": "^3.4.13"
+    "tailwindcss": "^3.4.13",
+    "eslint": "^9.36.0",
+    "prettier": "^3.5.3",
+    "typescript": "5.6.3"
   },
   "engines": {
     "node": ">=20.11"

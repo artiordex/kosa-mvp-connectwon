@@ -27,7 +27,6 @@ const nextConfig = {
   transpilePackages: [
     '@connectwon/ui',
     '@connectwon/api-contract',
-    '@connectwon/sdk',
     '@connectwon/client',
     '@connectwon/configs'
   ],

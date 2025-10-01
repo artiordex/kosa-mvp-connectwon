@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Footer from '../../../components/Footer';
-import Header from '../../../components/Header';
+import Footer from 'components/Footer';
+import Header from 'components/Header';
 
 export default function AuthCallbackPage() {
   const [loading, setLoading] = useState(true);

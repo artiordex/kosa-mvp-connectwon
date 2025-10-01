@@ -16,11 +16,11 @@
     "declarationDir": "../../dist/packages/database",
 
     // Node ESM 권장
-    "target": "ES2022",
-    "lib": ["ES2022"],
+    "target": "es2022",
+    "lib": ["es2022"],
     "types": ["node"],
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
 
     // 선언 파일 및 소스맵 생성
     "declaration": true,

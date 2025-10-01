@@ -12,13 +12,13 @@
     "outDir": "../../dist/packages/logger",
 
     // Node ESM 권장
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
     "resolveJsonModule": true,
 
     // 서버 전용 타깃
-    "target": "ES2022",
-    "lib": ["ES2022"],
+    "target": "es2022",
+    "lib": ["es2022"],
     "types": ["node"],
 
     // 타입 선언 및 소스맵

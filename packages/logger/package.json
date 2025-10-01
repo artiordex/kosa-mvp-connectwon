@@ -17,10 +17,11 @@
     },
     "./logger-types": {
       "types": "./dist/packages/logger/logger-types.d.ts",
-      "import": "./dist/packages/logger/logger-types.ts"
+      "import": "./dist/packages/logger/logger-types.js"
     },
     "./package.json": "./package.json"
   },
+  "__comment_scripts": "빌드/개발/배포 스크립트",
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "dev": "tsc -p tsconfig.json --watch",
@@ -29,21 +30,24 @@
     "lint": "eslint src --ext .ts",
     "test": "vitest run"
   },
+  "__comment_dependencies": "실행 시 필요한 런타임 의존성",
   "dependencies": {
     "logform": "^2.7.0",
     "winston": "^3.17.0",
     "winston-daily-rotate-file": "^5.0.0",
     "winston-transport": "^4.9.0"
   },
+  "__comment_devDependencies": "개발/테스트/빌드용 의존성",
   "devDependencies": {
-    "@types/node": "^20.11.0",
-    "eslint": "^9.0.0",
+    "@types/node": "^24.3.1",
+    "eslint": "^9.36.0",
     "rimraf": "^6.0.1",
-    "typescript": "^5.6.0",
-    "vitest": "^2.0.0"
+    "typescript": "5.6.3",
+    "vitest": "^3.2.4"
   },
+  "__comment_engines": "런타임/패키지 매니저 버전 요구사항",
   "engines": {
     "node": ">=20.11",
-    "pnpm": ">=9.0.0"
+    "pnpm": ">=10.7.0"
   }
 }

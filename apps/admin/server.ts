@@ -3,7 +3,6 @@
  * Author : Shiwoo Min
  * Date : 2025-09-16
  */
-import tailwindConfig from '@connectwon/ui/tailwind-config'
 import next from 'next';
 import http, { IncomingMessage, ServerResponse } from 'http';
 

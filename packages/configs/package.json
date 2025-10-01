@@ -10,23 +10,26 @@
   ],
   "exports": {
     ".": {
-    "types": "./dist/packages/configs/index.d.ts",
-    "import": "./dist/packages/configs/index.js"
+      "types": "./dist/packages/configs/index.d.ts",
+      "import": "./dist/packages/configs/index.js"
     }
   },
+  "__comment_scripts": "빌드 및 퍼블리시 스크립트",
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "clean": "rimraf dist",
     "prepublishOnly": "pnpm run clean && pnpm run build",
     "type-check": "tsc --noEmit -p tsconfig.json"
   },
+  "__comment_peerDependencies": "공용 설정에 필요한 peer (앱에서 직접 설치해야 함)",
   "peerDependencies": {
-    "eslint": ">=8.57",
-    "tailwindcss": ">=3.4",
-    "typescript": ">=5.4",
-    "vite-tsconfig-paths": ">=4.3",
-    "vitest": ">=1.5"
+    "eslint": ">=9.0.0",
+    "tailwindcss": "^3.4.13",
+    "typescript": "5.6.3",
+    "vite-tsconfig-paths": "^5.1.4",
+    "vitest": ">=3.0.0"
   },
+  "__comment_devDependencies": "개발 중 테스트/빌드용 최소 deps",
   "devDependencies": {
     "tailwindcss": "^3.4.13",
     "vite-tsconfig-paths": "^5.1.4"

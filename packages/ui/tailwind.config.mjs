@@ -5,7 +5,14 @@
  * 09-30 : configs 패키지 설정 통합
  * config 기준 : https://tailwindcss.com/docs/configuration
  */
+// TailwindCSS 공식 플러그인 import
+import aspectRatio from '@tailwindcss/aspect-ratio';
+import containerQueries from '@tailwindcss/container-queries';
+import forms from '@tailwindcss/forms';
+import lineClamp from '@tailwindcss/line-clamp';
+import typography from '@tailwindcss/typography';
 
+/** @type {import('tailwindcss').Config} */
 const config = {
   // 다크모드 클래스 기반
   darkMode: ['class'],
@@ -295,13 +302,7 @@ const config = {
   },
 
   // 플러그인
-  plugins: [
-    typography,
-    forms,
-    lineClamp,
-    aspectRatio,
-    containerQueries,
-  ],
+  plugins: [typography, forms, lineClamp, aspectRatio, containerQueries],
 };
 
 export default config;

@@ -16,14 +16,15 @@
     "install:browsers": "playwright install --with-deps",
     "clean": "rimraf playwright-report test-results"
   },
+  "__comment_dependencies": "테스트 코드에서 import 하는 내부 패키지",
   "dependencies": {
     "@connectwon/api-contract": "workspace:*",
     "@connectwon/logger": "workspace:*"
   },
+  "__comment_devDependencies": "E2E 실행을 위한 테스트/도구",
   "devDependencies": {
     "@playwright/test": "^1.51.1",
-    "dotenv": "^17.2.2",
-    "@types/dotenv": "^8.2.3"
+    "dotenv": "^17.2.2"
   },
   "engines": {
     "node": ">=20.11"

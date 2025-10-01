@@ -19,6 +19,7 @@
     },
     "./package.json": "./package.json"
   },
+  "__comment_scripts": "빌드 및 타입 체크 관련 스크립트",
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "dev": "tsc --watch -p tsconfig.json",
@@ -26,11 +27,13 @@
     "prepublishOnly": "pnpm run clean && pnpm run build",
     "type-check": "tsc --noEmit -p tsconfig.json"
   },
+  "__comment_dependencies": "런타임 의존성",
   "dependencies": {
     "@ts-rest/core": "^3.52.1",
     "swagger-ui-dist": "^5.29.0",
     "zod": "^3.23.8"
   },
+  "__comment_devDependencies": "개발 의존성",
   "devDependencies": {
     "@types/node": "^24.3.1",
     "openapi-types": "^12.1.3"

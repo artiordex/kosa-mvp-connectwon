@@ -5,7 +5,7 @@
   "private": true,
   "type": "module",
   "sideEffects": false,
-    "files": [
+  "files": [
     "dist"
   ],
   "exports": {
@@ -19,17 +19,18 @@
     },
     "./package.json": "./package.json"
   },
+  "__comment_scripts": "빌드 및 관리 스크립트",
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "clean": "rimraf dist",
     "prepublishOnly": "pnpm run build"
   },
+  "__comment_dependencies": "런타임 의존성 (NestJS 유틸, 외부 API 연동)",
   "dependencies": {
     "@anthropic-ai/sdk": "^0.61.0",
     "@sentry/nestjs": "^10.14.0",
     "@slack/web-api": "^7.6.0",
     "bcrypt": "^6.0.0",
-    "express": "^4.21.2",
     "google-auth-library": "^10.3.0",
     "ioredis": "^5.7.0",
     "jsonwebtoken": "^9.0.2",
@@ -40,6 +41,7 @@
     "rxjs": "^7.8.2",
     "zod": "^3.23.8"
   },
+  "__comment_peerDependencies": "NestJS는 peer로만 두기 (앱 단에서 설치)",
   "peerDependencies": {
     "@nestjs/common": "^11.1.6",
     "@nestjs/core": "^11.1.6",
@@ -56,6 +58,7 @@
       "optional": true
     }
   },
+  "__comment_devDependencies": "개발용 타입 패키지",
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
     "@types/express": "^5.0.3",

@@ -1,0 +1,39 @@
+[
+  {
+    "href": "/",
+    "icon": "ri-dashboard-line",
+    "label": "대시보드",
+    "exact": true,
+    "title": "대시보드"
+  },
+  {
+    "href": "/users",
+    "icon": "ri-user-line",
+    "label": "회원 관리",
+    "title": "회원 관리"
+  },
+  {
+    "href": "/programs",
+    "icon": "ri-book-line",
+    "label": "프로그램 관리",
+    "title": "프로그램 관리"
+  },
+  {
+    "href": "/facilities",
+    "icon": "ri-building-line",
+    "label": "시설 관리",
+    "title": "시설 관리"
+  },
+  {
+    "href": "/equipments",
+    "icon": "ri-tools-line",
+    "label": "장비 관리",
+    "title": "장비 관리"
+  },
+  {
+    "href": "/reservations",
+    "icon": "ri-calendar-check-line",
+    "label": "예약 관리",
+    "title": "예약 관리"
+  }
+]

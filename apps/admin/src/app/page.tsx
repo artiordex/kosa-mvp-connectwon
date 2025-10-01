@@ -2,11 +2,11 @@
 
 import { useState } from 'react';
 
-import PredictionAnalysis from '../components/ai/PredictionAnalysis';
-import SentimentAnalysis from '../components/ai/SentimentAnalysis';
-import AppShell from '../components/AppShell';
-import PeriodFilter from '../components/PeriodFilter';
-import RealTimeStats from '../components/RealTimeStats';
+import PredictionAnalysis from 'components/ai/PredictionAnalysis';
+import SentimentAnalysis from 'components/ai/SentimentAnalysis';
+import AppShell from 'components/AppShell';
+import PeriodFilter from 'components/PeriodFilter';
+import RealTimeStats from 'components/RealTimeStats';
 
 export default function AdminPage() {
   const [selectedPeriod, setSelectedPeriod] = useState('week');
