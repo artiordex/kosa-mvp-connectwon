@@ -186,7 +186,7 @@ export default function AdminError({ error }: { error: Error & { digest?: string
             </button>
 
             <button
-              onClick={() => (window.location.href = '/admin')}
+              onClick={() => (window.location.href = '/')}
               className="px-6 py-2 border border-slate-600 text-slate-300 rounded-lg hover:bg-slate-800 transition-colors flex items-center justify-center"
             >
               <i className="ri-home-line mr-2"></i>
@@ -228,7 +228,7 @@ export default function AdminError({ error }: { error: Error & { digest?: string
         {/* 하단 지원 정보 */}
         <div className="mt-8 text-xs text-slate-500">
           <p>문제가 지속되면 기술지원팀에 문의하세요</p>
-          <p className="mt-1">이메일: tech-support@connectone.co.kr | 전화: 02-1234-5678</p>
+          <p className="mt-1">이메일: tech-support@connectwon.co.kr | 전화: 00-0000-0000</p>
         </div>
       </div>
 

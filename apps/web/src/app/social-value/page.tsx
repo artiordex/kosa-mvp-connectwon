@@ -1,4 +1,3 @@
-import AppShell from 'components/AppShell';
 import CTASection from './CTASection';
 import EquipmentSpaceSection from './EquipmentSpaceSection';
 import ImpactAreas from './ImpactAreas';
@@ -9,7 +8,7 @@ import ValueIntroduction from './ValueIntroduction';
 
 export default function SocialValuePage() {
   return (
-    <AppShell showHeader={true} showFooter={true} className="bg-white">
+    <div className="bg-white">
       {/* 히어로 섹션 */}
       <SocialValueHero />
       {/* 사회적가치 소개 */}
@@ -24,6 +23,6 @@ export default function SocialValuePage() {
       <PartnershipsSection />
       {/* CTA 섹션 */}
       <CTASection />
-    </AppShell>
+    </div>
   );
 }

@@ -1,10 +1,10 @@
 
 'use client';
 
-import Header from '../../components/Header';
-import Footer from '../../components/Footer';
-import AIChat from '../../components/AIChat';
-import AIRecommendations from '../../components/AIRecommendations';
+import Header from 'components/Header';
+import Footer from 'components/Footer';
+import AIChat from 'components/ai/AIChat';
+import AIRecommendations from 'components/ai/AIRecommendations';
 import Link from 'next/link';
 import { useState } from 'react';
 
@@ -115,7 +115,7 @@ export default function RoomsPage() {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      
+
       <main className="flex-grow pt-20">
         {/* 검색 및 필터 섹션 */}
         <section className="bg-blue-50 py-8">
@@ -249,13 +249,13 @@ export default function RoomsPage() {
         {/* AI 추천 섹션 */}
         <section className="py-8 bg-gray-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <AIRecommendations 
-              type="room" 
+            <AIRecommendations
+              type="room"
               userId="user1"
-              userPreferences={{ 
+              userPreferences={{
                 capacity: selectedCapacity,
                 facilities: selectedFacilities,
-                location: selectedLocation 
+                location: selectedLocation
               }}
             />
           </div>
@@ -274,7 +274,7 @@ export default function RoomsPage() {
               {filteredRooms.map((room) => (
                 <div key={room.id} className="bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-lg transition-shadow">
                   <div className="relative">
-                    <img 
+                    <img
                       src={room.image}
                       alt={room.name}
                       className="w-full h-48 object-cover object-top rounded-t-xl"
@@ -290,12 +290,12 @@ export default function RoomsPage() {
                       </span>
                     </div>
                   </div>
-                  
+
                   <div className="p-6">
                     <h3 className="text-xl font-semibold text-gray-900 mb-2">
                       {room.name}
                     </h3>
-                    
+
                     <div className="space-y-2 mb-4">
                       <div className="flex items-center text-gray-600">
                         <i className="ri-group-line mr-2 w-4 h-4 flex items-center justify-center"></i>
@@ -357,7 +357,7 @@ export default function RoomsPage() {
       </main>
 
       <Footer />
-      
+
       <AIChat onBookingRequest={handleAIBookingRequest} />
     </div>
   );

@@ -1,14 +1,11 @@
 'use client';
 
 import Login from './Login';
-import AppShell from 'components/AppShell';
 
 export default function LoginPage() {
   return (
-    <AppShell>
-      <div className="min-h-[90vh] flex items-center justify-center py-12 sm:py-20 lg:py-24">
-        <Login />
-      </div>
-    </AppShell>
+    <div className="min-h-[90vh] flex items-center justify-center pt-12 sm:pt-20 lg:pt-24 pb-8 sm:pb-12 lg:pb-16">
+      <Login />
+    </div>
   );
 }

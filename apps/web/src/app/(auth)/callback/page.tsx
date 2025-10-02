@@ -2,8 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Footer from 'components/Footer';
-import Header from 'components/Header';
 
 export default function AuthCallbackPage() {
   const [loading, setLoading] = useState(true);
@@ -19,7 +17,7 @@ export default function AuthCallbackPage() {
         // 사용자 정보를 로컬 스토리지에 저장 (실제로는 Supabase Auth 사용)
         const userData = {
           id: '1',
-          email: 'user@gmail.com',
+          email: 'artiordex@gmail.com',
           name: '홍길동',
           avatar: '/images/avatar.jpg',
         };
@@ -41,7 +39,6 @@ export default function AuthCallbackPage() {
   if (error) {
     return (
       <div className="min-h-screen flex flex-col">
-        <Header />
         <main className="flex-grow bg-gray-50 flex items-center justify-center">
           <div className="max-w-md mx-auto px-4 text-center">
             <div className="bg-white rounded-xl shadow-lg p-8">
@@ -59,7 +56,6 @@ export default function AuthCallbackPage() {
             </div>
           </div>
         </main>
-        <Footer />
       </div>
     );
   }
@@ -68,7 +64,6 @@ export default function AuthCallbackPage() {
   if (loading) {
     return (
       <div className="min-h-screen flex flex-col">
-        <Header />
         <main className="flex-grow bg-gray-50 flex items-center justify-center">
           <div className="max-w-md mx-auto px-4 text-center">
             <div className="bg-white rounded-xl shadow-lg p-8">
@@ -80,7 +75,6 @@ export default function AuthCallbackPage() {
             </div>
           </div>
         </main>
-        <Footer />
       </div>
     );
   }

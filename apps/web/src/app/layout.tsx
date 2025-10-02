@@ -1,8 +1,9 @@
 import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
+import AppShell from 'components/AppShell';
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: '커넥트원 - 혁신적인 교육과 체험 공간',
@@ -13,18 +14,15 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-}
+};
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ko">
       <body className={inter.className}>
-        {children}
+        {/* AppShell로 전체 레이아웃 감싸기 */}
+        <AppShell>{children}</AppShell>
       </body>
     </html>
-  )
+  );
 }

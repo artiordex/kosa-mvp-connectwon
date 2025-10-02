@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
+import AppShell from 'components/AppShell';
 import './globals.css';
 
 const inter = Inter({
@@ -22,8 +23,9 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ko">
-      <body className={`${inter.className} bg-gray-100`}></body>
-      <body className={inter.className}>{children}</body>
+      <body className={`${inter.className} bg-gray-100`}>
+        <AppShell>{children}</AppShell>
+      </body>
     </html>
   );
 }
