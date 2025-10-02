@@ -1,17 +1,16 @@
-import Footer from 'components/Footer';
-import Header from 'components/Header';
+'use client';
+
 import Onboarding from './Onboarding';
+import AppShell from 'components/AppShell';
 
 export default function OnboardingPage() {
   return (
-    <div className="min-h-screen flex flex-col">
-      <Header />
-      <main className="flex-grow pt-20 pb-12 px-4">
-        <div className="max-w-lg mx-auto">
+    <AppShell>
+      <div className="min-h-[90vh] flex items-center justify-center py-12 sm:py-20 lg:py-24 px-4">
+        <div className="max-w-lg w-full">
           <Onboarding />
         </div>
-      </main>
-      <Footer />
-    </div>
+      </div>
+    </AppShell>
   );
 }

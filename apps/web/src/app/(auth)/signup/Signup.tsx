@@ -3,6 +3,9 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import SSOSignup from '../login/SSO';
+import Input from 'components/Input';
+import TermsModal from 'components/TermsModal';
 
 export default function Signup() {
   const [formData, setFormData] = useState({
@@ -11,9 +14,13 @@ export default function Signup() {
     password: '',
     confirmPassword: '',
     phone: '',
-    birthDate: '',
+    birthDate: null as Date | null,
     gender: '',
   });
+
+  const [emailVerified, setEmailVerified] = useState(false);
+  const [verificationCode, setVerificationCode] = useState('');
+  const [sentCode, setSentCode] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [agreedTerms, setAgreedTerms] = useState(false);
@@ -21,262 +28,239 @@ export default function Signup() {
   const [agreedMarketing, setAgreedMarketing] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [openModal, setOpenModal] = useState<null | 'terms' | 'privacy'>(null);
+
   const router = useRouter();
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-
-    if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: '' }));
-    }
+  const handleSendCode = () => {
+    const code = Math.floor(100000 + Math.random() * 900000).toString();
+    setSentCode(code);
+    alert(`인증번호 발송됨 (테스트: ${code})`);
   };
 
-  const validateForm = () => {
-    const newErrors: Record<string, string> = {};
-    if (!formData.name.trim()) newErrors['name'] = '이름을 입력해주세요';
-    if (!formData.email) newErrors['email'] = '이메일을 입력해주세요';
-    if (!formData.password) newErrors['password'] = '비밀번호를 입력해주세요';
-    if (formData.password !== formData.confirmPassword) newErrors['confirmPassword'] = '비밀번호가 일치하지 않습니다';
-    if (!formData.phone) newErrors['phone'] = '휴대폰 번호를 입력해주세요';
-    if (!agreedTerms) newErrors['terms'] = '이용약관에 동의해주세요';
-    if (!agreedPrivacy) newErrors['privacy'] = '개인정보 처리방침에 동의해주세요';
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+  const handleVerifyCode = () => {
+    if (verificationCode === sentCode) {
+      setEmailVerified(true);
+      alert('이메일 인증 완료!');
+    } else {
+      alert('인증번호가 일치하지 않습니다.');
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!validateForm()) return;
-
     setLoading(true);
     try {
-      console.log('회원가입 시도:', {
-        ...formData,
-        agreedTerms,
-        agreedPrivacy,
-        agreedMarketing,
-      });
+      console.log('회원가입:', formData, { agreedTerms, agreedPrivacy, agreedMarketing });
       await new Promise(resolve => setTimeout(resolve, 2000));
-      router.push('/login?signup=success');
-    } catch (err) {
-      setErrors({ submit: '회원가입 실패. 다시 시도해주세요.' });
+      router.push('/onboarding');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleSocialSignup = (provider: string) => {
-    console.log(`${provider} 회원가입`);
-    if (provider === 'Google') router.push('/auth/callback');
-  };
-
   return (
-    <>
-      <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">회원가입</h1>
-        <p className="text-gray-600">Connectwon에서 새로운 연결을 시작하세요</p>
-      </div>
-
-      {/* 소셜 회원가입 */}
-      <div className="space-y-3 mb-6">
-        <button
-          onClick={() => handleSocialSignup('Naver')}
-          className="w-full bg-green-500 text-white py-3 px-4 rounded-lg font-medium hover:bg-green-600"
-        >
-          네이버로 가입하기
-        </button>
-        <button
-          onClick={() => handleSocialSignup('Kakao')}
-          className="w-full bg-yellow-400 text-gray-900 py-3 px-4 rounded-lg font-medium hover:bg-yellow-500"
-        >
-          카카오로 가입하기
-        </button>
-        <button
-          onClick={() => handleSocialSignup('Google')}
-          className="w-full bg-white border border-gray-300 text-gray-700 py-3 px-4 rounded-lg font-medium hover:bg-gray-50"
-        >
-          구글로 가입하기
-        </button>
-      </div>
-
-      {/* 구분선 */}
-      <div className="relative mb-6">
-        <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-gray-300"></div>
+    <div className="max-w-md mx-auto px-4">
+      <div className="bg-white rounded-xl shadow-md p-8">
+        {/* 헤더 */}
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">회원가입</h1>
+          <p className="text-gray-600">Connectwon에서 새로운 연결을 시작하세요</p>
         </div>
-        <div className="relative flex justify-center text-sm">
-          <span className="px-2 bg-white text-gray-500">또는</span>
-        </div>
-      </div>
 
-      {/* 이메일 회원가입 */}
-      <form onSubmit={handleSubmit} className="space-y-4">
-        {errors['submit'] && <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">{errors['submit']}</div>}
-
-        {/* 이름 */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">이름 *</label>
-          <input
-            type="text"
+        {/* 폼 */}
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* 이름 */}
+          <Input
+            id="name"
             name="name"
+            label="이름 *"
             value={formData.name}
-            onChange={handleInputChange}
-            className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
+            onChangeAction={v => setFormData(prev => ({ ...prev, name: v as string }))}
+            error={errors['name'] ?? ''}
           />
-          {errors['name'] && <p className="text-sm text-red-600">{errors['name']}</p>}
-        </div>
 
-        {/* 이메일 */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">이메일 *</label>
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleInputChange}
-            className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
+          {/* 이메일 + 인증 */}
+          <div>
+            <div className="flex space-x-2">
+              <div className="flex-1">
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  label="이메일 *"
+                  value={formData.email}
+                  onChangeAction={v => setFormData(prev => ({ ...prev, email: v as string }))}
+                  error={errors['email'] ?? ''}
+                  disabled={emailVerified}
+                />
+              </div>
+              {!emailVerified && (
+                <button type="button" onClick={handleSendCode} className="px-3 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700">
+                  인증번호 보내기
+                </button>
+              )}
+            </div>
+
+            {!emailVerified && sentCode && (
+              <div className="mt-3 flex space-x-2">
+                <Input
+                  id="verificationCode"
+                  name="verificationCode"
+                  label="인증번호 입력"
+                  value={verificationCode}
+                  onChangeAction={v => setVerificationCode(v as string)}
+                />
+                <button type="button" onClick={handleVerifyCode} className="px-3 py-2 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700">
+                  인증하기
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* 비밀번호 */}
+          <Input
+            id="password"
+            name="password"
+            type={showPassword ? 'text' : 'password'}
+            label="비밀번호 *"
+            value={formData.password}
+            onChangeAction={v => setFormData(prev => ({ ...prev, password: v as string }))}
+            error={errors['password'] ?? ''}
+            rightElement={
+              <button type="button" onClick={() => setShowPassword(!showPassword)} className="text-gray-500">
+                <i className={showPassword ? 'ri-eye-off-line' : 'ri-eye-line'} />
+              </button>
+            }
           />
-          {errors['email'] && <p className="text-sm text-red-600">{errors['email']}</p>}
-        </div>
 
-        {/* 비밀번호 */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">비밀번호 *</label>
-          <div className="relative">
-            <input
-              type={showPassword ? 'text' : 'password'}
-              name="password"
-              value={formData.password}
-              onChange={handleInputChange}
-              className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 pr-12 text-sm"
-            />
-            <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">
-              <i className={showPassword ? 'ri-eye-off-line' : 'ri-eye-line'}></i>
-            </button>
-          </div>
-          {errors['password'] && <p className="text-sm text-red-600">{errors['password']}</p>}
-        </div>
+          {/* 비밀번호 확인 */}
+          <Input
+            id="confirmPassword"
+            name="confirmPassword"
+            type={showConfirmPassword ? 'text' : 'password'}
+            label="비밀번호 확인 *"
+            value={formData.confirmPassword}
+            onChangeAction={v => setFormData(prev => ({ ...prev, confirmPassword: v as string }))}
+            error={errors['confirmPassword'] ?? ''}
+            rightElement={
+              <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="text-gray-500">
+                <i className={showConfirmPassword ? 'ri-eye-off-line' : 'ri-eye-line'} />
+              </button>
+            }
+          />
 
-        {/* 비밀번호 확인 */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">비밀번호 확인 *</label>
-          <div className="relative">
-            <input
-              type={showConfirmPassword ? 'text' : 'password'}
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={handleInputChange}
-              className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 pr-12 text-sm"
-            />
-            <button
-              type="button"
-              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
-            >
-              <i className={showConfirmPassword ? 'ri-eye-off-line' : 'ri-eye-line'}></i>
-            </button>
-          </div>
-          {errors['confirmPassword'] && <p className="text-sm text-red-600">{errors['confirmPassword']}</p>}
-        </div>
-
-        {/* 휴대폰 */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">휴대폰 번호 *</label>
-          <input
-            type="tel"
+          {/* 휴대폰 */}
+          <Input
+            id="phone"
             name="phone"
+            type="tel"
+            label="휴대폰 번호 *"
             value={formData.phone}
-            onChange={handleInputChange}
-            className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
+            onChangeAction={v => setFormData(prev => ({ ...prev, phone: v as string }))}
+            error={errors['phone'] ?? ''}
           />
-          {errors['phone'] && <p className="text-sm text-red-600">{errors['phone']}</p>}
-        </div>
 
-        {/* 생년월일 + 성별 */}
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">생년월일</label>
-            <input
-              type="date"
+          {/* 생년월일 + 성별 */}
+          <div className="grid grid-cols-2 gap-4">
+            <Input
+              id="birthDate"
               name="birthDate"
+              type="date"
+              label="생년월일"
               value={formData.birthDate}
-              onChange={handleInputChange}
-              className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
+              onChangeAction={v => setFormData(prev => ({ ...prev, birthDate: v as Date | null }))}
+              error={errors['birthDate'] ?? ''}
             />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">성별</label>
-            <select
+
+            <Input
+              id="gender"
               name="gender"
+              type="select"
+              label="성별"
               value={formData.gender}
-              onChange={handleInputChange}
-              className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
-            >
-              <option value="">선택안함</option>
-              <option value="male">남성</option>
-              <option value="female">여성</option>
-            </select>
+              onChangeAction={v => setFormData(prev => ({ ...prev, gender: v as string }))}
+              error={errors['gender'] ?? ''}
+              options={[
+                { value: 'none', label: '선택안함' },
+                { value: 'male', label: '남성' },
+                { value: 'female', label: '여성' },
+                { value: 'other', label: '기타' },
+              ]}
+            />
+          </div>
+
+          {/* 약관 동의 */}
+          <div className="space-y-2 pt-4 border-t border-gray-200">
+            <label className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                checked={agreedTerms}
+                onChange={e => setAgreedTerms(e.target.checked)}
+                className="w-4 h-4 text-blue-600 border-gray-300 rounded"
+              />
+              <span className="text-sm">이용약관 동의 *</span>
+              <button type="button" onClick={() => setOpenModal('terms')} className="text-blue-600 text-sm ml-2 hover:underline">
+                보기
+              </button>
+            </label>
+
+            <label className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                checked={agreedPrivacy}
+                onChange={e => setAgreedPrivacy(e.target.checked)}
+                className="w-4 h-4 text-blue-600 border-gray-300 rounded"
+              />
+              <span className="text-sm">개인정보 처리방침 동의 *</span>
+              <button type="button" onClick={() => setOpenModal('privacy')} className="text-blue-600 text-sm ml-2 hover:underline">
+                보기
+              </button>
+            </label>
+
+            <label className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                checked={agreedMarketing}
+                onChange={e => setAgreedMarketing(e.target.checked)}
+                className="w-4 h-4 text-blue-600 border-gray-300 rounded"
+              />
+              <span className="text-sm">마케팅 정보 수신 동의 (선택)</span>
+            </label>
+          </div>
+
+          {/* 제출 버튼 */}
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 mt-6"
+          >
+            {loading ? '가입 중...' : '회원가입'}
+          </button>
+        </form>
+
+        {/* SNS 가입 */}
+        <div className="relative my-6">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-gray-300"></div>
+          </div>
+          <div className="relative flex justify-center text-sm">
+            <span className="px-2 bg-white text-gray-500">SNS로 가입하기</span>
           </div>
         </div>
 
-        {/* 약관 */}
-        <div className="space-y-2 pt-4 border-t border-gray-200">
-          <label className="flex items-center space-x-2">
-            <input
-              type="checkbox"
-              checked={agreedTerms}
-              onChange={e => setAgreedTerms(e.target.checked)}
-              className="w-4 h-4 text-blue-600 border-gray-300 rounded"
-            />
-            <span className="text-sm">이용약관 동의 *</span>
-            <Link href="/terms" className="text-blue-600 text-sm ml-2">
-              보기
-            </Link>
-          </label>
-          {errors['terms'] && <p className="text-sm text-red-600 ml-6">{errors['terms']}</p>}
+        <SSOSignup />
 
-          <label className="flex items-center space-x-2">
-            <input
-              type="checkbox"
-              checked={agreedPrivacy}
-              onChange={e => setAgreedPrivacy(e.target.checked)}
-              className="w-4 h-4 text-blue-600 border-gray-300 rounded"
-            />
-            <span className="text-sm">개인정보 처리방침 동의 *</span>
-            <Link href="/privacy" className="text-blue-600 text-sm ml-2">
-              보기
-            </Link>
-          </label>
-          {errors['privacy'] && <p className="text-sm text-red-600 ml-6">{errors['privacy']}</p>}
-
-          <label className="flex items-center space-x-2">
-            <input
-              type="checkbox"
-              checked={agreedMarketing}
-              onChange={e => setAgreedMarketing(e.target.checked)}
-              className="w-4 h-4 text-blue-600 border-gray-300 rounded"
-            />
-            <span className="text-sm">마케팅 정보 수신 동의 (선택)</span>
-          </label>
+        <div className="mt-6 text-center">
+          <span className="text-gray-600">이미 계정이 있으신가요? </span>
+          <Link href="/login" className="text-blue-600 font-medium hover:text-blue-800">
+            로그인
+          </Link>
         </div>
-
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 mt-6"
-        >
-          {loading ? '가입 중...' : '회원가입'}
-        </button>
-      </form>
-
-      <div className="mt-6 text-center">
-        <span className="text-gray-600">이미 계정이 있으신가요? </span>
-        <Link href="/login" className="text-blue-600 font-medium hover:text-blue-800">
-          로그인
-        </Link>
       </div>
-    </>
+
+      {/* 약관 모달 */}
+      <TermsModal type={openModal ?? 'terms'} isOpen={openModal !== null} onClose={() => setOpenModal(null)} />
+    </div>
   );
 }

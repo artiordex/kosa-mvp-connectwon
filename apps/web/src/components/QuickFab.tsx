@@ -13,6 +13,7 @@ export default function QuickFab() {
     window.location.href = 'mailto:info@connectone.com?subject=문의사항';
   };
 
+  // 메뉴 아이템 정의
   const menuItems = [
     { icon: 'ri-map-pin-2-line', label: '위치' },
     { icon: 'ri-briefcase-line', label: '비즈니스' },
@@ -45,7 +46,7 @@ export default function QuickFab() {
               <div className="relative group">
                 <button
                   onClick={item.action}
-                  className="w-12 h-12 rounded-full border-2 border-orange-400 flex items-center justify-center text-orange-400 hover:bg-orange-500/20 transition-all duration-200 cursor-pointer backdrop-blur-sm"
+                  className="w-12 h-12 rounded-full border-2 border-blue-500 bg-black/20 flex items-center justify-center  text-blue-500 hover:bg-blue-500/10 transition-all duration-200 cursor-pointer backdrop-blur-sm"
                 >
                   <i className={`${item.icon} text-base`}></i>
                 </button>
@@ -60,13 +61,13 @@ export default function QuickFab() {
           );
         })}
 
-        {/* QUICK 메인 버튼 (파란색 로고 스타일) */}
+        {/* QUICK 메인 버튼 */}
         <button
           onClick={() => setIsOpen(!isOpen)}
           className="w-14 h-14 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 transition-all duration-200 flex items-center justify-center relative overflow-hidden cursor-pointer"
         >
           <div className="flex flex-col items-center justify-center">
-            <span className="text-[10px] font-semibold leading-tight">QUICK</span>
+            {/* <span className="text-[10px] font-semibold leading-tight">QUICK</span> */}
           </div>
 
           {/* 회전 애니메이션 아이콘 */}

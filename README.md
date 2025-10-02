@@ -1,26 +1,25 @@
 # 🚀 ConnectWon
 
+
+## 📋 프로젝트 개요
 > **도전하는 모든 이에게 공정한 기회와 지속되는 연결의 장을 제공한다.**
 
 ![Cover](docs/assets/ConnectWon.png)
 
-ConnectWon은 취업 및 창업 준비자를 위한 예약 기반 생활 서비스 플랫폼입니다. 인큐베이터형 공유 오피스 예약, AI 기반 프로그램 매칭, 멘토링 네트워크를 통해 청년들의 성장과 도전을 지원합니다.
-
 [![GitHub Actions](https://github.com/artiordex/kosa-mvp-connectwon/workflows/CI/badge.svg)](https://github.com/artiordex/kosa-mvp-connectwon/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-
-## 📋 프로젝트 개요
 
 > 본 프로젝트의 목표는 MVP를 신속하게 설계·구현하여 핵심 기능과 서비스 가치를 검증하고, 이를 기반으로 향후 확장 가능한 서비스 아키텍처와 비즈니스 모델을 구체화하는 것이다.
   이를 위해 기획, 설계, 개발, 테스트, 배포 전 과정을 단일 사이클 내에서 완성하며, 실사용 환경에서의 피드백을 반영할 수 있는 프로토타입을 제작한다.
 
-- **📌 프로젝트명**: ConnectWon (커넥트원)
-- **⏳ 기간**: 2025.09.01 ~ 2025.10.10 (6주)
-- **👥 팀**: 아티올덱스(Artiordex) - 민시우, 소나무
-- **🎓 멘토**: 이영희 교수님 (KOSA)
+- **📌 Project Name**: ConnectWon (커넥트원)
+- **📖 Description**: ConnectWon은 취업 및 창업 준비자를 위한 예약 기반 생활 서비스 플랫폼입니다. 인큐베이터형 공유 오피스 예약, AI 기반 프로그램 매칭, 멘토링 네트워크를 통해 청년들의 성장과 도전을 지원합니다.
+- **⏳ Duration**: 2025.09.05 - 2025.10.10 (6주)
+- **👥 Team**: 아티올덱스(Artiordex) - 민시우, 소나무
+- **🎓 Mentor**: 이영희 교수님 (KOSA)
 
 
-### 📂 프로젝트 산출물 링크 모음
+## 📂 프로젝트 산출물 링크 모음
 
 - [Notion](https://www.notion.so/your-link)
 - [Google Drive](https://drive.google.com/drive/folders/your-id)
@@ -30,7 +29,7 @@ ConnectWon은 취업 및 창업 준비자를 위한 예약 기반 생활 서비�
 - [Mermaid ERD](https://mermaid.live/edit#pako:your-encoded-data)
 - [Lucidchart](https://lucid.app/lucidchart/your-id/edit?viewport_loc=0%2C0%2C2000%2C2000)
 - [Dev Docs](https://github.com/artiordex/kosa-mvp-connectwon/tree/main/docs)
----
+
 
 ## 🎯 핵심 가치
 
@@ -52,136 +51,132 @@ ConnectWon은 취업 및 창업 준비자를 위한 예약 기반 생활 서비�
 - **지역 활성화**: 유휴 공간 활용 및 지역 커뮤니티 연계
 - **지속 가능성**: 멤버십 기반 운영으로 안정적 수익 구조 확보
 
----
 
-### 🧩 주요 기능 상세
+## 🧩 주요 기능 상세
 
-#### 🏢 공유 오피스 예약 시스템
-- **기능**:
-  - 실시간 공간 가용성 확인 (캘린더 기반 UI)
-  - 시간/공간 단위 예약 및 취소
-  - 예약 내역 관리 및 알림 연동
-- **기술 스택**:
-  - Frontend: React + Zustand
-  - Backend: NestJS + Prisma
-  - Infra: PostgreSQL, Redis, n8n
+### 🏢 공유 오피스 예약 시스템
+**기능**:
+- 실시간 공간 가용성 확인 (캘린더 기반 UI)
+- 시간/공간 단위 예약 및 취소
+- 예약 내역 관리 및 알림 연동 (Email, SMS, Push)
+- 사용자 멤버십/권한에 따른 예약 정책 적용
+- 관리자용 예약 현황 대시보드 및 통계
+- n8n 기반 예약 확정/취소 알림 자동화
 
-#### 🤖 AI 기반 서비스
-- **기능**:
-  - 사용자 행동 기반 프로그램 추천 (OpenAI Embedding + 벡터 검색)
-  - 콘텐츠 요약 및 자동 태깅 (GPT 기반 요약)
-  - 커뮤니티 모더레이션 (비속어 필터링, 토픽 분류)
-- **기술 스택**:
-  - OpenAI, Anthropic, Hugging Face API
-  - Zod 기반 데이터 검증
-  - BullMQ로 비동기 처리
+**기술 스택**:
+- **Frontend**: Next.js 15 (App Router), React, Zustand, React Query, Tailwind CSS
+- **Backend**: NestJS 11, Prisma ORM, ts-rest (타입 안전 API), BullMQ (비동기 작업 큐)
+- **Infra & DB**: PostgreSQL 15, Redis 7 (Cache/Queue), Docker Compose, Kubernetes
+- **Auth & Security**: Auth.js (Google/Naver/Kakao), JWT + Guard, Role-based Access Control
+- **Automation & Notification**: n8n Workflow Engine, nodemailer, Slack Webhook
+- **Monitoring**: Grafana, Prometheus, Sentry (에러/성능 추적)
 
-#### 💳 통합 결제 및 멤버십 관리
-- **기능**:
-  - Stripe 연동 결제 (카드, 포인트, 정기 구독)
-  - 포인트 적립/사용 내역 관리
-  - 멤버십 등급별 혜택 자동 적용
-- **기술 스택**:
-  - Stripe API
-  - Redis 기반 포인트 캐싱
-  - Prisma로 사용자-멤버십 관계 관리
+### 🤖 AI 기반 서비스
+**기능**:
+- 사용자 행동 기반 프로그램 추천 (OpenAI Embedding + 벡터 검색)
+- 콘텐츠 요약 및 자동 태깅 (GPT 기반 요약)
+- 커뮤니티 모더레이션 (비속어 필터링, 토픽 분류)
 
-#### 📱 관리자 대시보드
-- **기능**:
-  - 실시간 사용자 통계 (가입자 수, 예약률, 프로그램 참여율)
-  - 사용자 관리 (권한, 멤버십, 활동 로그)
-  - 운영 분석 리포트 (월간/분기별 KPI 시각화)
-- **기술 스택**:
-  - Next.js + Recharts
-  - React Query + Zustand
-  - Backend API: NestJS + Swagger
+**기술 스택**:
+- OpenAI, Anthropic, Hugging Face API
+- Zod 기반 데이터 검증
+- BullMQ로 비동기 처리
 
-#### 🔔 자동화 알림 시스템
-- **기능**:
-  - 예약/취소/리마인더 알림 (Slack, 이메일, 앱 푸시)
-  - 관리자 알림 (공간 이상 감지, 멤버십 만료 등)
-  - 워크플로우 기반 예약 승인/거절 처리
-- **기술 스택**:
-  - n8n Workflow Engine
-  - Nodemailer, Slack Webhook
-  - BullMQ + Redis Queue
----
+### 💳 통합 결제 및 멤버십 관리
+**기능**:
+- Stripe 연동 결제 (카드, 포인트, 정기 구독)
+- 포인트 적립/사용 내역 관리
+- 멤버십 등급별 혜택 자동 적용
+- 
+**기술 스택**:
+- Stripe API
+- Redis 기반 포인트 캐싱
+- Prisma로 사용자-멤버십 관계 관리
+
+### 📱 관리자 대시보드
+**기능**:
+- 실시간 사용자 통계 (가입자 수, 예약률, 프로그램 참여율)
+- 사용자 관리 (권한, 멤버십, 활동 로그)
+- 운영 분석 리포트 (월간/분기별 KPI 시각화)
+-
+**기술 스택**:
+- Next.js + Recharts
+- React Query + Zustand
+- Backend API: NestJS + Swagger
+
+### 🔔 자동화 알림 시스템
+**기능**:
+- 예약/취소/리마인더 알림 (Slack, 이메일, 앱 푸시)
+- 관리자 알림 (공간 이상 감지, 멤버십 만료 등)
+- 워크플로우 기반 예약 승인/거절 처리
+
+**기술 스택**:
+- n8n Workflow Engine
+- Nodemailer, Slack Webhook
+- BullMQ + Redis Queue
+
 
 ## 🛠️ 기술 스택
 
 ### 🧩 Core Technologies
 | 항목              | 설명                                                                 |
 |-------------------|----------------------------------------------------------------------|
-| **Framework**     | Next.js 14 (App Router, Server Actions), NestJS 11                   |
-| **Language**      | TypeScript, Node.js                                                  |
-| **Package Manager** | pnpm                                                               |
-| **Architecture**  | Monorepo (NX 기반), Domain-Driven Design                             |
-| **Build Tools**   | Vite, Webpack, tsx, ts-node                                          |
----
+| **Framework**     | **Next.js 15** (App Router, Server Actions), **NestJS 11**           |
+| **Language**      | TypeScript 5.6, Node.js ≥ 20                                         |
+| **Package Manager** | pnpm 10 (workspace + Nx 기반 모노레포)                              |
+| **Architecture**  | Monorepo (Nx), Domain-Driven Design (DDD), Hexagonal/Ports & Adapters|
+| **Build Tools**   | Nx, Vite, Webpack, tsx, ts-node                                      |
 
 ### 🎨 Frontend
-
 | 항목         | 설명                                                                 |
 |--------------|----------------------------------------------------------------------|
-| **UI**       | Tailwind CSS, shadcn/ui, class-variance-authority, lucide-react      |
-| **State**    | Zustand, React Query (@tanstack/react-query)                         |
-| **Form**     | react-hook-form                                                      |
-| **Animation**| framer-motion                                                        |
-| **Auth**     | Auth.js (Google, Naver, Kakao), next-auth                            |
-| **Chart**    | Recharts                                                             |
+| **UI/Design**| Tailwind CSS, shadcn/ui, class-variance-authority, lucide-react, custom design tokens |
+| **State Mgmt**| Zustand, TanStack React Query                                        |
+| **Forms**    | react-hook-form                                                      |
+| **Animations**| framer-motion                                                       |
+| **Auth**     | Auth.js (next-auth providers: Google, Naver, Kakao)                  |
+| **Charts**   | Recharts                                                             |
 | **Icons**    | heroicons, react-icons                                               |
-| **Dropzone** | react-dropzone                                                       |
+| **File Upload** | react-dropzone                                                    |
 | **Color Picker** | react-color                                                     |
----
 
 ### 🧠 Backend & Database
-
 | 항목               | 설명                                                                 |
 |--------------------|----------------------------------------------------------------------|
-| **Framework**       | NestJS 11                                                            |
-| **Database**        | PostgreSQL, Prisma ORM                                               |
-| **Cache**           | Redis (ioredis)                                                      |
-| **API**             | REST (zod + @ts-rest/core), Swagger UI                              |
-| **Validation**      | class-validator, zod, class-transformer                              |
-| **Background Jobs** | BullMQ, Bull Board                                                   |
-| **Mailing**         | nodemailer                                                           |
-| **Security**        | bcryptjs, helmet, jsonwebtoken                                       |
----
+| **Framework**       | NestJS 11 (모듈별 분리: auth, users, payments, reservations, venues, programs 등) |
+| **Database**        | PostgreSQL 14+, Prisma ORM                                          |
+| **Cache/Queue**     | Redis (ioredis), BullMQ + Bull Board                                |
+| **API 설계**        | ts-rest, zod-openapi, Swagger UI                                    |
+| **Validation**      | class-validator, zod, class-transformer                             |
+| **Mailing**         | nodemailer (이메일 알림)                                            |
+| **Security**        | bcryptjs, helmet, jsonwebtoken, cookie-session                      |
 
 ### 🤖 AI & External Services
+| 항목             | 설명                                                                 |
+|------------------|----------------------------------------------------------------------|
+| **AI APIs**      | OpenAI SDK, Anthropic SDK, Hugging Face Inference API                |
+| **Automation**   | n8n Workflow Engine (api 연결, webhooks, 예약/결제 알림)             |
+| **Notifications**| Slack Webhook, Email (nodemailer), Push (웹/앱 푸시 예정)            |
+| **Payment**      | Stripe (결제, 구독/포인트/정산 모듈 준비)                            |
 
-| 항목         | 설명                                                                 |
-|--------------|----------------------------------------------------------------------|
-| **AI APIs**  | OpenAI, Anthropic SDK, Hugging Face Inference                        |
-| **Payment**  | Stripe (추후 연동 예정)                                              |
-| **Notifications** | Slack Webhook, Email via nodemailer                          |
-| **Automation** | n8n Workflow Engine                                                |
----
-
-### 🚀 DevOps & Monitoring
-
+### 🚀 DevOps & Infra
 | 항목           | 설명                                                                 |
 |----------------|----------------------------------------------------------------------|
-| **Deployment** | Vercel (Frontend), Docker + K8s (Backend)                            |
-| **CI/CD**      | GitHub Actions, lint-staged, husky                                   |
-| **Monitoring** | Sentry, Vercel Analytics                                             |
-| **Logging**    | winston, logform, daily rotate file, pino                            |
-| **Infra Tools**| dotenv-cli, cross-env, rimraf                                        |
----
+| **Deployment** | Docker + Docker Compose, Kubernetes (ArgoCD, Kustomize), Vercel (FE) |
+| **CI/CD**      | GitHub Actions, Husky + lint-staged                                   |
+| **Monitoring** | Grafana, Prometheus, Alerts, Sentry, Vercel Analytics                |
+| **Logging**    | winston, logform, pino, daily rotate file                             |
 
 ### 🧪 Testing & Quality
-
-| 항목               | 설명                                                                 |
-|--------------------|----------------------------------------------------------------------|
-| **Unit Test**       | Vitest, @vitest/ui                                                  |
-| **E2E Test**        | Playwright, supertest                                               |
-| **Mocking**         | MSW (Mock Service Worker)                                           |
-| **Linting**         | ESLint, Prettier, typescript-eslint, eslint-plugin-unused-imports   |
-| **Commit 관리**     | Changesets, Commitizen, cz-customizable                             |
-| **Import 정리**     | prettier-plugin-sort-imports, simple-import-sort                    |
-| **Unused 체크**     | knip                                                                |
-| **Sync 관리**       | syncpack                                                            |
----
+| 항목           | 설명                                                                 |
+|----------------|----------------------------------------------------------------------|
+| **Unit Test**  | Vitest, @vitest/ui                                                   |
+| **E2E Test**   | Playwright                                                           |
+| **Mocking**    | MSW (Mock Service Worker)                                            |
+| **API Test**   | supertest                                                            |
+| **Lint & Style**| ESLint, Prettier, typescript-eslint, prettier-plugin-tailwindcss     |
+| **Commit 관리**| Changesets, Commitizen, cz-customizable, husky pre-commit hooks       |
+| **Static Check**| knip (unused code), syncpack (dependency sync)                      |
 
 ### 📦 주요 내부 패키지
 
@@ -191,7 +186,7 @@ ConnectWon은 취업 및 창업 준비자를 위한 예약 기반 생활 서비�
 | **@connectwon/database** | Prisma ORM, PostgreSQL, dotenv 연동                         |
 | **@connectwon/logger** | winston 기반 로깅 시스템                                        |
 | **@connectwon/api-contract** | zod 기반 API 스펙, ts-rest 연동                        |
-| **@connectwon/sdk**  | 클라이언트용 API 호출 SDK                                         |
+| **@connectwon/sdk**  | 백엔드(NestJS)에서 사용하는 타입 안전 API 호출 SDK(Python + Typescript) |
 | **@connectwon/ui**   | 공통 UI 컴포넌트, Tailwind 기반 디자인 시스템                     |
 | **@connectwon/server** | SSR 관련 서버 컴포넌트, React Query, Nodemailer 등             |
 | **@connectwon/web**  | 메인 프론트엔드 앱, next-auth, react-hook-form 등                |
@@ -200,91 +195,92 @@ ConnectWon은 취업 및 창업 준비자를 위한 예약 기반 생활 서비�
 | **@connectwon/worker** | Bull Board UI, 백그라운드 작업 처리                            |
 | **@connectwon/e2e**  | Playwright 기반 E2E 테스트                                        |
 | **@connectwon/n8n**  | n8n 자동화 워크플로우 관리                                        |
----
+
 
 ## 🏗️ 프로젝트 구조
 
 ```
 kosa-mvp-connectwon/
 ├── apps/
-│   ├── admin/
-│   ├── api/
-│   ├── e2e/
-│   ├── web/
-│   └── worker/
+│ ├── admin/
+│ ├── api/
+│ ├── e2e/
+│ ├── web/
+│ └── worker/
+│
 ├── packages/
-│   ├── api-contract/
-│   │   └── src/
-│   │       ├── client.ts
-│   │       ├── contracts/
-│   │       ├── openapi/
-│   │       └── schemas/
-│   ├── client/
-│   │   └── src/
-│   │       ├── hooks/
-│   │       └── providers/
-│   ├── configs/
-│   │   ├── eslint/
-│   │   ├── tailwind/
-│   │   ├── testing/
-│   │   └── typescript/
-│   ├── core/
-│   │   └── src/
-│   │       ├── adapters/
-│   │       │   ├── ai/
-│   │       │   └── notification/
-│   │       ├── application/
-│   │       │   ├── application.module.ts
-│   │       │   ├── guards/
-│   │       │   ├── policies/
-│   │       │   └── usecases/
-│   │       ├── domain/
-│   │       ├── infrastructure/
-│   │       ├── ports/
-│   │       └── queue/
-│   ├── database/
-│   │   └── prisma/
-│   ├── logger/
-│   ├── sdk/
-│   ├── server/
-│   │   └── src/
-│   │       ├── decorators/
-│   │       ├── guards/
-│   │       ├── interceptors/
-│   │       ├── middleware/
-│   │       ├── pipes/
-│   │       ├── plugins/
-│   │       └── rsc-cache.ts
-│   └── ui/
-│       ├── public/
-│       │   ├── favicon/
-│       │   ├── fonts/
-│       │   ├── icons/
-│       │   └── images/
-│       └── src/
-│           ├── animations/
-│           ├── charts/
-│           ├── components/
-│           ├── hooks/
-│           ├── layout/
-│           ├── public/
-│           ├── styles/
-│           ├── utils/
-│           └── templates/
+│ ├── api-contract/
+│ │ └── src/
+│ │ ├── client.ts
+│ │ ├── contracts/
+│ │ ├── openapi/
+│ │ └── schemas/
+│ ├── client/
+│ │ └── src/
+│ │ ├── hooks/
+│ │ └── providers/
+│ ├── configs/
+│ │ ├── eslint/
+│ │ ├── tailwind/
+│ │ ├── testing/
+│ │ └── typescript/
+│ ├── core/
+│ │ └── src/
+│ │ ├── adapters/
+│ │ │ ├── ai/
+│ │ │ └── notification/
+│ │ ├── application/
+│ │ │ ├── application.module.ts
+│ │ │ ├── guards/
+│ │ │ ├── policies/
+│ │ │ └── usecases/
+│ │ ├── domain/
+│ │ ├── infrastructure/
+│ │ ├── ports/
+│ │ └── queue/
+│ ├── database/
+│ │ └── prisma/
+│ ├── logger/
+│ ├── sdk/
+│ ├── server/
+│ │ └── src/
+│ │ ├── decorators/
+│ │ ├── guards/
+│ │ ├── interceptors/
+│ │ ├── middleware/
+│ │ ├── pipes/
+│ │ ├── plugins/
+│ │ └── rsc-cache.ts
+│ └── ui/
+│ ├── public/
+│ │ ├── favicon/
+│ │ ├── fonts/
+│ │ ├── icons/
+│ │ └── images/
+│ └── src/
+│ ├── animations/
+│ ├── charts/
+│ ├── components/
+│ ├── hooks/
+│ ├── layout/
+│ ├── public/
+│ ├── styles/
+│ ├── utils/
+│ └── templates/
 ├── infra/
-│   ├── database/
-│   ├── docker/
-│   ├── infra-types.ts
-│   ├── k8s/
-│   ├── monitoring/
-│   └── n8n/
+│ ├── database/
+│ ├── docker/
+│ ├── infra-types.ts
+│ ├── k8s/
+│ ├── monitoring/
+│ └── n8n/
 ├── docs/
-│   ├── guideline/
-│   └── study/
+│ ├── guideline/
+│ └── study/
 ├── tools/
-│   ├── services/
-│   ├── testkit/
-│   └── utils/
+│ ├── services/
+│ ├── testkit/
+│ └── utils/
 ├── test/
 ├── tmp/
 ├── .husky/
@@ -310,48 +306,44 @@ kosa-mvp-connectwon/
 ├── tsconfig.json
 └── vitest.config.ts
 ```
----
-### 📦 필수 설치 항목
+
+
+## 📦 필수 설치 항목
 
 ### 🧰 시스템 도구
 
-| 항목             | 최소 버전 | 설치 방법 |
-|------------------|------------|------------|
-| **Node.js**      | 18+        | [nodejs.org](https://nodejs.org) 또는 `nvm` 사용 |
-| **pnpm**         | 8+         | `npm install -g pnpm` |
-| **Git**          | 최신       | [git-scm.com](https://git-scm.com) |
-| **Docker**       | 최신       | [Docker Desktop](https://www.docker.com/products/docker-desktop) |
-| **Docker Compose** | 포함됨    | Docker 설치 시 자동 포함 |
-| **VS Code**      | 최신       | [code.visualstudio.com](https://code.visualstudio.com) |
-| **PowerShell / Terminal** | 최신 | Windows Terminal, zsh, bash 등 |
-
----
+| 항목                  | 최소 버전  | 설치 방법 |
+|-----------------------|------------|-----------|
+| **Node.js**           | 20+        | [nodejs.org](https://nodejs.org) 또는 `nvm` 사용 |
+| **pnpm**              | 10+        | `npm install -g pnpm` |
+| **Git**               | 최신       | [git-scm.com](https://git-scm.com) |
+| **Docker**            | 최신       | [Docker Desktop](https://www.docker.com/products/docker-desktop) |
+| **docker compose**    | v2 (내장)  | Docker Desktop에 포함됨 |
+| **VS Code**           | 최신       | [code.visualstudio.com](https://code.visualstudio.com) |
+| **터미널 환경**        | 최신       | Windows Terminal, zsh, bash 등 |
 
 ### 🗄️ 백엔드 서비스 (Docker 기반)
 
-| 서비스       | 버전 | 실행 방법 |
-|--------------|-------|-----------|
-| **PostgreSQL** | 14+  | `docker-compose up -d postgres` |
-| **Redis**      | 6+   | `docker-compose up -d redis` |
-
-> `infra/docker/docker-compose.yml` 파일을 기반으로 실행됩니다.
-
----
-
+| 서비스          | 권장 버전 | 실행 방법 |
+|-----------------|-----------|-----------|
+| **PostgreSQL**  | 15+       | `docker compose -f infra/docker/docker-compose.yml up -d postgres` |
+| **Redis**       | 7+        | `docker compose -f infra/docker/docker-compose.yml up -d redis` |
+> infra/docker/docker-compose.yml 파일을 기반으로 실행됩니다.
 
 ### ⚙️ 개발 환경 설정 권장 사항
 
-- **VS Code 확장 추천**:
-  - ESLint
-  - Prettier
-  - Tailwind CSS IntelliSense
-  - Prisma
-  - GitLens
-  - DotENV
+**VS Code 확장 추천**:
+- ESLint
+- Prettier
+- Tailwind CSS IntelliSense
+- Prisma
+- GitLens
+- DotENV
 
-- **터미널 환경**:
-  - Windows: PowerShell 또는 Windows Terminal
-  - macOS/Linux: zsh 또는 bash
+**터미널 환경**:
+- Windows: PowerShell 또는 Windows Terminal
+- macOS/Linux: zsh 또는 bash
+
 
 ## 🚀 설치 및 실행 가이드
 
@@ -361,31 +353,36 @@ kosa-mvp-connectwon/
 git clone https://github.com/your-username/kosa-mvp-connectwon.git
 cd kosa-mvp-connectwon
 ```
-
 ---
-
 ### 2️⃣ 필수 도구 설치
 
 | 도구             | 최소 버전 | 설치 방법 |
-|------------------|------------|------------|
-| Node.js          | 18+        | [nodejs.org](https://nodejs.org) 또는 `nvm` 사용 |
-| pnpm             | 8+         | `npm install -g pnpm` |
-| Git              | 최신       | [git-scm.com](https://git-scm.com) |
-| Docker & Compose | 최신       | [Docker Desktop](https://www.docker.com/products/docker-desktop) |
-| VS Code          | 최신       | [code.visualstudio.com](https://code.visualstudio.com) |
+|------------------|-----------|-----------|
+| Node.js          | 20+       | [nodejs.org](https://nodejs.org) 또는 `nvm` 사용 |
+| pnpm             | 10+       | `npm install -g pnpm` |
+| Git              | 최신      | [git-scm.com](https://git-scm.com) |
+| Docker & Compose | 최신(v2)  | [Docker Desktop](https://www.docker.com/products/docker-desktop) |
+| VS Code          | 최신      | [code.visualstudio.com](https://code.visualstudio.com) |
 
-> 💡 VS Code 확장 추천: ESLint, Prettier, Tailwind CSS IntelliSense, Prisma, GitLens, DotENV, NX Console
-
+> 💡 **VS Code 확장 추천**
+> - **Nx Console** (Nx 워크스페이스 관리)
+> - **ESLint** + **Prettier** (코드 스타일 & 린팅)
+> - **Tailwind CSS IntelliSense** (유틸리티 클래스 자동완성)
+> - **Prisma** (DB 스키마 관리)
+> - **DotENV** (환경변수 지원)
+> - **GitLens** (깊이 있는 Git 히스토리 탐색)
+> - **Error Lens** (코드 에러/워닝 인라인 표시)
+> - **REST Client** 또는 **Thunder Client** (API 테스트)
 ---
-
 ### 3️⃣ 의존성 설치
 
 ```bash
+# 의존성 설치
 pnpm install
+# 의존성 그래프 확인
+pnpm nx graph
 ```
-
 > 모든 앱과 패키지의 의존성이 설치됩니다. 모노레포 기반이므로 루트에서 한 번만 실행하면 됩니다.
-
 ---
 
 ### 4️⃣ 환경 변수 설정
@@ -408,9 +405,8 @@ cp .env.example .env
 ### 5️⃣ 도커 기반 서비스 실행
 
 ```bash
-docker-compose up -d postgres redis
+docker compose -p connectwon --env-file .env -f infra/docker/docker-compose.yml up -d
 ```
-
 - 도커 설정은 `infra/docker/docker-compose.yml`에 정의되어 있습니다.
 - 실행 후 `localhost:5432`, `localhost:6379` 포트로 접근 가능합니다.
 
@@ -439,7 +435,66 @@ pnpm dev:worker  # 백그라운드 작업 처리 (BullMQ)
 
 ---
 
-### 7️⃣ 테스트 실행
+
+### 7️⃣ 스크립트 실행 (bash 기준)
+
+```bash
+# OpenAPI 스키마 생성
+pnpm --filter @connectwon/api-contract generate
+
+# 클라이언트 빌드
+pnpm --filter @connectwon/api-contract build
+
+# SDK 훅/프로바이더 빌드
+pnpm --filter @connectwon/client build
+
+# 개발 모드 (watch)
+pnpm --filter @connectwon/client dev
+
+# eslint / tailwind / tsconfig 등 공유 설정 빌드
+pnpm --filter @connectwon/configs build
+
+# 도메인 / 애플리케이션 레이어 빌드
+pnpm --filter @connectwon/core build
+
+# 테스트 실행
+pnpm --filter @connectwon/core test
+
+# Prisma 클라이언트 생성
+pnpm --filter @connectwon/database prisma generate
+
+# 마이그레이션 실행
+pnpm --filter @connectwon/database prisma migrate dev
+
+# DB 시드
+pnpm --filter @connectwon/database prisma db seed
+
+# 특정 패키지만 실행 (예: api)
+pnpm --filter @connectwon/api build
+
+# 특정 앱 실행 (예: web, api, admin, worker)
+pnpm nx serve @connectwon/web
+pnpm nx serve @connectwon/api
+pnpm nx serve @connectwon/admin
+pnpm nx serve @connectwon/worker
+
+# 특정 프로젝트 빌드
+pnpm nx build @connectwon/api
+
+# 다중 프로젝트 빌드 (병렬)
+pnpm nx run-many -t build --parallel
+
+# 테스트 실행
+pnpm nx run-many -t test --parallel
+
+# BullMQ 대기열 작업 실행 (worker)
+pnpm nx serve @connectwon/worker
+
+# Bull Board (웹 UI) 실행 — 패키지에 따라 연결 필요
+pnpm nx run @connectwon/api:bull-board
+
+# Redis 연결 확인 (CLI)
+docker exec -it connectwon-redis redis-cli
 
 #### 유닛 테스트 (Vitest)
 
@@ -454,7 +509,6 @@ pnpm e2e
 ```
 
 > 테스트 설정은 `apps/e2e` 및 `vitest.config.ts`에 정의되어 있습니다.
----
 
 ## 🎨 주요 화면
 
@@ -514,6 +568,7 @@ pnpm e2e
 - **통합 자동화**: n8n 기반 예약부터 결제, 알림까지 end-to-end 자동화
 
 ### 🔧 참고자료
+
 #### 언어 & 프레임워크
 - [Next.js](https://nextjs.org/docs)
 - [NestJS](https://docs.nestjs.com/)
@@ -522,7 +577,7 @@ pnpm e2e
 - [Node.js](https://nodejs.org/en/docs)
 
 #### 인증 & 보안
-- [NextAuth.js](https://next-auth.js.org/getting-started/introduction)
+- [Auth.js (NextAuth)](https://authjs.dev/)
 - [jsonwebtoken](https://github.com/auth0/node-jsonwebtoken#readme)
 - [bcryptjs](https://github.com/dcodeIO/bcrypt.js#readme)
 - [helmet](https://helmetjs.github.io/)
@@ -533,11 +588,13 @@ pnpm e2e
 - [class-validator](https://github.com/typestack/class-validator#readme)
 - [class-transformer](https://github.com/typestack/class-transformer#readme)
 - [Zod](https://zod.dev/)
+- [zod-openapi](https://www.npmjs.com/package/zod-openapi)
 
 #### API & 문서화
+- [ts-rest](https://ts-rest.com/)
 - [Swagger UI Express](https://github.com/scottie1984/swagger-ui-express#readme)
 - [@nestjs/swagger](https://docs.nestjs.com/openapi/introduction)
-- [OpenAPI Types](https://github.com/OAI/OpenAPI-Specification)
+- [OpenAPI Spec](https://github.com/OAI/OpenAPI-Specification)
 
 #### 메시징 & 큐
 - [BullMQ](https://docs.bullmq.io/)
@@ -551,10 +608,14 @@ pnpm e2e
 - [Testing Library - React](https://testing-library.com/docs/react-testing-library/intro/)
 - [MSW(Mock Service Worker)](https://mswjs.io/)
 - [Supertest](https://github.com/ladjs/supertest#readme)
+- [Testcontainers](https://testcontainers.com/)
+- [jest-mock-extended](https://github.com/marchaos/jest-mock-extended)
 
 #### 상태관리 & 데이터 패칭
 - [TanStack Query (React Query)](https://tanstack.com/query/latest)
+- [Zustand](https://zustand-demo.pmnd.rs/)
 - [RxJS](https://rxjs.dev/)
+- [superjson](https://github.com/blitz-js/superjson)
 
 #### UI & 스타일링
 - [Tailwind CSS](https://tailwindcss.com/docs)
@@ -577,6 +638,10 @@ pnpm e2e
 - [Winston](https://github.com/winstonjs/winston#readme)
 - [winston-daily-rotate-file](https://www.npmjs.com/package/winston-daily-rotate-file)
 - [Morgan](https://github.com/expressjs/morgan#readme)
+- [Pino](https://getpino.io/#/)
+- [Sentry](https://docs.sentry.io/platforms/javascript/)
+- [Grafana](https://grafana.com/docs/)
+- [Prometheus](https://prometheus.io/docs/introduction/overview/)
 
 #### 서버 & 네트워크
 - [Express](https://expressjs.com/)
@@ -584,6 +649,8 @@ pnpm e2e
 - [dotenv](https://github.com/motdotla/dotenv#readme)
 - [dotenv-cli](https://github.com/entropitor/dotenv-cli#readme)
 - [Reflect Metadata](https://rbuckton.github.io/reflect-metadata/)
+- [Fastify](https://fastify.dev/)
+- [NestJS WebSockets](https://docs.nestjs.com/websockets/gateways)
 
 #### 빌드 & 번들링
 - [Vite](https://vitejs.dev/)
@@ -601,6 +668,8 @@ pnpm e2e
 - [eslint-plugin-prettier](https://github.com/prettier/eslint-plugin-prettier#readme)
 - [eslint-plugin-simple-import-sort](https://github.com/lydell/eslint-plugin-simple-import-sort#readme)
 - [eslint-plugin-unused-imports](https://github.com/sweepline/eslint-plugin-unused-imports#readme)
+- [knip](https://knip.dev/)
+- [syncpack](https://github.com/JamieMason/syncpack#readme)
 
 #### 자동화 & 배포
 - [Husky](https://typicode.github.io/husky/)
@@ -611,6 +680,8 @@ pnpm e2e
 - [cz-customizable](https://github.com/leoforfree/cz-customizable#readme)
 - [npm-run-all](https://github.com/mysticatea/npm-run-all#readme)
 - [Concurrently](https://github.com/open-cli-tools/concurrently#readme)
+- [Plop.js](https://plopjs.com/)
+- [zx](https://github.com/google/zx)
 
 #### AI & 외부 API
 - [OpenAI Node SDK](https://github.com/openai/openai-node#readme)
@@ -621,16 +692,14 @@ pnpm e2e
 
 #### 워크플로우 자동화
 - [n8n](https://n8n.io/docs)
+- [ArgoCD](https://argo-cd.readthedocs.io/en/stable/)
 
 #### 기타 유틸리티
-- [Axios](https://axios-http.com/docs/intro)
 - [Day.js](https://day.js.org/)
 - [clsx](https://github.com/lukeed/clsx#readme)
 - [js-yaml](https://github.com/nodeca/js-yaml#readme)
 - [rimraf](https://github.com/isaacs/rimraf#readme)
-- [syncpack](https://github.com/JamieMason/syncpack#readme)
-- [knip](https://knip.dev/)
----
+
 
 ## 📌 MVP 개발 일정 (6주)
 
@@ -668,8 +737,6 @@ pnpm e2e
 - 공통 컴포넌트/레이아웃/스타일 시스템(Tailwind CSS, shadcn/ui) 구축
 - API 명세서(zod-openapi) 초안 작성
 
----
-
 #### Week 3-4: 핵심 기능 개발
 
 **1. 사용자 인증 시스템**
@@ -694,8 +761,6 @@ pnpm e2e
 - Anthropic/Hugging Face API PoC(모더레이션, 분석)
 - AI 호출 로그(ai_interactions) 저장 및 추천 알고리즘 기초 구현
 
----
-
 #### Week 5-6: 완성 및 최적화
 
 **1. 관리자 대시보드**
@@ -719,19 +784,6 @@ pnpm e2e
 - 코드 스플리팅, 불필요 렌더링 최소화
 - 보안 강화(zod 검증, 환경변수 키 관리, 로그 마스킹)
 
----
-## 🤝 기여하기
-
-1. 이 저장소를 포크합니다
-2. 기능 브랜치를 생성합니다 (`git checkout -b feature/amazing-feature`)
-3. 변경사항을 커밋합니다 (`git commit -m 'Add some amazing feature'`)
-4. 브랜치에 푸시합니다 (`git push origin feature/amazing-feature`)
-5. Pull Request를 생성합니다
-
-## 📄 라이선스
-
-이 프로젝트는 MIT 라이선스 하에 배포됩니다. 자세한 내용은 [LICENSE](LICENSE) 파일을 참조하세요.
-
 ## 📞 문의
 
 - **총괄개발**: 민시우 - [artiordex@gmail.com](mailto:artiordex@gmail.com)
@@ -742,5 +794,4 @@ pnpm e2e
 
 이 프로젝트는 KOSA(한국소프트웨어산업협회)의 지원을 받아 개발되었습니다. 멘토링을 제공해주신 이영희 교수님과 모든 관계자분들께 감사드립니다.
 
----
 **ConnectWon** - 도전하는 모든 이에게 공정한 기회와 지속되는 연결의 장을 제공합니다. 💪

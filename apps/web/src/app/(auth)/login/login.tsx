@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import SSOLogin from './SSO';
+import Input from 'components/Input';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -25,87 +27,44 @@ export default function Login() {
     }
   };
 
-  const handleSocialLogin = (provider: string) => {
-    console.log(`${provider} 로그인`);
-    if (provider === 'Google') {
-      router.push('/auth/callback');
-    }
-  };
-
   return (
     <div className="max-w-md mx-auto px-4">
       <div className="bg-white rounded-xl shadow-md p-8">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">로그인</h1>
           <p className="text-gray-600">Connectwon에 다시 오신 걸 환영합니다.</p>
-      </div>
-
-        {/* 소셜 로그인 */}
-        <div className="space-y-3 mb-6">
-          <button
-            onClick={() => handleSocialLogin('Naver')}
-            className="w-full bg-green-500 text-white py-3 px-4 rounded-lg font-medium hover:bg-green-600 transition-colors"
-          >
-            네이버로 로그인
-          </button>
-          <button
-            onClick={() => handleSocialLogin('Kakao')}
-            className="w-full bg-yellow-400 text-gray-900 py-3 px-4 rounded-lg font-medium hover:bg-yellow-500 transition-colors"
-          >
-            카카오로 로그인
-          </button>
-          <button
-            onClick={() => handleSocialLogin('Google')}
-            className="w-full bg-white border border-gray-300 text-gray-700 py-3 px-4 rounded-lg font-medium hover:bg-gray-50 transition-colors"
-          >
-            구글로 로그인
-          </button>
         </div>
 
-        <div className="relative mb-6">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-gray-300"></div>
-          </div>
-          <div className="relative flex justify-center text-sm">
-            <span className="px-2 bg-white text-gray-500">또는</span>
-          </div>
-        </div>
+        {/* 이메일/비밀번호 로그인 */}
+        <form onSubmit={handleSubmit} className="space-y-6 mb-6">
+          {/* 이메일 */}
+          <Input
+            id="email"
+            name="email"
+            type="email"
+            label="이메일"
+            value={email}
+            onChangeAction={setEmail}
+            required
+          />
 
-        {/* 이메일 로그인 */}
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">이메일</label>
-            <input
-              type="email"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-              placeholder="이메일을 입력하세요"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">비밀번호</label>
-            <div className="relative">
-              <input
-                type={showPassword ? 'text' : 'password'}
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-12 text-sm"
-                placeholder="비밀번호를 입력하세요"
-                required
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
-              >
-                <i className={`${showPassword ? 'ri-eye-off-line' : 'ri-eye-line'} w-5 h-5`}></i>
+          {/* 비밀번호 */}
+          <Input
+            id="password"
+            name="password"
+            type={showPassword ? 'text' : 'password'}
+            label="비밀번호"
+            value={password}
+            onChangeAction={setPassword}
+            required
+            rightElement={
+              <button type="button" onClick={() => setShowPassword(!showPassword)} className="text-gray-500 hover:text-gray-700">
+                <i className={`${showPassword ? 'ri-eye-off-line' : 'ri-eye-line'} w-5 h-5`} />
               </button>
-            </div>
-          </div>
+            }
+          />
 
+          {/* 옵션 & 링크 */}
           <div className="flex items-center justify-between">
             <label className="flex items-center">
               <input type="checkbox" className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" />
@@ -116,6 +75,7 @@ export default function Login() {
             </Link>
           </div>
 
+          {/* 로그인 버튼 */}
           <button
             type="submit"
             disabled={loading}
@@ -124,6 +84,18 @@ export default function Login() {
             {loading ? '로그인 중...' : '로그인'}
           </button>
         </form>
+
+        {/* 구분선 + SNS 로그인 */}
+        <div className="relative mb-6">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-gray-300"></div>
+          </div>
+          <div className="relative flex justify-center text-sm">
+            <span className="px-2 bg-white text-gray-500">또는 SNS 로그인</span>
+          </div>
+        </div>
+
+        <SSOLogin />
 
         <div className="mt-6 text-center">
           <span className="text-gray-600">아직 계정이 없으신가요? </span>

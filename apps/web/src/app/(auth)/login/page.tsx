@@ -1,15 +1,14 @@
-import Footer from 'components/Footer';
-import Header from 'components/Header';
-import Login from './login';
+'use client';
+
+import Login from './Login';
+import AppShell from 'components/AppShell';
 
 export default function LoginPage() {
   return (
-    <div className="min-h-screen flex flex-col">
-      <Header />
-      <main className="min-h-[90vh] bg-gray-50 pb-12 pt-20" style={{ paddingTop: '80px' }}>
+    <AppShell>
+      <div className="min-h-[90vh] flex items-center justify-center py-12 sm:py-20 lg:py-24">
         <Login />
-      </main>
-      <Footer />
-    </div>
+      </div>
+    </AppShell>
   );
 }

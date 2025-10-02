@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import slides from '../../data/hero.json';
+import slides from 'data/hero.json';
 
 /**
  * @description HeroSection 메인화면 캐러셀 컴포넌트 (CTA 버튼과 인디케이터, 좌우 화살표를 제공)

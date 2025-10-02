@@ -4,17 +4,31 @@
  * Date : 2025-09-17
  * Path : apps/web/src/app/api/auth/[...nextauth]/route.ts
  */
-import NextAuth, { DefaultSession } from 'next-auth';
+import NextAuth from 'next-auth';
 import type { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
+import KakaoProvider from 'next-auth/providers/kakao';
+import NaverProvider from 'next-auth/providers/naver';
 
 const authOptions: NextAuthOptions = {
   providers: [
-    // Google OAuth 설정
+    // Google OAuth
     GoogleProvider({
       clientId: process.env['GOOGLE_CLIENT_ID'] || '',
       clientSecret: process.env['GOOGLE_CLIENT_SECRET'] || '',
+    }),
+
+    // Naver OAuth
+    NaverProvider({
+      clientId: process.env['NAVER_CLIENT_ID'] || '',
+      clientSecret: process.env['NAVER_CLIENT_SECRET'] || '',
+    }),
+
+    // Kakao OAuth
+    KakaoProvider({
+      clientId: process.env['KAKAO_CLIENT_ID'] || '',
+      clientSecret: process.env['KAKAO_CLIENT_SECRET'] || '',
     }),
 
     // 이메일/비밀번호 로그인
@@ -45,19 +59,18 @@ const authOptions: NextAuthOptions = {
           //     email: credentials.email,
           //     password: credentials.password,
           //   }),
-          // })
-
-          // const user = await response.json()
+          // });
+          // const user = await response.json();
 
           // if (response.ok && user) {
           //   return {
           //     id: user.id,
           //     email: user.email,
           //     name: user.name,
-          //   }
+          //   };
           // }
 
-          // 임시 하드코딩된 사용자 (개발용)
+          // 개발용 하드코딩 계정
           if (credentials.email === 'admin@connectwon.com' && credentials.password === 'admin123') {
             return {
               id: '1',
@@ -86,58 +99,46 @@ const authOptions: NextAuthOptions = {
     secret: process.env['NEXTAUTH_SECRET'] || 'default_secret_value',
   },
 
-  // 페이지 경로 커스터마이징
+  // 페이지 경로
   pages: {
-    signIn: '/login',
+    signIn: '/auth/login',
     signOut: '/auth/signout',
     error: '/auth/error',
   },
 
-  // 콜백 함수들 - 타입 확장 사용으로 깔끔하게
+  // 콜백
   callbacks: {
     async jwt({ token, user, account }) {
-      // 첫 로그인 시 사용자 정보를 토큰에 저장
       if (user && account) {
-        token['id'] = user['id'];
-        token['provider'] = account['provider'];
+        token['id'] = (user as any).id || token.sub;
+        token['provider'] = account.provider;
       }
       return token;
     },
-
     async session({ session, token }) {
       if (session.user && token) {
-        session.user['id'] = token['id'] as string;
-        session.user['provider'] = token['provider'] as string;
+        (session.user as any).id = token['id'];
+        (session.user as any).provider = token['provider'];
       }
       return session;
     },
-
     async redirect({ url, baseUrl }) {
-      // 로그인 후 리다이렉트 경로 설정
-      if (url.startsWith('/')) {
-        return `${baseUrl}${url}`;
-      }
-      if (new URL(url).origin === baseUrl) {
-        return url;
-      }
+      if (url.startsWith('/')) return `${baseUrl}${url}`;
+      if (new URL(url).origin === baseUrl) return url;
       return `${baseUrl}/dashboard`;
     },
   },
 
-  // 이벤트 핸들러
+  // 이벤트 로그
   events: {
-    async signIn({ user, account, profile, isNewUser }) {
-      console.log('User signed in:', { user: user['email'], provider: account?.provider });
+    async signIn({ user, account }) {
+      console.log('✅ User signed in:', { email: (user as any)?.email, provider: account?.provider });
     },
-
-    async signOut({ session, token }) {
-      console.log('User signed out:', session?.user?.email);
+    async signOut({ session }) {
+      console.log('🚪 User signed out:', session?.user?.email);
     },
   },
 };
 
-// NextAuth 핸들러 생성
 const handler = NextAuth(authOptions);
-
-// App Router에서 HTTP 메서드별로 export
 export { handler as GET, handler as POST };

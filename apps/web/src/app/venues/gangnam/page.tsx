@@ -1,4 +1,4 @@
-import CenterDetail from './CenterDetail';
+import CenterDetail from './VenueDetail';
 
 export async function generateStaticParams() {
   return [

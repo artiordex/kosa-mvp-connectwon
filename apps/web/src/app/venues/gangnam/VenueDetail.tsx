@@ -58,7 +58,7 @@ export default function CenterDetail() {
   return (
     <div className="min-h-screen bg-white pt-20">
       {/* 헤더 */}
-      <section 
+      <section
         className="relative h-96 flex items-center justify-center bg-cover bg-center text-white"
         style={{
           backgroundImage: 'url("https://readdy.ai/api/search-image?query=modern%20office%20building%20exterior%20in%20Gangnam%20Seoul%20at%20sunset%2C%20glass%20facade%20with%20warm%20lighting%2C%20urban%20business%20district%20skyline%2C%20professional%20corporate%20environment&width=1920&height=600&seq=gangnam-hero&orientation=landscape")',
@@ -110,25 +110,25 @@ export default function CenterDetail() {
             {/* 이미지 갤러리 */}
             <div>
               <div className="relative mb-4">
-                <img 
+                <img
                   src={images[currentImageIndex]}
                   alt="강남센터"
                   className="w-full h-80 object-cover rounded-2xl"
                 />
-                <button 
+                <button
                   onClick={prevImage}
                   className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 shadow-lg"
                 >
                   <i className="ri-arrow-left-line w-5 h-5 flex items-center justify-center"></i>
                 </button>
-                <button 
+                <button
                   onClick={nextImage}
                   className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 shadow-lg"
                 >
                   <i className="ri-arrow-right-line w-5 h-5 flex items-center justify-center"></i>
                 </button>
               </div>
-              
+
               <div className="flex space-x-2 justify-center">
                 {images.map((_, index) => (
                   <button
@@ -193,11 +193,11 @@ export default function CenterDetail() {
           <div className="mt-16">
             <h3 className="text-2xl font-bold text-gray-900 mb-6">오시는 길</h3>
             <div className="bg-gray-100 rounded-2xl h-96 flex items-center justify-center">
-              <iframe 
+              <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3165.562!2d127.027!3d37.502!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x357ca34a215e1845%3A0x2dd2f8cd496c4ec1!2z7ISc7Jq47Yq567OE67OE7IucIOqwleq1rOq1rCDthYztl6TrnoDroZwgMjE3!5e0!3m2!1sko!2skr!4v1630655507166!5m2!1sko!2skr"
-                width="100%" 
-                height="100%" 
-                loading="lazy" 
+                width="100%"
+                height="100%"
+                loading="lazy"
                 allowFullScreen
                 className="rounded-2xl"
               ></iframe>
@@ -229,7 +229,7 @@ export default function CenterDetail() {
               </p>
             </div>
 
-            <form 
+            <form
               onSubmit={handleSubmit}
               data-readdy-form
               id="gangnam-center-feedback"
@@ -340,8 +340,8 @@ export default function CenterDetail() {
 
               {submitStatus && (
                 <div className={`p-4 rounded-lg text-sm ${
-                  submitStatus.includes('성공') 
-                    ? 'bg-green-50 text-green-700 border border-green-200' 
+                  submitStatus.includes('성공')
+                    ? 'bg-green-50 text-green-700 border border-green-200'
                     : 'bg-red-50 text-red-700 border border-red-200'
                 }`}>
                   {submitStatus}
