@@ -15,3 +15,4 @@ export * from './hooks/useToggle.js';
 // providers
 export { AuthProvider } from './providers/AuthProvider.js';
 export { QueryProvider } from './providers/QueryProvider.js';
+export { FirebaseProvider } from './providers/FirebaseProvider.js';

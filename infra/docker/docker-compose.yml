@@ -182,7 +182,6 @@ services:
       - ../database/conf/pg_hba.conf:/etc/postgresql/pg_hba.conf:ro
       - ../database/init:/docker-entrypoint-initdb.d:ro
     command: >
-      postgres
       -c config_file=/etc/postgresql/postgresql.conf
       -c hba_file=/etc/postgresql/pg_hba.conf
     healthcheck:

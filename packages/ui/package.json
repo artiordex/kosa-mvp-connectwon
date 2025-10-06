@@ -8,8 +8,11 @@
     "./dist/**/*.css"
   ],
   "files": [
-    "dist"
+    "dist",
+    "src"
   ],
+  "main": "dist/packages/ui/index.js",
+  "types": "dist/packages/ui/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/packages/ui/index.d.ts",
@@ -20,8 +23,8 @@
       "import": "./dist/packages/ui/ui-types.js"
     },
     "./tailwind-config": {
-      "types": "./tailwind.config.d.ts",
-      "import": "./tailwind.config.mjs"
+      "types": "./dist/packages/ui/tailwind.config.d.ts",
+      "import": "./dist/packages/ui/tailwind.config.mjs"
     },
     "./styles/*": "./dist/packages/ui/styles/*",
     "./package.json": "./package.json"
@@ -29,7 +32,7 @@
   "__comment_scripts": "빌드 및 타입체크 스크립트",
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "postbuild": "shx mv dist/packages/ui/src/* dist/packages/ui/ && shx rm -rf dist/packages/ui/src",
+    "postbuild": "shx mkdir -p ../../dist/packages/ui && shx cp ./tailwind.config.mjs ../../dist/packages/ui/",
     "clean": "rimraf dist",
     "prepublishOnly": "pnpm run clean && pnpm run build",
     "type-check": "tsc --noEmit -p tsconfig.json"

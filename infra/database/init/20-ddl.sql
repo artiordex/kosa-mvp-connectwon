@@ -1,7 +1,11 @@
--- Description : 20-ddl.sql - 📌 PostgreSQL Table DDL with Comments
+-- Description : 20-ddl.sql - 📌 PostgreSQL Table DDL with Comments (Revised)
 -- Author : Shiwoo Min
 -- Date : 2025-09-27
 -- Schema : ConnectWon MVP (Users, Auth, Programs, Venues, Devices, Reviews, Logs)
+
+-- Ensure required extensions
+CREATE EXTENSION IF NOT EXISTS citext;
+CREATE EXTENSION IF NOT EXISTS btree_gist;
 
 -- USERS
 CREATE TABLE users (
@@ -24,10 +28,17 @@ CREATE TABLE auth_providers (
   password_hash  TEXT,
   meta           JSONB DEFAULT '{}'::jsonb,
   created_at     TIMESTAMPTZ NOT NULL DEFAULT now(),
-  updated_at     TIMESTAMPTZ NOT NULL DEFAULT now(),
-  CONSTRAINT uq_provider_sub UNIQUE (provider, provider_sub) WHERE provider_sub IS NOT NULL,
-  CONSTRAINT uq_user_local UNIQUE (user_id) WHERE provider = 'local'
+  updated_at     TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+
+-- Partial Unique Indexes
+CREATE UNIQUE INDEX uq_provider_sub
+  ON auth_providers(provider, provider_sub)
+  WHERE provider_sub IS NOT NULL;
+
+CREATE UNIQUE INDEX uq_user_local
+  ON auth_providers(user_id)
+  WHERE provider = 'local';
 
 -- PROGRAMS
 CREATE TABLE programs (

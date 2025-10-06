@@ -45,5 +45,9 @@
   "exclude": ["dist", "node_modules"],
 
   // 프로젝트 참조
-  "references": [{ "path": "../core" }, { "path": "../configs" }, { "path": "../logger" }]
+  "references": [
+    { "path": "../core" },
+    { "path": "../configs" },
+    { "path": "../logger" }
+  ]
 }

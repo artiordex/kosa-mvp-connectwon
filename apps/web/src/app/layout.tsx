@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
+import { FirebaseProvider, QueryProvider } from '@connectwon/client';
 import './globals.css';
 import AppShell from 'components/AppShell';
 
@@ -20,8 +21,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="ko">
       <body className={inter.className}>
-        {/* AppShell로 전체 레이아웃 감싸기 */}
-        <AppShell>{children}</AppShell>
+        {/* FirebaseProvider + QueryProvider로 전역 상태 감싸기 */}
+        <FirebaseProvider>
+          <QueryProvider>
+            {/* 기존 AppShell은 그대로 유지 */}
+            <AppShell>{children}</AppShell>
+          </QueryProvider>
+        </FirebaseProvider>
       </body>
     </html>
   );

@@ -15,7 +15,7 @@
   "scripts": {
     "clean": "rimraf dist",
     "build": "pnpm run clean && pnpm nx run-many -t build --parallel",
-    "postbuild": "node tools/services/postbuild.js",
+    "postbuild": "ts-node --esm tools/services/postbuild.js",
     "builds": "pnpm run clean && pnpm --filter @connectwon/* --parallel run build",
     "build:configs": "pnpm nx run @connectwon/configs:build",
     "build:api": "pnpm nx run @connectwon/api:build",
@@ -102,6 +102,7 @@
     "prettier": "^3.5.3",
     "prettier-plugin-tailwindcss": "^0.2.8",
     "rimraf": "^6.0.1",
+    "shx": "^0.4.0",
     "supertest": "^7.1.0",
     "syncpack": "^13.0.4",
     "ts-node": "^10.9.2",
