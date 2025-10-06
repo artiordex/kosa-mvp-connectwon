@@ -87,7 +87,7 @@
 - Stripe 연동 결제 (카드, 포인트, 정기 구독)
 - 포인트 적립/사용 내역 관리
 - 멤버십 등급별 혜택 자동 적용
-- 
+  
 **기술 스택**:
 - Stripe API
 - Redis 기반 포인트 캐싱
@@ -98,7 +98,7 @@
 - 실시간 사용자 통계 (가입자 수, 예약률, 프로그램 참여율)
 - 사용자 관리 (권한, 멤버십, 활동 로그)
 - 운영 분석 리포트 (월간/분기별 KPI 시각화)
--
+
 **기술 스택**:
 - Next.js + Recharts
 - React Query + Zustand
@@ -307,6 +307,165 @@ kosa-mvp-connectwon/
 └── vitest.config.ts
 ```
 
+## 🛢️DDL 
+```mermaid
+---
+config:
+  theme: mc
+  layout: dagre
+---
+erDiagram
+	direction TB
+	USERS {
+		BIGINT id PK ""  
+		CITEXT email  "email(로그인)"  
+		TEXT name  "이름"  
+		TIMESTAMPTZ last_login_at  "마지막로그인"  
+		INT role_flags  "권한플래그"  
+		JSONB preferences  "선호도"  
+		TIMESTAMPTZ created_at  "생성일"  
+		TIMESTAMPTZ updated_at  "수정일"  
+	}
+	AUTH_PROVIDERS {
+		BIGINT id PK ""  
+		BIGINT user_id FK "사용자ID"  
+		TEXT provider  "제공자"  
+		TEXT provider_sub  "외부ID"  
+		TEXT password_hash  "비밀번호"  
+		JSONB meta  "메타"  
+	}
+	PROGRAMS {
+		BIGINT id PK ""  
+		TEXT title  "제목"  
+		TEXT description  "설명"  
+		BIGINT created_by_user_id FK "개설자"  
+		TEXT category  "카테고리"  
+		JSONB meta  "메타"  
+	}
+	SESSIONS {
+		BIGINT id PK ""  
+		BIGINT program_id FK "프로그램ID"  
+		TIMESTAMPTZ starts_at  "시작"  
+		TIMESTAMPTZ ends_at  "종료"  
+		INT capacity  "정원"  
+		INT participant_fee  "참가비"  
+		TEXT status  "상태"  
+		BIGINT room_reservation_id FK "예약연결"  
+		TEXT location_text  "장소"  
+	}
+	VENUES {
+		BIGINT id PK ""  
+		TEXT name  "지점명"  
+		TEXT address  "주소"  
+		JSONB opening_hours  "운영시간"  
+		JSONB blackout_rules  "블랙아웃"  
+	}
+	ROOMS {
+		BIGINT id PK ""  
+		BIGINT venue_id FK "지점ID"  
+		TEXT name  "방이름"  
+		INT capacity  "정원"  
+		TEXT status  "상태"  
+	}
+	ROOM_RESERVATIONS {
+		BIGINT id PK ""  
+		BIGINT room_id FK "방ID"  
+		BIGINT user_id FK "예약자"  
+		TIMESTAMPTZ starts_at  "시작"  
+		TIMESTAMPTZ ends_at  "종료"  
+		TSTZRANGE period  "시간구간"  
+		TEXT purpose  "목적"  
+		TEXT status  "상태"  
+		BIGINT session_id FK "세션ID"  
+		JSONB meta  "메타"  
+	}
+	PROGRAM_PARTICIPANTS {
+		BIGINT id PK ""  
+		BIGINT session_id FK "세션ID"  
+		BIGINT user_id FK "사용자ID"  
+		TEXT role  "역할"  
+		TEXT status  "상태"  
+		TIMESTAMPTZ joined_at  "참여시각"  
+	}
+	DEVICES {
+		BIGINT id PK ""  
+		TEXT name  "장비명"  
+		TEXT type  "유형"  
+		JSONB specs  "사양"  
+		TEXT status  "상태"  
+	}
+	DEVICE_RENTALS {
+		BIGINT id PK ""  
+		BIGINT device_id FK "장비ID"  
+		BIGINT user_id FK "사용자ID"  
+		TIMESTAMPTZ starts_at  "시작"  
+		TIMESTAMPTZ ends_at  "종료"  
+		TEXT status  "상태"  
+		JSONB meta  "메타"  
+	}
+	REVIEWS {
+		BIGINT id PK ""  
+		BIGINT user_id FK "작성자"  
+		TEXT target_type  "대상유형"  
+		BIGINT target_id  "대상ID"  
+		INT rating  "평점"  
+		TEXT comment  "코멘트"  
+	}
+	NOTIFICATIONS {
+		BIGINT id PK ""  
+		BIGINT user_id FK "사용자ID"  
+		TEXT type  "유형"  
+		TEXT title  "제목"  
+		TEXT message  "메시지"  
+		BOOLEAN is_read  "읽음여부"  
+	}
+	USER_ACTIVITIES {
+		BIGINT id PK ""  
+		BIGINT user_id FK "사용자ID"  
+		TEXT action  "행동"  
+		TEXT entity_type  "엔티티유형"  
+		BIGINT entity_id  "엔티티ID"  
+	}
+	AI_INTERACTIONS {
+		BIGINT id PK ""  
+		BIGINT user_id FK "사용자ID"  
+		BIGINT program_id FK "프로그램"  
+		BIGINT session_id FK "세션"  
+		TEXT provider  "제공자"  
+		TEXT model  "모델명"  
+		TEXT kind  "유형"  
+		INT prompt_tokens  "프롬프트토큰"  
+		INT completion_tokens  "완료토큰"  
+		NUMERIC cost  "비용"  
+		TEXT status  "상태"  
+	}
+	Untitled-Entity {
+	}
+	Untitled-Entity-1 {
+	}
+
+	USERS||--o{AUTH_PROVIDERS:"인증"
+	USERS||--o{PROGRAMS:"프로그램개설"
+	USERS||--o{ROOM_RESERVATIONS:"예약"
+	USERS||--o{PROGRAM_PARTICIPANTS:"세션참여"
+	USERS||--o{DEVICE_RENTALS:"장비대여"
+	USERS||--o{REVIEWS:"리뷰"
+	USERS||--o{NOTIFICATIONS:"알림"
+	USERS||--o{USER_ACTIVITIES:"활동"
+	USERS||--o{AI_INTERACTIONS:"AI호출"
+	PROGRAMS||--o{SESSIONS:"세션"
+	PROGRAMS||--o{AI_INTERACTIONS:"AI연계"
+	VENUES||--o{ROOMS:"공간"
+	ROOMS||--o{ROOM_RESERVATIONS:"예약"
+	SESSIONS||--o{ROOM_RESERVATIONS:"예약연결"
+	SESSIONS||--o{PROGRAM_PARTICIPANTS:"참여"
+	SESSIONS||--o{AI_INTERACTIONS:"AI연계"
+	DEVICES||--o{DEVICE_RENTALS:"대여"
+	USERS}|--|{Untitled-Entity:"  "
+	AUTH_PROVIDERS}|--|{Untitled-Entity-1:"  "
+
+	style DEVICES ::stroke-width:2px,stroke-dasharray:0
+```
 
 ## 📦 필수 설치 항목
 
@@ -795,3 +954,4 @@ pnpm e2e
 이 프로젝트는 KOSA(한국소프트웨어산업협회)의 지원을 받아 개발되었습니다. 멘토링을 제공해주신 이영희 교수님과 모든 관계자분들께 감사드립니다.
 
 **ConnectWon** - 도전하는 모든 이에게 공정한 기회와 지속되는 연결의 장을 제공합니다. 💪
+
