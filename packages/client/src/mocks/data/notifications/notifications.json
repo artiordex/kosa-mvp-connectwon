@@ -1,0 +1,190 @@
+[
+  {
+    "id": "noti-20251009-001",
+    "userId": 101,
+    "type": "reservation",
+    "category": "success",
+    "title": "예약이 확정되었습니다",
+    "message": "‘AI 창업 부트캠프’ 프로그램 예약이 확정되었습니다.",
+    "data": {
+      "entityType": "Reservation",
+      "entityId": 4501,
+      "actionRequired": false
+    },
+    "isRead": false,
+    "priority": "normal",
+    "actionUrl": "/reservations/4501",
+    "actionLabel": "예약 확인하기",
+    "createdAt": "2025-10-09T09:00:00Z",
+    "updatedAt": "2025-10-09T09:00:00Z"
+  },
+  {
+    "id": "noti-20251009-002",
+    "userId": 205,
+    "type": "payment",
+    "category": "success",
+    "title": "결제가 완료되었습니다",
+    "message": "‘Pro 멤버십’ 결제가 성공적으로 완료되었습니다. 이용이 즉시 시작됩니다.",
+    "data": {
+      "entityType": "Payment",
+      "entityId": 8094
+    },
+    "isRead": false,
+    "priority": "high",
+    "actionUrl": "/memberships",
+    "actionLabel": "멤버십 확인",
+    "createdAt": "2025-10-09T08:58:00Z",
+    "updatedAt": "2025-10-09T09:10:00Z"
+  },
+  {
+    "id": "noti-20251009-003",
+    "userId": 310,
+    "type": "equipment",
+    "category": "reminder",
+    "title": "장비 반납일 알림",
+    "message": "대여하신 ‘MacBook Air M3’ 반납일이 오늘까지입니다.",
+    "data": {
+      "entityType": "EquipmentRental",
+      "entityId": 302,
+      "actionRequired": true
+    },
+    "isRead": false,
+    "priority": "urgent",
+    "actionUrl": "/equipment/rentals/302",
+    "actionLabel": "지금 반납하기",
+    "createdAt": "2025-10-09T07:30:00Z",
+    "updatedAt": "2025-10-09T07:30:00Z",
+    "expiresAt": "2025-10-10T00:00:00Z"
+  },
+  {
+    "id": "noti-20251009-004",
+    "userId": 501,
+    "type": "program",
+    "category": "info",
+    "title": "새로운 프로그램이 추가되었습니다",
+    "message": "‘디지털 마케팅 실무반’ 프로그램이 새롭게 오픈되었습니다.",
+    "data": {
+      "entityType": "Program",
+      "entityId": 991
+    },
+    "isRead": true,
+    "priority": "normal",
+    "actionUrl": "/programs/991",
+    "actionLabel": "프로그램 보기",
+    "createdAt": "2025-10-08T14:00:00Z",
+    "updatedAt": "2025-10-08T18:00:00Z"
+  },
+  {
+    "id": "noti-20251009-005",
+    "userId": 104,
+    "type": "membership",
+    "category": "warning",
+    "title": "멤버십 갱신 알림",
+    "message": "Pro 멤버십이 3일 후 만료됩니다. 자동 갱신을 확인해주세요.",
+    "data": {
+      "entityType": "UserSubscription",
+      "entityId": 1302,
+      "actionRequired": true
+    },
+    "isRead": false,
+    "priority": "high",
+    "actionUrl": "/memberships",
+    "actionLabel": "갱신 설정",
+    "createdAt": "2025-10-07T10:00:00Z",
+    "updatedAt": "2025-10-09T09:00:00Z",
+    "expiresAt": "2025-10-12T00:00:00Z"
+  },
+  {
+    "id": "noti-20251009-006",
+    "userId": 330,
+    "type": "system",
+    "category": "info",
+    "title": "시스템 점검 안내",
+    "message": "10월 12일(토) 02:00~04:00 동안 정기 시스템 점검이 진행됩니다.",
+    "data": {
+      "entityType": "SystemNotice"
+    },
+    "isRead": true,
+    "priority": "low",
+    "actionUrl": "/notices/system",
+    "actionLabel": "공지 확인",
+    "createdAt": "2025-10-06T12:00:00Z",
+    "updatedAt": "2025-10-06T12:10:00Z",
+    "expiresAt": "2025-10-13T00:00:00Z"
+  },
+  {
+    "id": "noti-20251009-007",
+    "userId": 204,
+    "type": "community",
+    "category": "success",
+    "title": "내 게시글에 댓글이 달렸습니다",
+    "message": "‘AI 취업 준비 팁 공유’ 게시글에 새 댓글이 있습니다.",
+    "data": {
+      "entityType": "Post",
+      "entityId": 875,
+      "actionRequired": false
+    },
+    "isRead": false,
+    "priority": "normal",
+    "actionUrl": "/community/posts/875",
+    "actionLabel": "댓글 보기",
+    "createdAt": "2025-10-09T08:40:00Z",
+    "updatedAt": "2025-10-09T09:00:00Z"
+  },
+  {
+    "id": "noti-20251009-008",
+    "userId": 470,
+    "type": "marketing",
+    "category": "info",
+    "title": "10월 한정 프로모션 🎉",
+    "message": "이번 달 PRO 플랜 신규 가입 시 20% 할인 혜택을 제공합니다.",
+    "data": {
+      "entityType": "Promotion",
+      "entityId": 3001
+    },
+    "isRead": false,
+    "priority": "normal",
+    "actionUrl": "/memberships/plans",
+    "actionLabel": "혜택 보기",
+    "imageUrl": "/images/promotions/october-pro.png",
+    "createdAt": "2025-10-05T10:00:00Z",
+    "updatedAt": "2025-10-09T09:00:00Z",
+    "expiresAt": "2025-10-31T23:59:00Z"
+  },
+  {
+    "id": "noti-20251009-009",
+    "userId": 150,
+    "type": "mentoring",
+    "category": "reminder",
+    "title": "멘토링 일정 리마인드",
+    "message": "오늘 오후 3시에 ‘창업 전략 세션’ 멘토링이 예약되어 있습니다.",
+    "data": {
+      "entityType": "MentoringSession",
+      "entityId": 981
+    },
+    "isRead": false,
+    "priority": "urgent",
+    "actionUrl": "/mentoring/981",
+    "actionLabel": "세션 참여",
+    "createdAt": "2025-10-09T07:00:00Z",
+    "updatedAt": "2025-10-09T07:30:00Z"
+  },
+  {
+    "id": "noti-20251009-010",
+    "userId": 103,
+    "type": "system",
+    "category": "error",
+    "title": "서버 연결 오류 감지",
+    "message": "일시적인 네트워크 오류로 일부 요청이 처리되지 않았습니다.",
+    "data": {
+      "entityType": "SystemHealth",
+      "metadata": { "region": "Seoul-1", "durationSec": 42 }
+    },
+    "isRead": true,
+    "priority": "high",
+    "actionUrl": "/status",
+    "actionLabel": "상태 보기",
+    "createdAt": "2025-10-09T06:00:00Z",
+    "updatedAt": "2025-10-09T06:10:00Z"
+  }
+]

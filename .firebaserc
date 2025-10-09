@@ -1,0 +1,18 @@
+{
+  "projects": {
+    "default": "connectwon-fb"
+  },
+  "targets": {
+    "connectwon-fb": {
+      "hosting": {
+        "connectwon-web": [
+          "connectwon-web"
+        ],
+        "connectwon-admin": [
+          "connectwon-admin"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}

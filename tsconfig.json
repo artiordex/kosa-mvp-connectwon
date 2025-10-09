@@ -3,6 +3,7 @@
  * Author : Shiwoo Min
  * Date : 2025-09-07
  * 10-01 : 루트 tsconfig.json을 noEmit + references 전용으로 단순화
+ * 10-08 : composite 추가, include 명시, references 주석 구조 정리
  * 참고 명령어:
  *   pnpm -w exec tsc --project tsconfig.json --showConfig
  */
@@ -29,6 +30,9 @@
     // 산출물 생성 금지 (루트는 타입체크 전용)
     "noEmit": true,
 
+    // Project References 활성화
+    "composite": true,
+
     // 엄격 모드 공통 적용
     "strict": true,
 
@@ -36,15 +40,16 @@
     "moduleDetection": "force"
   },
 
-  // 루트는 개별 소스 포함하지 않음
+  // 루트는 직접 소스 포함하지 않음
   "files": [],
+  "include": [],
 
   // Project References (모노레포 구성요소)
   "references": [
     // packages
     { "path": "./packages/api-contract" },
-    { "path": "./packages/core" },
     { "path": "./packages/configs" },
+    { "path": "./packages/core" },
     { "path": "./packages/database" },
     { "path": "./packages/logger" },
     { "path": "./packages/sdk" },

@@ -1,32 +1,40 @@
 {
   "name": "@connectwon/e2e",
   "version": "1.0.0",
-  "description": "ConnectWon E2E 테스트",
+  "description": "ConnectWon E2E 테스트 ",
   "private": true,
   "type": "module",
-  "__comment_scripts": "pnpm scripts 명령어",
+
+  "__comment_scripts": "pnpm scripts 명령어 (CI/CD 포함)",
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "test": "playwright test",
     "test:ui": "playwright test --ui",
-    "test:report": "playwright show-report",
     "test:debug": "playwright test --debug",
-    "test:ci": "playwright test --reporter=line",
+    "test:ci": "playwright test --reporter=line --project=chromium --timeout=30000",
     "report": "playwright show-report",
     "install:browsers": "playwright install --with-deps",
     "clean": "rimraf playwright-report test-results"
   },
-  "__comment_dependencies": "테스트 코드에서 import 하는 내부 패키지",
+
+  "__comment_dependencies": "테스트 코드에서 import 하는 내부 workspace 패키지",
   "dependencies": {
     "@connectwon/api-contract": "workspace:*",
-    "@connectwon/logger": "workspace:*"
+    "@connectwon/logger": "workspace:*",
+    "@connectwon/configs": "workspace:*"
   },
-  "__comment_devDependencies": "E2E 실행을 위한 테스트/도구",
+
+  "__comment_devDependencies": "Playwright E2E 실행 및 타입 검사용 의존성",
   "devDependencies": {
     "@playwright/test": "^1.51.1",
-    "dotenv": "^17.2.2"
+    "dotenv": "^17.2.2",
+    "typescript": "5.6.3",
+    "rimraf": "^6.0.1"
   },
+
+  "__comment_engines": "Node / pnpm 최소 버전",
   "engines": {
-    "node": ">=20.11"
+    "node": ">=20.11",
+    "pnpm": ">=10.7.0"
   }
 }

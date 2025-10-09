@@ -4,6 +4,8 @@
  * Date : 2025-09-06
  * 09-12 - 브라우저 번들러 해석(ESNext/Bundler), noEmit/Next 플러그인 추가, include 정리
  * 09-17 - TypeScript 컴파일 에러 해결을 위한 설정 추가
+ * 10-07 - dist 기반 workspace 패키지(@connectwon/*) 경로 추가
+ * 10-09 - Docker / Cloud Run / Firebase / Azure / Local 완전 호환 버전
  */
 {
   // 루트 공통 규칙 상속
@@ -22,9 +24,23 @@
     // Web 전용 baseUrl 및 경로 alias
     "baseUrl": "src",
     "paths": {
+      "@connectwon/core": ["../../dist/packages/core/index.d.ts"],
+      "@connectwon/core/*": ["../../dist/packages/core/*"],
+      "@connectwon/configs": ["../../dist/packages/configs/index.d.ts"],
+      "@connectwon/configs/*": ["../../dist/packages/configs/*"],
+      "@connectwon/logger": ["../../dist/packages/logger/index.d.ts"],
+      "@connectwon/logger/*": ["../../dist/packages/logger/*"],
+      "@connectwon/client": ["../../dist/packages/client/index.d.ts"],
+      "@connectwon/client/*": ["../../dist/packages/client/*"],
+      "@connectwon/ui": ["../../dist/packages/ui/index.d.ts"],
+      "@connectwon/ui/*": ["../../dist/packages/ui/*"],
+      "@connectwon/sdk": ["../../dist/packages/sdk/index.d.ts"],
+      "@connectwon/sdk/*": ["../../dist/packages/sdk/*"],
+      "@connectwon/api-contract": ["../../dist/packages/api-contract/index.d.ts"],
+      "@connectwon/api-contract/*": ["../../dist/packages/api-contract/*"],
       "components/*": ["components/*"],
       "data/*": ["data/*"],
-      "lib/*": ["lib/*"],
+      "lib/*": ["lib/*"]
     },
 
     // Next는 타입만 체크(noEmit)
@@ -36,7 +52,6 @@
     "lib": ["dom", "dom.iterable", "es2022"],
     "types": ["node"],
 
-    // TypeScript 컴파일 에러 해결
     "verbatimModuleSyntax": false,
     "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,
@@ -44,12 +59,10 @@
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
 
-    // Strict 설정
     "strict": true,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
 
-    // CI 속도 ↑
     "incremental": true,
     "tsBuildInfoFile": "./.next/.tsbuildinfo"
   },

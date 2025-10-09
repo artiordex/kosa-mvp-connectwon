@@ -1,11 +1,13 @@
 {
   "name": "@connectwon/api-contract",
   "sourceRoot": "packages/api-contract/src",
+
   "__comment_projectType": "Nx 프로젝트 타입",
   "projectType": "library",
   "version": "1.0.0",
   "tags": ["type:lib", "layer:shared"],
-  "__comment_targets": "Nx 빌드, 테스트, 린트 등 작업 정의",
+
+  "__comment_targets": "빌드/린트/테스트/문서 생성",
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
@@ -21,8 +23,12 @@
     "gen:openapi": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "tsx src/openapi/emit.ts",
-        "cwd": "packages/api-contract"
+        "commands": [
+          {
+            "command": "tsx packages/api-contract/src/openapi/emit.ts"
+          }
+        ],
+        "parallel": false
       }
     },
     "lint": {

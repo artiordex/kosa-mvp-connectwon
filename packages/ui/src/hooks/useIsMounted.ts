@@ -3,6 +3,8 @@
  * Author : Shiwoo Min
  * Date : 2025-09-09
  */
+"use client";
+
 import { useCallback, useEffect, useRef } from 'react';
 
 // 마운트 여부 조회 훅

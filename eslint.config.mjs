@@ -1,19 +1,15 @@
-
 /**
  * Description : eslint.config.mjs - 📌 모노레포 ESLint Flat Config 설정
  * Author : Shiwoo Min
  * Date : 2025-09-25
  * 명령어 : pnpm eslint .
+ * 10-08 - Docker/Firebase/Azure 환경 대응 경로 수정 및 중복 import 정리
  */
 import eslint from '@eslint/js';
 import nextPlugin from '@next/eslint-plugin-next';
 import nx from '@nx/eslint-plugin';
 import typescript from '@typescript-eslint/eslint-plugin';
 import typescriptParser from '@typescript-eslint/parser';
-import importPlugin from 'eslint-plugin-import';
-import playwright from 'eslint-plugin-playwright';
-import react from 'eslint-plugin-react';
-import reactHooks from 'eslint-plugin-react-hooks';
 import importPlugin from 'eslint-plugin-import';
 import playwright from 'eslint-plugin-playwright';
 import react from 'eslint-plugin-react';
@@ -30,7 +26,13 @@ export default [
       sourceType: 'module',
       parser: typescriptParser,
       parserOptions: {
-        project: ['./tsconfig.json', './apps/*/tsconfig.json', './packages/*/tsconfig.json'],
+        // 모노레포 경로 문제 대응 (Docker/Firebase 빌드 환경)
+        tsconfigRootDir: process.cwd(),
+        project: [
+          './tsconfig.json',
+          './apps/*/tsconfig.json',
+          './packages/*/tsconfig.json',
+        ],
         ecmaFeatures: {
           jsx: true,
         },
@@ -64,8 +66,16 @@ export default [
     settings: {
       'import/resolver': {
         typescript: {
-          project: ['./tsconfig.json', './apps/*/tsconfig.json', './packages/*/tsconfig.json'],
+          project: [
+            './tsconfig.json',
+            './apps/*/tsconfig.json',
+            './packages/*/tsconfig.json',
+          ],
           alwaysTryTypes: true,
+          // 모노레포 절대 경로 alias 호환
+          paths: {
+            '@connectwon/*': ['./packages/*/src'],
+          },
         },
         node: {
           extensions: ['.mjs', '.js', '.ts', '.tsx', '.jsx', '.cjs'],
@@ -150,6 +160,8 @@ export default [
       // React 관련 규칙
       'react/react-in-jsx-scope': 'off',
       'react/prop-types': 'off',
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'warn',
 
       // Next.js 규칙
       '@next/next/no-html-link-for-pages': 'off',
@@ -161,17 +173,17 @@ export default [
   // 파일별 무시 패턴
   {
     ignores: [
-      'node_modules/',
-      'dist/',
-      'build/',
-      'coverage/',
+      'node_modules/**',
+      'dist/**',
+      'build/**',
+      'coverage/**',
       '*.config.js',
       '*.config.ts',
       'package-lock.json',
       'yarn.lock',
       'pnpm-lock.yaml',
       '*.snap',
-      'test-results/',
+      'test-results/**',
       'vite.config.ts',
       'eslintrc.cjs',
     ],

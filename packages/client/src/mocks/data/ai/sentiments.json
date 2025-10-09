@@ -1,0 +1,72 @@
+[
+  {
+    "text": "이번 프로그램 너무 유익했어요! 강사님 설명이 깔끔했습니다.",
+    "sentiment": "positive",
+    "score": 0.95,
+    "keywords": ["프로그램", "강사", "설명", "유익함"],
+    "confidence": 0.92
+  },
+  {
+    "text": "예약 시스템이 느리고 오류가 자주 발생해요.",
+    "sentiment": "negative",
+    "score": 0.89,
+    "keywords": ["예약", "시스템", "오류", "느림"],
+    "confidence": 0.94
+  },
+  {
+    "text": "시설은 괜찮은데 조명이 조금 어두워요.",
+    "sentiment": "neutral",
+    "score": 0.53,
+    "keywords": ["시설", "조명", "밝기"],
+    "confidence": 0.75
+  },
+  {
+    "text": "멘토님이 정말 열정적으로 도와주셔서 감동받았어요!",
+    "sentiment": "positive",
+    "score": 0.97,
+    "keywords": ["멘토", "도움", "감동"],
+    "confidence": 0.96
+  },
+  {
+    "text": "결제는 되었는데 영수증이 안 와요. 문의했는데 답변도 없어요.",
+    "sentiment": "negative",
+    "score": 0.91,
+    "keywords": ["결제", "영수증", "문의", "답변"],
+    "confidence": 0.93
+  },
+  {
+    "text": "카페 구역이 조용해서 집중하기 좋네요.",
+    "sentiment": "positive",
+    "score": 0.88,
+    "keywords": ["카페", "조용함", "집중"],
+    "confidence": 0.89
+  },
+  {
+    "text": "교육 내용은 좋은데 시간이 좀 짧았어요.",
+    "sentiment": "neutral",
+    "score": 0.56,
+    "keywords": ["교육", "시간", "짧음"],
+    "confidence": 0.74
+  },
+  {
+    "text": "어제 로그인 오류로 하루 종일 접속이 안 됐어요.",
+    "sentiment": "negative",
+    "score": 0.92,
+    "keywords": ["로그인", "오류", "접속"],
+    "confidence": 0.95
+  },
+  {
+    "text": "멘토링 예약이 빠르고 편리해서 좋았습니다.",
+    "sentiment": "positive",
+    "score": 0.94,
+    "keywords": ["멘토링", "예약", "편리함"],
+    "confidence": 0.93
+  },
+  {
+    "text": "사이트 디자인이 깔끔하고 보기 좋아요.",
+    "sentiment": "positive",
+    "score": 0.9,
+    "keywords": ["사이트", "디자인", "깔끔함"],
+    "confidence": 0.9
+  }
+]

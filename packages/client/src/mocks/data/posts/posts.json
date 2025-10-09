@@ -1,0 +1,92 @@
+[
+  {
+    "id": 1,
+    "userId": 1,
+    "title": "첫 번째 게시글",
+    "content": "안녕하세요! 첫 게시글입니다.",
+    "createdAt": "2024-10-01T09:00:00Z",
+    "likes": 15,
+    "views": 234
+  },
+  {
+    "id": 2,
+    "userId": 2,
+    "title": "React 학습 방법",
+    "content": "React를 효과적으로 학습하는 방법을 공유합니다.",
+    "createdAt": "2024-10-02T10:30:00Z",
+    "likes": 42,
+    "views": 567
+  },
+  {
+    "id": 3,
+    "userId": 1,
+    "title": "JavaScript 비동기 처리",
+    "content": "Promise와 async/await에 대해 알아봅시다.",
+    "createdAt": "2024-10-03T14:20:00Z",
+    "likes": 38,
+    "views": 489
+  },
+  {
+    "id": 4,
+    "userId": 3,
+    "title": "TypeScript 시작하기",
+    "content": "TypeScript의 기본 개념과 설치 방법입니다.",
+    "createdAt": "2024-10-04T11:15:00Z",
+    "likes": 55,
+    "views": 678
+  },
+  {
+    "id": 5,
+    "userId": 2,
+    "title": "CSS Grid 레이아웃",
+    "content": "Grid를 사용한 반응형 레이아웃 만들기",
+    "createdAt": "2024-10-05T16:45:00Z",
+    "likes": 28,
+    "views": 345
+  },
+  {
+    "id": 6,
+    "userId": 4,
+    "title": "Node.js REST API 구축",
+    "content": "Express를 활용한 RESTful API 개발 가이드",
+    "createdAt": "2024-10-06T13:00:00Z",
+    "likes": 67,
+    "views": 892
+  },
+  {
+    "id": 7,
+    "userId": 3,
+    "title": "Git 브랜치 전략",
+    "content": "효과적인 Git 브랜치 관리 방법을 소개합니다.",
+    "createdAt": "2024-10-07T09:30:00Z",
+    "likes": 44,
+    "views": 567
+  },
+  {
+    "id": 8,
+    "userId": 5,
+    "title": "React Hooks 완벽 가이드",
+    "content": "useState, useEffect 등 주요 Hooks 사용법",
+    "createdAt": "2024-10-08T15:20:00Z",
+    "likes": 89,
+    "views": 1234
+  },
+  {
+    "id": 9,
+    "userId": 4,
+    "title": "웹 성능 최적화",
+    "content": "로딩 속도를 개선하는 다양한 기법들",
+    "createdAt": "2024-10-09T10:00:00Z",
+    "likes": 73,
+    "views": 945
+  },
+  {
+    "id": 10,
+    "userId": 5,
+    "title": "보안 취약점 점검",
+    "content": "웹 애플리케이션의 주요 보안 이슈와 대응 방법",
+    "createdAt": "2024-10-10T14:30:00Z",
+    "likes": 61,
+    "views": 723
+  }
+]

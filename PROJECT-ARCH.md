@@ -1,13 +1,30 @@
+
 ```
 kosa-mvp-connectwon
 ├─ .changeset
+│  ├─ config.json
+│  └─ README.md
 ├─ .cz-config.cjs
-├─ .dockerignore
-├─ .eslintignore
+├─ .firebaserc
 ├─ .hintrc
 ├─ .husky
+│  └─ _
+│     ├─ applypatch-msg
+│     ├─ commit-msg
+│     ├─ h
+│     ├─ husky.sh
+│     ├─ post-applypatch
+│     ├─ post-commit
+│     ├─ post-merge
+│     ├─ post-rewrite
+│     ├─ pre-applypatch
+│     ├─ pre-auto-gc
+│     ├─ pre-commit
+│     ├─ pre-merge-commit
+│     ├─ pre-push
+│     ├─ pre-rebase
+│     └─ prepare-commit-msg
 ├─ .pnpmrc
-├─ .prettierrc.json
 ├─ apps
 │  ├─ admin
 │  │  ├─ next-env.d.ts
@@ -16,6 +33,18 @@ kosa-mvp-connectwon
 │  │  ├─ postcss.config.mjs
 │  │  ├─ project.json
 │  │  ├─ public
+│  │  │  ├─ favicon
+│  │  │  │  ├─ android-chrome-192x192.png
+│  │  │  │  ├─ android-chrome-512x512.png
+│  │  │  │  ├─ apple-touch-icon.png
+│  │  │  │  ├─ favicon-16x16.png
+│  │  │  │  ├─ favicon-32x32.png
+│  │  │  │  ├─ favicon.ico
+│  │  │  │  └─ site.webmanifest
+│  │  │  └─ images
+│  │  │     ├─ footer_logo.png
+│  │  │     ├─ header_logo.png
+│  │  │     └─ logo.png
 │  │  ├─ server.ts
 │  │  ├─ src
 │  │  │  ├─ app
@@ -34,36 +63,41 @@ kosa-mvp-connectwon
 │  │  │  │  ├─ content
 │  │  │  │  │  └─ AdminContent.tsx
 │  │  │  │  ├─ dashboard
-│  │  │  │  │  └─ Dashboard.tsx
+│  │  │  │  │  ├─ AiDashboard.tsx
+│  │  │  │  │  └─ AnalyticsDashboard.tsx
 │  │  │  │  ├─ error.tsx
 │  │  │  │  ├─ feedback
 │  │  │  │  │  └─ Feedback.tsx
 │  │  │  │  ├─ globals.css
+│  │  │  │  ├─ help
+│  │  │  │  │  └─ page.tsx
 │  │  │  │  ├─ loading.tsx
 │  │  │  │  ├─ not-found.tsx
 │  │  │  │  ├─ page.tsx
-│  │  │  │  ├─ page2.tsx
 │  │  │  │  ├─ programs
+│  │  │  │  │  ├─ add
+│  │  │  │  │  │  └─ page.tsx
 │  │  │  │  │  ├─ page.tsx
+│  │  │  │  │  ├─ ProgramAdd.tsx
 │  │  │  │  │  └─ [id]
 │  │  │  │  │     ├─ edit
 │  │  │  │  │     │  └─ page.tsx
 │  │  │  │  │     └─ sessions
 │  │  │  │  │        └─ page.tsx
 │  │  │  │  ├─ reservation
-│  │  │  │  │  ├─ Reservation.tsx
-│  │  │  │  │  └─ [id]
+│  │  │  │  │  └─ Reservation.tsx
 │  │  │  │  ├─ settings
+│  │  │  │  │  ├─ Contact.tsx
+│  │  │  │  │  └─ page.tsx
+│  │  │  │  ├─ test-firebase
 │  │  │  │  │  └─ page.tsx
 │  │  │  │  ├─ users
 │  │  │  │  │  ├─ page.tsx
-│  │  │  │  │  └─ [id]
-│  │  │  │  │     └─ edit
+│  │  │  │  │  └─ UserSettings.tsx
 │  │  │  │  └─ venues
 │  │  │  │     ├─ page.tsx
 │  │  │  │     ├─ RoomSettings.tsx
 │  │  │  │     └─ [id]
-│  │  │  │        ├─ edit
 │  │  │  │        └─ rooms
 │  │  │  │           └─ [roomId]
 │  │  │  │              └─ page.tsx
@@ -87,17 +121,22 @@ kosa-mvp-connectwon
 │  │  │  │  ├─ RoomUsagePrediction.tsx
 │  │  │  │  ├─ Sidebar.tsx
 │  │  │  │  └─ WeeklyTrends.tsx
-│  │  │  └─ data
-│  │  │     ├─ content.json
-│  │  │     ├─ devices.json
-│  │  │     ├─ features.json
-│  │  │     ├─ hero.json
-│  │  │     ├─ insights.json
-│  │  │     ├─ partners.json
-│  │  │     ├─ programs.json
-│  │  │     ├─ rooms.json
-│  │  │     └─ venues.json
-│  │  ├─ tailwind.config.ts
+│  │  │  ├─ data
+│  │  │  │  ├─ content.json
+│  │  │  │  ├─ devices.json
+│  │  │  │  ├─ features.json
+│  │  │  │  ├─ hero.json
+│  │  │  │  ├─ insights.json
+│  │  │  │  ├─ menu.json
+│  │  │  │  ├─ partners.json
+│  │  │  │  ├─ programs.json
+│  │  │  │  ├─ rooms.json
+│  │  │  │  ├─ users.json
+│  │  │  │  └─ venues.json
+│  │  │  ├─ pages
+│  │  │  │  └─ _document.tsx
+│  │  │  └─ providers
+│  │  │     └─ RootProvider.tsx
 │  │  └─ tsconfig.json
 │  ├─ api
 │  │  ├─ ecosystem.config.js
@@ -163,6 +202,7 @@ kosa-mvp-connectwon
 │  │  └─ tsconfig.json
 │  ├─ e2e
 │  │  ├─ package.json
+│  │  ├─ playwright.config.ts
 │  │  ├─ project.json
 │  │  ├─ src
 │  │  │  ├─ actions
@@ -170,24 +210,15 @@ kosa-mvp-connectwon
 │  │  │  ├─ e2e-types.ts
 │  │  │  ├─ locators
 │  │  │  │  └─ locator.ts
-│  │  │  ├─ playwright.config.ts
 │  │  │  ├─ setup.ts
 │  │  │  ├─ teardown.ts
 │  │  │  └─ tests
 │  │  │     ├─ admin
-│  │  │     │  └─ dashboard.spec.ts
 │  │  │     ├─ api
-│  │  │     │  └─ health.spec.ts
 │  │  │     ├─ auth
-│  │  │     │  ├─ admin.spec.ts
-│  │  │     │  └─ user.spec.ts
 │  │  │     ├─ flow
-│  │  │     │  ├─ admin-flow.spec.ts
-│  │  │     │  └─ user-flow.spec.ts
 │  │  │     ├─ program
-│  │  │     │  └─ participant.spec.ts
 │  │  │     └─ venues
-│  │  │        └─ reservation.spec.ts
 │  │  └─ tsconfig.json
 │  ├─ web
 │  │  ├─ next-env.d.ts
@@ -196,6 +227,14 @@ kosa-mvp-connectwon
 │  │  ├─ postcss.config.mjs
 │  │  ├─ project.json
 │  │  ├─ public
+│  │  │  ├─ favicon
+│  │  │  │  ├─ android-chrome-192x192.png
+│  │  │  │  ├─ android-chrome-512x512.png
+│  │  │  │  ├─ apple-touch-icon.png
+│  │  │  │  ├─ favicon-16x16.png
+│  │  │  │  ├─ favicon-32x32.png
+│  │  │  │  ├─ favicon.ico
+│  │  │  │  └─ site.webmanifest
 │  │  │  ├─ images
 │  │  │  │  ├─ avatar.jpg
 │  │  │  │  ├─ creator_hero_bg.jpg
@@ -217,7 +256,11 @@ kosa-mvp-connectwon
 │  │  │  │  ├─ room_sp_2.jpg
 │  │  │  │  ├─ room_sp_3.jpg
 │  │  │  │  ├─ room_sp_4.jpg
-│  │  │  │  └─ social_hero_bk.jpg
+│  │  │  │  ├─ social_hero_bk.jpg
+│  │  │  │  ├─ venues_hero_bg.jpg
+│  │  │  │  ├─ venue_sp_1.jpg
+│  │  │  │  ├─ venue_sp_2.jpg
+│  │  │  │  └─ venue_sp_3.jpg
 │  │  │  └─ policies
 │  │  │     ├─ privacy.html
 │  │  │     └─ terms.html
@@ -229,11 +272,11 @@ kosa-mvp-connectwon
 │  │  │  │  │  │  └─ page.tsx
 │  │  │  │  │  ├─ login
 │  │  │  │  │  │  ├─ login.tsx
-│  │  │  │  │  │  └─ page.tsx
+│  │  │  │  │  │  ├─ page.tsx
+│  │  │  │  │  │  └─ SSO.tsx
 │  │  │  │  │  ├─ onboarding
 │  │  │  │  │  │  ├─ Onboarding.tsx
-│  │  │  │  │  │  ├─ page.tsx
-│  │  │  │  │  │  └─ StepIndicator.tsx
+│  │  │  │  │  │  └─ page.tsx
 │  │  │  │  │  └─ signup
 │  │  │  │  │     ├─ page.tsx
 │  │  │  │  │     └─ Signup.tsx
@@ -298,11 +341,9 @@ kosa-mvp-connectwon
 │  │  │  │  ├─ users
 │  │  │  │  │  └─ page.tsx
 │  │  │  │  └─ venues
-│  │  │  │     ├─ CentersHero.tsx
-│  │  │  │     ├─ CentersList.tsx
 │  │  │  │     ├─ gangnam
-│  │  │  │     │  ├─ CenterDetail.tsx
-│  │  │  │     │  └─ page.tsx
+│  │  │  │     │  ├─ page.tsx
+│  │  │  │     │  └─ VenueDetail.tsx
 │  │  │  │     ├─ gwangmyeong
 │  │  │  │     │  ├─ CenterDetail.tsx
 │  │  │  │     │  └─ page.tsx
@@ -317,6 +358,8 @@ kosa-mvp-connectwon
 │  │  │  │     │  └─ [id]
 │  │  │  │     │     └─ booking
 │  │  │  │     │        └─ page.tsx
+│  │  │  │     ├─ VenueHeroSection.tsx
+│  │  │  │     ├─ VenueListSection.tsx
 │  │  │  │     └─ [id]
 │  │  │  │        └─ page.tsx
 │  │  │  ├─ components
@@ -332,12 +375,13 @@ kosa-mvp-connectwon
 │  │  │  │  │  ├─ AIViewSection.tsx
 │  │  │  │  │  ├─ CTASection.tsx
 │  │  │  │  │  ├─ FeatureSection.tsx
-│  │  │  │  │  ├─ HeroSection.tsx
 │  │  │  │  │  ├─ InsightSection.tsx
+│  │  │  │  │  ├─ MainHeroSection.tsx
 │  │  │  │  │  ├─ PartnerSlideSection.tsx
 │  │  │  │  │  ├─ ProgramSection.tsx
 │  │  │  │  │  ├─ QuickMenuSection.tsx
 │  │  │  │  │  └─ RoomSection.tsx
+│  │  │  │  ├─ Input.tsx
 │  │  │  │  ├─ programs
 │  │  │  │  │  ├─ ProgramCard.tsx
 │  │  │  │  │  ├─ ProgramList.tsx
@@ -354,13 +398,18 @@ kosa-mvp-connectwon
 │  │  │  │  ├─ programs.json
 │  │  │  │  ├─ rooms.json
 │  │  │  │  └─ venues.json
-│  │  │  └─ lib
-│  │  │     ├─ email.ts
-│  │  │     └─ huggingface.ts
-│  │  ├─ tailwind.config.ts
-│  │  ├─ tsconfig.json
-│  │  ├─ web-types.d.ts
-│  │  └─ web-types.ts
+│  │  │  ├─ global.d.ts
+│  │  │  ├─ lib
+│  │  │  │  ├─ email.ts
+│  │  │  │  └─ huggingface.ts
+│  │  │  ├─ next-env.d.ts
+│  │  │  ├─ pages
+│  │  │  │  └─ _document.tsx
+│  │  │  ├─ providers
+│  │  │  │  └─ RootProvider.tsx
+│  │  │  ├─ web-types.d.ts
+│  │  │  └─ web-types.ts
+│  │  └─ tsconfig.json
 │  └─ worker
 │     ├─ package.json
 │     ├─ project.json
@@ -407,7 +456,9 @@ kosa-mvp-connectwon
 │     ├─ 19_트러블슈팅건.md
 │     └─ 20_참고자료.md
 ├─ eslint.config.mjs
+├─ firebase.json
 ├─ infra
+│  ├─ cloudbuild.yaml
 │  ├─ database
 │  │  ├─ conf
 │  │  │  ├─ pg_hba.conf
@@ -420,12 +471,6 @@ kosa-mvp-connectwon
 │  ├─ docker
 │  │  ├─ .wslconfig
 │  │  ├─ docker-compose.yml
-│  │  ├─ Dockerfile.admin
-│  │  ├─ Dockerfile.api
-│  │  ├─ Dockerfile.db
-│  │  ├─ Dockerfile.e2e
-│  │  ├─ Dockerfile.web
-│  │  ├─ Dockerfile.worker
 │  │  └─ nginx.conf
 │  ├─ infra-types.ts
 │  ├─ k8s
@@ -441,11 +486,9 @@ kosa-mvp-connectwon
 │  └─ n8n
 │     ├─ package.json
 │     ├─ project.json
-│     ├─ scripts
-│     │  ├─ build.sh
-│     │  └─ setup.sh
-│     └─ workflows
-│        └─ exported
+│     └─ scripts
+│        ├─ build.sh
+│        └─ setup.sh
 ├─ LICENSE
 ├─ nx.json
 ├─ package.json
@@ -460,21 +503,19 @@ kosa-mvp-connectwon
 │  │  │  │  ├─ ai.contract.ts
 │  │  │  │  ├─ auth.contract.ts
 │  │  │  │  ├─ common.contract.ts
-│  │  │  │  ├─ index.ts
 │  │  │  │  ├─ payment.contract.ts
 │  │  │  │  ├─ program.contract.ts
 │  │  │  │  └─ venue.contract.ts
+│  │  │  ├─ index.ts
 │  │  │  ├─ openapi
 │  │  │  │  ├─ document.ts
 │  │  │  │  ├─ emit.ts
-│  │  │  │  ├─ index.ts
 │  │  │  │  ├─ registry.ts
 │  │  │  │  └─ setup.ts
 │  │  │  └─ schemas
 │  │  │     ├─ ai.schema.ts
 │  │  │     ├─ auth.schema.ts
 │  │  │     ├─ common.schema.ts
-│  │  │     ├─ index.ts
 │  │  │     ├─ payment.schema.ts
 │  │  │     ├─ program.schema.ts
 │  │  │     └─ venue.schema.ts
@@ -492,9 +533,144 @@ kosa-mvp-connectwon
 │  │  │  │  ├─ useOnlineStatus.ts
 │  │  │  │  └─ useToggle.ts
 │  │  │  ├─ index.ts
+│  │  │  ├─ mock-types.ts
+│  │  │  ├─ mocks
+│  │  │  │  ├─ browser.ts
+│  │  │  │  ├─ data
+│  │  │  │  │  ├─ admin
+│  │  │  │  │  │  ├─ activities.json
+│  │  │  │  │  │  ├─ reports.json
+│  │  │  │  │  │  └─ stats.json
+│  │  │  │  │  ├─ ai
+│  │  │  │  │  │  ├─ interactions.json
+│  │  │  │  │  │  ├─ recommendations.json
+│  │  │  │  │  │  └─ sentiments.json
+│  │  │  │  │  ├─ memberships
+│  │  │  │  │  │  ├─ comparisons.json
+│  │  │  │  │  │  ├─ plans.json
+│  │  │  │  │  │  └─ subscriptions.json
+│  │  │  │  │  ├─ notifications
+│  │  │  │  │  │  └─ notifications.json
+│  │  │  │  │  ├─ payments
+│  │  │  │  │  │  └─ payments.json
+│  │  │  │  │  ├─ posts
+│  │  │  │  │  │  ├─ comments.json
+│  │  │  │  │  │  └─ posts.json
+│  │  │  │  │  ├─ programs
+│  │  │  │  │  │  ├─ programs.json
+│  │  │  │  │  │  ├─ reviews.json
+│  │  │  │  │  │  └─ sessions.json
+│  │  │  │  │  ├─ reservations
+│  │  │  │  │  │  ├─ attendance.json
+│  │  │  │  │  │  ├─ reservations.json
+│  │  │  │  │  │  └─ scheduler.json
+│  │  │  │  │  ├─ users
+│  │  │  │  │  │  ├─ activities.json
+│  │  │  │  │  │  ├─ creators.json
+│  │  │  │  │  │  ├─ profiles.json
+│  │  │  │  │  │  ├─ stats.json
+│  │  │  │  │  │  └─ users.json
+│  │  │  │  │  └─ venues
+│  │  │  │  │     ├─ equipment.json
+│  │  │  │  │     ├─ equipmentRentals.json
+│  │  │  │  │     ├─ inventories.json
+│  │  │  │  │     ├─ rooms.json
+│  │  │  │  │     └─ venues.json
+│  │  │  │  ├─ db
+│  │  │  │  │  ├─ index.ts
+│  │  │  │  │  ├─ schema.ts
+│  │  │  │  │  └─ seeds.ts
+│  │  │  │  ├─ generators
+│  │  │  │  │  ├─ admin.generator.ts
+│  │  │  │  │  ├─ ai.generator.ts
+│  │  │  │  │  ├─ equipment.generator.ts
+│  │  │  │  │  ├─ index.ts
+│  │  │  │  │  ├─ membership.generator.ts
+│  │  │  │  │  ├─ notification.generator.ts
+│  │  │  │  │  ├─ payment.generator.ts
+│  │  │  │  │  ├─ post.generator.ts
+│  │  │  │  │  ├─ program.generator.ts
+│  │  │  │  │  ├─ reservation.generator.ts
+│  │  │  │  │  ├─ scheduler.generator.ts
+│  │  │  │  │  ├─ user.generator.ts
+│  │  │  │  │  └─ venue.generator.ts
+│  │  │  │  ├─ handlers
+│  │  │  │  │  ├─ admin
+│  │  │  │  │  │  ├─ dashboard.handler.ts
+│  │  │  │  │  │  ├─ program-management.handler.ts
+│  │  │  │  │  │  ├─ report-management.handler.ts
+│  │  │  │  │  │  ├─ user-management.handler.ts
+│  │  │  │  │  │  └─ venue-management.handler.ts
+│  │  │  │  │  ├─ ai
+│  │  │  │  │  │  ├─ ai.handler.ts
+│  │  │  │  │  │  ├─ chat.handler.ts
+│  │  │  │  │  │  ├─ moderation.handler.ts
+│  │  │  │  │  │  ├─ recommendation.handler.ts
+│  │  │  │  │  │  └─ summary.handler.ts
+│  │  │  │  │  ├─ auth
+│  │  │  │  │  │  ├─ auth.handler.ts
+│  │  │  │  │  │  ├─ session.handler.ts
+│  │  │  │  │  │  └─ sso.handler.ts
+│  │  │  │  │  ├─ index.ts
+│  │  │  │  │  ├─ memberships
+│  │  │  │  │  │  ├─ benefit.handler.ts
+│  │  │  │  │  │  └─ membership.handler.ts
+│  │  │  │  │  ├─ notifications
+│  │  │  │  │  │  ├─ message.handler.ts
+│  │  │  │  │  │  ├─ notification.handler.ts
+│  │  │  │  │  │  └─ slack.handler.ts
+│  │  │  │  │  ├─ payments
+│  │  │  │  │  │  ├─ payment.handler.ts
+│  │  │  │  │  │  ├─ receipt.handler.ts
+│  │  │  │  │  │  └─ subscription.handler.ts
+│  │  │  │  │  ├─ posts
+│  │  │  │  │  │  ├─ comment.handler.ts
+│  │  │  │  │  │  ├─ post.handler.ts
+│  │  │  │  │  │  └─ report.handler.ts
+│  │  │  │  │  ├─ programs
+│  │  │  │  │  │  ├─ participant.handler.ts
+│  │  │  │  │  │  ├─ program.handler.ts
+│  │  │  │  │  │  ├─ review.handler.ts
+│  │  │  │  │  │  └─ session.handler.ts
+│  │  │  │  │  ├─ users
+│  │  │  │  │  │  ├─ activity.handler.ts
+│  │  │  │  │  │  ├─ creator.handler.ts
+│  │  │  │  │  │  ├─ profile.handler.ts
+│  │  │  │  │  │  └─ user.handler.ts
+│  │  │  │  │  └─ venues
+│  │  │  │  │     ├─ equipment.handler.ts
+│  │  │  │  │     ├─ reservation.handler.ts
+│  │  │  │  │     ├─ room.handler.ts
+│  │  │  │  │     ├─ scheduler.handler.ts
+│  │  │  │  │     └─ venue.handler.ts
+│  │  │  │  ├─ index.ts
+│  │  │  │  └─ utils
+│  │  │  │     ├─ delay.ts
+│  │  │  │     ├─ pagination.ts
+│  │  │  │     ├─ response.ts
+│  │  │  │     └─ search.ts
 │  │  │  └─ providers
 │  │  │     ├─ AuthProvider.tsx
-│  │  │     └─ QueryProvider.tsx
+│  │  │     ├─ firebase-init.ts
+│  │  │     ├─ firebase.ts
+│  │  │     ├─ FirebaseProvider.tsx
+│  │  │     ├─ QueryProvider.tsx
+│  │  │     └─ RootProvider.tsx
+│  │  └─ tsconfig.json
+│  ├─ configs
+│  │  ├─ package.json
+│  │  ├─ project.json
+│  │  ├─ src
+│  │  │  ├─ eslint
+│  │  │  │  └─ base.ts
+│  │  │  ├─ index.ts
+│  │  │  ├─ testing
+│  │  │  │  ├─ playwright.ts
+│  │  │  │  └─ vitest.ts
+│  │  │  └─ typescript
+│  │  │     ├─ base.json
+│  │  │     ├─ node.json
+│  │  │     └─ web.json
 │  │  └─ tsconfig.json
 │  ├─ core
 │  │  ├─ package.json
@@ -508,26 +684,16 @@ kosa-mvp-connectwon
 │  │  │  │     ├─ program.usecase.ts
 │  │  │  │     ├─ reservation.usecase.ts
 │  │  │  │     └─ schedule.usecase.ts
-│  │  │  ├─ configs
-│  │  │  │  ├─ eslint
-│  │  │  │  │  └─ base.ts
-│  │  │  │  ├─ index.ts
-│  │  │  │  ├─ tailwind
-│  │  │  │  │  ├─ admin.ts
-│  │  │  │  │  ├─ base.ts
-│  │  │  │  │  └─ web.ts
-│  │  │  │  ├─ testing
-│  │  │  │  │  ├─ playwright.ts
-│  │  │  │  │  └─ vitest.ts
-│  │  │  │  └─ typescript
-│  │  │  │     ├─ base.json
-│  │  │  │     ├─ node.json
-│  │  │  │     └─ web.json
 │  │  │  ├─ connectwon-env.ts
 │  │  │  ├─ core-types.ts
 │  │  │  ├─ domain
 │  │  │  │  └─ value-objects.ts
 │  │  │  ├─ index.ts
+│  │  │  ├─ locales
+│  │  │  │  ├─ en.json
+│  │  │  │  ├─ ja.json
+│  │  │  │  ├─ ko.json
+│  │  │  │  └─ vi.json
 │  │  │  ├─ ports
 │  │  │  │  ├─ ai.port.ts
 │  │  │  │  ├─ cache.port.ts
@@ -566,8 +732,8 @@ kosa-mvp-connectwon
 │  │  │  │  └─ venue.adapter.ts
 │  │  │  ├─ client.ts
 │  │  │  ├─ index.ts
+│  │  │  ├─ test-smoke.ts
 │  │  │  └─ utils.ts
-│  │  ├─ test-smoke.ts
 │  │  └─ tsconfig.json
 │  ├─ logger
 │  │  ├─ package.json
@@ -592,17 +758,16 @@ kosa-mvp-connectwon
 │  │  │  │  ├─ models.py
 │  │  │  │  └─ __init__.py
 │  │  │  └─ pyproject.toml
-│  │  ├─ tsconfig.json
-│  │  └─ typescript
-│  │     └─ src
-│  │        ├─ auth.ts
-│  │        ├─ errors.ts
-│  │        ├─ http.ts
-│  │        ├─ index.ts
-│  │        ├─ middleware.ts
-│  │        ├─ pagination.ts
-│  │        ├─ sdk-types.ts
-│  │        └─ tracing.ts
+│  │  ├─ src
+│  │  │  ├─ auth.ts
+│  │  │  ├─ errors.ts
+│  │  │  ├─ http.ts
+│  │  │  ├─ index.ts
+│  │  │  ├─ middleware.ts
+│  │  │  ├─ pagination.ts
+│  │  │  ├─ sdk-types.ts
+│  │  │  └─ tracing.ts
+│  │  └─ tsconfig.json
 │  ├─ server
 │  │  ├─ package.json
 │  │  ├─ project.json
@@ -706,9 +871,6 @@ kosa-mvp-connectwon
 │     │  │  ├─ useOnClickOutside.ts
 │     │  │  └─ useThrottle.ts
 │     │  ├─ index.ts
-│     │  ├─ public
-│     │  │  ├─ icons
-│     │  │  └─ images
 │     │  ├─ styles
 │     │  │  ├─ animations.css
 │     │  │  └─ customs.css
@@ -718,25 +880,27 @@ kosa-mvp-connectwon
 │     │  ├─ ui-types.ts
 │     │  └─ utils
 │     │     └─ cn.ts
-│     ├─ tailwind.config.ts
+│     ├─ tailwind.config.mjs
 │     └─ tsconfig.json
 ├─ pnpm-lock.yaml
 ├─ pnpm-workspace.yaml
+├─ prettier.config.mjs
 ├─ PROJECT-ARCH.md
 ├─ README.md
 ├─ renovate.json
 ├─ setup-structure.ps1
-├─ test
-│  └─ setup.ts
+├─ tmp
 ├─ tools
 │  ├─ services
+│  │  ├─ postbuild.ts
 │  │  └─ webhook-catcher.ts
 │  ├─ testkit
+│  │  ├─ setup.ts
 │  │  └─ test-artifacts.ts
 │  ├─ tool-types.ts
 │  └─ utils
 │     └─ assert.ts
 ├─ tsconfig.base.json
-├─ tsconfig.json
-└─ vitest.config.ts
+└─ tsconfig.json
+
 ```

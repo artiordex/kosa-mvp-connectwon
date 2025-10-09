@@ -1,0 +1,103 @@
+[
+  {
+    "id": "rec-20251009-001",
+    "userId": 101,
+    "type": "program",
+    "items": [
+      { "id": 82, "score": 0.92, "reason": "최근 IT/개발 프로그램에 참여함" },
+      { "id": 91, "score": 0.88, "reason": "AI 관련 키워드 선호도 높음" },
+      { "id": 73, "score": 0.81, "reason": "유사 관심군(IT창업자) 활동 중" }
+    ],
+    "generatedAt": "2025-10-09T09:10:00Z"
+  },
+  {
+    "id": "rec-20251009-002",
+    "userId": 202,
+    "type": "mentor",
+    "items": [
+      { "id": 34, "score": 0.95, "reason": "디자인 관련 멘토링을 자주 수강함" },
+      { "id": 41, "score": 0.89, "reason": "UX/UI 포트폴리오 관련 문의 이력" }
+    ],
+    "generatedAt": "2025-10-09T09:12:10Z"
+  },
+  {
+    "id": "rec-20251009-003",
+    "userId": 303,
+    "type": "venue",
+    "items": [
+      { "id": 12, "score": 0.86, "reason": "서울 근처 협업 공간 선호" },
+      { "id": 8, "score": 0.77, "reason": "야간 이용 이력 있음" }
+    ],
+    "generatedAt": "2025-10-09T09:15:30Z"
+  },
+  {
+    "id": "rec-20251009-004",
+    "userId": 104,
+    "type": "program",
+    "items": [
+      { "id": 64, "score": 0.91, "reason": "마케팅 관련 키워드 클릭 빈도 높음" },
+      { "id": 68, "score": 0.83, "reason": "SNS 캠페인 참여 기록" }
+    ],
+    "generatedAt": "2025-10-09T09:19:00Z"
+  },
+  {
+    "id": "rec-20251009-005",
+    "userId": 501,
+    "type": "session",
+    "items": [
+      { "id": 1201, "score": 0.93, "reason": "‘디지털 브랜딩 워크샵’ 참석" },
+      { "id": 1202, "score": 0.79, "reason": "유사 세션에 긍정적 피드백 제공" }
+    ],
+    "generatedAt": "2025-10-09T09:22:00Z"
+  },
+  {
+    "id": "rec-20251009-006",
+    "userId": 402,
+    "type": "mentor",
+    "items": [
+      { "id": 35, "score": 0.88, "reason": "비즈니스 모델 코칭 요청 경험" },
+      { "id": 38, "score": 0.85, "reason": "창업 자금 관련 질문 다수" }
+    ],
+    "generatedAt": "2025-10-09T09:25:40Z"
+  },
+  {
+    "id": "rec-20251009-007",
+    "userId": 301,
+    "type": "program",
+    "items": [
+      { "id": 77, "score": 0.94, "reason": "디자인 툴 관련 프로그램 참여 이력" },
+      { "id": 81, "score": 0.79, "reason": "Adobe XD/피그마 태그 선호" }
+    ],
+    "generatedAt": "2025-10-09T09:30:00Z"
+  },
+  {
+    "id": "rec-20251009-008",
+    "userId": 222,
+    "type": "venue",
+    "items": [
+      { "id": 9, "score": 0.91, "reason": "스터디룸 예약 빈도 높음" },
+      { "id": 11, "score": 0.80, "reason": "라운지 공간 이용 다수" }
+    ],
+    "generatedAt": "2025-10-09T09:35:00Z"
+  },
+  {
+    "id": "rec-20251009-009",
+    "userId": 150,
+    "type": "program",
+    "items": [
+      { "id": 95, "score": 0.97, "reason": "최근 ‘AI 부트캠프’ 수료 후 연관 과정 요청" },
+      { "id": 102, "score": 0.84, "reason": "심화 과정 관심 표현" }
+    ],
+    "generatedAt": "2025-10-09T09:42:10Z"
+  },
+  {
+    "id": "rec-20251009-010",
+    "userId": 470,
+    "type": "mentor",
+    "items": [
+      { "id": 44, "score": 0.93, "reason": "개인 창업 관련 상담 요청" },
+      { "id": 45, "score": 0.88, "reason": "사업계획서 피드백 이력" }
+    ],
+    "generatedAt": "2025-10-09T09:48:00Z"
+  }
+]

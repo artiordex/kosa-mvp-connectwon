@@ -1,48 +1,70 @@
 {
   "name": "@connectwon/database",
   "version": "1.0.0",
-  "description": "ConnectWon 데이터베이스 모듈 (Prisma 기반)",
+  "description": "ConnectWon 데이터 계층 (Prisma + PostgreSQL + Core 연동)",
   "private": true,
   "type": "module",
+  "sideEffects": false,
+
+  "files": ["dist", "prisma"],
+
+  "__comment_exports": "ESM/TS 타입 정의 - Docker / Cloud Run / Firebase / Azure / Local 완전 호환",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
-    }
+    },
+    "./package.json": "./package.json"
   },
-  "files": [
-    "dist",
-    "prisma/schema.prisma"
-  ],
-  "__comment_scripts": "pnpm scripts 명령어",
+
+  "__comment_scripts": "Prisma 및 빌드 관련 스크립트",
   "scripts": {
+    "clean": "rimraf dist",
+    "build": "tsc -p tsconfig.json",
+    "type-check": "tsc --noEmit -p tsconfig.json",
     "generate": "prisma generate",
     "migrate": "prisma migrate dev",
-    "migrate:reset": "prisma migrate reset -f",
     "migrate:deploy": "prisma migrate deploy",
     "studio": "prisma studio",
-    "push": "prisma db push",
-    "introspect": "prisma db pull",
-    "build": "tsc -p tsconfig.json",
-    "clean": "rimraf dist",
-    "prepublishOnly": "pnpm run generate && pnpm run build"
+    "seed": "tsx prisma/seed.ts",
+    "prepublishOnly": "pnpm run clean && pnpm run build"
   },
-  "__comment_dependencies": "런타임 의존성 (실행 시 필요한 것들)",
+
+  "__comment_dependencies": "Prisma 및 데이터 계층 관련 런타임 의존성",
   "dependencies": {
     "@connectwon/core": "workspace:*",
-    "@connectwon/logger": "workspace:*",
-    "@prisma/client": "^6.16.2",
-    "dotenv": "^16.4.5"
+    "@prisma/client": "^6.0.1",
+    "prisma": "^6.0.1",
+    "dayjs": "^1.11.10",
+    "zod": "^3.23.8"
   },
-  "__comment_devDependencies": "개발/빌드 의존성 (빌드/마이그레이션용)",
+
+  "__comment_peerDependencies": "외부 의존성 (Core 등)",
+  "peerDependencies": {
+    "typescript": "5.6.3"
+  },
+
+  "__comment_devDependencies": "빌드 및 개발 도구",
   "devDependencies": {
-    "prisma": "^6.16.2",
+    "@types/node": "^24.3.1",
     "rimraf": "^6.0.1",
-    "typescript": "5.6.3",
-    "@types/node": "^24.3.1"
+    "tsx": "^4.19.3",
+    "typescript": "5.6.3"
   },
+
+  "__comment_nx": "Nx 그래프 자동 종속 관리",
+  "nx": {
+    "implicitDependencies": ["@connectwon/core", "@connectwon/logger"],
+    "targets": {
+      "build": {
+        "dependsOn": ["^build"]
+      }
+    }
+  },
+
+  "__comment_engines": "Node 20+ 런타임 보장",
   "engines": {
     "node": ">=20.11"
   }

@@ -1,0 +1,45 @@
+{
+  "__comment_root": "Firebase Hosting 설정 - ConnectWon (Web + Admin)",
+  "__comment_description": "Next.js 정적 빌드 결과(out 디렉터리)를 Firebase Hosting으로 배포하는 구성입니다.",
+
+  "hosting": [
+    {
+      "__comment_hosting_web": "웹 클라이언트용 호스팅 설정",
+      "target": "connectwon-web",
+      "public": "apps/web/out",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "cleanUrls": true,
+      "trailingSlash": false,
+      "rewrites": [
+        {
+          "__comment_rewrite_web": "SPA 라우팅용 리라이트 - 모든 경로를 index.html로 전달",
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ]
+    },
+    {
+      "__comment_hosting_admin": "관리자 대시보드용 호스팅 설정",
+      "target": "connectwon-admin",
+      "public": "apps/admin/out",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "cleanUrls": true,
+      "trailingSlash": false,
+      "rewrites": [
+        {
+          "__comment_rewrite_admin": "SPA 라우팅용 리라이트 - 모든 경로를 index.html로 전달",
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ]
+    }
+  ]
+}

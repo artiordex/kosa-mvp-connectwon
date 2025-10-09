@@ -1,56 +1,52 @@
 /**
- * Description : tsconfig.json - 📌 Config 패키지 (TypeScript 설정)
+ * Description : tsconfig.json - 📌 Configs 공통 설정 패키지
  * Author : Shiwoo Min
- * Date : 2025-09-05
- * 09-09 : noEmit=true, include 범위 축소, JS 제외(TS 전용)
- * 09-12 : NodeNext 해석/JSON 모듈/Node 타입 추가
- * 09-30 : Project References 대응 → composite: true / noEmit 제거
- * 명령어 : ls -l dist/packages/configs/index.*
+ * Date  : 2025-10-09
+ *
+ * Environment :
+ *  - Docker / Cloud Run / Firebase / Azure / Local 개발환경 완전 호환
+ *  - ESM 기반 (NodeNext) + 번들러 호환 (Nx tsc executor)
+ *
+ * Note :
+ *  - outDir/declarationDir 통합
+ *  - Node 환경용 Config 전용 (no JSX)
  */
 {
-  // 루트의 tsconfig.base.json 상속
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "composite": true,
 
-    // I/O 경로
+    // 경로
     "rootDir": "./src",
     "outDir": "../../dist/packages/configs",
     "declarationDir": "../../dist/packages/configs",
+    "tsBuildInfoFile": "../../dist/packages/configs/.tsbuildinfo",
 
-    // Node ESM 해석 (config TS 파일 import 시 일관성↑)
-    "module": "nodenext",
-    "moduleResolution": "nodenext",
+    // ESM + 번들러 해석
     "target": "es2022",
-    "lib": ["es2022"],
-    "types": ["node"],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "verbatimModuleSyntax": true,
 
-    // configs는 TS 전용으로 운용
-    "allowJs": false,
-
-    // JSON 설정을 TS에서 참조할 수 있게
-    "resolveJsonModule": true,
-
-    // 편의/안전
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-
-    // 선언 파일 및 소스맵 생성
+    // 선언 파일/소스맵
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
-
-    // 증분 빌드 캐시
     "incremental": true,
-    "tsBuildInfoFile": "../../dist/packages/configs/.tsbuildinfo"
+
+    // Node 전용 라이브러리
+    "lib": ["es2022"],
+    "types": ["node"],
+
+    // 품질 설정
+    "resolveJsonModule": true,
+    "exactOptionalPropertyTypes": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "stripInternal": true
   },
 
-  // 포함 범위
+  // JSON 파일 포함
   "include": ["src/**/*", "src/**/*.json"],
-
-  // 불필요한 폴더 제외
-  "exclude": ["dist", "node_modules"],
-
-  // Project References
-  "references": []
+  "exclude": ["dist", "node_modules"]
 }

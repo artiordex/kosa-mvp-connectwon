@@ -1,0 +1,102 @@
+[
+  {
+    "id": "act-20251009-001",
+    "adminId": 1,
+    "action": "user_suspend",
+    "targetType": "User",
+    "targetId": 102,
+    "description": "비정상 로그인 시도로 사용자 계정 정지 처리",
+    "timestamp": "2025-10-09T09:22:10Z",
+    "metadata": { "reason": "다중 IP 로그인", "ip": "211.184.72.22" }
+  },
+  {
+    "id": "act-20251009-002",
+    "adminId": 2,
+    "action": "program_approve",
+    "targetType": "Program",
+    "targetId": 84,
+    "description": "‘AI 창업 부트캠프’ 프로그램 승인 완료",
+    "timestamp": "2025-10-09T09:45:05Z",
+    "metadata": { "reviewDurationMin": 12 }
+  },
+  {
+    "id": "act-20251009-003",
+    "adminId": 3,
+    "action": "report_generate",
+    "targetType": "System",
+    "targetId": 0,
+    "description": "일일 리포트 자동 생성 완료",
+    "timestamp": "2025-10-09T10:01:47Z",
+    "metadata": { "reportId": "rep-20251009-01" }
+  },
+  {
+    "id": "act-20251009-004",
+    "adminId": 1,
+    "action": "venue_update",
+    "targetType": "Venue",
+    "targetId": 7,
+    "description": "‘광명 창업센터’ 좌석 수 50 → 60으로 업데이트",
+    "timestamp": "2025-10-09T11:08:00Z",
+    "metadata": { "beforeCapacity": 50, "afterCapacity": 60 }
+  },
+  {
+    "id": "act-20251009-005",
+    "adminId": 4,
+    "action": "payment_refund",
+    "targetType": "Payment",
+    "targetId": 903,
+    "description": "‘UX 디자인 워크숍’ 환불 처리 완료",
+    "timestamp": "2025-10-09T11:40:15Z",
+    "metadata": { "refundAmount": 39000, "method": "card" }
+  },
+  {
+    "id": "act-20251009-006",
+    "adminId": 2,
+    "action": "equipment_add",
+    "targetType": "Equipment",
+    "targetId": 201,
+    "description": "‘MacBook Air M3’ 장비 3대 추가 등록",
+    "timestamp": "2025-10-09T12:05:30Z",
+    "metadata": { "category": "notebook", "quantity": 3 }
+  },
+  {
+    "id": "act-20251009-007",
+    "adminId": 3,
+    "action": "user_upgrade",
+    "targetType": "Membership",
+    "targetId": 22,
+    "description": "회원 ‘박진수’ BASIC → PRO 등급 업그레이드",
+    "timestamp": "2025-10-09T12:18:44Z",
+    "metadata": { "from": "basic", "to": "pro" }
+  },
+  {
+    "id": "act-20251009-008",
+    "adminId": 5,
+    "action": "notification_broadcast",
+    "targetType": "System",
+    "targetId": 0,
+    "description": "‘정기점검 안내’ 공지 발송 완료 (1,500명)",
+    "timestamp": "2025-10-09T13:00:10Z",
+    "metadata": { "recipients": 1500 }
+  },
+  {
+    "id": "act-20251009-009",
+    "adminId": 4,
+    "action": "reservation_cancel",
+    "targetType": "Reservation",
+    "targetId": 511,
+    "description": "‘AI 실무 워크샵’ 예약 취소 승인",
+    "timestamp": "2025-10-09T13:24:09Z",
+    "metadata": { "cancelledBy": "user", "refund": "processed" }
+  },
+  {
+    "id": "act-20251009-010",
+    "adminId": 1,
+    "action": "system_restart",
+    "targetType": "System",
+    "targetId": 0,
+    "description": "관리 콘솔 서버 재시작 완료 (정기 점검)",
+    "timestamp": "2025-10-09T14:05:00Z",
+    "metadata": { "durationSec": 48, "result": "success" }
+  }
+]

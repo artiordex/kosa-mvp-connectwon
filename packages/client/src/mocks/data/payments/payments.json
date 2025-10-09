@@ -1,0 +1,212 @@
+[
+  {
+    "id": "pay-20251009-001",
+    "userId": 101,
+    "userName": "김지원",
+    "type": "membership",
+    "method": "card",
+    "status": "success",
+    "amount": 49000,
+    "currency": "KRW",
+    "description": "Pro 멤버십 월 결제",
+    "orderNumber": "ORD-20251009-1001",
+    "transactionId": "TRX-4A9F21",
+    "receiptUrl": "/receipts/ORD-20251009-1001.pdf",
+    "metadata": {
+      "entityType": "UserSubscription",
+      "entityId": 1302,
+      "cardBrand": "Hyundai",
+      "cardLast4": "3721"
+    },
+    "paidAt": "2025-10-09T09:00:00Z",
+    "createdAt": "2025-10-09T08:59:00Z",
+    "updatedAt": "2025-10-09T09:01:00Z"
+  },
+  {
+    "id": "pay-20251009-002",
+    "userId": 205,
+    "userName": "박서연",
+    "type": "program",
+    "method": "kakao_pay",
+    "status": "success",
+    "amount": 25000,
+    "currency": "KRW",
+    "description": "‘AI 실무 워크샵’ 프로그램 참가비",
+    "orderNumber": "ORD-20251009-2001",
+    "transactionId": "TRX-7B3C10",
+    "receiptUrl": "/receipts/ORD-20251009-2001.pdf",
+    "metadata": {
+      "entityType": "Program",
+      "entityId": 921
+    },
+    "paidAt": "2025-10-08T15:20:00Z",
+    "createdAt": "2025-10-08T15:10:00Z",
+    "updatedAt": "2025-10-09T09:00:00Z"
+  },
+  {
+    "id": "pay-20251009-003",
+    "userId": 304,
+    "userName": "이도현",
+    "type": "equipment_rental",
+    "method": "card",
+    "status": "processing",
+    "amount": 12000,
+    "currency": "KRW",
+    "description": "노트북(MacBook Air M2) 대여 보증금",
+    "orderNumber": "ORD-20251009-3003",
+    "transactionId": "TRX-3C77A2",
+    "metadata": {
+      "entityType": "EquipmentRental",
+      "entityId": 302,
+      "cardBrand": "KB",
+      "cardLast4": "9482"
+    },
+    "createdAt": "2025-10-09T08:00:00Z",
+    "updatedAt": "2025-10-09T08:30:00Z"
+  },
+  {
+    "id": "pay-20251009-004",
+    "userId": 406,
+    "userName": "정유나",
+    "type": "deposit",
+    "method": "bank_transfer",
+    "status": "success",
+    "amount": 100000,
+    "currency": "KRW",
+    "description": "포인트 충전 (입금)",
+    "orderNumber": "ORD-20251009-4004",
+    "transactionId": "TRX-9E81C9",
+    "metadata": {
+      "entityType": "Deposit",
+      "bankName": "신한은행",
+      "accountNumber": "110-215-567890"
+    },
+    "paidAt": "2025-10-09T07:40:00Z",
+    "createdAt": "2025-10-09T07:30:00Z",
+    "updatedAt": "2025-10-09T09:00:00Z"
+  },
+  {
+    "id": "pay-20251009-005",
+    "userId": 512,
+    "userName": "홍길동",
+    "type": "program",
+    "method": "point",
+    "status": "success",
+    "amount": 15000,
+    "currency": "P",
+    "description": "포인트로 ‘디자인 트렌드 세미나’ 결제",
+    "orderNumber": "ORD-20251009-5005",
+    "metadata": {
+      "entityType": "Program",
+      "entityId": 993,
+      "pointsUsed": 15000
+    },
+    "paidAt": "2025-10-09T06:00:00Z",
+    "createdAt": "2025-10-09T05:55:00Z",
+    "updatedAt": "2025-10-09T06:05:00Z"
+  },
+  {
+    "id": "pay-20251009-006",
+    "userId": 223,
+    "userName": "배수아",
+    "type": "membership",
+    "method": "naver_pay",
+    "status": "failed",
+    "amount": 49000,
+    "currency": "KRW",
+    "description": "Pro 멤버십 결제 실패 (잔액 부족)",
+    "orderNumber": "ORD-20251009-6006",
+    "transactionId": "TRX-FF55C1",
+    "metadata": {
+      "entityType": "UserSubscription",
+      "entityId": 1320
+    },
+    "failureReason": "잔액 부족으로 결제 실패",
+    "createdAt": "2025-10-09T04:00:00Z",
+    "updatedAt": "2025-10-09T04:10:00Z"
+  },
+  {
+    "id": "pay-20251009-007",
+    "userId": 410,
+    "userName": "조윤서",
+    "type": "membership",
+    "method": "toss",
+    "status": "refunded",
+    "amount": 19000,
+    "currency": "KRW",
+    "description": "Basic 멤버십 환불 처리 완료",
+    "orderNumber": "ORD-20251009-7007",
+    "transactionId": "TRX-12AA9C",
+    "metadata": {
+      "entityType": "UserSubscription",
+      "entityId": 1255
+    },
+    "paidAt": "2025-09-15T08:00:00Z",
+    "refundedAt": "2025-10-05T09:00:00Z",
+    "refundAmount": 19000,
+    "refundReason": "구독 취소 요청",
+    "createdAt": "2025-09-15T08:00:00Z",
+    "updatedAt": "2025-10-09T09:00:00Z"
+  },
+  {
+    "id": "pay-20251009-008",
+    "userId": 372,
+    "userName": "이민재",
+    "type": "event",
+    "method": "kakao_pay",
+    "status": "success",
+    "amount": 5000,
+    "currency": "KRW",
+    "description": "‘창업 네트워킹 데이’ 참가비",
+    "orderNumber": "ORD-20251009-8008",
+    "transactionId": "TRX-66F91A",
+    "metadata": {
+      "entityType": "Event",
+      "entityId": 2003
+    },
+    "paidAt": "2025-10-08T09:00:00Z",
+    "createdAt": "2025-10-08T08:50:00Z",
+    "updatedAt": "2025-10-09T09:00:00Z"
+  },
+  {
+    "id": "pay-20251009-009",
+    "userId": 512,
+    "userName": "홍길동",
+    "type": "deposit",
+    "method": "point",
+    "status": "success",
+    "amount": 10000,
+    "currency": "KRW",
+    "description": "활동 리워드 포인트 적립",
+    "orderNumber": "ORD-20251009-9009",
+    "metadata": {
+      "entityType": "Reward",
+      "pointsUsed": -10000
+    },
+    "paidAt": "2025-10-09T03:00:00Z",
+    "createdAt": "2025-10-09T02:59:00Z",
+    "updatedAt": "2025-10-09T09:00:00Z"
+  },
+  {
+    "id": "pay-20251009-010",
+    "userId": 220,
+    "userName": "최민혁",
+    "type": "room_reservation",
+    "method": "corporate",
+    "status": "success",
+    "amount": 85000,
+    "currency": "KRW",
+    "description": "회의실(Conference B) 3시간 예약 결제",
+    "orderNumber": "ORD-20251009-1010",
+    "transactionId": "TRX-9DFE02",
+    "metadata": {
+      "entityType": "Reservation",
+      "entityId": 6002,
+      "couponCode": "AUTUMN10",
+      "discountAmount": 8500
+    },
+    "paidAt": "2025-10-09T01:00:00Z",
+    "createdAt": "2025-10-09T00:50:00Z",
+    "updatedAt": "2025-10-09T09:00:00Z"
+  }
+]

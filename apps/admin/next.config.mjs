@@ -1,47 +1,31 @@
 /**
- * Description : next.config.mjs - 📌 Admin 앱 Next.js 설정
+ * Description : next.config.mjs - 📌 Admin 앱 Next.js 설정 (Docker / Cloud Run 배포용)
  * Author : Shiwoo Min
- * Date : 2025-09-11
- * 09-16 - packages 컴포넌트 추가, public 폴더 없이 빌드 가능하도록 수정
- * 09-17 - 빌드 에러 해결을 위한 임시 설정 추가
+ * Date : 2025-10-08
+ *
+ * Note :
+ *  - SSR 및 API 라우트 포함 관리 콘솔 서버 전용 설정
+ *  - Firebase Cloud Run 또는 Docker 기반 배포에 적합
+ *  - @connectwon/ui/dist/public 자산 (파비콘 등) 직접 참조 가능
  */
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import 'dotenv/config';
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  /**
-   * @property output
-   * @description Nx/모노레포 배포를 위한 standalone 출력
-   * @default "standalone"
-   */
+  // Cloud Run / Docker용 서버 빌드
   output: 'standalone',
 
-  /**
-   * @property transpilePackages
-   * @description 내부 패키지(ESM/클라 전용 포함) 트랜스파일
-   */
-  transpilePackages: [
-    '@connectwon/ui',
-    '@connectwon/api-contract',
-    '@connectwon/client',
-    '@connectwon/configs'
-  ],
+  // 내부 워크스페이스 패키지 트랜스파일 (React 기반 패키지만)
+  transpilePackages: ['@connectwon/ui', '@connectwon/client'],
 
-  /**
-   * @property reactStrictMode
-   * @description Context 이슈 회피를 위한 임시 비활성화
-   * @default false
-   */
   reactStrictMode: false,
 
-  /**
-   * @property images
-   * @description public 폴더 없이도 원격 이미지 허용
-   */
+  // 이미지 도메인 허용
   images: {
     unoptimized: true,
     remotePatterns: [
@@ -50,70 +34,44 @@ const nextConfig = {
     ],
   },
 
-  /**
-   * @property outputFileTracingRoot
-   * @description 서버 번들 트레이싱 루트(정식 키)
-   */
+  // Firebase Admin 환경변수
+  env: {
+    NEXT_PUBLIC_FIREBASE_ADMIN_API_KEY: process.env.NEXT_PUBLIC_FIREBASE_ADMIN_API_KEY,
+    NEXT_PUBLIC_FIREBASE_ADMIN_AUTH_DOMAIN: process.env.NEXT_PUBLIC_FIREBASE_ADMIN_AUTH_DOMAIN,
+    NEXT_PUBLIC_FIREBASE_ADMIN_PROJECT_ID: process.env.NEXT_PUBLIC_FIREBASE_ADMIN_PROJECT_ID,
+    NEXT_PUBLIC_FIREBASE_ADMIN_STORAGE_BUCKET: process.env.NEXT_PUBLIC_FIREBASE_ADMIN_STORAGE_BUCKET,
+    NEXT_PUBLIC_FIREBASE_ADMIN_MESSAGING_SENDER_ID: process.env.NEXT_PUBLIC_FIREBASE_ADMIN_MESSAGING_SENDER_ID,
+    NEXT_PUBLIC_FIREBASE_ADMIN_APP_ID: process.env.NEXT_PUBLIC_FIREBASE_ADMIN_APP_ID,
+    NEXT_PUBLIC_FIREBASE_ADMIN_MEASUREMENT_ID: process.env.NEXT_PUBLIC_FIREBASE_ADMIN_MEASUREMENT_ID,
+  },
+
+  // 개발 시 API 프록시 + UI 정적 자산 경로 매핑
+  async rewrites() {
+    const rules = [
+      {
+        source: '/ui/:path*',
+        destination: '/_next/static/ui/:path*',
+      },
+    ];
+
+    if (process.env.NODE_ENV === 'development') {
+      rules.push({
+        source: '/api/:path*',
+        destination: `${process.env.API_URL || 'http://localhost:8000'}/api/:path*`,
+      });
+    }
+
+    return rules;
+  },
+
+  // experimental.outputFileTracingRoot → 루트 레벨로 이동
   outputFileTracingRoot: path.resolve(__dirname, '../../'),
 
-  /**
-   * @property experimental
-   * @description 안정성 우선으로 실험 옵션 최소화
-   */
-  experimental: {
-    // @note RSC 경계 충돌 가능성 있어 비활성화
-    // optimizePackageImports: ['lucide-react'],
-    isrMemoryCacheSize: 0,
-  },
-
-  // /**
-  //  * @method redirects
-  //  * @description 기본 루트 → 대시보드 리다이렉트
-  //  */
-  // async redirects() {
-  //   return [{ source: '/', destination: '/dashboard', permanent: false }];
-  // },
-
-  /**
-   * @method rewrites
-   * @description 개발 환경 API 프록시
-   */
-  async rewrites() {
-    if (process.env.NODE_ENV === 'development') {
-      return [
-        {
-          source: '/api/:path*',
-          destination: `${process.env.API_URL || 'http://localhost:8000'}/api/:path*`,
-        },
-      ];
-    }
-    return [];
-  },
-
-  /**
-   * @property compress
-   * @description gzip 압축 활성화
-   * @default true
-   */
   compress: true,
-
-  /**
-   * @property poweredByHeader
-   * @description X-Powered-By 헤더 제거
-   * @default false
-   */
   poweredByHeader: false,
 
-  /**
-   * @property typescript
-   * @description 빌드 진행을 위한 타입 에러 임시 무시
-   */
+  // 타입 및 린트 오류는 빌드 시 무시
   typescript: { ignoreBuildErrors: true },
-
-  /**
-   * @property eslint
-   * @description 빌드 진행을 위한 ESLint 에러 임시 무시
-   */
   eslint: { ignoreDuringBuilds: true },
 };
 

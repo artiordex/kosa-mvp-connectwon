@@ -1,29 +1,91 @@
 {
   "name": "@connectwon/client",
-  "sourceRoot": "packages/client/src",
-  "projectType": "library",
-  "tags": ["type:lib", "layer:frontend"],
-  "targets": {
-    "build": {
-      "executor": "@nx/js:tsc",
-      "options": {
-        "main": "packages/client/src/index.ts",
-        "outputPath": "dist/packages/client",
-        "tsConfig": "packages/client/tsconfig.json"
-      }
+  "version": "1.0.0",
+  "description": "ConnectWon 클라이언트 유틸리티",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "src"
+  ],
+
+  "__comment_exports": "ESM/TS 타입 정의 - 모든 환경 호환",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
     },
-    "lint": {
-      "executor": "@nx/eslint:lint",
-      "options": {
-        "lintFilePatterns": ["packages/client/**/*.{ts,tsx}"]
-      }
+    "./client-types": {
+      "types": "./dist/client-types.d.ts",
+      "import": "./dist/client-types.js",
+      "require": "./dist/client-types.js"
     },
-    "test": {
-      "executor": "@nx/vite:test",
-      "options": {
-        "passWithNoTests": true
+    "./mocks": {
+      "types": "./dist/mocks/index.d.ts",
+      "import": "./dist/mocks/index.js",
+      "require": "./dist/mocks/index.js"
+    },
+    "./mocks/*": {
+      "types": "./dist/mocks/*.d.ts",
+      "import": "./dist/mocks/*.js",
+      "require": "./dist/mocks/*.js"
+    },
+    "./package.json": "./package.json"
+  },
+
+  "__comment_scripts": "빌드 및 배포 스크립트",
+  "scripts": {
+    "clean": "rimraf dist",
+    "build": "tsc -p tsconfig.json",
+    "prepublishOnly": "pnpm run clean && pnpm run build"
+  },
+
+  "__comment_peerDependencies": "React 환경에서 호스트 앱이 제공해야 하는 의존성",
+  "peerDependencies": {
+    "@tanstack/react-query": "^5.0.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "peerDependenciesMeta": {
+    "@tanstack/react-query": {
+      "optional": true
+    }
+  },
+
+  "__comment_dependencies": "런타임 의존성 (Firebase SDK 등)",
+  "dependencies": {
+    "firebase": "^12.3.0"
+  },
+
+  "__comment_devDependencies": "개발 및 빌드 도구",
+  "devDependencies": {
+    "@faker-js/faker": "^10.0.0",
+    "@mswjs/data": "^0.16.2",
+    "@types/react": "^18.3.7",
+    "@types/react-dom": "^18.3.0",
+    "eslint": "^9.36.0",
+    "prettier": "^3.5.3",
+    "rimraf": "^6.0.1",
+    "tsup": "^8.0.1",
+    "typescript": "^5.6.3"
+  },
+
+  "__comment_nx": "Nx 그래프 자동 종속 제거",
+  "nx": {
+    "implicitDependencies": [],
+    "targets": {
+      "build": {
+        "dependsOn": ["^build"]
       }
     }
   },
-  "implicitDependencies": ["@connectwon/api-contract"]
+
+  "__comment_engines": "Node 20+ 환경 보장",
+  "engines": {
+    "node": ">=20.11"
+  }
 }

@@ -1,0 +1,12 @@
+[
+  { "id": 1, "programId": 101, "title": "오리엔테이션", "speaker": "김현수", "startsAt": "2025-10-14T09:00:00Z", "endsAt": "2025-10-14T09:30:00Z", "location": "A-101", "status": "scheduled" },
+  { "id": 2, "programId": 101, "title": "AI 스타트업 트렌드", "speaker": "이서준", "startsAt": "2025-10-14T10:00:00Z", "endsAt": "2025-10-14T12:00:00Z", "location": "A-101", "status": "scheduled" },
+  { "id": 3, "programId": 102, "title": "SNS 광고 전략", "speaker": "박지은", "startsAt": "2025-10-20T10:00:00Z", "endsAt": "2025-10-20T12:00:00Z", "location": "B-204", "status": "scheduled" },
+  { "id": 4, "programId": 103, "title": "Figma 프로토타이핑", "speaker": "조민재", "startsAt": "2025-10-18T13:00:00Z", "endsAt": "2025-10-18T15:00:00Z", "location": "C-103", "status": "scheduled" },
+  { "id": 5, "programId": 104, "title": "비즈니스 모델 캔버스 작성", "speaker": "안소현", "startsAt": "2025-10-22T09:00:00Z", "endsAt": "2025-10-22T11:30:00Z", "location": "D-201", "status": "scheduled" },
+  { "id": 6, "programId": 105, "title": "Next.js 배포 실습", "speaker": "최도윤", "startsAt": "2025-10-17T15:00:00Z", "endsAt": "2025-10-17T17:00:00Z", "location": "E-401", "status": "scheduled" },
+  { "id": 7, "programId": 106, "title": "AI 이미지 생성 실습", "speaker": "김윤아", "startsAt": "2025-10-25T11:00:00Z", "endsAt": "2025-10-25T13:00:00Z", "location": "C-102", "status": "scheduled" },
+  { "id": 8, "programId": 107, "title": "Pandas 실습", "speaker": "오지민", "startsAt": "2025-10-19T14:00:00Z", "endsAt": "2025-10-19T16:00:00Z", "location": "F-202", "status": "scheduled" },
+  { "id": 9, "programId": 108, "title": "AI 서비스 기획 실무", "speaker": "이하늘", "startsAt": "2025-10-21T14:00:00Z", "endsAt": "2025-10-21T17:00:00Z", "location": "B-301", "status": "scheduled" },
+  { "id": 10, "programId": 109, "title": "IR 피칭 발표 실습", "speaker": "정승민", "startsAt": "2025-10-26T13:00:00Z", "endsAt": "2025-10-26T16:00:00Z", "location": "A-105", "status": "scheduled" }
+]

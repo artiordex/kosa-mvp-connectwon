@@ -1,8 +1,8 @@
 /**
- * Description : settings.json - 📌 VS Code에서 Setting 설정 파일
+ * Description : settings.json - 📌 VS Code 설정 파일 (ConnectWon Monorepo)
  * Author : Shiwoo Min
  * Date : 2025-09-02
- * 09-09: 모노레포/ESM 보강, 탐색/검색 제외 강화, ESLint/Prettier 연동 정리
+ * 10-09 : Nx 경고 차단, ESLint/Prettier 충돌 방지, VSCode 성능 최적화
  */
 {
   // 탭 크기
@@ -119,56 +119,20 @@
   // ESLint Flat Config 사용 (eslint.config.mjs)
   "eslint.useFlatConfig": true,
 
+  // ESLint 저장 모드 (문제 있는 부분만 자동 수정)
+  "eslint.codeActionsOnSave.mode": "problems",
+
+  // ESLint 포맷 비활성화 (Prettier가 포맷 담당)
+  "eslint.format.enable": false,
+
   // Prettier 설정 파일이 있을 때만 포맷(팀 일관성)
   "prettier.requireConfig": true,
 
-  // 파일을 새 탭에서 열기
-  "workbench.editor.enablePreview": false,
+  // JSON 스키마 유효성 검사 비활성화 (Nx 관련 경고 제거)
+  "json.validate.enable": false,
 
-  // 열린 탭 표시
-  "workbench.editor.showTabs": "multiple",
-
-  // 아이콘 테마
-  "workbench.iconTheme": "material-icon-theme",
-
-  // VS Code 테마
-  "workbench.colorTheme": "Copilot Theme",
-
-  // Playwright 테스트 결과 자동 열기
-  "playwright.reuseBrowser": true,
-
-  // Windows에서 기본 터미널 설정 (Git Bash 추천)
-  "terminal.integrated.defaultProfile.windows": "Git Bash",
-
-  // Linux 기본 터미널 (bash)
-  "terminal.integrated.defaultProfile.linux": "bash",
-
-  // macOS에서 기본 터미널 셸을 zsh로 설정
-  "terminal.integrated.defaultProfile.osx": "zsh",
-  "terminal.integrated.profiles.osx": {
-    "zsh": { "path": "/bin/zsh" }
-  },
-
-  // 터미널 글자 크기
-  "terminal.integrated.fontSize": 14,
-
-  // 터미널 스크롤 백 로그 길이
-  "terminal.integrated.scrollback": 10000,
-
-  // 터미널 탭 활성화
-  "terminal.integrated.tabs.enabled": true,
-
-  // 터미널에서 선택하면 자동 복사
-  "terminal.integrated.copyOnSelection": true,
-
-  // Windows용 터미널 환경 변수 설정
-  "terminal.integrated.env.windows": {},
-
-  // Linux용 터미널 환경 변수 설정
-  "terminal.integrated.env.linux": {},
-
-  // Git 저장소 변경사항을 자동으로 가져오기
-  "git.autofetch": true,
+  // TS 서버 로그 비활성화 (성능 향상)
+  "typescript.tsserver.log": "off",
 
   // 프로젝트 진단 비활성(노이즈 감소)
   "typescript.tsserver.experimental.enableProjectDiagnostics": false,
@@ -176,15 +140,44 @@
   // CSS 유효성 검사 비활성(충돌 방지)
   "css.validate": false,
 
+  // Nx Console AI 규칙 사용
+  "nxConsole.generateAiAgentRules": true,
+
+  // Nx Console 텔레메트리 비활성화
+  "nxConsole.enableTelemetry": false,
+
+  // YAML 관련 스키마 검증 비활성화 (GitHub Actions 경고 제거)
+  "yaml.customTags": [
+    "!secrets scalar",
+    "!secrets mapping",
+    "!env scalar",
+    "!env mapping"
+  ],
+
+  "yaml.schemas": {
+    "https://json.schemastore.org/github-workflow.json": "file:///d:/kosa-mvp-connectwon/.github/workflows/*.yml"
+  },
+  "yaml.validate": false,
+  "yaml.validation": true,
+  "yaml.format.enable": true,
+
   // tailwind CSS IntelliSense 활성화
   "tailwindCSS.includeLanguages": {
     "typescript": "javascript",
     "typescriptreact": "javascript"
   },
 
-  "cSpell.ignorePaths": ["pnpm-lock.yaml", "settings.json", "extensions.json", "snippets.code-snippets", "docs/*", "infra/database/*"],
+  // 스펠링 검사 제외 경로
+  "cSpell.ignorePaths": [
+    "pnpm-lock.yaml",
+    "settings.json",
+    "extensions.json",
+    "snippets.code-snippets",
+    "docs/*",
+    "infra/database/*"
+  ],
 
-  // 스펠링 검사에서 제외할 사용자 정의 단어 목록
+  // 스펠링 검사 제외 단어 목록
   "cSpell.userWords": [
     "ShiwooMin",
     "Artiordex",
@@ -275,9 +268,6 @@
     "cutover",
     "kubectl",
     "kubernetes",
-    "pnpm",
-    "nestjs",
-    "connectwon",
     "Streamable",
     "stylelintcache",
     "eslintcache",
@@ -396,9 +386,53 @@
     "mypy",
     "disp",
     "languagedetector",
-    "ZSET"
+    "ZSET",
+    "notif",
+    "cloudbuild",
+    "gwangyeong",
+    "gangnams",
+    "mapo"
   ],
 
-  // Nx Console AI 규칙 사용
-  "nxConsole.generateAiAgentRules": true
+  // 파일을 새 탭에서 열기
+  "workbench.editor.enablePreview": false,
+
+  // 열린 탭 표시
+  "workbench.editor.showTabs": "multiple",
+
+  // 아이콘 테마
+  "workbench.iconTheme": "material-icon-theme",
+
+  // VS Code 테마
+  "workbench.colorTheme": "Copilot Theme",
+
+  // Playwright 테스트 결과 자동 열기
+  "playwright.reuseBrowser": true,
+
+  // Windows에서 기본 터미널 설정 (Git Bash 추천)
+  "terminal.integrated.defaultProfile.windows": "Git Bash",
+
+  // Linux 기본 터미널 (bash)
+  "terminal.integrated.defaultProfile.linux": "bash",
+
+  // macOS에서 기본 터미널 셸을 zsh로 설정
+  "terminal.integrated.defaultProfile.osx": "zsh",
+  "terminal.integrated.profiles.osx": {
+    "zsh": { "path": "/bin/zsh" }
+  },
+
+  // 터미널 글자 크기
+  "terminal.integrated.fontSize": 14,
+
+  // 터미널 스크롤 백 로그 길이
+  "terminal.integrated.scrollback": 10000,
+
+  // 터미널 탭 활성화
+  "terminal.integrated.tabs.enabled": true,
+
+  // 터미널에서 선택하면 자동 복사
+  "terminal.integrated.copyOnSelection": true,
+
+  // Git 저장소 변경사항 자동 가져오기
+  "git.autofetch": true
 }

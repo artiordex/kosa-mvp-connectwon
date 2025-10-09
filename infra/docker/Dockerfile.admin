@@ -1,8 +1,6 @@
 # Description : Dockerfile.admin - 📌 ConnectWon Admin (Next.js) 컨테이너 빌드
 # Author : Shiwoo Min
 # Date : 2025-09-20
-# 09-20 - deps 단계 filter 설치 + Distroless 런타임
-# 09-28 - --frozen-lockfile → --no-frozen-lockfile 로 변경
 # admin 빌드: docker compose -p connectwon --env-file .env -f infra/docker/docker-compose.yml up -d --build admin
 
 # 1. 베이스 이미지
@@ -11,7 +9,7 @@ WORKDIR /app
 
 # 필수 패키지 및 corepack 설정
 RUN corepack enable \
-  && apk add --no-cache libc6-compat ca-certificates \
+  && apk add --no-cache libc6-compat ca-certificates git openssh bash \
   && apk upgrade --no-cache \
   && update-ca-certificates \
   && pnpm config set fetch-retries 6 \
@@ -23,49 +21,48 @@ RUN corepack enable \
 FROM base AS deps
 WORKDIR /app
 
-# 루트 메타데이터 먼저 복사 (락파일 포함)
+# 루트 메타데이터 복사 (락파일 포함)
 COPY pnpm-lock.yaml pnpm-workspace.yaml package.json nx.json tsconfig.json tsconfig.base.json ./
 
-# admin이 사용하는 내부 패키지들의 package.json만 복사 (캐시 최적화)
-COPY packages/api-contract/package.json packages/api-contract/
-COPY packages/ui/package.json            packages/ui/
-COPY packages/client/package.json        packages/client/
-COPY packages/sdk/package.json           packages/sdk/
-COPY packages/core/package.json         packages/core/
-COPY apps/admin/package.json             apps/admin/
+# 모든 패키지 package.json 복사 (workspace 링크 유지)
+COPY packages/*/package.json packages/*/
+COPY apps/*/package.json apps/*/
 
-# pnpm install 시 filter로 범위 제한 → 락파일 불일치 오류 방지
-RUN pnpm install --no-frozen-lockfile \
-  --filter @connectwon/api-contract \
-  --filter @connectwon/ui \
-  --filter @connectwon/client \
-  --filter @connectwon/sdk \
-  --filter @connectwon/core \
-  --filter @connectwon/admin
+# pnpm install (전체 workspace 링크 유지)
+# --prod=false : devDependencies 포함 (E2E/빌드 대응)
+RUN pnpm install --no-frozen-lockfile --prod=false
+
+# ✅ UI/Client 패키지의 peerDependencies 강제 설치 (Docker 내부 빌드용)
+RUN pnpm add -w recharts clsx class-variance-authority tailwind-merge @tanstack/react-query next-auth
 
 # 3. 빌드 단계
 FROM deps AS build
 WORKDIR /app
 
-# 실제 소스 복사
+# 전체 소스 복사
 COPY packages ./packages
-COPY apps/admin ./apps/admin
+COPY apps ./apps
 
-# Next.js 빌드 (standalone 산출)
-ENV NODE_ENV=production \
-    NEXT_TELEMETRY_DISABLED=1
-RUN pnpm --filter @connectwon/admin build
+# 내부 패키지 dist 빌드 후 admin 빌드
+RUN pnpm nx run-many -t build \
+  --projects=@connectwon/ui,@connectwon/client \
+  --parallel --skip-nx-cache \
+  --exclude=@connectwon/api-contract,@connectwon/configs && \
+  # 빌드 후 dist를 node_modules에 링크
+  pnpm link --dir apps/admin @connectwon/ui @connectwon/client && \
+  pnpm --filter @connectwon/admin build
 
 # 4. 런타임 단계 (Distroless)
 FROM gcr.io/distroless/nodejs22-debian12:nonroot AS runtime
 WORKDIR /app
 ENV NODE_ENV=production \
-    PORT=3001
+    PORT=8080 \
+    HOST=0.0.0.0
 
-# Next standalone 산출물만 복사
+# Next.js standalone 산출물 복사
 COPY --from=build /app/apps/admin/.next/standalone ./
-COPY --from=build /app/apps/admin/public ./apps/admin/public
-COPY --from=build /app/apps/admin/.next/static ./apps/admin/.next/static
+COPY --from=build /app/apps/admin/public ./public
+COPY --from=build /app/apps/admin/.next/static ./.next/static
 
-EXPOSE 3001
-CMD ["apps/admin/server.js"]
+EXPOSE 8080
+CMD ["server.js"]

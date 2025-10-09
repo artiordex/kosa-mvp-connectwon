@@ -2,168 +2,132 @@
 # Author : Shiwoo Min
 # Date : 2025-09-09
 # 09-16 - 주석 보강
+# 10-09 - Vitest, Docker, Nx dist 경로, IDE 캐시 추가
 
-# 로그 파일
+# 로그 및 진단 파일
 logs
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
-
-# Node.js 진단 리포트
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
-# 런타임 데이터
+# 런타임 / 프로세스 관련
+
 pids
 *.pid
 *.seed
 *.pid.lock
 
-# jscoverage/JSCover로 생성된 계측 라이브러리
+# 빌드 및 커버리지 결과
 lib-cov
-
-# 커버리지 결과 (Istanbul 등)
 coverage
 *.lcov
-
-# nyc 커버리지 출력
 .nyc_output
+build/
+dist/
+dist/apps/
+dist/packages/
 
-# Grunt 임시 저장소
-.grunt
-
-# Bower 의존성 디렉터리
-bower_components
-
-# node-waf 설정 파일
-.lock-wscript
-
-# 컴파일된 바이너리 애드온
-build/Release
-
-# 의존성 디렉터리
+# 의존성 및 캐시
 node_modules/
 jspm_packages/
-
-# Snowpack 의존성 디렉터리
 web_modules/
-
-# TypeScript 캐시
-*.tsbuildinfo
-
-# npm 캐시 디렉터리(선택)
+bower_components
+.lock-wscript
 .npm
-
-# Nx 캐시
 .nx
-
-# DataGrip 캐시
-.idea
-
-# eslint 캐시(선택)
 .eslintcache
-
-# stylelint 캐시(선택)
 .stylelintcache
 
-# Node REPL 히스토리(선택)
-.node_repl_history
+# IDE / 도구 캐시
+.idea/
+.vscode/
+.vscode-test/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
 
-# npm pack 결과
-*.tgz
-
-# Yarn 무결성 파일
-.yarn-integrity
-
-# dotenv 환경 변수 파일
+# 환경 / 보안
 .env
 .env.*
 !.env.example
-
-# 비밀 키 파일
 .secrets
+poetry/
+.poetry/
+__pycache__/
+*.pyc
+*.pyo
 
-# parcel 캐시
-.cache
-.parcel-cache
-
-# Next.js 빌드 결과
+# 빌드 시스템별 산출물
 .next
 out
-
-# Nuxt.js 빌드/생성 결과
 .nuxt
-dist
-
-# Gatsby 빌드 결과
-.cache/
-
-# Next.js가 아니라 Gatsby를 쓰는 경우 public 폴더 무시
-# public
-
-# vuepress 빌드 결과
-.vuepress/dist
-
-# vuepress v2.x 임시 및 캐시 디렉터리
-.temp
 .cache
-tmp/
-
-# SvelteKit 캐시 디렉터리
+.temp
+.tmp
+.vuepress/dist
 .svelte-kit/
-
-# vitepress 빌드 결과
-**/.vitepress/dist
-
-# vitepress 캐시 디렉터리
-**/.vitepress/cache
-
-# Docusaurus 캐시 및 생성 파일
+.vitepress/dist
+.vitepress/cache
 .docusaurus
-
-# Serverless 빌드 결과
 .serverless/
-
-# FuseBox 캐시
 .fusebox/
-
-# 로컬 DynamoDB 데이터
 .dynamodb/
 
-# Firebase 캐시 디렉터리
+# Firebase / Docker / Nx
 .firebase/
+infra/docker/tmp/
+infra/docker/logs/
+infra/docker/.env
+docker-compose.override.yml
+docker-compose.local.yml
+Dockerfile*
+.docker/
+.dockerignore
 
-# TernJS 포트 파일
-.tern-port
+# 테스트 / Vitest / Playwright
+vitest.config.ts
+test/
+test-results/
+e2e-artifacts/
+playwright-report/
+coverage/
+*.spec.ts
+*.test.ts
+*.spec.tsx
+*.test.tsx
 
-# VSCode 확장 테스트용 버전 저장소
-.vscode-test
+# TypeScript / Prisma
+*.tsbuildinfo
+/packages/database/generated/
 
-# yarn v3 (Plug’n’Play)
-.pnp.*
+# Yarn / PNPM / Nx / CI 캐시
 .yarn/*
 !.yarn/patches
 !.yarn/plugins
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+.pnpm-store/
+node_modules/.cache/
+node_modules/.cache/nx/
+node_modules/.vite/
+node_modules/.turbo/
 
-# Vite 로그 파일
-vite.config.js.timestamp-*
-vite.config.ts.timestamp-*
+# OS / 편집기 임시파일
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
 
-# Prisma 자동 생성 클라이언트
-/packages/database/generated/
-
-# Python 패키지 빌드 산출물
+# Python / 기타 언어
 *.egg-info/
 build/
 dist/
 __pycache__/
 *.pyc
 *.pyo
-
-# 가상환경
-poetry/
-.poetry/

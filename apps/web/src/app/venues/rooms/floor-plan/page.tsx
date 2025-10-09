@@ -1,7 +1,5 @@
 'use client';
 
-import Header from '../../../components/Header';
-import Footer from '../../../components/Footer';
 import { useState, useEffect } from 'react';
 
 export default function FloorPlanPage() {
@@ -129,8 +127,7 @@ export default function FloorPlanPage() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Header />
-      
+
       <main className="flex-grow bg-gray-50">
         {/* 헤더 섹션 */}
         <section className="bg-white border-b py-6">
@@ -239,7 +236,7 @@ export default function FloorPlanPage() {
                     <h3 className="font-bold text-lg mb-1">{room.name}</h3>
                     <p className="text-sm opacity-90">{room.capacity}명</p>
                     <p className="text-xs opacity-80 mt-1">{getStatusText(room.status)}</p>
-                    
+
                     {/* 현재 사용 중인 경우 남은 시간 표시 */}
                     {room.currentBooking && (
                       <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-red-600 text-white px-2 py-1 rounded text-xs whitespace-nowrap">
@@ -396,8 +393,6 @@ export default function FloorPlanPage() {
           </div>
         )}
       </main>
-
-      <Footer />
     </div>
   );
 }

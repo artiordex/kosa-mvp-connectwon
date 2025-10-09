@@ -3,6 +3,8 @@
  * Author : Shiwoo Min
  * Date : 2025-09-09
  */
+"use client";
+
 import { useEffect, useState } from 'react';
 
 // CSS 미디어쿼리 매칭 훅

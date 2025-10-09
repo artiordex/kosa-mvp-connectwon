@@ -1,0 +1,57 @@
+[
+  {
+    "id": 1,
+    "username": "김개발",
+    "email": "kim.dev@example.com",
+    "password": "$2a$10$N9qo8uLOickgx2ZMRZoMye",
+    "role": "developer",
+    "status": "active",
+    "joinedAt": "2024-01-15T09:00:00Z",
+    "lastLoginAt": "2024-10-09T14:30:00Z",
+    "profileImage": "https://i.pravatar.cc/150?img=1"
+  },
+  {
+    "id": 2,
+    "username": "이디자인",
+    "email": "lee.design@example.com",
+    "password": "$2a$10$N9qo8uLOickgx2ZMRZoMye",
+    "role": "designer",
+    "status": "active",
+    "joinedAt": "2024-02-20T10:30:00Z",
+    "lastLoginAt": "2024-10-10T09:15:00Z",
+    "profileImage": "https://i.pravatar.cc/150?img=2"
+  },
+  {
+    "id": 3,
+    "username": "박프론트",
+    "email": "park.front@example.com",
+    "password": "$2a$10$N9qo8uLOickgx2ZMRZoMye",
+    "role": "frontend",
+    "status": "active",
+    "joinedAt": "2024-03-10T14:00:00Z",
+    "lastLoginAt": "2024-10-08T18:20:00Z",
+    "profileImage": "https://i.pravatar.cc/150?img=3"
+  },
+  {
+    "id": 4,
+    "username": "최백엔드",
+    "email": "choi.back@example.com",
+    "password": "$2a$10$N9qo8uLOickgx2ZMRZoMye",
+    "role": "backend",
+    "status": "active",
+    "joinedAt": "2024-04-05T11:15:00Z",
+    "lastLoginAt": "2024-10-10T11:00:00Z",
+    "profileImage": "https://i.pravatar.cc/150?img=4"
+  },
+  {
+    "id": 5,
+    "username": "정풀스택",
+    "email": "jung.full@example.com",
+    "password": "$2a$10$N9qo8uLOickgx2ZMRZoMye",
+    "role": "fullstack",
+    "status": "active",
+    "joinedAt": "2024-05-12T13:45:00Z",
+    "lastLoginAt": "2024-10-10T15:45:00Z",
+    "profileImage": "https://i.pravatar.cc/150?img=5"
+  }
+]

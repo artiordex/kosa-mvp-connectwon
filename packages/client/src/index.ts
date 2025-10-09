@@ -16,3 +16,7 @@ export * from './hooks/useToggle.js';
 export { AuthProvider } from './providers/AuthProvider.js';
 export { QueryProvider } from './providers/QueryProvider.js';
 export { FirebaseProvider } from './providers/FirebaseProvider.js';
+export { RootProvider } from './providers/RootProvider.js';
+
+// firebase
+export { app, auth, analytics } from './providers/firebase-init.js';

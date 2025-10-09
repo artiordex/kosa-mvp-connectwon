@@ -1,0 +1,12 @@
+[
+  { "feature": "월 공간 이용시간", "free": "10시간", "basic": "10시간", "pro": "40시간", "enterprise": "무제한" },
+  { "feature": "참여 가능한 프로그램 수", "free": "2개", "basic": "2개", "pro": "무제한", "enterprise": "무제한" },
+  { "feature": "멘토링 세션 수", "free": "없음", "basic": "1회", "pro": "4회", "enterprise": "무제한" },
+  { "feature": "장비 대여", "free": "불가", "basic": "2회", "pro": "10회", "enterprise": "무제한" },
+  { "feature": "저장소 용량", "free": "1GB", "basic": "5GB", "pro": "20GB", "enterprise": "200GB" },
+  { "feature": "팀원 수", "free": "1명", "basic": "2명", "pro": "5명", "enterprise": "20명" },
+  { "feature": "우선 예약", "free": "❌", "basic": "❌", "pro": "✅", "enterprise": "✅" },
+  { "feature": "이벤트 무료참여", "free": "1회", "basic": "무제한", "pro": "무제한", "enterprise": "무제한" },
+  { "feature": "전담 지원", "free": "❌", "basic": "❌", "pro": "✅", "enterprise": "✅" },
+  { "feature": "커스텀 브랜딩", "free": "❌", "basic": "❌", "pro": "❌", "enterprise": "✅" }
+]

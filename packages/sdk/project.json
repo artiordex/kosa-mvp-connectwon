@@ -3,6 +3,8 @@
   "sourceRoot": "packages/sdk/src",
   "projectType": "library",
   "tags": ["type:lib", "layer:shared"],
+
+  "__comment_targets": "Nx 빌드/린트/테스트 설정",
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
@@ -11,7 +13,8 @@
         "outputPath": "dist/packages/sdk",
         "tsConfig": "packages/sdk/tsconfig.json",
         "assets": ["packages/sdk/package.json"]
-      }
+      },
+      "outputs": ["{options.outputPath}"]
     },
     "lint": {
       "executor": "@nx/eslint:lint",
@@ -26,9 +29,11 @@
       }
     }
   },
+
+  "__comment_dependencies": "api-contract, core, logger 의존성",
   "implicitDependencies": [
     "@connectwon/api-contract",
-    "@connectwon/logger",
-    "@connectwon/core"
+    "@connectwon/core",
+    "@connectwon/logger"
   ]
 }

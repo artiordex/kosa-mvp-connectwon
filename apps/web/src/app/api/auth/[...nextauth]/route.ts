@@ -4,6 +4,7 @@
  * Date : 2025-09-17
  * Path : apps/web/src/app/api/auth/[...nextauth]/route.ts
  */
+export const dynamic = 'force-static';
 import NextAuth from 'next-auth';
 import type { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';

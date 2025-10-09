@@ -1,0 +1,13 @@
+[
+  { "id": 1, "reservationId": 1001, "userId": 201, "checkInAt": "2025-10-14T08:45:00Z", "checkOutAt": "2025-10-16T18:05:00Z", "status": "attended", "remarks": "정상 참여" },
+  { "id": 2, "reservationId": 1002, "userId": 205, "checkInAt": null, "checkOutAt": null, "status": "absent", "remarks": "대기중, 자리 없음" },
+  { "id": 3, "reservationId": 1003, "userId": 310, "checkInAt": "2025-10-09T09:05:00Z", "checkOutAt": null, "status": "in_use", "remarks": "MacBook Air M3 대여중" },
+  { "id": 4, "reservationId": 1004, "userId": 104, "checkInAt": "2025-10-12T12:50:00Z", "checkOutAt": "2025-10-12T16:10:00Z", "status": "attended", "remarks": "회의 종료 후 정리 완료" },
+  { "id": 5, "reservationId": 1005, "userId": 512, "checkInAt": null, "checkOutAt": null, "status": "cancelled", "remarks": "포인트 환불 완료" },
+  { "id": 6, "reservationId": 1006, "userId": 223, "checkInAt": null, "checkOutAt": null, "status": "failed", "remarks": "결제 실패로 자동 취소" },
+  { "id": 7, "reservationId": 1007, "userId": 470, "checkInAt": "2025-10-21T09:40:00Z", "checkOutAt": "2025-10-21T18:20:00Z", "status": "attended", "remarks": "참석 및 과제 제출 완료" },
+  { "id": 8, "reservationId": 1008, "userId": 150, "checkInAt": "2025-10-28T17:50:00Z", "checkOutAt": "2025-10-28T21:10:00Z", "status": "attended", "remarks": "멘토링 참여 완료" },
+  { "id": 9, "reservationId": 1009, "userId": 330, "checkInAt": "2025-10-07T09:10:00Z", "checkOutAt": "2025-10-07T18:00:00Z", "status": "returned", "remarks": "정상 반납" },
+  { "id": 10, "reservationId": 1010, "userId": 501, "checkInAt": null, "checkOutAt": null, "status": "pending", "remarks": "확정 대기중" },
+  { "id": 11, "reservationId": 1001, "userId": 202, "checkInAt": "2025-10-14T09:10:00Z", "checkOutAt": "2025-10-16T18:10:00Z", "status": "attended", "remarks": "팀 B 배정" }
+]

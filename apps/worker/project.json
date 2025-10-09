@@ -2,6 +2,9 @@
   "name": "@connectwon/worker",
   "sourceRoot": "apps/worker/src",
   "projectType": "application",
+  "tags": ["scope:worker", "type:application", "layer:backend"],
+
+  "__comment_targets": "Nx 빌드/서버/테스트 설정",
   "targets": {
     "__comment_build": "빌드 설정",
     "build": {
@@ -9,11 +12,13 @@
       "options": {
         "main": "apps/worker/src/main.ts",
         "tsConfig": "apps/worker/tsconfig.json",
-        "assets": []
+        "outputPath": "dist/apps/worker",
+        "assets": ["apps/worker/src/**/*.json", "apps/worker/package.json"]
       },
       "outputs": ["{workspaceRoot}/dist/apps/worker"]
     },
-    "__comment_serve": "개발 서버 실행",
+
+    "__comment_serve": "개발 서버 실행 (로컬 / Docker / Cloud Run 호환)",
     "serve": {
       "executor": "@nx/js:node",
       "options": {
@@ -28,23 +33,26 @@
         }
       }
     },
+
     "__comment_test": "테스트 실행",
     "test": {
       "executor": "@nx/vite:test",
-      "outputs": ["{workspaceRoot}/coverage/apps/worker"],
       "options": {
         "config": "apps/worker/vitest.config.ts",
         "passWithNoTests": true
-      }
+      },
+      "outputs": ["{workspaceRoot}/coverage/apps/worker"]
     },
+
     "__comment_lint": "코드 린트 검사",
     "lint": {
       "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"],
       "options": {
         "lintFilePatterns": ["apps/worker/**/*.{ts,tsx,js,jsx}"]
-      }
+      },
+      "outputs": ["{options.outputFile}"]
     },
+
     "__comment_type_check": "TypeScript 타입 체크",
     "type-check": {
       "executor": "@nx/js:tsc",
@@ -53,17 +61,23 @@
         "noEmit": true
       }
     },
+
     "__comment_docker": "Docker 빌드",
     "docker-build": {
-      "executor": "@nx/docker:build",
+      "executor": "nx:run-commands",
       "options": {
-        "dockerfile": "infra/docker/Dockerfile.worker",
-        "context": ".",
-        "tags": ["connectwon/worker:latest"]
+        "command": "docker build -f infra/docker/Dockerfile.worker -t connectwon/worker:latest .",
+        "cwd": "."
       }
     }
   },
+
   "__comment_dependencies": "프로젝트 의존성",
-  "implicitDependencies": ["@connectwon/core", "@connectwon/database", "@connectwon/logger"],
-  "tags": ["scope:worker", "type:application"]
+  "implicitDependencies": [
+    "@connectwon/core",
+    "@connectwon/database",
+    "@connectwon/logger",
+    "@connectwon/api-contract",
+    "@connectwon/sdk"
+  ]
 }

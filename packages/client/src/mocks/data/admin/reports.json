@@ -1,0 +1,166 @@
+[
+  {
+    "id": "rep-20251009-01",
+    "type": "daily",
+    "period": "2025-10-09",
+    "stats": {
+      "newUsers": 9,
+      "newReservations": 15,
+      "completedPrograms": 4,
+      "paymentsProcessed": 14,
+      "totalRevenue": 880000,
+      "cancellations": 1,
+      "equipmentRented": 10
+    },
+    "generatedAt": "2025-10-09T10:00:00Z",
+    "generatedBy": 3
+  },
+  {
+    "id": "rep-20251008-01",
+    "type": "daily",
+    "period": "2025-10-08",
+    "stats": {
+      "newUsers": 11,
+      "newReservations": 17,
+      "completedPrograms": 3,
+      "paymentsProcessed": 12,
+      "totalRevenue": 720000,
+      "cancellations": 2,
+      "equipmentRented": 6
+    },
+    "generatedAt": "2025-10-08T10:00:00Z",
+    "generatedBy": 3
+  },
+  {
+    "id": "rep-20251007-01",
+    "type": "daily",
+    "period": "2025-10-07",
+    "stats": {
+      "newUsers": 8,
+      "newReservations": 13,
+      "completedPrograms": 2,
+      "paymentsProcessed": 10,
+      "totalRevenue": 610000,
+      "cancellations": 1,
+      "equipmentRented": 4
+    },
+    "generatedAt": "2025-10-07T10:00:00Z",
+    "generatedBy": 3
+  },
+  {
+    "id": "rep-20251006-01",
+    "type": "weekly",
+    "period": "2025-09-30 ~ 2025-10-06",
+    "stats": {
+      "newUsers": 52,
+      "activePrograms": 18,
+      "totalReservations": 104,
+      "paymentsProcessed": 97,
+      "totalRevenue": 6250000,
+      "cancelled": 4,
+      "averageSatisfaction": 4.7
+    },
+    "generatedAt": "2025-10-06T18:00:00Z",
+    "generatedBy": 2
+  },
+  {
+    "id": "rep-20250929-01",
+    "type": "weekly",
+    "period": "2025-09-23 ~ 2025-09-29",
+    "stats": {
+      "newUsers": 48,
+      "activePrograms": 16,
+      "totalReservations": 96,
+      "paymentsProcessed": 90,
+      "totalRevenue": 5840000,
+      "cancelled": 6,
+      "averageSatisfaction": 4.5
+    },
+    "generatedAt": "2025-09-29T18:00:00Z",
+    "generatedBy": 2
+  },
+  {
+    "id": "rep-20250922-01",
+    "type": "weekly",
+    "period": "2025-09-16 ~ 2025-09-22",
+    "stats": {
+      "newUsers": 55,
+      "activePrograms": 19,
+      "totalReservations": 109,
+      "paymentsProcessed": 102,
+      "totalRevenue": 6400000,
+      "cancelled": 5,
+      "averageSatisfaction": 4.6
+    },
+    "generatedAt": "2025-09-22T18:00:00Z",
+    "generatedBy": 2
+  },
+  {
+    "id": "rep-20250930-01",
+    "type": "monthly",
+    "period": "2025-09-01 ~ 2025-09-30",
+    "stats": {
+      "newUsers": 214,
+      "activePrograms": 75,
+      "completedPrograms": 48,
+      "reservations": 389,
+      "totalRevenue": 19840000,
+      "equipmentRentals": 122,
+      "averageSatisfaction": 4.5,
+      "topProgram": "AI 스타트업 부트캠프"
+    },
+    "generatedAt": "2025-09-30T23:00:00Z",
+    "generatedBy": 1
+  },
+  {
+    "id": "rep-20250831-01",
+    "type": "monthly",
+    "period": "2025-08-01 ~ 2025-08-31",
+    "stats": {
+      "newUsers": 201,
+      "activePrograms": 69,
+      "completedPrograms": 41,
+      "reservations": 358,
+      "totalRevenue": 18300000,
+      "equipmentRentals": 108,
+      "averageSatisfaction": 4.4,
+      "topProgram": "AI 기초 입문 캠프"
+    },
+    "generatedAt": "2025-08-31T23:00:00Z",
+    "generatedBy": 1
+  },
+  {
+    "id": "rep-20250731-01",
+    "type": "monthly",
+    "period": "2025-07-01 ~ 2025-07-31",
+    "stats": {
+      "newUsers": 188,
+      "activePrograms": 63,
+      "completedPrograms": 39,
+      "reservations": 340,
+      "totalRevenue": 17400000,
+      "equipmentRentals": 101,
+      "averageSatisfaction": 4.3,
+      "topProgram": "디자인 실무 부트캠프"
+    },
+    "generatedAt": "2025-07-31T23:00:00Z",
+    "generatedBy": 1
+  },
+  {
+    "id": "rep-20250630-01",
+    "type": "monthly",
+    "period": "2025-06-01 ~ 2025-06-30",
+    "stats": {
+      "newUsers": 179,
+      "activePrograms": 58,
+      "completedPrograms": 33,
+      "reservations": 315,
+      "totalRevenue": 16000000,
+      "equipmentRentals": 96,
+      "averageSatisfaction": 4.2,
+      "topProgram": "마케팅 자동화 실습"
+    },
+    "generatedAt": "2025-06-30T23:00:00Z",
+    "generatedBy": 1
+  }
+]

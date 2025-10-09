@@ -3,6 +3,8 @@
  * Author : Shiwoo Min
  * Date : 2025-09-09
  */
+"use client";
+
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { ThrottleOptions } from '../ui-types.js';
 

@@ -1,0 +1,233 @@
+[
+  {
+    "id": 1,
+    "username": "admin",
+    "email": "admin@example.com",
+    "password": "$2a$10$N9qo8uLOickgx2ZMRZoMye",
+    "role": "admin",
+    "status": "active",
+    "joinedAt": "2024-01-01T00:00:00Z",
+    "lastLoginAt": "2024-10-10T16:00:00Z",
+    "profileImage": "https://i.pravatar.cc/150?img=50"
+  },
+  {
+    "id": 2,
+    "username": "김개발",
+    "email": "kim.dev@example.com",
+    "password": "$2a$10$N9qo8uLOickgx2ZMRZoMye",
+    "role": "creator",
+    "status": "active",
+    "joinedAt": "2024-01-15T09:00:00Z",
+    "lastLoginAt": "2024-10-09T14:30:00Z",
+    "profileImage": "https://i.pravatar.cc/150?img=1"
+  },
+  {
+    "id": 3,
+    "username": "이디자인",
+    "email": "lee.design@example.com",
+    "password": "$2a$10$N9qo8uLOickgx2ZMRZoMye",
+    "role": "creator",
+    "status": "active",
+    "joinedAt": "2024-02-20T10:30:00Z",
+    "lastLoginAt": "2024-10-10T09:15:00Z",
+    "profileImage": "https://i.pravatar.cc/150?img=2"
+  },
+  {
+    "id": 4,
+    "username": "박프론트",
+    "email": "park.front@example.com",
+    "password": "$2a$10$N9qo8uLOickgx2ZMRZoMye",
+    "role": "creator",
+    "status": "active",
+    "joinedAt": "2024-03-10T14:00:00Z",
+    "lastLoginAt": "2024-10-08T18:20:00Z",
+    "profileImage": "https://i.pravatar.cc/150?img=3"
+  },
+  {
+    "id": 5,
+    "username": "최백엔드",
+    "email": "choi.back@example.com",
+    "password": "$2a$10$N9qo8uLOickgx2ZMRZoMye",
+    "role": "creator",
+    "status": "active",
+    "joinedAt": "2024-04-05T11:15:00Z",
+    "lastLoginAt": "2024-10-10T11:00:00Z",
+    "profileImage": "https://i.pravatar.cc/150?img=4"
+  },
+  {
+    "id": 6,
+    "username": "정풀스택",
+    "email": "jung.full@example.com",
+    "password": "$2a$10$N9qo8uLOickgx2ZMRZoMye",
+    "role": "creator",
+    "status": "active",
+    "joinedAt": "2024-05-12T13:45:00Z",
+    "lastLoginAt": "2024-10-10T15:45:00Z",
+    "profileImage": "https://i.pravatar.cc/150?img=5"
+  },
+  {
+    "id": 7,
+    "username": "강코더",
+    "email": "kang.coder@example.com",
+    "password": "$2a$10$N9qo8uLOickgx2ZMRZoMye",
+    "role": "creator",
+    "status": "active",
+    "joinedAt": "2024-06-01T10:00:00Z",
+    "lastLoginAt": "2024-10-09T16:30:00Z",
+    "profileImage": "https://i.pravatar.cc/150?img=6"
+  },
+  {
+    "id": 8,
+    "username": "윤테크",
+    "email": "yoon.tech@example.com",
+    "password": "$2a$10$N9qo8uLOickgx2ZMRZoMye",
+    "role": "creator",
+    "status": "active",
+    "joinedAt": "2024-06-15T11:20:00Z",
+    "lastLoginAt": "2024-10-10T10:00:00Z",
+    "profileImage": "https://i.pravatar.cc/150?img=7"
+  },
+  {
+    "id": 9,
+    "username": "임데브",
+    "email": "lim.dev@example.com",
+    "password": "$2a$10$N9qo8uLOickgx2ZMRZoMye",
+    "role": "creator",
+    "status": "active",
+    "joinedAt": "2024-07-10T09:30:00Z",
+    "lastLoginAt": "2024-10-09T20:15:00Z",
+    "profileImage": "https://i.pravatar.cc/150?img=8"
+  },
+  {
+    "id": 10,
+    "username": "한크리에이터",
+    "email": "han.creator@example.com",
+    "password": "$2a$10$N9qo8uLOickgx2ZMRZoMye",
+    "role": "creator",
+    "status": "active",
+    "joinedAt": "2024-07-25T14:00:00Z",
+    "lastLoginAt": "2024-10-10T12:30:00Z",
+    "profileImage": "https://i.pravatar.cc/150?img=9"
+  },
+  {
+    "id": 11,
+    "username": "오프로",
+    "email": "oh.pro@example.com",
+    "password": "$2a$10$N9qo8uLOickgx2ZMRZoMye",
+    "role": "creator",
+    "status": "active",
+    "joinedAt": "2024-08-05T10:45:00Z",
+    "lastLoginAt": "2024-10-10T08:20:00Z",
+    "profileImage": "https://i.pravatar.cc/150?img=10"
+  },
+  {
+    "id": 12,
+    "username": "김유저",
+    "email": "kim.user@example.com",
+    "password": "$2a$10$N9qo8uLOickgx2ZMRZoMye",
+    "role": "user",
+    "status": "active",
+    "joinedAt": "2024-05-20T11:00:00Z",
+    "lastLoginAt": "2024-10-09T15:00:00Z",
+    "profileImage": "https://i.pravatar.cc/150?img=11"
+  },
+  {
+    "id": 13,
+    "username": "이독자",
+    "email": "lee.reader@example.com",
+    "password": "$2a$10$N9qo8uLOickgx2ZMRZoMye",
+    "role": "user",
+    "status": "active",
+    "joinedAt": "2024-06-10T13:30:00Z",
+    "lastLoginAt": "2024-10-10T07:45:00Z",
+    "profileImage": "https://i.pravatar.cc/150?img=12"
+  },
+  {
+    "id": 14,
+    "username": "박관람",
+    "email": "park.viewer@example.com",
+    "password": "$2a$10$N9qo8uLOickgx2ZMRZoMye",
+    "role": "user",
+    "status": "active",
+    "joinedAt": "2024-06-25T09:15:00Z",
+    "lastLoginAt": "2024-10-09T18:30:00Z",
+    "profileImage": "https://i.pravatar.cc/150?img=13"
+  },
+  {
+    "id": 15,
+    "username": "최구독",
+    "email": "choi.subscriber@example.com",
+    "password": "$2a$10$N9qo8uLOickgx2ZMRZoMye",
+    "role": "user",
+    "status": "active",
+    "joinedAt": "2024-07-05T14:20:00Z",
+    "lastLoginAt": "2024-10-10T13:00:00Z",
+    "profileImage": "https://i.pravatar.cc/150?img=14"
+  },
+  {
+    "id": 16,
+    "username": "정팬",
+    "email": "jung.fan@example.com",
+    "password": "$2a$10$N9qo8uLOickgx2ZMRZoMye",
+    "role": "user",
+    "status": "active",
+    "joinedAt": "2024-07-20T10:00:00Z",
+    "lastLoginAt": "2024-10-09T21:00:00Z",
+    "profileImage": "https://i.pravatar.cc/150?img=15"
+  },
+  {
+    "id": 17,
+    "username": "강멤버",
+    "email": "kang.member@example.com",
+    "password": "$2a$10$N9qo8uLOickgx2ZMRZoMye",
+    "role": "user",
+    "status": "active",
+    "joinedAt": "2024-08-01T11:30:00Z",
+    "lastLoginAt": "2024-10-10T09:00:00Z",
+    "profileImage": "https://i.pravatar.cc/150?img=16"
+  },
+  {
+    "id": 18,
+    "username": "윤방문",
+    "email": "yoon.visitor@example.com",
+    "password": "$2a$10$N9qo8uLOickgx2ZMRZoMye",
+    "role": "user",
+    "status": "active",
+    "joinedAt": "2024-08-15T15:00:00Z",
+    "lastLoginAt": "2024-10-09T12:30:00Z",
+    "profileImage": "https://i.pravatar.cc/150?img=17"
+  },
+  {
+    "id": 19,
+    "username": "임참여",
+    "email": "lim.participant@example.com",
+    "password": "$2a$10$N9qo8uLOickgx2ZMRZoMye",
+    "role": "user",
+    "status": "active",
+    "joinedAt": "2024-09-01T10:15:00Z",
+    "lastLoginAt": "2024-10-10T14:00:00Z",
+    "profileImage": "https://i.pravatar.cc/150?img=18"
+  },
+  {
+    "id": 20,
+    "username": "한일반",
+    "email": "han.normal@example.com",
+    "password": "$2a$10$N9qo8uLOickgx2ZMRZoMye",
+    "role": "user",
+    "status": "active",
+    "joinedAt": "2024-09-15T13:45:00Z",
+    "lastLoginAt": "2024-10-09T16:00:00Z",
+    "profileImage": "https://i.pravatar.cc/150?img=19"
+  },
+  {
+    "id": 21,
+    "username": "서뉴비",
+    "email": "seo.newbie@example.com",
+    "password": "$2a$10$N9qo8uLOickgx2ZMRZoMye",
+    "role": "user",
+    "status": "active",
+    "joinedAt": "2024-10-01T09:00:00Z",
+    "lastLoginAt": "2024-10-10T11:30:00Z",
+    "profileImage": "https://i.pravatar.cc/150?img=20"
+  }
+]

@@ -3,6 +3,8 @@
  * Author : Shiwoo Min
  * Date : 2025-09-12
  */
+"use client";
+
 import React, { useState } from 'react';
 import { type DehydratedState, HydrationBoundary, QueryClient, type QueryClientConfig, QueryClientProvider } from '@tanstack/react-query';
 

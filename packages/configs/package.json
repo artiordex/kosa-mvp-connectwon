@@ -1,37 +1,87 @@
 {
   "name": "@connectwon/configs",
   "version": "1.0.0",
-  "description": "ConnectWon 공통 설정 Config",
+  "description": "ConnectWon 공통 설정(Config) 패키지",
   "private": true,
   "type": "module",
   "sideEffects": false,
-  "files": [
-    "dist"
-  ],
+
+  "files": ["dist"],
+
+  "__comment_exports": "ESM/TS 타입 정의 - Docker / Cloud Run / Firebase / Azure / Local 개발환경 완전 호환",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/packages/configs/index.d.ts",
-      "import": "./dist/packages/configs/index.js"
-    }
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./eslint/base": {
+      "types": "./dist/eslint/base.d.ts",
+      "import": "./dist/eslint/base.js"
+    },
+    "./typescript/base": {
+      "types": "./dist/typescript/base.d.ts",
+      "import": "./dist/typescript/base.js"
+    },
+    "./typescript/node": {
+      "types": "./dist/typescript/node.d.ts",
+      "import": "./dist/typescript/node.js"
+    },
+    "./typescript/web": {
+      "types": "./dist/typescript/web.d.ts",
+      "import": "./dist/typescript/web.js"
+    },
+    "./testing/vitest": {
+      "types": "./dist/testing/vitest.d.ts",
+      "import": "./dist/testing/vitest.js"
+    },
+    "./testing/playwright": {
+      "types": "./dist/testing/playwright.d.ts",
+      "import": "./dist/testing/playwright.js"
+    },
+    "./package.json": "./package.json"
   },
+
   "__comment_scripts": "빌드 및 퍼블리시 스크립트",
   "scripts": {
-    "build": "tsc -p tsconfig.json",
     "clean": "rimraf dist",
-    "prepublishOnly": "pnpm run clean && pnpm run build",
-    "type-check": "tsc --noEmit -p tsconfig.json"
+    "build": "tsc -p tsconfig.json",
+    "type-check": "tsc --noEmit -p tsconfig.json",
+    "prepublishOnly": "pnpm run clean && pnpm run build"
   },
+
   "__comment_peerDependencies": "공용 설정에 필요한 peer (앱에서 직접 설치해야 함)",
   "peerDependencies": {
     "eslint": ">=9.0.0",
-    "tailwindcss": "^3.4.13",
     "typescript": "5.6.3",
-    "vite-tsconfig-paths": "^5.1.4",
     "vitest": ">=3.0.0"
   },
-  "__comment_devDependencies": "개발 중 테스트/빌드용 최소 deps",
-  "devDependencies": {
-    "tailwindcss": "^3.4.13",
+
+  "__comment_dependencies": "빌드 시 실제 필요한 모듈 (Docker / Firebase / Nx 환경 포함)",
+  "dependencies": {
+    "tailwindcss": "^3.4.14",
     "vite-tsconfig-paths": "^5.1.4"
+  },
+
+  "__comment_devDependencies": "개발용 최소 도구",
+  "devDependencies": {
+    "rimraf": "^6.0.1",
+    "typescript": "^5.6.3"
+  },
+
+  "__comment_nx": "Nx 그래프 자동 종속 관리",
+  "nx": {
+    "implicitDependencies": [],
+    "targets": {
+      "build": {
+        "dependsOn": []
+      }
+    }
+  },
+
+  "__comment_engines": "모든 배포 환경 호환",
+  "engines": {
+    "node": ">=20.11"
   }
 }

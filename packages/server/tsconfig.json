@@ -1,48 +1,67 @@
 /**
- * Description : tsconfig.json - 📌 Nest.js 패키지 (TypeScript 설정 + core 참조)
+ * Description : tsconfig.json - 📌 Server 패키지 (NestJS 공용 유틸/모듈)
  * Author : Shiwoo Min
- * Date : 2025-09-12
+ * Date : 2025-10-09
+ *
+ * Environment :
+ *  - Docker / Cloud Run / Firebase / Azure / Local 개발환경 완전 호환
+ *  - ESM 기반 (NodeNext) + 번들러 호환 (Nx tsc executor)
+ *
+ * Note :
+ *  - NestJS용 공용 필터, 인터셉터, 데코레이터, 모듈 유틸 제공
+ *  - Core/Logger/Database 의존
+ *  - 빌드 로그 : tsc -p tsconfig.json --listEmittedFiles
  */
 {
-  // 루트의 tsconfig.base.json 상속
   "extends": "../../tsconfig.base.json",
-
   "compilerOptions": {
-    // I/O 경로
+    "composite": true,
+
+    // 출력 경로
     "rootDir": "./src",
     "outDir": "../../dist/packages/server",
+    "declarationDir": "../../dist/packages/server",
     "tsBuildInfoFile": "../../dist/packages/server/.tsbuildinfo",
 
-    // Project References 필수
-    "composite": true,
+    // NodeNext / Bundler 해석
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "target": "es2022",
+    "lib": ["es2022"],
+    "verbatimModuleSyntax": true,
+
+    // 선언 및 디버깅
     "declaration": true,
     "declarationMap": true,
-    "noEmit": false,
+    "sourceMap": true,
+    "incremental": true,
 
-    // NestJS 권장 옵션
-    "strict": true,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "useDefineForClassFields": false,
-
-    // ESM/CJS 상호운용
+    // Node 환경
+    "types": ["node"],
+    "resolveJsonModule": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
 
-    // 기타 유틸 옵션
-    "resolveJsonModule": true,
-    "sourceMap": true,
+    // 품질 / 안정성
     "skipLibCheck": true,
-    "lib": ["es2022"],
-    "types": ["node"]
+    "forceConsistentCasingInFileNames": true,
+    "exactOptionalPropertyTypes": true,
+    "strict": true,
+
+    // 경로 alias
+    "baseUrl": "./",
+    "paths": {
+      "@connectwon/server/*": ["src/*"]
+    }
   },
 
-  // server 소스만 포함
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist", "**/*.test.*", "**/*.spec.*"],
+  "exclude": ["dist", "node_modules"],
 
-  // 모노레포 빌드 순서 보장
+  // Project References
   "references": [
-    { "path": "../core" }
+    { "path": "../core" },
+    { "path": "../logger" },
+    { "path": "../database" }
   ]
 }

@@ -1,54 +1,67 @@
 /**
- * Description : tsconfig.json - 📌 SDK 패키지 (TypeScript 설정)
+ * Description : tsconfig.json - 📌 SDK 패키지
  * Author : Shiwoo Min
- * Date : 2025-09-12
- * 09-30 : src 디렉토리 구조 단순화 (typescript/src → src)
+ * Date : 2025-10-09
+ *
+ * Environment :
+ *  - Docker / Cloud Run / Firebase / Azure / Local 개발환경 완전 호환
+ *  - ESM 기반 (NodeNext) + 번들러 호환 (Nx tsc executor)
+ *
+ * Note :
+ *  - SDK는 브라우저와 Node 환경 모두를 대상으로 동작
+ *  - AI 호출, Web Scraping, Web Worker, API Request 유틸리티 포함
+ *  - 빌드 로그 : tsc -p tsconfig.json --listEmittedFiles
  */
 {
-  // 루트의 tsconfig.base.json 상속
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    // I/O 경로
-    "rootDir": "./src",
-    "outDir": "../../dist/packages/sdk",
-    "declarationDir": "../../dist/packages/sdk/types",
-
-    // Node ESM 권장
-    "target": "es2022",
-    "module": "esnext",
-    "moduleResolution": "Bundler",
-
-    // d.ts 생성 (루트 base에도 있지만 명시 유지)
-    "declaration": true,
-
-    // 엄격 모드 및 성능
-    "strict": true,
-    "skipLibCheck": true,
-    "exactOptionalPropertyTypes": true,
-    "resolveJsonModule": true,
-
-    // 브라우저 타깃 (Iterable API 사용 시 DOM.Iterable 포함)
-    "lib": ["es2022", "dom", "dom.iterable"],
-
-    // 프로젝트 레퍼런스 활성화
     "composite": true,
 
-    // Node 전역 타입 유입 방지
-    "types": ["node"]
+    // 출력 경로
+    "rootDir": "./src",
+    "outDir": "../../dist/packages/sdk",
+    "declarationDir": "../../dist/packages/sdk",
+    "tsBuildInfoFile": "../../dist/packages/sdk/.tsbuildinfo",
+
+    // NodeNext / ESM / Bundler 호환
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "target": "es2022",
+    "lib": ["es2022", "dom", "dom.iterable"],
+    "verbatimModuleSyntax": true,
+
+    // 선언 및 디버깅
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "incremental": true,
+
+    // Node 및 브라우저 환경
+    "types": ["node"],
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+
+    // 품질 / 일관성
+    "skipLibCheck": true,
+    "strict": true,
+    "exactOptionalPropertyTypes": true,
+    "forceConsistentCasingInFileNames": true,
+
+    // 내부 경로 alias
+    "baseUrl": "./",
+    "paths": {
+      "@connectwon/sdk/*": ["src/*"]
+    }
   },
 
-  // 포함 범위
   "include": ["src/**/*"],
+  "exclude": ["dist", "node_modules"],
 
-  // 불필요한 폴더 및 파일 제외
-  "exclude": [
-    "dist",
-    "node_modules"
-  ],
-
-  // 의존 패키지 참조 (api-contract, logger 사용)
+  // Project References
   "references": [
     { "path": "../api-contract" },
+    { "path": "../core" },
     { "path": "../logger" }
   ]
 }

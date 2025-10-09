@@ -3,33 +3,46 @@
   "sourceRoot": "packages/database/src",
   "projectType": "library",
   "tags": ["type:lib", "layer:backend"],
+
+  "__comment_targets": "Nx 빌드/Prisma/린트/테스트 설정 - 모든 배포 환경 호환",
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
       "options": {
         "main": "packages/database/src/index.ts",
         "outputPath": "dist/packages/database",
-        "tsConfig": "packages/database/tsconfig.json"
+        "tsConfig": "packages/database/tsconfig.json",
+        "assets": [
+          "packages/database/package.json",
+          "packages/database/prisma/schema.prisma"
+        ]
       }
     },
     "prisma:generate": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "prisma generate",
+        "command": "pnpm run generate",
         "cwd": "packages/database"
       }
     },
     "prisma:migrate": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "prisma migrate dev",
+        "command": "pnpm run migrate",
+        "cwd": "packages/database"
+      }
+    },
+    "prisma:migrate:deploy": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "pnpm run migrate:deploy",
         "cwd": "packages/database"
       }
     },
     "prisma:studio": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "prisma studio",
+        "command": "pnpm run studio",
         "cwd": "packages/database"
       }
     },
@@ -45,5 +58,8 @@
         "passWithNoTests": true
       }
     }
-  }
+  },
+
+  "__comment_dependencies": "core/logger 의존성 (DB 로직 ↔ Core 서비스 계층 연동)",
+  "implicitDependencies": ["@connectwon/core", "@connectwon/logger"]
 }

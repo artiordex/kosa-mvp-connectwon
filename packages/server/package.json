@@ -1,31 +1,37 @@
 {
   "name": "@connectwon/server",
   "version": "1.0.0",
-  "description": "ConnectWon NestJS 공통 모듈 및 유틸리티",
+  "description": "ConnectWon 서버 공통 모듈 및 유틸리티 (NestJS 기반)",
   "private": true,
   "type": "module",
   "sideEffects": false,
-  "files": [
-    "dist"
-  ],
+
+  "files": ["dist"],
+
+  "__comment_exports": "ESM/TS 타입 정의",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/packages/server/index.d.ts",
-      "import": "./dist/packages/server/index.js"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
     },
     "./server-types": {
-      "types": "./dist/packages/server/server-types.d.ts",
-      "import": "./dist/packages/server/server-types.js"
+      "types": "./dist/server-types.d.ts",
+      "import": "./dist/server-types.js"
     },
     "./package.json": "./package.json"
   },
+
   "__comment_scripts": "빌드 및 관리 스크립트",
   "scripts": {
-    "build": "tsc -p tsconfig.json",
     "clean": "rimraf dist",
-    "prepublishOnly": "pnpm run build"
+    "build": "tsc -p tsconfig.json",
+    "type-check": "tsc --noEmit -p tsconfig.json",
+    "prepublishOnly": "pnpm run clean && pnpm run build"
   },
-  "__comment_dependencies": "런타임 의존성 (NestJS 유틸, 외부 API 연동)",
+
+  "__comment_dependencies": "런타임 의존성 (AI, Redis, Email, Slack, JWT 등 포함)",
   "dependencies": {
     "@anthropic-ai/sdk": "^0.61.0",
     "@sentry/nestjs": "^10.14.0",
@@ -41,6 +47,7 @@
     "rxjs": "^7.8.2",
     "zod": "^3.23.8"
   },
+
   "__comment_peerDependencies": "NestJS는 peer로만 두기 (앱 단에서 설치)",
   "peerDependencies": {
     "@nestjs/common": "^11.1.6",
@@ -48,16 +55,11 @@
     "@nestjs/swagger": "^11.2.0"
   },
   "peerDependenciesMeta": {
-    "@nestjs/common": {
-      "optional": true
-    },
-    "@nestjs/core": {
-      "optional": true
-    },
-    "@nestjs/swagger": {
-      "optional": true
-    }
+    "@nestjs/common": { "optional": true },
+    "@nestjs/core": { "optional": true },
+    "@nestjs/swagger": { "optional": true }
   },
+
   "__comment_devDependencies": "개발용 타입 패키지",
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
@@ -65,9 +67,32 @@
     "@types/ioredis": "^5.0.0",
     "@types/jsonwebtoken": "^9.0.7",
     "@types/nodemailer": "^7.0.1",
-    "@types/swagger-ui-express": "^4.1.8"
+    "@types/swagger-ui-express": "^4.1.8",
+    "@types/node": "^24.3.1",
+    "eslint": "^9.36.0",
+    "rimraf": "^6.0.1",
+    "typescript": "5.6.3",
+    "vitest": "^3.2.4"
   },
+
+  "__comment_dependencies_internal": "ConnectWon 내부 종속성",
+  "dependenciesInternal": {
+    "@connectwon/core": "workspace:*",
+    "@connectwon/logger": "workspace:*",
+    "@connectwon/database": "workspace:*"
+  },
+
+  "__comment_engines": "Node 20+ 런타임 보장",
   "engines": {
     "node": ">=20.11"
+  },
+
+  "__comment_nx": "Nx 그래프 종속성",
+  "nx": {
+    "implicitDependencies": [
+      "@connectwon/core",
+      "@connectwon/logger",
+      "@connectwon/database"
+    ]
   }
 }

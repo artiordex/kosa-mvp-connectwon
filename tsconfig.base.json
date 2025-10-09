@@ -5,6 +5,7 @@
  * 09-17 : paths에 apps, packages 전체 추가
  * 09-20 : paths를 compilerOptions 내부로 이동, 중복 baseUrl 제거
  * 09-28 : paths를 src + dist 이중 매핑으로 변경 (배포/로컬 모두 지원)
+ * 10-08 : lib에 DOM 타입 추가, NodeNext 해석 강화, dist 경로 일관화
  * 컴파일러 가능한 상태인지 확인:
  *   pnpm -w exec tsc --noEmit --showConfig > /dev/null
  */
@@ -21,9 +22,11 @@
 
     // 패키지 exports/확장자 규칙 (NodeNext)
     "moduleResolution": "nodenext",
+    "resolvePackageJsonExports": true,
+    "resolvePackageJsonImports": true,
 
-    // 서버/라이브러리 공통은 ES 표준
-    "lib": ["es2022"],
+    // 서버/프론트엔드 공용 lib (DOM 타입 포함)
+    "lib": ["es2022", "dom", "dom.iterable"],
 
     // 타입 검사 관련
     "strict": true,
@@ -41,8 +44,8 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
 
-    // import/export 구문 그대로 보존
-    "verbatimModuleSyntax": true,
+    // import/export 구문 그대로 보존 (Next.js 호환성 위해 false)
+    "verbatimModuleSyntax": false,
 
     // 대소문자 일관성 검사
     "forceConsistentCasingInFileNames": true,
@@ -79,145 +82,145 @@
      * 경로 매핑 (packages / apps)
      * dev 환경(src) + build 환경(dist) 이중 매핑
      */
-    "paths": {
+     "paths": {
       // Core
       "@connectwon/core": [
-        // "packages/core/src/index.ts",
+        "packages/core/src/index.ts",
         "dist/packages/core/index.d.ts"
       ],
       "@connectwon/core/*": [
-        // "packages/core/src/*",
+        "packages/core/src/*",
         "dist/packages/core/*"
       ],
 
-      // Config
+      // Configs
       "@connectwon/configs": [
-        // "packages/configs/src/index.ts",
+        "packages/configs/src/index.ts",
         "dist/packages/configs/index.d.ts"
       ],
       "@connectwon/configs/*": [
-        // "packages/configs/src/*",
+        "packages/configs/src/*",
         "dist/packages/configs/*"
       ],
 
       // Database
       "@connectwon/database": [
-        // "packages/database/src/index.ts",
+        "packages/database/src/index.ts",
         "dist/packages/database/index.d.ts"
       ],
       "@connectwon/database/*": [
-        // "packages/database/src/*",
+        "packages/database/src/*",
         "dist/packages/database/*"
       ],
 
       // Logger
       "@connectwon/logger": [
-        // "packages/logger/src/index.ts",
+        "packages/logger/src/index.ts",
         "dist/packages/logger/index.d.ts"
       ],
       "@connectwon/logger/*": [
-        // "packages/logger/src/*",
+        "packages/logger/src/*",
         "dist/packages/logger/*"
       ],
 
       // UI
       "@connectwon/ui": [
-        // "packages/ui/src/index.ts",
+        "packages/ui/src/index.ts",
         "dist/packages/ui/index.d.ts"
       ],
       "@connectwon/ui/*": [
-        // "packages/ui/src/*",
+        "packages/ui/src/*",
         "dist/packages/ui/*"
       ],
 
       // Client
       "@connectwon/client": [
-        // "packages/client/src/index.ts",
+        "packages/client/src/index.ts",
         "dist/packages/client/index.d.ts"
       ],
       "@connectwon/client/*": [
-        // "packages/client/src/*",
+        "packages/client/src/*",
         "dist/packages/client/*"
       ],
 
       // SDK
       "@connectwon/sdk": [
-        // "packages/sdk/src/index.ts",
+        "packages/sdk/src/index.ts",
         "dist/packages/sdk/index.d.ts"
       ],
       "@connectwon/sdk/*": [
-        // "packages/sdk/src/*",
+        "packages/sdk/src/*",
         "dist/packages/sdk/*"
       ],
 
       // API Contract
       "@connectwon/api-contract": [
-        // "packages/api-contract/src/index.ts",
+        "packages/api-contract/src/index.ts",
         "dist/packages/api-contract/index.d.ts"
       ],
       "@connectwon/api-contract/*": [
-        // "packages/api-contract/src/*",
+        "packages/api-contract/src/*",
         "dist/packages/api-contract/*"
       ],
 
       // Server
-      // "@connectwon/server": [
-      //   // "packages/server/src/index.ts",
-      //   "dist/packages/server/index.d.ts"
-      // ],
-      // "@connectwon/server/*": [
-      //   // "packages/server/src/*",
-      //   "dist/packages/server/*"
-      // ],
+      "@connectwon/server": [
+        "packages/server/src/index.ts",
+        "dist/packages/server/index.d.ts"
+      ],
+      "@connectwon/server/*": [
+        "packages/server/src/*",
+        "dist/packages/server/*"
+      ],
 
       // Web
       "@connectwon/web": [
-        "apps/web/src/index.ts"
-        // "dist/apps/web/index.d.ts"
+        "apps/web/src/index.ts",
+        "dist/apps/web/index.d.ts"
       ],
       "@connectwon/web/*": [
-        "apps/web/src/*"
-        // "dist/apps/web/*"
+        "apps/web/src/*",
+        "dist/apps/web/*"
       ],
 
       // Admin
       "@connectwon/admin": [
-        "apps/admin/src/index.ts"
-        // "dist/apps/admin/index.d.ts"
+        "apps/admin/src/index.ts",
+        "dist/apps/admin/index.d.ts"
       ],
       "@connectwon/admin/*": [
-        "apps/admin/src/*"
-        // "dist/apps/admin/*"
+        "apps/admin/src/*",
+        "dist/apps/admin/*"
       ],
 
-      // Api
+      // API
       "@connectwon/api": [
-        "apps/api/src/index.ts"
-        // "dist/apps/api/index.d.ts"
+        "apps/api/src/index.ts",
+        "dist/apps/api/index.d.ts"
       ],
       "@connectwon/api/*": [
-        "apps/api/src/*"
-        // "dist/apps/api/*"
+        "apps/api/src/*",
+        "dist/apps/api/*"
       ],
 
       // Worker
       "@connectwon/worker": [
-        "apps/worker/src/index.ts"
-        // "dist/apps/worker/index.d.ts"
+        "apps/worker/src/index.ts",
+        "dist/apps/worker/index.d.ts"
       ],
       "@connectwon/worker/*": [
-        "apps/worker/src/*"
-        // "dist/apps/worker/*"
+        "apps/worker/src/*",
+        "dist/apps/worker/*"
       ],
 
       // E2E
       "@connectwon/e2e": [
-        "apps/e2e/src/index.ts"
-        // "dist/apps/e2e/index.d.ts"
+        "apps/e2e/src/index.ts",
+        "dist/apps/e2e/index.d.ts"
       ],
       "@connectwon/e2e/*": [
-        "apps/e2e/src/*"
-        // "dist/apps/e2e/*"
+        "apps/e2e/src/*",
+        "dist/apps/e2e/*"
       ]
     }
   }

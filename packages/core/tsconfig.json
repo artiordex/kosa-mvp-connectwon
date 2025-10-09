@@ -1,56 +1,65 @@
 /**
  * Description : tsconfig.json - 📌 Core 패키지
  * Author : Shiwoo Min
- * Date : 2025-09-28
- * 09-10 : core 패키지의 domain/authz 참조 추가
- * 09-12 : 선언파일/소스맵/증분빌드/레퍼런스 정리
- * 09-22 : .d.ts 파일 사용으로 변경, declaration 중복 생성 방지
- * 09-26 : alias(@connectwon/core-types) 추가
- * 09-28 : configs(ts/json) 통합 반영 (resolveJsonModule, include 패턴 확장)
- * 빌드 로그 확인 - tsc -p tsconfig.json --listEmittedFiles
+ * Date : 2025-10-09
+ *
+ * Environment :
+ *  - Docker / Cloud Run / Firebase / Azure / Local 개발환경 완전 호환
+ *  - ESM 기반 (NodeNext) + 번들러 호환 (Nx tsc executor)
+ *
+ * Note :
+ *  - core domain/authz/queue 등 핵심 서비스 로직
+ *  - AI SDK 및 Redis/BullMQ 호환성 보장
+ *  - 빌드 로그 : tsc -p tsconfig.json --listEmittedFiles
  */
 {
-  // 루트의 tsconfig.base.json 상속
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    // I/O 경로
+    "composite": true,
+
+    // 경로 설정
     "rootDir": "./src",
     "outDir": "../../dist/packages/core",
     "declarationDir": "../../dist/packages/core",
+    "tsBuildInfoFile": "../../dist/packages/core/.tsbuildinfo",
 
-    // Node ESM 해석 (config TS 파일 import 시 일관성↑)
-    "module": "nodenext",
-    "moduleResolution": "nodenext",
+    // NodeNext / ESM 모듈 해석
+    "module": "esnext",
+    "moduleResolution": "bundler",
     "target": "es2022",
     "lib": ["es2022"],
-    "types": ["node", "eslint"],
+    "verbatimModuleSyntax": true,
 
     // 선언 파일 및 디버깅
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
-    "emitDeclarationOnly": false,
-
-    // 모노레포 증분 빌드
     "incremental": true,
-    "tsBuildInfoFile": "../../dist/packages/core/.tsbuildinfo",
 
-    // 상호운용/편의
+    // Node 환경
+    "types": ["node"],
+    "resolveJsonModule": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "allowArbitraryExtensions": true,
-    "resolveJsonModule": true,
+
+    // 품질 / 안정성
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "exactOptionalPropertyTypes": true
+    "exactOptionalPropertyTypes": true,
+
+    // 내부 경로 alias
+    "baseUrl": "./",
+    "paths": {
+      "@connectwon/core/*": ["src/*"],
+      "@connectwon/core-types": ["src/core-types.ts"]
+    }
   },
 
-  // 포함 범위
   "include": ["src/**/*"],
-
-  // 불필요한 폴더 제외
   "exclude": ["dist", "node_modules", "**/*.test.*", "**/*.spec.*"],
 
-  // 순환 참조 방지: database → core 참조만 허용, core → database 금지
-  "references": []
+  // Project References
+  "references": [
+    { "path": "../api-contract" }
+  ]
 }

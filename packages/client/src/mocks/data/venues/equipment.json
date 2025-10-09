@@ -1,0 +1,869 @@
+[
+  {
+    "id": 1,
+    "name": "빔프로젝터 EPSON EB-2250U",
+    "category": "projector",
+    "brand": "EPSON",
+    "model": "EB-2250U",
+    "specifications": {
+      "resolution": "1920x1200",
+      "brightness": "5000 lumens",
+      "connectivity": ["HDMI", "USB", "WiFi"]
+    },
+    "rentalPrice": 50000,
+    "depositPrice": 200000,
+    "status": "active",
+    "thumbnail": "/images/equipment/projector-1.jpg"
+  },
+  {
+    "id": 2,
+    "name": "빔프로젝터 LG PF50KS",
+    "category": "projector",
+    "brand": "LG",
+    "model": "PF50KS",
+    "specifications": {
+      "resolution": "1920x1080",
+      "brightness": "600 lumens",
+      "connectivity": ["HDMI", "USB", "Bluetooth"]
+    },
+    "rentalPrice": 30000,
+    "depositPrice": 150000,
+    "status": "active",
+    "thumbnail": "/images/equipment/projector-2.jpg"
+  },
+  {
+    "id": 3,
+    "name": "노트북 MacBook Pro 16 (M3 Max)",
+    "category": "laptop",
+    "brand": "Apple",
+    "model": "MacBook Pro 16",
+    "specifications": {
+      "processor": "Apple M3 Max",
+      "ram": "32GB",
+      "storage": "1TB SSD",
+      "display": "16.2-inch"
+    },
+    "rentalPrice": 80000,
+    "depositPrice": 500000,
+    "status": "active",
+    "thumbnail": "/images/equipment/laptop-1.jpg"
+  },
+  {
+    "id": 4,
+    "name": "노트북 MacBook Air 13 (M2)",
+    "category": "laptop",
+    "brand": "Apple",
+    "model": "MacBook Air 13",
+    "specifications": {
+      "processor": "Apple M2",
+      "ram": "16GB",
+      "storage": "512GB SSD",
+      "display": "13.6-inch"
+    },
+    "rentalPrice": 50000,
+    "depositPrice": 300000,
+    "status": "active",
+    "thumbnail": "/images/equipment/laptop-2.jpg"
+  },
+  {
+    "id": 5,
+    "name": "노트북 LG gram 17",
+    "category": "laptop",
+    "brand": "LG",
+    "model": "gram 17",
+    "specifications": {
+      "processor": "Intel Core i7",
+      "ram": "16GB",
+      "storage": "512GB SSD",
+      "display": "17-inch"
+    },
+    "rentalPrice": 40000,
+    "depositPrice": 250000,
+    "status": "active",
+    "thumbnail": "/images/equipment/laptop-3.jpg"
+  },
+  {
+    "id": 6,
+    "name": "노트북 Samsung Galaxy Book3 Pro",
+    "category": "laptop",
+    "brand": "Samsung",
+    "model": "Galaxy Book3 Pro",
+    "specifications": {
+      "processor": "Intel Core i7",
+      "ram": "16GB",
+      "storage": "512GB SSD",
+      "display": "14-inch"
+    },
+    "rentalPrice": 45000,
+    "depositPrice": 280000,
+    "status": "active",
+    "thumbnail": "/images/equipment/laptop-4.jpg"
+  },
+  {
+    "id": 7,
+    "name": "충전 어댑터 USB-C 65W",
+    "category": "adapter",
+    "brand": "Anker",
+    "model": "PowerPort III",
+    "specifications": {
+      "power": "65W",
+      "ports": ["USB-C"],
+      "cable": "1.8m"
+    },
+    "rentalPrice": 5000,
+    "depositPrice": 20000,
+    "status": "active",
+    "thumbnail": "/images/equipment/adapter-1.jpg"
+  },
+  {
+    "id": 8,
+    "name": "충전 어댑터 USB-C 100W",
+    "category": "adapter",
+    "brand": "Anker",
+    "model": "PowerPort Atom III",
+    "specifications": {
+      "power": "100W",
+      "ports": ["USB-C"],
+      "cable": "2m"
+    },
+    "rentalPrice": 7000,
+    "depositPrice": 30000,
+    "status": "active",
+    "thumbnail": "/images/equipment/adapter-2.jpg"
+  },
+  {
+    "id": 9,
+    "name": "멀티 충전 어댑터 4포트",
+    "category": "adapter",
+    "brand": "Belkin",
+    "model": "Multi Charger",
+    "specifications": {
+      "power": "100W",
+      "ports": ["USB-C x2", "USB-A x2"],
+      "cable": "1.5m"
+    },
+    "rentalPrice": 10000,
+    "depositPrice": 40000,
+    "status": "active",
+    "thumbnail": "/images/equipment/adapter-3.jpg"
+  },
+  {
+    "id": 10,
+    "name": "HDMI 케이블 5m",
+    "category": "cable",
+    "brand": "Belkin",
+    "model": "HDMI 2.1",
+    "specifications": {
+      "length": "5m",
+      "version": "HDMI 2.1",
+      "resolution": "8K"
+    },
+    "rentalPrice": 5000,
+    "depositPrice": 15000,
+    "status": "active",
+    "thumbnail": "/images/equipment/cable-1.jpg"
+  },
+  {
+    "id": 11,
+    "name": "USB-C to HDMI 케이블",
+    "category": "cable",
+    "brand": "Anker",
+    "model": "USB-C HDMI",
+    "specifications": {
+      "length": "2m",
+      "resolution": "4K@60Hz"
+    },
+    "rentalPrice": 7000,
+    "depositPrice": 20000,
+    "status": "active",
+    "thumbnail": "/images/equipment/cable-2.jpg"
+  },
+  {
+    "id": 12,
+    "name": "무선 마이크 세트",
+    "category": "microphone",
+    "brand": "Shure",
+    "model": "BLX24/SM58",
+    "specifications": {
+      "type": "무선",
+      "frequency": "UHF",
+      "range": "100m"
+    },
+    "rentalPrice": 40000,
+    "depositPrice": 200000,
+    "status": "active",
+    "thumbnail": "/images/equipment/mic-1.jpg"
+  },
+  {
+    "id": 13,
+    "name": "유선 마이크",
+    "category": "microphone",
+    "brand": "Shure",
+    "model": "SM58",
+    "specifications": {
+      "type": "유선",
+      "connector": "XLR",
+      "cable": "5m"
+    },
+    "rentalPrice": 10000,
+    "depositPrice": 50000,
+    "status": "active",
+    "thumbnail": "/images/equipment/mic-2.jpg"
+  },
+  {
+    "id": 14,
+    "name": "핀 마이크",
+    "category": "microphone",
+    "brand": "Rode",
+    "model": "Wireless GO II",
+    "specifications": {
+      "type": "무선 핀마이크",
+      "range": "200m",
+      "battery": "7시간"
+    },
+    "rentalPrice": 35000,
+    "depositPrice": 180000,
+    "status": "active",
+    "thumbnail": "/images/equipment/mic-3.jpg"
+  },
+  {
+    "id": 15,
+    "name": "스피커 JBL Eon One",
+    "category": "speaker",
+    "brand": "JBL",
+    "model": "Eon One",
+    "specifications": {
+      "power": "380W",
+      "connectivity": ["Bluetooth", "XLR", "AUX"]
+    },
+    "rentalPrice": 50000,
+    "depositPrice": 250000,
+    "status": "active",
+    "thumbnail": "/images/equipment/speaker-1.jpg"
+  },
+  {
+    "id": 16,
+    "name": "블루투스 스피커",
+    "category": "speaker",
+    "brand": "Bose",
+    "model": "S1 Pro",
+    "specifications": {
+      "power": "200W",
+      "connectivity": ["Bluetooth"],
+      "battery": "11시간"
+    },
+    "rentalPrice": 30000,
+    "depositPrice": 150000,
+    "status": "active",
+    "thumbnail": "/images/equipment/speaker-2.jpg"
+  },
+  {
+    "id": 17,
+    "name": "카메라 Sony A7 IV",
+    "category": "camera",
+    "brand": "Sony",
+    "model": "A7 IV",
+    "specifications": {
+      "sensor": "Full Frame 33MP",
+      "video": "4K 60fps",
+      "lens": "24-70mm"
+    },
+    "rentalPrice": 100000,
+    "depositPrice": 500000,
+    "status": "active",
+    "thumbnail": "/images/equipment/camera-1.jpg"
+  },
+  {
+    "id": 18,
+    "name": "카메라 Canon EOS R6",
+    "category": "camera",
+    "brand": "Canon",
+    "model": "EOS R6",
+    "specifications": {
+      "sensor": "Full Frame 20MP",
+      "video": "4K 60fps",
+      "lens": "24-105mm"
+    },
+    "rentalPrice": 95000,
+    "depositPrice": 480000,
+    "status": "active",
+    "thumbnail": "/images/equipment/camera-2.jpg"
+  },
+  {
+    "id": 19,
+    "name": "웹캠 Logitech Brio 4K",
+    "category": "webcam",
+    "brand": "Logitech",
+    "model": "Brio 4K",
+    "specifications": {
+      "resolution": "4K",
+      "fps": "30fps",
+      "connectivity": ["USB-C"]
+    },
+    "rentalPrice": 15000,
+    "depositPrice": 70000,
+    "status": "active",
+    "thumbnail": "/images/equipment/webcam-1.jpg"
+  },
+  {
+    "id": 20,
+    "name": "삼각대 Manfrotto",
+    "category": "tripod",
+    "brand": "Manfrotto",
+    "model": "MT190XPRO3",
+    "specifications": {
+      "height": "170cm",
+      "weight": "2.5kg",
+      "maxLoad": "9kg"
+    },
+    "rentalPrice": 15000,
+    "depositPrice": 80000,
+    "status": "active",
+    "thumbnail": "/images/equipment/tripod-1.jpg"
+  },
+  {
+    "id": 21,
+    "name": "조명 Godox SL-60W",
+    "category": "lighting",
+    "brand": "Godox",
+    "model": "SL-60W",
+    "specifications": {
+      "power": "60W",
+      "colorTemp": "5600K",
+      "control": "리모컨"
+    },
+    "rentalPrice": 25000,
+    "depositPrice": 120000,
+    "status": "active",
+    "thumbnail": "/images/equipment/light-1.jpg"
+  },
+  {
+    "id": 22,
+    "name": "링라이트 18인치",
+    "category": "lighting",
+    "brand": "Neewer",
+    "model": "Ring Light 18",
+    "specifications": {
+      "size": "18inch",
+      "power": "55W",
+      "dimming": "1-100%"
+    },
+    "rentalPrice": 15000,
+    "depositPrice": 60000,
+    "status": "active",
+    "thumbnail": "/images/equipment/light-2.jpg"
+  },
+  {
+    "id": 23,
+    "name": "화이트보드 이동식 대형",
+    "category": "whiteboard",
+    "brand": "한솔",
+    "model": "Mobile WB-1200",
+    "specifications": {
+      "size": "1200x900mm",
+      "type": "양면",
+      "mobile": "바퀴 포함"
+    },
+    "rentalPrice": 20000,
+    "depositPrice": 100000,
+    "status": "active",
+    "thumbnail": "/images/equipment/whiteboard-1.jpg"
+  },
+  {
+    "id": 24,
+    "name": "플립차트",
+    "category": "whiteboard",
+    "brand": "한솔",
+    "model": "Flipchart FC-100",
+    "specifications": {
+      "size": "900x600mm",
+      "paper": "50매 포함"
+    },
+    "rentalPrice": 10000,
+    "depositPrice": 50000,
+    "status": "active",
+    "thumbnail": "/images/equipment/flipchart-1.jpg"
+  },
+  {
+    "id": 25,
+    "name": "태블릿 iPad Pro 12.9",
+    "category": "tablet",
+    "brand": "Apple",
+    "model": "iPad Pro 12.9",
+    "specifications": {
+      "display": "12.9-inch",
+      "storage": "256GB",
+      "pencil": "Apple Pencil 포함"
+    },
+    "rentalPrice": 40000,
+    "depositPrice": 200000,
+    "status": "active",
+    "thumbnail": "/images/equipment/tablet-1.jpg"
+  },
+  {
+    "id": 26,
+    "name": "태블릿 Samsung Galaxy Tab S9",
+    "category": "tablet",
+    "brand": "Samsung",
+    "model": "Galaxy Tab S9",
+    "specifications": {
+      "display": "11-inch",
+      "storage": "256GB",
+      "spen": "S Pen 포함"
+    },
+    "rentalPrice": 30000,
+    "depositPrice": 150000,
+    "status": "active",
+    "thumbnail": "/images/equipment/tablet-2.jpg"
+  },
+  {
+    "id": 27,
+    "name": "모니터 Dell 27인치 4K",
+    "category": "monitor",
+    "brand": "Dell",
+    "model": "U2720Q",
+    "specifications": {
+      "size": "27-inch",
+      "resolution": "3840x2160",
+      "connectivity": ["HDMI", "DisplayPort", "USB-C"]
+    },
+    "rentalPrice": 30000,
+    "depositPrice": 150000,
+    "status": "active",
+    "thumbnail": "/images/equipment/monitor-1.jpg"
+  },
+  {
+    "id": 28,
+    "name": "모니터 LG 32인치 4K",
+    "category": "monitor",
+    "brand": "LG",
+    "model": "32UN880",
+    "specifications": {
+      "size": "32-inch",
+      "resolution": "3840x2160",
+      "connectivity": ["HDMI", "DisplayPort", "USB-C"]
+    },
+    "rentalPrice": 35000,
+    "depositPrice": 180000,
+    "status": "active",
+    "thumbnail": "/images/equipment/monitor-2.jpg"
+  },
+  {
+    "id": 29,
+    "name": "키보드 Logitech MX Keys",
+    "category": "keyboard",
+    "brand": "Logitech",
+    "model": "MX Keys",
+    "specifications": {
+      "type": "무선",
+      "connectivity": ["Bluetooth", "USB"],
+      "backlight": "자동조절"
+    },
+    "rentalPrice": 10000,
+    "depositPrice": 50000,
+    "status": "active",
+    "thumbnail": "/images/equipment/keyboard-1.jpg"
+  },
+  {
+    "id": 30,
+    "name": "마우스 Logitech MX Master 3",
+    "category": "mouse",
+    "brand": "Logitech",
+    "model": "MX Master 3",
+    "specifications": {
+      "type": "무선",
+      "connectivity": ["Bluetooth", "USB"],
+      "battery": "70일"
+    },
+    "rentalPrice": 8000,
+    "depositPrice": 40000,
+    "status": "active",
+    "thumbnail": "/images/equipment/mouse-1.jpg"
+  },
+  {
+    "id": 31,
+    "name": "외장하드 Samsung T7 2TB",
+    "category": "storage",
+    "brand": "Samsung",
+    "model": "T7 Portable SSD",
+    "specifications": {
+      "capacity": "2TB",
+      "interface": "USB 3.2",
+      "speed": "1050MB/s"
+    },
+    "rentalPrice": 15000,
+    "depositPrice": 80000,
+    "status": "active",
+    "thumbnail": "/images/equipment/ssd-1.jpg"
+  },
+  {
+    "id": 32,
+    "name": "외장하드 Seagate 4TB",
+    "category": "storage",
+    "brand": "Seagate",
+    "model": "Backup Plus",
+    "specifications": {
+      "capacity": "4TB",
+      "interface": "USB 3.0",
+      "speed": "120MB/s"
+    },
+    "rentalPrice": 12000,
+    "depositPrice": 60000,
+    "status": "active",
+    "thumbnail": "/images/equipment/hdd-1.jpg"
+  },
+  {
+    "id": 33,
+    "name": "프린터 HP LaserJet Pro",
+    "category": "printer",
+    "brand": "HP",
+    "model": "LaserJet Pro M404dn",
+    "specifications": {
+      "type": "레이저",
+      "speed": "38ppm",
+      "connectivity": ["WiFi", "LAN", "USB"]
+    },
+    "rentalPrice": 25000,
+    "depositPrice": 150000,
+    "status": "active",
+    "thumbnail": "/images/equipment/printer-1.jpg"
+  },
+  {
+    "id": 34,
+    "name": "스캐너 Epson DS-530",
+    "category": "scanner",
+    "brand": "Epson",
+    "model": "DS-530",
+    "specifications": {
+      "speed": "35ppm",
+      "resolution": "600dpi",
+      "connectivity": ["USB"]
+    },
+    "rentalPrice": 20000,
+    "depositPrice": 100000,
+    "status": "active",
+    "thumbnail": "/images/equipment/scanner-1.jpg"
+  },
+  {
+    "id": 35,
+    "name": "라우터 공유기 TP-Link AX3000",
+    "category": "network",
+    "brand": "TP-Link",
+    "model": "Archer AX50",
+    "specifications": {
+      "speed": "3000Mbps",
+      "standard": "WiFi 6",
+      "coverage": "200㎡"
+    },
+    "rentalPrice": 15000,
+    "depositPrice": 70000,
+    "status": "active",
+    "thumbnail": "/images/equipment/router-1.jpg"
+  },
+  {
+    "id": 36,
+    "name": "빔프로젝터 BenQ MH535",
+    "category": "projector",
+    "brand": "BenQ",
+    "model": "MH535",
+    "specifications": {
+      "resolution": "1920x1080",
+      "brightness": "3600 lumens",
+      "connectivity": ["HDMI", "VGA"]
+    },
+    "rentalPrice": 40000,
+    "depositPrice": 180000,
+    "status": "active",
+    "thumbnail": "/images/equipment/projector-3.jpg"
+  },
+  {
+    "id": 37,
+    "name": "노트북 Dell XPS 15",
+    "category": "laptop",
+    "brand": "Dell",
+    "model": "XPS 15",
+    "specifications": {
+      "processor": "Intel Core i7",
+      "ram": "16GB",
+      "storage": "512GB SSD",
+      "display": "15.6-inch 4K"
+    },
+    "rentalPrice": 55000,
+    "depositPrice": 320000,
+    "status": "active",
+    "thumbnail": "/images/equipment/laptop-5.jpg"
+  },
+  {
+    "id": 38,
+    "name": "노트북 HP Spectre x360",
+    "category": "laptop",
+    "brand": "HP",
+    "model": "Spectre x360",
+    "specifications": {
+      "processor": "Intel Core i7",
+      "ram": "16GB",
+      "storage": "1TB SSD",
+      "display": "13.5-inch"
+    },
+    "rentalPrice": 50000,
+    "depositPrice": 300000,
+    "status": "active",
+    "thumbnail": "/images/equipment/laptop-6.jpg"
+  },
+  {
+    "id": 39,
+    "name": "노트북 Lenovo ThinkPad X1",
+    "category": "laptop",
+    "brand": "Lenovo",
+    "model": "ThinkPad X1 Carbon",
+    "specifications": {
+      "processor": "Intel Core i7",
+      "ram": "16GB",
+      "storage": "512GB SSD",
+      "display": "14-inch"
+    },
+    "rentalPrice": 48000,
+    "depositPrice": 290000,
+    "status": "active",
+    "thumbnail": "/images/equipment/laptop-7.jpg"
+  },
+  {
+    "id": 40,
+    "name": "USB 허브 7포트",
+    "category": "hub",
+    "brand": "Anker",
+    "model": "USB Hub 7-Port",
+    "specifications": {
+      "ports": "USB 3.0 x7",
+      "power": "외부전원"
+    },
+    "rentalPrice": 8000,
+    "depositPrice": 35000,
+    "status": "active",
+    "thumbnail": "/images/equipment/hub-1.jpg"
+  },
+  {
+    "id": 41,
+    "name": "USB-C 허브 멀티포트",
+    "category": "hub",
+    "brand": "Belkin",
+    "model": "USB-C Hub",
+    "specifications": {
+      "ports": ["HDMI", "USB 3.0 x3", "SD Card", "USB-C PD"]
+    },
+    "rentalPrice": 12000,
+    "depositPrice": 50000,
+    "status": "active",
+    "thumbnail": "/images/equipment/hub-2.jpg"
+  },
+  {
+    "id": 42,
+    "name": "헤드셋 Sony WH-1000XM5",
+    "category": "headset",
+    "brand": "Sony",
+    "model": "WH-1000XM5",
+    "specifications": {
+      "type": "무선",
+      "noiseCancelling": "능동형",
+      "battery": "30시간"
+    },
+    "rentalPrice": 20000,
+    "depositPrice": 100000,
+    "status": "active",
+    "thumbnail": "/images/equipment/headset-1.jpg"
+  },
+  {
+    "id": 43,
+    "name": "헤드셋 Bose QuietComfort",
+    "category": "headset",
+    "brand": "Bose",
+    "model": "QuietComfort 45",
+    "specifications": {
+      "type": "무선",
+      "noiseCancelling": "능동형",
+      "battery": "24시간"
+    },
+    "rentalPrice": 18000,
+    "depositPrice": 90000,
+    "status": "active",
+    "thumbnail": "/images/equipment/headset-2.jpg"
+  },
+  {
+    "id": 44,
+    "name": "드론 DJI Mini 3 Pro",
+    "category": "drone",
+    "brand": "DJI",
+    "model": "Mini 3 Pro",
+    "specifications": {
+      "camera": "48MP",
+      "video": "4K 60fps",
+      "flightTime": "34분"
+    },
+    "rentalPrice": 80000,
+    "depositPrice": 400000,
+    "status": "active",
+    "thumbnail": "/images/equipment/drone-1.jpg"
+  },
+  {
+    "id": 45,
+    "name": "짐벌 DJI RS 3",
+    "category": "gimbal",
+    "brand": "DJI",
+    "model": "RS 3",
+    "specifications": {
+      "payload": "3kg",
+      "battery": "12시간",
+      "modes": ["팬팔로우", "락", "FPV"]
+    },
+    "rentalPrice": 50000,
+    "depositPrice": 250000,
+    "status": "active",
+    "thumbnail": "/images/equipment/gimbal-1.jpg"
+  },
+  {
+    "id": 46,
+    "name": "녹음기 Zoom H5",
+    "category": "recorder",
+    "brand": "Zoom",
+    "model": "H5",
+    "specifications": {
+      "channels": "4",
+      "recording": "24bit/96kHz",
+      "storage": "SD Card"
+    },
+    "rentalPrice": 25000,
+    "depositPrice": 120000,
+    "status": "active",
+    "thumbnail": "/images/equipment/recorder-1.jpg"
+  },
+  {
+    "id": 47,
+    "name": "믹서 Behringer X32",
+    "category": "mixer",
+    "brand": "Behringer",
+    "model": "X32",
+    "specifications": {
+      "channels": "32",
+      "preamps": "16",
+      "effects": "내장"
+    },
+    "rentalPrice": 80000,
+    "depositPrice": 400000,
+    "status": "active",
+    "thumbnail": "/images/equipment/mixer-1.jpg"
+  },
+  {
+    "id": 48,
+    "name": "스크린 이동식 100인치",
+    "category": "screen",
+    "brand": "Elite Screens",
+    "model": "Manual 100",
+    "specifications": {
+      "size": "100inch",
+      "ratio": "16:9",
+      "type": "수동"
+    },
+    "rentalPrice": 30000,
+    "depositPrice": 150000,
+    "status": "active",
+    "thumbnail": "/images/equipment/screen-1.jpg"
+  },
+  {
+    "id": 49,
+    "name": "스크린 전동식 120인치",
+    "category": "screen",
+    "brand": "Elite Screens",
+    "model": "Electric 120",
+    "specifications": {
+      "size": "120inch",
+      "ratio": "16:9",
+      "type": "전동"
+    },
+    "rentalPrice": 50000,
+    "depositPrice": 250000,
+    "status": "active",
+    "thumbnail": "/images/equipment/screen-2.jpg"
+  },
+  {
+    "id": 50,
+    "name": "포인터 프레젠터",
+    "category": "presenter",
+    "brand": "Logitech",
+    "model": "Spotlight",
+    "specifications": {
+      "range": "30m",
+      "battery": "충전식",
+      "functions": ["레이저", "타이머"]
+    },
+    "rentalPrice": 8000,
+    "depositPrice": 40000,
+    "status": "active",
+    "thumbnail": "/images/equipment/presenter-1.jpg"
+  },
+  {
+    "id": 51,
+    "name": "빔프로젝터 Optoma HD146X",
+    "category": "projector",
+    "brand": "Optoma",
+    "model": "HD146X",
+    "specifications": {
+      "resolution": "1920x1080",
+      "brightness": "3600 lumens",
+      "connectivity": ["HDMI", "VGA", "USB"]
+    },
+    "rentalPrice": 38000,
+    "depositPrice": 170000,
+    "status": "active",
+    "thumbnail": "/images/equipment/projector-4.jpg"
+  },
+  {
+    "id": 52,
+    "name": "노트북 ASUS ZenBook",
+    "category": "laptop",
+    "brand": "ASUS",
+    "model": "ZenBook 14",
+    "specifications": {
+      "processor": "Intel Core i7",
+      "ram": "16GB",
+      "storage": "512GB SSD",
+      "display": "14-inch"
+    },
+    "rentalPrice": 42000,
+    "depositPrice": 260000,
+    "status": "active",
+    "thumbnail": "/images/equipment/laptop-8.jpg"
+  },
+  {
+    "id": 53,
+    "name": "노트북 Acer Swift 3",
+    "category": "laptop",
+    "brand": "Acer",
+    "model": "Swift 3",
+    "specifications": {
+      "processor": "AMD Ryzen 7",
+      "ram": "16GB",
+      "storage": "512GB SSD",
+      "display": "14-inch"
+    },
+    "rentalPrice": 38000,
+    "depositPrice": 240000,
+    "status": "active",
+    "thumbnail": "/images/equipment/laptop-9.jpg"
+  },
+  {
+    "id": 54,
+    "name": "충전 어댑터 GaN 65W",
+    "category": "adapter",
+    "brand": "RAVPower",
+    "model": "GaN Charger",
+    "specifications": {
+      "power": "65W",
+      "ports": ["USB-C x2"],
+      "technology": "GaN"
+    },
+    "rentalPrice": 6000,
+    "depositPrice": 25000,
+    "status": "active",
+    "thumbnail": "/images/equipment/laptop-9.jpg"
+  }
+]

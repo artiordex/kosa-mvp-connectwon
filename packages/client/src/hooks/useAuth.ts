@@ -1,12 +1,11 @@
 /**
- * Description : useAuth.ts - 📌 클라이언트 측 인증 컨텍스트 훅
+ * Description : useAuth.ts - 📌 클라이언트 측 인증 컨텍스트 훅 (Next.js 비의존형)
  * Author : Shiwoo Min
- * Date : 2025-09-12
+ * Date : 2025-10-07
  */
 'use client';
 
 import { useCallback, useContext, useEffect, useMemo } from 'react';
-import { useRouter } from 'next/navigation.js';
 import type { SessionUser, UserRole } from '../client-types.js';
 import { AuthContext, type AuthContextValue } from '../providers/AuthProvider.js';
 
@@ -27,26 +26,28 @@ export function useAuthUser(opts: { required: true; message?: string }): Session
 export function useAuthUser(opts?: { required?: boolean; message?: string }): SessionUser | null {
   const { user, loading, isAuthenticated } = useAuth();
   if (opts?.required && !loading && !isAuthenticated) {
-    // 기본은 에러 throw → ErrorBoundary에서 잡을 수 있음
     throw new Error(opts.message ?? 'Authentication required');
   }
   return user;
 }
 
 /**
- * @description 인증 필수 체크 훅 (자동 리다이렉트 지원)
+ * @description 인증 필수 체크 훅 (자동 리다이렉트 지원, Next.js 독립형)
  */
-export function useRequireAuth(opts?: { redirectTo?: string; redirect?: (to: string) => void; onUnauthenticated?: () => void }) {
+export function useRequireAuth(opts?: {
+  redirectTo?: string;
+  redirect?: (to: string) => void; // ✅ 외부에서 push 주입
+  onUnauthenticated?: () => void;
+}) {
   const { user, loading, isAuthenticated } = useAuth();
-  const router = useRouter();
   const redirectTo = opts?.redirectTo ?? '/login';
 
   const doRedirect = useCallback(
     (to: string) => {
-      if (opts?.redirect) return opts.redirect(to);
-      router.push(to); // Next.js App Router push 사용
+      if (opts?.redirect) return opts.redirect(to); // Next.js 환경이면 router.push 주입
+      if (typeof window !== 'undefined') window.location.href = to; // ✅ fallback
     },
-    [opts, router],
+    [opts],
   );
 
   useEffect(() => {

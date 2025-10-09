@@ -1,6 +1,8 @@
-# Description : e2e.yml - 📌 Docker Compose 기반 Playwright E2E 테스트 파이프라인
+# Description : e2e.yml -  Docker Compose 기반 Playwright E2E 테스트 파이프라인
 # Author : Shiwoo Min
 # Date : 2025-09-16
+# 10-09 : 캐시/로그 보강 및 안정성 향상
+
 name: E2E (minimal)
 
 on:
@@ -16,15 +18,39 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Docker 권한 보장
+      - name: Set Docker permissions
+        run: sudo chmod 666 /var/run/docker.sock
+
+      # 결과 디렉토리 준비
       - name: Prepare results dir
         run: mkdir -p "${{ env.HOST_RESULTS_DIR }}"
 
-      - name: Build & start
-        run: docker compose -f "${COMPOSE_FILE}" up -d --build
+      # Docker 캐시
+      - name: Cache Docker layers
+        uses: actions/cache@v4
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ hashFiles('**/Dockerfile') }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
 
+      # 빌드 & 기동
+      - name: Build & start
+        run: docker compose -f "${COMPOSE_FILE}" build --progress=plain --build-arg BUILDKIT_INLINE_CACHE=1 && \
+             docker compose -f "${COMPOSE_FILE}" up -d
+
+      # E2E 테스트
       - name: Run E2E
         run: docker compose -f "${COMPOSE_FILE}" run --rm e2e
+        timeout-minutes: 15
 
+      # 로그 저장 (테스트 실패 시)
+      - name: Dump docker logs
+        if: failure()
+        run: docker compose -f "${COMPOSE_FILE}" logs --no-color > docker-compose.log
+
+      # 리포트 업로드
       - name: Upload reports
         if: always()
         uses: actions/upload-artifact@v4
@@ -35,6 +61,16 @@ jobs:
             ${{ env.HOST_RESULTS_DIR }}/junit.xml
           if-no-files-found: warn
 
+      # 로그 업로드
+      - name: Upload docker logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-logs
+          path: docker-compose.log
+          if-no-files-found: ignore
+
+      # 정리
       - name: Down
         if: always()
         run: docker compose -f "${COMPOSE_FILE}" down -v

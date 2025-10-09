@@ -1,8 +1,8 @@
 
 'use client';
 
-import Header from '../../components/Header';
-import Footer from '../../components/Footer';
+import Header from '../../../components/Header';
+import Footer from '../../../components/Footer';
 import Link from 'next/link';
 import { useState } from 'react';
 
@@ -125,7 +125,7 @@ export default function DevicesPage() {
     }
   ];
 
-  const filteredDevices = devices.filter(device => 
+  const filteredDevices = devices.filter(device =>
     selectedCategory === '전체' || device.category === selectedCategory
   );
 
@@ -134,8 +134,8 @@ export default function DevicesPage() {
   const addToCart = (device: any, duration: number) => {
     const existingItem = cart.find(item => item.id === device.id);
     if (existingItem) {
-      setCart(cart.map(item => 
-        item.id === device.id 
+      setCart(cart.map(item =>
+        item.id === device.id
           ? { ...item, duration, totalPrice: device.price * duration }
           : item
       ));
@@ -161,7 +161,7 @@ export default function DevicesPage() {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      
+
       <main className="flex-grow pt-20">
         {/* 헤로 섹션 */}
         <section className="bg-gradient-to-br from-blue-50 to-indigo-100 py-16">
@@ -172,7 +172,7 @@ export default function DevicesPage() {
             <p className="text-xl text-gray-600 mb-8">
               원하는 지점에서 필요한 디바이스를 선택하고 한번에 예약하세요
             </p>
-            
+
             {/* 단계 표시 */}
             <div className="flex items-center justify-center space-x-4 mb-8">
               <div className="flex items-center">
@@ -234,20 +234,20 @@ export default function DevicesPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
               {centers.map((center) => (
-                <div 
-                  key={center.id} 
+                <div
+                  key={center.id}
                   onClick={() => {
                     setSelectedCenter(center.id);
                     setCart([]);
                   }}
                   className={`bg-white border-2 rounded-xl shadow-sm hover:shadow-lg transition-all cursor-pointer ${
-                    selectedCenter === center.id 
-                      ? 'border-blue-500 ring-2 ring-blue-200' 
+                    selectedCenter === center.id
+                      ? 'border-blue-500 ring-2 ring-blue-200'
                       : 'border-gray-200 hover:border-blue-300'
                   }`}
                 >
                   <div className="relative">
-                    <img 
+                    <img
                       src={center.image}
                       alt={center.name}
                       className="w-full h-48 object-cover object-top rounded-t-xl"
@@ -260,12 +260,12 @@ export default function DevicesPage() {
                       </div>
                     )}
                   </div>
-                  
+
                   <div className="p-6">
                     <h3 className="text-xl font-semibold text-gray-900 mb-3">
                       {center.name}
                     </h3>
-                    
+
                     <div className="space-y-2">
                       <div className="flex items-start text-gray-600">
                         <i className="ri-map-pin-line mr-2 w-4 h-4 flex items-center justify-center mt-1"></i>
@@ -340,17 +340,17 @@ export default function DevicesPage() {
 
               <div className="mb-6">
                 <p className="text-gray-600 text-lg">
-                  <span className="font-semibold text-blue-600">{selectedCategory === '전체' ? '전체' : selectedCategory}</span> 
-                  ({filteredDevices.length}개) • 
+                  <span className="font-semibold text-blue-600">{selectedCategory === '전체' ? '전체' : selectedCategory}</span>
+                  ({filteredDevices.length}개) •
                   <span className="font-semibold text-green-600"> {selectedCenterData?.name}</span>에서 수령
                 </p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {filteredDevices.map((device) => (
-                  <DeviceCard 
-                    key={device.id} 
-                    device={device} 
+                  <DeviceCard
+                    key={device.id}
+                    device={device}
                     onAddToCart={addToCart}
                     selectedCenter={selectedCenterData}
                   />
@@ -412,7 +412,7 @@ export default function DevicesPage() {
 
       {/* 장바구니 모달 */}
       {showCart && (
-        <CartModal 
+        <CartModal
           cart={cart}
           onClose={() => setShowCart(false)}
           onRemove={removeFromCart}
@@ -423,8 +423,8 @@ export default function DevicesPage() {
   );
 }
 
-function DeviceCard({ device, onAddToCart, selectedCenter }: { 
-  device: any, 
+function DeviceCard({ device, onAddToCart, selectedCenter }: {
+  device: any,
   onAddToCart: (device: any, duration: number) => void,
   selectedCenter: any
 }) {
@@ -441,7 +441,7 @@ function DeviceCard({ device, onAddToCart, selectedCenter }: {
   return (
     <div className={`bg-white rounded-xl shadow-sm hover:shadow-lg transition-all border-2 ${device.color}`}>
       <div className="relative">
-        <img 
+        <img
           src={device.image}
           alt={device.name}
           className="w-full h-48 object-cover object-top rounded-t-xl"
@@ -463,12 +463,12 @@ function DeviceCard({ device, onAddToCart, selectedCenter }: {
           </span>
         </div>
       </div>
-      
+
       <div className="p-6">
         <h3 className="text-xl font-semibold text-gray-900 mb-2">
           {device.name}
         </h3>
-        
+
         <p className="text-gray-600 mb-4 text-sm">
           {device.description}
         </p>
@@ -488,7 +488,7 @@ function DeviceCard({ device, onAddToCart, selectedCenter }: {
             상세 기능 보기
             <i className={`ri-arrow-${showDetails ? 'up' : 'down'}-s-line ml-1 w-4 h-4 flex items-center justify-center`}></i>
           </button>
-          
+
           {showDetails && (
             <div className="mt-3 p-3 bg-gray-50 rounded-lg">
               <ul className="text-sm text-gray-600 space-y-1">
@@ -557,11 +557,11 @@ function DeviceCard({ device, onAddToCart, selectedCenter }: {
   );
 }
 
-function CartModal({ cart, onClose, onRemove, totalPrice }: { 
-  cart: any[], 
-  onClose: () => void, 
-  onRemove: (id: number) => void, 
-  totalPrice: number 
+function CartModal({ cart, onClose, onRemove, totalPrice }: {
+  cart: any[],
+  onClose: () => void,
+  onRemove: (id: number) => void,
+  totalPrice: number
 }) {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
@@ -588,7 +588,7 @@ function CartModal({ cart, onClose, onRemove, totalPrice }: {
             <div className="space-y-4">
               {cart.map((item) => (
                 <div key={item.id} className="flex items-center p-4 border rounded-lg">
-                  <img 
+                  <img
                     src={item.image}
                     alt={item.name}
                     className="w-16 h-16 object-cover object-top rounded-lg"

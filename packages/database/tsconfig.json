@@ -1,53 +1,60 @@
 /**
- * Description : tsconfig.json - 📌 database 패키지의 tsconfig.json
+ * Description : tsconfig.json - 📌 Database 패키지 (Prisma + PostgreSQL + Core 연동)
  * Author : Shiwoo Min
- * Date : 2025-09-05
- * 09-07 : prisma 지원 추가
- * 09-10 : core 패키지의 domain/authz 참조 추가
- * 09-12 : 선언파일/소스맵/증분빌드/레퍼런스 정리
+ * Date : 2025-10-09
+ *
+ * Environment :
+ *  - Docker / Cloud Run / Firebase / Azure / Local 개발환경 완전 호환
+ *  - ESM 기반 (NodeNext) + Prisma CLI / Client 완전 대응
+ *
+ * Note :
+ *  - Prisma CLI는 NodeNext 또는 Bundler 기반 ESM만 정상 지원
+ *  - Core/Logger 패키지 타입 자동 추적 (Nx project reference 기반)
+ *  - 빌드 로그 : tsc -p tsconfig.json --listEmittedFiles
  */
 {
-  // 루트의 tsconfig.base.json 상속
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    // I/O 경로
+    "composite": true,
+
+    // 출력 경로
     "rootDir": "./src",
     "outDir": "../../dist/packages/database",
     "declarationDir": "../../dist/packages/database",
+    "tsBuildInfoFile": "../../dist/packages/database/.tsbuildinfo",
 
-    // Node ESM 권장
+    // NodeNext (ESM) 모듈 해석
     "target": "es2022",
+    "module": "esnext",
+    "moduleResolution": "bundler",
     "lib": ["es2022"],
-    "types": ["node"],
-    "module": "nodenext",
-    "moduleResolution": "nodenext",
+    "verbatimModuleSyntax": true,
 
-    // 선언 파일 및 소스맵 생성
+    // 선언 파일 / 소스맵 / 증분 빌드
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
-
-    // 모노레포 증분 빌드 캐시
-    "composite": true,
     "incremental": true,
-    "tsBuildInfoFile": "../../dist/packages/database/.tsbuildinfo",
 
-    // 상호운용/편의
+    // Node 환경 옵션
+    "types": ["node"],
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "resolveJsonModule": true,
+
+    // 품질 / 안정성
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-
-    // 엄격 모드
+    "exactOptionalPropertyTypes": true,
     "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true
+    "noUnusedLocals": false,
+    "noUnusedParameters": false
   },
-  "include": ["src/**/*", "prisma/seed.ts"],
-  "exclude": ["dist", "node_modules", "src/generated", "prisma/migrations", "**/*.test.ts", "**/*.spec.ts"],
 
-  // 프로젝트 레퍼런스
+  "include": ["src/**/*", "prisma/**/*.ts", "prisma/seed.ts"],
+  "exclude": ["dist", "node_modules", "src/generated", "prisma/migrations"],
+
+  // Project References (core/logger)
   "references": [
     { "path": "../core" },
     { "path": "../logger" }

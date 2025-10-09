@@ -1,15 +1,37 @@
 {
   "$schema": "https://json.schemastore.org/nest-cli",
   "collection": "@nestjs/schematics",
-  "sourceRoot": "src",
+
+  // 소스 루트 (Nx 구조 기반)
+  "sourceRoot": "apps/api/src",
+  "entryFile": "main",
+
+  // 모노레포 구조 설정
+  "monorepo": true,
+  "monorepoRoot": "../../",
+
+  // 빌드 관련 설정
   "compilerOptions": {
     "deleteOutDir": true,
-    "assets": ["src/**/*.json", "src/**/*.md"],
-    "watchAssets": true
+    "watchAssets": true,
+    "webpack": false,
+    "tsConfigPath": "apps/api/tsconfig.json",
+
+    // Cloud Run / Docker 환경에서도 정상 동작
+    "assets": [
+      {
+        "include": "apps/api/src/**/*.json",
+        "outDir": "dist/apps/api"
+      },
+      {
+        "include": "apps/api/src/**/*.md",
+        "outDir": "dist/apps/api"
+      }
+    ]
   },
+
+  // Nest CLI generate 옵션
   "generateOptions": {
     "spec": false
-  },
-  "monorepo": true,
-  "root": "apps/api"
+  }
 }

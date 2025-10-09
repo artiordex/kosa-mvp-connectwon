@@ -1,11 +1,35 @@
 /**
- * Description : Header.tsx - 📌 ConnectWon UI 헤더 컴포넌트 모음
+ * Description : Header.tsx - 📌 ConnectWon UI 헤더 컴포넌트 (Next.js 비의존형)
  * Author : Shiwoo Min
- * Date : 2025-09-25
+ * Date : 2025-10-07
  */
 import { forwardRef, useEffect, useRef, useState } from 'react';
-import Link from 'next/link';
 import type { CommonHeaderProps, PageHeaderProps } from '../ui-types.js';
+
+interface HeaderLinkProps {
+  href: string;
+  children: React.ReactNode;
+  className?: string;
+  ariaLabel?: string;
+  ariaCurrent?: 'page' | undefined; // ✅ 타입 좁힘 (문자열 전체 X)
+  external?: boolean;
+}
+
+// ✅ 기본 <a> 링크 — Next.js 없이도 작동
+const DefaultLink = ({ href, children, className, ariaLabel, ariaCurrent, external }: HeaderLinkProps) =>
+  external ? (
+    <a href={href} target="_blank" rel="noopener noreferrer" aria-label={ariaLabel} aria-current={ariaCurrent} className={className}>
+      {children}
+    </a>
+  ) : (
+    <a href={href} aria-label={ariaLabel} aria-current={ariaCurrent} className={className}>
+      {children}
+    </a>
+  );
+
+export interface CommonHeaderWithLinkProps extends CommonHeaderProps {
+  LinkComponent?: React.ElementType;
+}
 
 // 공통 헤더 (사이트 네비게이션)
 const Header = ({
@@ -21,7 +45,8 @@ const Header = ({
   onLanguageChange,
   className,
   sticky = true,
-}: CommonHeaderProps) => {
+  LinkComponent = DefaultLink, // ✅ 외부에서 NextLink 주입 가능
+}: CommonHeaderWithLinkProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLanguageOpen, setIsLanguageOpen] = useState(false);
   const langRef = useRef<HTMLDivElement>(null);
@@ -55,24 +80,24 @@ const Header = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           {/* 로고 */}
-          <Link href="/" className="flex items-center" aria-label="홈으로 이동">
+          <LinkComponent href="/" ariaLabel="홈으로 이동" className="flex items-center">
             {logo ?? <span className="font-bold text-xl">ConnectWon</span>}
-          </Link>
+          </LinkComponent>
 
           {/* 데스크톱 내비 */}
           <nav className="hidden md:flex items-center space-x-8" aria-label="주요 메뉴">
             {nav.map(item => (
-              <Link
+              <LinkComponent
                 key={item.href}
                 href={item.href}
+                ariaCurrent={activePath === item.href ? ('page' as const) : undefined} // ✅ 타입 안전 처리
                 className={[
                   'text-gray-700 hover:text-blue-600 cursor-pointer text-xl font-medium',
                   activePath === item.href ? 'text-blue-600' : '',
                 ].join(' ')}
-                aria-current={activePath === item.href ? 'page' : undefined}
               >
                 {item.label}
-              </Link>
+              </LinkComponent>
             ))}
           </nav>
 
@@ -81,15 +106,15 @@ const Header = ({
             <div className="hidden md:flex items-center space-x-4">
               {showAuth && (
                 <>
-                  <Link href={loginHref} className="text-gray-700 hover:text-blue-600 cursor-pointer text-xl font-medium">
+                  <LinkComponent href={loginHref} className="text-gray-700 hover:text-blue-600 cursor-pointer text-xl font-medium">
                     로그인
-                  </Link>
-                  <Link
+                  </LinkComponent>
+                  <LinkComponent
                     href={signupHref}
                     className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors cursor-pointer whitespace-nowrap text-xl font-medium"
                   >
                     회원가입
-                  </Link>
+                  </LinkComponent>
                 </>
               )}
 
@@ -153,28 +178,27 @@ const Header = ({
         <nav id="mobile-menu" className="bg-white border-t shadow-lg md:hidden" aria-label="모바일 메뉴">
           <div className="px-2 pt-2 pb-3 space-y-1">
             {nav.map(item => (
-              <Link
+              <LinkComponent
                 key={item.href}
                 href={item.href}
                 className={[
                   'block px-3 py-2 text-gray-700 hover:text-blue-600 cursor-pointer text-xl font-medium',
                   activePath === item.href ? 'text-blue-600' : '',
                 ].join(' ')}
-                aria-current={activePath === item.href ? 'page' : undefined}
               >
                 {item.label}
-              </Link>
+              </LinkComponent>
             ))}
 
             {showAuth && (
               <>
                 <hr className="my-2" />
-                <Link href={loginHref} className="block px-3 py-2 text-gray-700 hover:text-blue-600 cursor-pointer text-xl font-medium">
+                <LinkComponent href={loginHref} className="block px-3 py-2 text-gray-700 hover:text-blue-600 cursor-pointer text-xl font-medium">
                   로그인
-                </Link>
-                <Link href={signupHref} className="block px-3 py-2 text-gray-700 hover:text-blue-600 cursor-pointer text-xl font-medium">
+                </LinkComponent>
+                <LinkComponent href={signupHref} className="block px-3 py-2 text-gray-700 hover:text-blue-600 cursor-pointer text-xl font-medium">
                   회원가입
-                </Link>
+                </LinkComponent>
               </>
             )}
 

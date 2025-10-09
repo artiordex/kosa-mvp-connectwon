@@ -3,6 +3,8 @@
  * Author : Shiwoo Min
  * Date : 2025-09-09
  */
+"use client";
+
 import { useEffect, useRef } from 'react';
 import type { TargetLike } from '../ui-types.js';
 

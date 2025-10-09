@@ -3,6 +3,8 @@
   "sourceRoot": "packages/logger/src",
   "projectType": "library",
   "tags": ["type:lib", "layer:shared"],
+
+  "__comment_targets": "Nx 빌드/테스트/린트 설정",
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
@@ -11,7 +13,8 @@
         "outputPath": "dist/packages/logger",
         "tsConfig": "packages/logger/tsconfig.json",
         "assets": ["packages/logger/package.json"]
-      }
+      },
+      "outputs": ["{options.outputPath}"]
     },
     "lint": {
       "executor": "@nx/eslint:lint",

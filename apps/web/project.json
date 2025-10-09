@@ -3,13 +3,28 @@
   "sourceRoot": "apps/web/src",
   "projectType": "application",
   "tags": ["type:app", "layer:frontend", "platform:nextjs"],
+
+  "__comment_targets": "Next.js 빌드/서버/테스트 설정",
   "targets": {
     "build": {
       "executor": "@nx/next:build",
       "options": {
-        "outputPath": "dist/apps/web"
+        "outputPath": "dist/apps/web",
+        "root": "apps/web"
+      },
+      "configurations": {
+        "firebase": {
+          "env": { "FIREBASE": "true" }
+        },
+        "cloud-run": {
+          "env": { "CLOUD_RUN": "true" }
+        },
+        "docker": {
+          "env": { "DOCKER": "true" }
+        }
       }
     },
+
     "serve": {
       "executor": "@nx/next:server",
       "options": {
@@ -18,12 +33,22 @@
         "port": 3000
       }
     },
+
+    "serve:ssr": {
+      "__comment": "Cloud Run / Docker 배포 시 SSR 커스텀 서버 구동",
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node apps/web/server.js"
+      }
+    },
+
     "lint": {
       "executor": "@nx/eslint:lint",
       "options": {
         "lintFilePatterns": ["apps/web/**/*.ts", "apps/web/**/*.tsx"]
       }
     },
+
     "test": {
       "executor": "@nx/vite:test",
       "options": {
@@ -31,10 +56,12 @@
       }
     }
   },
+
   "implicitDependencies": [
     "@connectwon/ui",
     "@connectwon/client",
     "@connectwon/api-contract",
-    "@connectwon/configs"
+    "@connectwon/configs",
+    "@connectwon/sdk"
   ]
 }

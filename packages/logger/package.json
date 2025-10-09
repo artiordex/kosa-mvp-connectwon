@@ -1,42 +1,48 @@
 {
   "name": "@connectwon/logger",
   "version": "1.0.0",
-  "description": "ConnectWon 로거 모듈 (Winston 기반)",
+  "description": "ConnectWon 로깅 모듈 (Winston 기반 - Cloud/Local/Container 공용)",
   "private": true,
   "type": "module",
   "sideEffects": [
     "./dist/**/*.js"
   ],
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
+
+  "__comment_exports": "ESM/TS 타입 정의 - Docker / Cloud Run / Firebase / Azure / Local 개발환경 완전 호환",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/packages/logger/index.d.ts",
-      "import": "./dist/packages/logger/index.js"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
     },
     "./logger-types": {
-      "types": "./dist/packages/logger/logger-types.d.ts",
-      "import": "./dist/packages/logger/logger-types.js"
+      "types": "./dist/logger-types.d.ts",
+      "import": "./dist/logger-types.js"
     },
     "./package.json": "./package.json"
   },
+
   "__comment_scripts": "빌드/개발/배포 스크립트",
   "scripts": {
+    "clean": "rimraf dist",
     "build": "tsc -p tsconfig.json",
     "dev": "tsc -p tsconfig.json --watch",
-    "clean": "rimraf dist",
+    "type-check": "tsc --noEmit -p tsconfig.json",
     "prepublishOnly": "pnpm run clean && pnpm run build",
     "lint": "eslint src --ext .ts",
     "test": "vitest run"
   },
-  "__comment_dependencies": "실행 시 필요한 런타임 의존성",
+
+  "__comment_dependencies": "런타임 로깅 의존성 (Cloud-ready Winston Stack)",
   "dependencies": {
     "logform": "^2.7.0",
     "winston": "^3.17.0",
     "winston-daily-rotate-file": "^5.0.0",
     "winston-transport": "^4.9.0"
   },
+
   "__comment_devDependencies": "개발/테스트/빌드용 의존성",
   "devDependencies": {
     "@types/node": "^24.3.1",
@@ -45,7 +51,18 @@
     "typescript": "5.6.3",
     "vitest": "^3.2.4"
   },
-  "__comment_engines": "런타임/패키지 매니저 버전 요구사항",
+
+  "__comment_nx": "Nx 그래프 자동 종속 관리 (core/database 등에서 사용 가능)",
+  "nx": {
+    "implicitDependencies": [],
+    "targets": {
+      "build": {
+        "dependsOn": []
+      }
+    }
+  },
+
+  "__comment_engines": "Node 20+ 런타임 보장 (Docker / Cloud Run / Firebase / Azure / Local)",
   "engines": {
     "node": ">=20.11",
     "pnpm": ">=10.7.0"

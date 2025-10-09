@@ -3,6 +3,8 @@
  * Author : Shiwoo Min
  * Date : 2025-09-09
  */
+"use client";
+
 import { useCallback, useState } from 'react';
 import type { UseBooleanActions } from '../ui-types.js';
 

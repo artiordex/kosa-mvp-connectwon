@@ -5,20 +5,19 @@
  * 09-23: Import 중복 문제 해결, React Hook/Next.js 스니펫 추가, JSON 문법 오류 수정
  * 참고: https://code.visualstudio.com/docs/editor/userdefinedsnippets
  */
-
 {
-  // React 컴포넌트 (Next/TS 친화)
+  // React Component (Next.js / TS 친화)
   "React Component": {
     "scope": "typescriptreact,javascriptreact",
     "prefix": "rfc",
-    "description": "React 함수 컴포넌트 기본 골격(Next.js 친화)",
+    "description": "React 함수 컴포넌트 (Next.js App Router 친화)",
     "body": [
       "${1|'use client';,|}",
       "interface ${2:Component}Props {",
       "  ${3:// props}",
       "}",
       "",
-      "export function ${2:Component}(${4:props}: ${2:Component}Props): JSX.Element {",
+      "export default function ${2:Component}(${4:props}: ${2:Component}Props) {",
       "  return (",
       "    <div className=\"${5:container}\">${6:content}</div>",
       "  );",
@@ -30,9 +29,9 @@
   "React useState": {
     "scope": "typescriptreact,javascriptreact",
     "prefix": "ustate",
-    "description": "useState Hook",
+    "description": "useState Hook with generic",
     "body": [
-      "const [${1:state}, set${1/(.*)/${1:/capitalize}/}] = useState${2|<string>,<number>,<boolean>,<any>,|}(${3:initialValue});"
+      "const [${1:state}, set${1/(.*)/${1:/capitalize}/}] = useState<${2:string}>(${3:''});"
     ]
   },
 
@@ -40,11 +39,13 @@
   "React useEffect": {
     "scope": "typescriptreact,javascriptreact",
     "prefix": "ueffect",
-    "description": "useEffect Hook",
+    "description": "useEffect Hook 기본 패턴",
     "body": [
       "useEffect(() => {",
-      "  ${1:// effect}",
-      "  ${2|,return () => {\\n    // cleanup\\n  };|}",
+      "  ${1:// effect 실행}",
+      "  return () => {",
+      "    ${2:// cleanup}",
+      "  };",
       "}, [${3:dependencies}]);"
     ]
   },
@@ -55,52 +56,49 @@
     "prefix": "nextpage",
     "description": "Next.js App Router 페이지 컴포넌트",
     "body": [
+      "${1|'use client';,|}",
       "import { Metadata } from 'next';",
       "",
       "export const metadata: Metadata = {",
-      "  title: '${1:Page Title}',",
-      "  description: '${2:Page Description}'",
+      "  title: '${2:Page Title}',",
+      "  description: '${3:Page Description}'",
       "};",
       "",
-      "export default function ${3:Page}() {",
+      "export default function ${4:Page}() {",
       "  return (",
-      "    <div className=\"${4:container}\">",
-      "      <h1>${5:Page Content}</h1>",
+      "    <div className=\"${5:container}\">",
+      "      <h1>${6:Page Content}</h1>",
       "    </div>",
       "  );",
       "}"
     ]
   },
 
-  // Next.js App Router - Layout
+  // Next.js Layout
   "Next.js Layout": {
     "scope": "typescriptreact",
     "prefix": "nextlayout",
-    "description": "Next.js App Router 레이아웃 컴포넌트",
+    "description": "Next.js App Router Layout 컴포넌트",
     "body": [
-      "export default function ${1:Root}Layout({",
-      "  children,",
-      "}: {",
-      "  children: React.ReactNode;",
-      "}) {",
+      "export default function ${1:RootLayout}({ children }: { children: React.ReactNode }) {",
       "  return (",
-      "    <${2|html,div|}${3| lang=\"ko\",|}>",
-      "      ${4:children}",
-      "    </${2|html,div|}>",
+      "    <html lang=\"ko\">",
+      "      <body>{children}</body>",
+      "    </html>",
       "  );",
       "}"
     ]
   },
 
-  // 디버깅용 로거(파일/라인 + 태그/페이로드)
+  // Debug Log
   "Debug Log": {
     "scope": "typescript,typescriptreact,javascript,javascriptreact",
     "prefix": "dlog",
     "description": "파일/라인 번호를 포함한 디버그 로그",
-    "body": ["console.log(`[${TM_FILENAME_BASE}:${TM_LINE_NUMBER}] ${1:tag}`, ${2:payload});"]
+    "body": ["console.log(`[${TM_FILENAME_BASE}:${TM_LINE_NUMBER}] ${1:msg}`, ${2:value});"]
   },
 
-  // 간단한 console.log
+  // Console Log
   "Console Log": {
     "scope": "typescript,typescriptreact,javascript,javascriptreact",
     "prefix": "cl",
@@ -108,7 +106,7 @@
     "body": ["console.log(${1:value});"]
   },
 
-  // ESM 함수 기본 골격
+  // ESM Function
   "ESM Function": {
     "scope": "typescript,javascript",
     "prefix": "fn",
@@ -120,7 +118,7 @@
     ]
   },
 
-  // Async + try/catch 패턴
+  // Async Try/Catch
   "Async Try/Catch": {
     "scope": "typescript,javascript",
     "prefix": "trya",
@@ -129,120 +127,47 @@
       "export async function ${1:run}(${2:args}: ${3:any}) {",
       "  try {",
       "    ${4:// await ...}",
-      "  } catch (err) {",
-      "    console.error('[${1:run}] failed:', err);",
-      "    throw err;",
+      "  } catch (error) {",
+      "    console.error(`[${1:run}] failed:`, error);",
+      "    throw error;",
       "  }",
       "}"
     ]
   },
 
-  // Class 기본 골격
-  "Class Basic": {
-    "scope": "typescript",
-    "prefix": "class",
-    "description": "TypeScript 클래스 기본 구조",
-    "body": [
-      "export class ${1:Service} {",
-      "  constructor(${2:deps?: any}) {",
-      "    ${3:// 초기화}",
-      "  }",
-      "",
-      "  public ${4:method}(${5:param}: ${6:any}): ${7:void} {",
-      "    ${8:// 구현}",
-      "  }",
-      "}"
-    ]
-  },
-
-  // Node ESM 스크립트(Top-Level Await)
+  // Node ESM Script (TLA)
   "Node TLA Script": {
     "scope": "typescript,javascript",
     "prefix": "tla",
-    "description": "Node ESM 스크립트 - top-level await",
+    "description": "Node ESM 스크립트 - top-level await + __dirname 대체",
     "body": [
-      "/* eslint-disable no-console */",
-      "export {};",
+      "import { fileURLToPath } from 'url';",
+      "import path from 'path';",
+      "",
+      "const __filename = fileURLToPath(import.meta.url);",
+      "const __dirname = path.dirname(__filename);",
       "",
       "(async () => {",
-      "  ${1:// TODO: 비동기 로직}",
-      "  console.log('done');",
+      "  ${1:// TODO: main logic}",
       "})();"
     ]
   },
 
-  // Playwright 기본 테스트 (import 포함)
+  // Playwright 기본 테스트
   "Playwright Test": {
     "scope": "typescript,javascript",
     "prefix": "pwtest",
-    "description": "Playwright 기본 테스트 스켈레톤",
+    "description": "Playwright 기본 테스트 + viewport 설정 예시",
     "body": [
       "import { test, expect } from '@playwright/test';",
+      "",
+      "test.use({ viewport: { width: 1280, height: 720 } });",
       "",
       "test.describe('${1:suite}', () => {",
       "  test('${2:should work}', async ({ page }) => {",
       "    await page.goto('${3:http://localhost:3000}');",
       "    await expect(page).toHaveTitle(/${4:Home}/);",
       "  });",
-      "});"
-    ]
-  },
-
-  // Playwright 테스트 (import 없음)
-  "Playwright Test (no import)": {
-    "scope": "typescript,javascript",
-    "prefix": "pwt",
-    "description": "Playwright 테스트 (import 없음)",
-    "body": [
-      "test.describe('${1:suite}', () => {",
-      "  test('${2:should work}', async ({ page }) => {",
-      "    await page.goto('${3:http://localhost:3000}');",
-      "    await expect(page).toHaveTitle(/${4:Home}/);",
-      "  });",
-      "});"
-    ]
-  },
-
-  // Playwright 단일 테스트
-  "Playwright Single Test": {
-    "scope": "typescript,javascript",
-    "prefix": "ptest",
-    "description": "Playwright 단일 테스트",
-    "body": [
-      "test('${1:should work}', async ({ page }) => {",
-      "  await page.goto('${2:http://localhost:3000}');",
-      "  ${3:// assertions}",
-      "});"
-    ]
-  },
-
-  // Playwright: 스크린샷 비교(비주얼 리그레션)
-  "Playwright Expect Screenshot": {
-    "scope": "typescript,javascript",
-    "prefix": "pwsnap",
-    "description": "Playwright 스크린샷 비교(비주얼 리그레션)",
-    "body": [
-      "import { test, expect } from '@playwright/test';",
-      "",
-      "test('${1:visual}', async ({ page }) => {",
-      "  await page.goto('${2:http://localhost:3000}');",
-      "  await expect(page).toHaveScreenshot('${3:home}.png', {",
-      "    fullPage: true,",
-      "    animations: 'disabled'",
-      "  });",
-      "});"
-    ]
-  },
-
-  // Playwright 스크린샷 (단일)
-  "Playwright Screenshot": {
-    "scope": "typescript,javascript",
-    "prefix": "pwss",
-    "description": "Playwright 스크린샷 단일",
-    "body": [
-      "await expect(page).toHaveScreenshot('${1:name}.png', {",
-      "  fullPage: ${2|true,false|},",
-      "  animations: '${3|disabled,allow|}'",
       "});"
     ]
   },
@@ -251,112 +176,42 @@
   "Vitest Test": {
     "scope": "typescript,javascript",
     "prefix": "vitest",
-    "description": "Vitest describe/it/expect 기본 스켈레톤",
+    "description": "Vitest describe/it + setup 패턴",
     "body": [
-      "import { describe, it, expect } from 'vitest';",
+      "import { describe, it, expect, beforeEach, afterEach } from 'vitest';",
       "",
       "describe('${1:module}', () => {",
-      "  it('${2:works}', () => {",
-      "    expect(${3:1 + 1}).toBe(${4:2});",
+      "  beforeEach(() => {",
+      "    ${2:// setup logic}",
       "  });",
-      "});"
-    ]
-  },
-
-  // Vitest 테스트 (import 없음)
-  "Vitest Test (no import)": {
-    "scope": "typescript,javascript",
-    "prefix": "vit",
-    "description": "Vitest describe/it (import 없음)",
-    "body": [
-      "describe('${1:module}', () => {",
-      "  it('${2:works}', () => {",
-      "    expect(${3:1 + 1}).toBe(${4:2});",
-      "  });",
-      "});"
-    ]
-  },
-
-  // Vitest 단일 테스트
-  "Vitest Single Test": {
-    "scope": "typescript,javascript",
-    "prefix": "vtest",
-    "description": "Vitest 단일 it 테스트",
-    "body": [
-      "it('${1:works}', () => {",
-      "  expect(${2:1 + 1}).toBe(${3:2});",
-      "});"
-    ]
-  },
-
-  // Vitest 모킹(vi.mock)
-  "Vitest Mock": {
-    "scope": "typescript,javascript",
-    "prefix": "vimock",
-    "description": "Vitest vi.mock 예제",
-    "body": [
-      "import { describe, it, expect, vi } from 'vitest';",
       "",
-      "vi.mock('${1:module}', () => ({",
-      "  ${2:fn}: vi.fn(() => ${3:'mocked'})",
-      "}));",
+      "  afterEach(() => {",
+      "    ${3:// cleanup logic}",
+      "  });",
       "",
-      "describe('${4:mock suite}', () => {",
-      "  it('should mock', () => {",
-      "    expect(${2:fn}()).toBe(${3:'mocked'});",
+      "  it('${4:works}', () => {",
+      "    expect(${5:1 + 1}).toBe(${6:2});",
       "  });",
       "});"
     ]
   },
 
-  // Vitest Mock Function
-  "Vitest Mock Function": {
-    "scope": "typescript,javascript",
-    "prefix": "vimockfn",
-    "description": "vi.fn() 모킹",
-    "body": [
-      "const ${1:mockFn} = vi.fn(${2|() => 'mocked',|})"
-    ]
-  },
-
-  // 환경변수 안전 접근(기본값 포함)
+  // ENV Getter
   "ENV Getter": {
     "scope": "typescript,javascript",
     "prefix": "envget",
-    "description": "process.env 안전 접근(기본값 포함)",
+    "description": "process.env 안전 접근 (기본값 포함)",
     "body": [
-      "const ${1:VAL} = process.env['${2:KEY}'] ?? '${3:default}';",
-      "if (!${1:VAL}) {",
-      "  throw new Error('Missing env: ${2:KEY}');",
-      "}"
+      "const ${1:VAL} = process.env['${2:KEY}'] ?? process.env.${2:KEY} ?? '${3:default}';",
+      "if (!${1:VAL}) throw new Error(`Missing env: ${2:KEY}`);"
     ]
   },
 
-  // AbortController가 포함된 fetch 래퍼
-  "Abortable Fetch": {
-    "scope": "typescript,javascript",
-    "prefix": "fetchab",
-    "description": "AbortController 기반 fetch 래퍼",
-    "body": [
-      "export async function ${1:request}(url: string, init: RequestInit = {}, timeout = ${2:10000}) {",
-      "  const ctrl = new AbortController();",
-      "  const id = setTimeout(() => ctrl.abort(), timeout);",
-      "  try {",
-      "    const res = await fetch(url, { ...init, signal: ctrl.signal });",
-      "    if (!res.ok) throw new Error(`HTTP \\${res.status}`);",
-      "    return res;",
-      "  } finally {",
-      "    clearTimeout(id);",
-      "  }",
-      "}"
-    ]
-  },
-
-  // Promise.allSettled 패턴
+  // Promise.allSettled Map
   "Promise AllSettled Map": {
     "scope": "typescript,javascript",
     "prefix": "allsettled",
-    "description": "Promise.allSettled 결과 안전 매핑",
+    "description": "Promise.allSettled 결과 안전 매핑 (TS 제네릭)",
     "body": [
       "const ${1:results} = await Promise.allSettled(${2:tasks});",
       "const ${3:fulfilled} = ${1:results}",
@@ -365,42 +220,6 @@
       "const ${4:rejected} = ${1:results}",
       "  .filter((r): r is PromiseRejectedResult => r.status === 'rejected')",
       "  .map(r => r.reason);"
-    ]
-  },
-
-  // TypeScript Interface
-  "TypeScript Interface": {
-    "scope": "typescript,typescriptreact",
-    "prefix": "interface",
-    "description": "TypeScript 인터페이스",
-    "body": [
-      "interface ${1:Name} {",
-      "  ${2:property}: ${3:string};",
-      "}"
-    ]
-  },
-
-  // TypeScript Type
-  "TypeScript Type": {
-    "scope": "typescript,typescriptreact",
-    "prefix": "type",
-    "description": "TypeScript 타입 별칭",
-    "body": [
-      "type ${1:Name} = ${2:string | number};"
-    ]
-  },
-
-  // API Response Type
-  "API Response Type": {
-    "scope": "typescript,typescriptreact",
-    "prefix": "apitype",
-    "description": "API 응답 타입 정의",
-    "body": [
-      "interface ${1:Api}Response {",
-      "  success: boolean;",
-      "  data${2|?: any,: any|};",
-      "  ${3|error?: string;,message?: string;|}",
-      "}"
     ]
   }
 }

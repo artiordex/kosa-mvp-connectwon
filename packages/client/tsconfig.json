@@ -1,52 +1,55 @@
 /**
- * Description : tsconfig.json - 📌 Nest.js 패키지 (TypeScript 설정)
+ * Description : tsconfig.json - 📌 Client 패키지 (React + Mock 구조 통합)
  * Author : Shiwoo Min
- * Date : 2025-09-12
- * 09-29 : rootDir=src 로 정리, TSX 지원 추가
+ * Date  : 2025-10-09
  */
 {
-  // 루트의 tsconfig.base.json 상속
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    // I/O 경로
+    "composite": true,
+
+    // 경로 설정
     "rootDir": "./src",
     "outDir": "../../dist/packages/client",
+    "declarationDir": "../../dist/packages/client",
     "tsBuildInfoFile": "../../dist/packages/client/.tsbuildinfo",
-    "noEmit": false,
 
-    // 서버 전용 타깃
+    // ESM + 번들러 해석
     "target": "es2022",
-    "module": "nodenext",
-    "moduleResolution": "nodenext",
-    "lib": ["es2022", "dom", "dom.iterable"],
-    "types": ["node"],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "verbatimModuleSyntax": true,
 
-    // Nest/Express 공통 추천
-    "strict": true,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "useDefineForClassFields": false,
-
-    // ESM/CJS 상호운용
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-
-    // TSX/JSX 지원
-    "jsx": "react-jsx",
-    "jsxImportSource": "react",
-
-    // 품질/편의
-    "resolveJsonModule": true,
-    "sourceMap": true,
-    "skipLibCheck": true,
+    // 선언 파일 / 소스맵 / 증분 빌드
     "declaration": true,
     "declarationMap": true,
+    "sourceMap": true,
     "incremental": true,
-    "forceConsistentCasingInFileNames": true
-  },
-  // 포함 범위
-  "include": ["src/**/*"],
 
-  // 불필요한 폴더 제외
-  "exclude": ["node_modules", "dist", "**/*.test.*", "**/*.spec.*"]
+    // React JSX
+    "jsx": "react-jsx",
+    "lib": ["dom", "dom.iterable", "es2022"],
+
+    // 타입 및 품질 설정
+    "types": ["node", "react", "react-dom"],
+    "allowJs": true,
+    "checkJs": false,
+    "resolveJsonModule": true,
+    "allowArbitraryExtensions": true,
+    "exactOptionalPropertyTypes": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "noEmitOnError": false
+  },
+
+  "__comment_include": "모든 src 하위 (mocks 포함)",
+  "include": ["src/**/*", "src/**/*.json"],
+
+  "__comment_exclude": "빌드 및 node_modules 제외",
+  "exclude": ["dist", "node_modules"],
+
+  "__comment_references": "API contract 패키지 참조",
+  "references": [
+    { "path": "../api-contract" }
+  ]
 }

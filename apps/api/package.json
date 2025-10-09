@@ -4,22 +4,28 @@
   "description": "ConnectWon REST-API 기반 백엔드",
   "private": true,
   "main": "dist/apps/api/main.js",
+
   "__comment_scripts": "pnpm scripts 명령어",
   "scripts": {
     "dev": "nx serve @connectwon/api",
     "build": "nx build @connectwon/api",
     "build:ci": "nx build @connectwon/api --skip-nx-cache",
-    "build:tsc": "tsc -p tsconfig.json --noEmit",
+    "type-check": "tsc -p tsconfig.json --noEmit",
+
     "start": "node dist/apps/api/main.js",
     "start:prod": "node --enable-source-maps dist/apps/api/main.js",
-    "start:pm2": "pm2 start ecosystem.config.js --env production",
+
+    "start:pm2": "pm2-runtime ecosystem.config.js --env production",
     "start:pm2:dev": "pm2 start ecosystem.config.js --only connectwon-api-dev",
+
     "clean": "pnpm -w exec rimraf dist",
     "clean:all": "pnpm -w exec rimraf dist node_modules .turbo .nx",
+
     "lint": "nx lint @connectwon/api",
     "test": "nx test @connectwon/api",
     "format": "nx format:write"
   },
+
   "__comment_dependencies": "런타임 의존성",
   "dependencies": {
     "@connectwon/api-contract": "workspace:*",
@@ -48,6 +54,7 @@
     "swagger-ui-express": "^5.0.1",
     "zod": "^3.23.8"
   },
+
   "__comment_dev": "개발 의존성",
   "devDependencies": {
     "@nestjs/bull": "^11.0.3",
@@ -62,6 +69,7 @@
     "@types/multer": "^2.0.0",
     "@types/node": "^24.3.1"
   },
+
   "__comment_engines": "런타임 요구사항",
   "engines": {
     "node": ">=20.11"

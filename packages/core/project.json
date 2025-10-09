@@ -3,6 +3,8 @@
   "sourceRoot": "packages/core/src",
   "projectType": "library",
   "tags": ["type:lib", "layer:backend", "layer:tooling"],
+
+  "__comment_targets": "Nx 빌드/린트/테스트 설정",
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
@@ -31,5 +33,7 @@
       }
     }
   },
+
+  "__comment_dependencies": "api-contract과의 의존 관계 명시",
   "implicitDependencies": ["@connectwon/api-contract"]
 }

@@ -3,42 +3,107 @@
   "sourceRoot": "apps/e2e",
   "projectType": "application",
   "tags": ["type:app", "layer:e2e"],
+
+  "__comment_targets": "Nx 빌드/린트/테스트 실행 설정",
   "targets": {
+    "__comment_test": "Playwright 테스트 실행 (환경별 동작 자동 감지)",
     "test": {
       "executor": "@nx/playwright:playwright",
       "options": {
         "config": "apps/e2e/playwright.config.ts",
-        "passWithNoTests": false
+        "passWithNoTests": false,
+        "reporter": [
+          ["list"],
+          ["html", { "open": "never", "outputFolder": "apps/e2e/playwright-report" }]
+        ],
+        "outputDir": "apps/e2e/test-results"
+      },
+      "configurations": {
+        "__comment_ci": "CI (Cloud Run / Firebase / Azure Pipelines) 환경",
+        "ci": {
+          "env": {
+            "CI": "true",
+            "DOCKER": "true",
+            "HEADLESS": "true"
+          },
+          "reporter": [
+            ["line"],
+            ["html", { "open": "never", "outputFolder": "apps/e2e/playwright-report" }]
+          ],
+          "parallel": false
+        },
+
+        "__comment_docker": "Docker 로컬/빌드 환경용 설정",
+        "docker": {
+          "env": {
+            "CI": "false",
+            "DOCKER": "true",
+            "HEADLESS": "true"
+          },
+          "command": "pnpm playwright test --reporter=list --config=apps/e2e/playwright.config.ts"
+        },
+
+        "__comment_local": "로컬 개발환경 (UI, 영상, HTML 리포트 자동 열림)",
+        "local": {
+          "env": {
+            "CI": "false",
+            "DOCKER": "false",
+            "HEADLESS": "false"
+          },
+          "reporter": [
+            ["list"],
+            ["html", { "open": "on-failure", "outputFolder": "apps/e2e/playwright-report" }]
+          ]
+        }
       },
       "outputs": ["apps/e2e/test-results", "apps/e2e/playwright-report"]
     },
+
+    "__comment_build": "E2E 테스트용 TypeScript 사전 빌드 (필요시)",
     "build": {
       "executor": "nx:run-script",
       "options": {
         "script": "build"
       }
     },
+
+    "__comment_test_ui": "Playwright UI 인터랙티브 테스트 실행 (로컬 전용)",
     "test:ui": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "playwright test --ui",
-        "cwd": "apps/e2e"
+        "cwd": "apps/e2e",
+        "command": "pnpm playwright test --ui"
       }
     },
+
+    "__comment_test_debug": "Playwright Debug 모드 실행 (단일 케이스 집중 디버깅용)",
     "test:debug": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "playwright test --debug",
-        "cwd": "apps/e2e"
+        "cwd": "apps/e2e",
+        "command": "pnpm playwright test --debug"
       }
     },
+
+    "__comment_install": "Playwright 브라우저/런타임 설치 (Docker/Firebase CI 필수)",
     "install": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "playwright install --with-deps",
-        "cwd": "apps/e2e"
+        "cwd": "apps/e2e",
+        "command": "pnpm playwright install --with-deps && pnpm playwright install-deps"
       }
     },
+
+    "__comment_verify": "Playwright 브라우저 설치 상태 검증 (CI/CD 전용)",
+    "verify:browsers": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "apps/e2e",
+        "command": "pnpm playwright install --check-deps"
+      }
+    },
+
+    "__comment_lint": "E2E 코드 린트 검사 (CI, PR 품질관리)",
     "lint": {
       "executor": "@nx/eslint:lint",
       "options": {
@@ -46,7 +111,10 @@
       }
     }
   },
+
+  "__comment_dependencies": "내부 패키지 종속 (logger / api-contract 등)",
   "implicitDependencies": [
-    "@connectwon/logger"
+    "@connectwon/logger",
+    "@connectwon/api-contract"
   ]
 }

@@ -1,0 +1,12 @@
+[
+  { "id": 1, "programId": 101, "userId": 201, "rating": 5, "comment": "실무 중심이라 정말 유익했습니다!", "createdAt": "2025-10-09T07:00:00Z" },
+  { "id": 2, "programId": 101, "userId": 202, "rating": 4, "comment": "팀 프로젝트가 인상적이었어요.", "createdAt": "2025-10-08T16:00:00Z" },
+  { "id": 3, "programId": 102, "userId": 305, "rating": 5, "comment": "초보자에게 딱 맞는 구성입니다.", "createdAt": "2025-10-08T12:00:00Z" },
+  { "id": 4, "programId": 103, "userId": 410, "rating": 4, "comment": "Figma 실습이 매우 유용했어요.", "createdAt": "2025-10-07T13:00:00Z" },
+  { "id": 5, "programId": 104, "userId": 501, "rating": 5, "comment": "린캔버스 실습 덕분에 사업계획이 명확해졌습니다.", "createdAt": "2025-10-07T10:00:00Z" },
+  { "id": 6, "programId": 105, "userId": 230, "rating": 3, "comment": "조금 더 심화 내용이 있었으면 좋겠어요.", "createdAt": "2025-10-06T18:00:00Z" },
+  { "id": 7, "programId": 106, "userId": 312, "rating": 5, "comment": "Midjourney 실습이 재밌었어요!", "createdAt": "2025-10-05T19:00:00Z" },
+  { "id": 8, "programId": 107, "userId": 418, "rating": 4, "comment": "데이터 분석의 기초를 잘 배웠습니다.", "createdAt": "2025-10-04T15:00:00Z" },
+  { "id": 9, "programId": 108, "userId": 340, "rating": 5, "comment": "서비스 기획에 바로 적용 가능했습니다.", "createdAt": "2025-10-03T12:00:00Z" },
+  { "id": 10, "programId": 109, "userId": 299, "rating": 4, "comment": "피칭 실습이 정말 현실적이었어요.", "createdAt": "2025-10-02T14:00:00Z" }
+]

@@ -3,6 +3,8 @@
  * Author : Shiwoo Min
  * Date : 2025-09-09
  */
+"use client";
+
 import { type RefObject, useCallback } from 'react';
 import type { MaybeRef } from '../ui-types.js';
 import { useEventListener } from './useEventListener.js';

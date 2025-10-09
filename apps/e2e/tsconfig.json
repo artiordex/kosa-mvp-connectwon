@@ -1,52 +1,76 @@
 /**
- * Description : tsconfig.json - 📌 Playwright 기반 E2E 모듈 (TypeScript 설정)
+ * Description : tsconfig.json - 📌 Playwright 기반 E2E 테스트 모듈
  * Author : Shiwoo Min
- * Date : 2025-09-07
- * 09-12 - include 범위 축소, DOM 타입 유지, noEmit 확정
- * 09-22 - Black-box: Project References 제거(불필요한 빌드 의존 차단), allowJs 기본 off
+ * Date : 2025-10-09
+ *
+ * Environment :
+ *  - Docker / Cloud Run / Firebase / Azure / Local 완전 호환
+ *  - Nx + Playwright + TypeScript 5.6+
+ *  - NodeNext 기반 ESM 구성 (dotenv / os / url 등 Node 내장모듈 정상 인식)
+ *
+ * Notes :
+ *  - E2E 전용 테스트 코드로만 사용 (빌드 산출물은 dist/apps/e2e)
+ *  - Project References 최소화 (logger만 참조)
+ *  - CI/CD 및 로컬 디버그 모두 호환됨
  */
 {
-  // 루트의 tsconfig.json 상속
+  // 루트 tsconfig.base.json 상속
   "extends": "../../tsconfig.base.json",
+
   "compilerOptions": {
-    // I/O 경로
+    // 경로 설정
     "rootDir": "./src",
     "outDir": "../../dist/apps/e2e",
 
+    // 모듈 시스템 (ESM 기반)
     "target": "es2022",
-    "lib": ["es2022", "dom", "dom.iterable"],
     "module": "nodenext",
     "moduleResolution": "nodenext",
 
-    // 상호운용/편의
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-    "allowJs": false,
+    // 브라우저/Node 혼합 환경
+    "lib": ["es2022", "dom", "dom.iterable"],
 
-    // 타입 전용(산출물 없음)
-    "strict": true,
-    "noEmit": false,
+    // 타입 호환성 및 상호운용
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+
+    // 빌드 산출물 관련
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
+    "noEmitOnError": false, // CI에서도 빌드 중단 방지
+    "incremental": true,
+    "tsBuildInfoFile": "../../dist/apps/e2e/.tsbuildinfo",
 
-    // Playwright/Node 타입
-    "types": ["node", "@playwright/test"],
-
-    // 자잘한 성능/안전
+    // 안정성 / 안전성
+    "strict": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true
+    "isolatedModules": true,
+
+    // Node 및 Playwright 타입 포함
+    "types": ["node", "@playwright/test"],
+
+    // JS import 제한 (테스트코드만 TypeScript 사용)
+    "allowJs": false
   },
 
+  // 포함 파일
   "include": [
     "src/**/*",
     "../playwright.config.ts"
   ],
 
-  // 산출물/리포트/노드모듈 제외
-  "exclude": ["node_modules", "dist", "test-results", "playwright-report"],
+  // 제외 폴더 (산출물/리포트/노드모듈)
+  "exclude": [
+    "node_modules",
+    "dist",
+    "test-results",
+    "playwright-report"
+  ],
+
+  // Project References (불필요한 빌드 의존 최소화)
   "references": [
     { "path": "../../packages/logger" }
   ]

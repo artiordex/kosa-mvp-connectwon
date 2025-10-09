@@ -3,6 +3,8 @@
  * Author : Shiwoo Min
  * Date : 2025-09-28
  */
+"use client";
+
 import { useEffect, useState } from 'react';
 
 /**

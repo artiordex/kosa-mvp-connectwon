@@ -1,8 +1,8 @@
 /**
- * Description : launch.json - 📌 VS Code에서 Debug 및 Testing 실행 설정 파일
+ * Description : launch.json - 📌 VS Code 디버그 및 테스트 실행 설정
  * Author : Shiwoo Min
- * Date : 2025-09-02
- * 09-09 : Vitest/Playwright 설정 변경
+ * Date : 2025-10-09
+ * Note : Vitest, Playwright, NestJS API 디버깅, ESM/TS 경로 인식 강화
  */
 {
   "version": "0.2.0",
@@ -12,11 +12,22 @@
       "name": "Vitest - Current File (debug)",
       "type": "node",
       "request": "launch",
+      "runtimeExecutable": "node",
       "program": "${workspaceFolder}/node_modules/vitest/vitest.mjs",
-      "args": ["run", "${file}", "--no-threads", "--watch=false", "--config", "vitest.config.ts"],
+      "args": [
+        "run",
+        "${file}",
+        "--no-threads",
+        "--watch=false",
+        "--config",
+        "vitest.config.ts"
+      ],
+      "envFile": "${workspaceFolder}/.env.test",
+      "env": { "NODE_ENV": "test" },
+      "outFiles": ["${workspaceFolder}/dist/**/*.js"],
+      "sourceMaps": true,
       "autoAttachChildProcesses": true,
       "smartStep": true,
-      "envFile": "${workspaceFolder}/.env",
       "cwd": "${workspaceFolder}",
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
@@ -28,77 +39,115 @@
       "name": "Vitest - Run All (once)",
       "type": "node",
       "request": "launch",
+      "runtimeExecutable": "node",
       "program": "${workspaceFolder}/node_modules/vitest/vitest.mjs",
       "args": ["run", "--watch=false", "--config", "vitest.config.ts"],
+      "envFile": "${workspaceFolder}/.env.test",
+      "env": { "NODE_ENV": "test" },
+      "outFiles": ["${workspaceFolder}/dist/**/*.js"],
+      "sourceMaps": true,
       "autoAttachChildProcesses": true,
-      "envFile": "${workspaceFolder}/.env",
       "cwd": "${workspaceFolder}",
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "skipFiles": ["<node_internals>/**"]
     },
 
-    // Vitest: 워치 모드(코드 저장 시 재실행)
+    // Vitest: 워치 모드
     {
       "name": "Vitest - Watch",
       "type": "node",
       "request": "launch",
+      "runtimeExecutable": "node",
       "program": "${workspaceFolder}/node_modules/vitest/vitest.mjs",
       "args": ["watch", "--config", "vitest.config.ts"],
+      "envFile": "${workspaceFolder}/.env.test",
+      "env": { "NODE_ENV": "test" },
+      "sourceMaps": true,
       "autoAttachChildProcesses": true,
-      "envFile": "${workspaceFolder}/.env",
       "cwd": "${workspaceFolder}",
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "skipFiles": ["<node_internals>/**"]
     },
 
-    // E2E: PC 웹 (headed)
+    // Playwright: E2E - PC (headed)
     {
-      "name": "Playwright E2E - PC",
+      "name": "Playwright E2E - PC (headed)",
       "type": "node",
       "request": "launch",
       "program": "${workspaceFolder}/node_modules/@playwright/test/cli.js",
-      "args": ["test", "e2e/pc-web", "--headed", "--reporter=html", "--trace=retain-on-failure"],
+      "args": [
+        "test",
+        "e2e/pc-web",
+        "--headed",
+        "--reporter=html",
+        "--trace=retain-on-failure"
+      ],
       "runtimeArgs": ["--require", "tsconfig-paths/register"],
-      // .env 자동 로딩
-      "envFile": "${workspaceFolder}/.env",
-      "env": { "POC": "pc" },
+      "envFile": "${workspaceFolder}/.env.test",
+      "env": { "POC": "pc", "NODE_ENV": "test" },
+      "sourceMaps": true,
       "cwd": "${workspaceFolder}",
       "console": "integratedTerminal",
-      "internalConsoleOptions": "neverOpen",
       "skipFiles": ["<node_internals>/**"]
     },
 
-    // E2E: 모바일 웹(PC 뷰포트) (headed)
+    // Playwright: E2E - PC (headless)
     {
-      "name": "Playwright E2E - PC Mobile Web",
+      "name": "Playwright E2E - PC (headless)",
       "type": "node",
       "request": "launch",
       "program": "${workspaceFolder}/node_modules/@playwright/test/cli.js",
-      "args": ["test", "e2e/pc-mobile-web", "--headed", "--reporter=html", "--trace=retain-on-failure"],
-      "runtimeArgs": ["--require", "tsconfig-paths/register"],
-      "envFile": "${workspaceFolder}/.env",
-      "env": { "POC": "mw" },
+      "args": [
+        "test",
+        "e2e/pc-web",
+        "--headless",
+        "--reporter=dot"
+      ],
+      "envFile": "${workspaceFolder}/.env.test",
+      "env": { "POC": "pc", "NODE_ENV": "test" },
+      "sourceMaps": true,
       "cwd": "${workspaceFolder}",
-      "console": "integratedTerminal",
-      "internalConsoleOptions": "neverOpen",
-      "skipFiles": ["<node_internals>/**"]
+      "console": "integratedTerminal"
     },
 
-    // E2E: API (headed)
+    // Playwright: API (headed)
     {
       "name": "Playwright E2E - API",
       "type": "node",
       "request": "launch",
       "program": "${workspaceFolder}/node_modules/@playwright/test/cli.js",
-      "args": ["test", "e2e/api", "--headed", "--reporter=html", "--trace=retain-on-failure"],
+      "args": [
+        "test",
+        "e2e/api",
+        "--headed",
+        "--reporter=html",
+        "--trace=retain-on-failure"
+      ],
       "runtimeArgs": ["--require", "tsconfig-paths/register"],
-      "envFile": "${workspaceFolder}/.env",
-      "env": { "POC": "api" },
+      "envFile": "${workspaceFolder}/.env.test",
+      "env": { "POC": "api", "NODE_ENV": "test" },
+      "sourceMaps": true,
       "cwd": "${workspaceFolder}",
       "console": "integratedTerminal",
-      "internalConsoleOptions": "neverOpen",
+      "skipFiles": ["<node_internals>/**"]
+    },
+
+    // NestJS API 서버 디버깅
+    {
+      "name": "NestJS API - Debug",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "node",
+      "args": ["${workspaceFolder}/apps/api/src/main.ts"],
+      "envFile": "${workspaceFolder}/.env",
+      "env": { "NODE_ENV": "development" },
+      "outFiles": ["${workspaceFolder}/dist/apps/api/**/*.js"],
+      "sourceMaps": true,
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "autoAttachChildProcesses": true,
       "skipFiles": ["<node_internals>/**"]
     }
   ]

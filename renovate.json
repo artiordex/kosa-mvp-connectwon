@@ -1,33 +1,63 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:base", ":dependencyDashboard", ":semanticCommits"],
-  "description": "Renovate configuration for ConnectWon monorepo",
+  "description": "ConnectWon 모노레포를 위한 Renovate 설정 파일",
+  "extends": [
+    "config:base",
+    ":dependencyDashboard",
+    ":semanticCommits",
+    ":separateMultipleMajorReleases",
+    ":automergeDisabled",
+    "group:monorepos"
+  ],
   "enabledManagers": ["npm", "pnpm"],
   "timezone": "Asia/Seoul",
   "npm": {
     "pnpm": { "enabled": true }
   },
   "postUpdateOptions": ["pnpmDedupe"],
-  "ignorePaths": ["docs/**"],
+  "ignorePaths": ["docs/**", "dist/**", "apps/**/out/**"],
   "packageRules": [
     {
-      "description": "patch/minor merges",
+      "description": "패치 및 마이너 버전은 자동 병합 허용",
       "matchUpdateTypes": ["patch", "minor"],
-      "automerge": true
+      "automerge": true,
+      "automergeType": "branch"
     },
     {
-      "description": "ConnectWon Apps",
+      "description": "ConnectWon 애플리케이션(Apps) 그룹 관리",
       "matchPaths": ["apps/**"],
-      "groupName": "apps"
+      "groupName": "apps",
+      "separateMajorMinor": false
     },
     {
-      "description": "ConnectWon Packages",
+      "description": "ConnectWon 공용 패키지(Packages) 그룹 관리",
       "matchPaths": ["packages/**"],
-      "groupName": "packages"
+      "groupName": "packages",
+      "separateMajorMinor": false
+    },
+    {
+      "description": "개발 인프라 관련 종속성(Nx, Docker, Firebase, Husky 등) 관리",
+      "matchPackagePatterns": [
+        "^@nx/",
+        "^nx",
+        "firebase",
+        "docker",
+        "husky",
+        "lint-staged"
+      ],
+      "groupName": "dev-infra",
+      "schedule": ["on saturday"]
     }
   ],
   "lockFileMaintenance": {
+    "description": "Lockfile 자동 유지 관리 (매주 토요일 실행)",
     "enabled": true,
-    "schedule": ["on saturday"]
-  }
+    "schedule": ["on saturday"],
+    "branchTopic": "lockfile-maintenance",
+    "commitMessageAction": "refresh",
+    "automerge": true
+  },
+  "semanticCommits": "enabled",
+  "commitMessagePrefix": "chore(deps): ",
+  "dependencyDashboardTitle": "Renovate Dependency Dashboard"
 }

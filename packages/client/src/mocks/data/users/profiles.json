@@ -1,0 +1,238 @@
+[
+  {
+    "id": 1,
+    "userId": 1,
+    "bio": "시스템 관리자입니다.",
+    "location": "서울, 대한민국",
+    "website": null,
+    "skills": ["System Management", "Security", "Database"],
+    "socialLinks": {},
+    "isPublic": false
+  },
+  {
+    "id": 2,
+    "userId": 2,
+    "bio": "풀스택 개발자입니다. React와 Node.js를 주로 사용합니다.",
+    "location": "서울, 대한민국",
+    "website": "https://kimdev.blog",
+    "skills": ["React", "Node.js", "TypeScript", "MongoDB"],
+    "socialLinks": {
+      "github": "https://github.com/kimdev",
+      "linkedin": "https://linkedin.com/in/kimdev"
+    },
+    "isPublic": true
+  },
+  {
+    "id": 3,
+    "userId": 3,
+    "bio": "UI/UX 디자이너. 사용자 경험을 최우선으로 생각합니다.",
+    "location": "부산, 대한민국",
+    "website": "https://leedesign.portfolio",
+    "skills": ["Figma", "Sketch", "Adobe XD", "Prototyping"],
+    "socialLinks": {
+      "behance": "https://behance.net/leedesign",
+      "dribbble": "https://dribbble.com/leedesign"
+    },
+    "isPublic": true
+  },
+  {
+    "id": 4,
+    "userId": 4,
+    "bio": "프론트엔드 개발자. 아름다운 웹을 만듭니다.",
+    "location": "인천, 대한민국",
+    "website": null,
+    "skills": ["Vue.js", "React", "CSS", "JavaScript"],
+    "socialLinks": {
+      "github": "https://github.com/parkfront"
+    },
+    "isPublic": true
+  },
+  {
+    "id": 5,
+    "userId": 5,
+    "bio": "백엔드 개발자. 안정적인 서버 구축이 목표입니다.",
+    "location": "대전, 대한민국",
+    "website": "https://choiback.dev",
+    "skills": ["Java", "Spring Boot", "PostgreSQL", "Docker"],
+    "socialLinks": {
+      "github": "https://github.com/choiback",
+      "linkedin": "https://linkedin.com/in/choiback"
+    },
+    "isPublic": false
+  },
+  {
+    "id": 6,
+    "userId": 6,
+    "bio": "풀스택 엔지니어. 프론트부터 백엔드까지 모두 다룹니다.",
+    "location": "광주, 대한민국",
+    "website": "https://jungfull.tech",
+    "skills": ["React", "Next.js", "Express", "GraphQL", "AWS"],
+    "socialLinks": {
+      "github": "https://github.com/jungfull",
+      "youtube": "https://youtube.com/@jungfull"
+    },
+    "isPublic": true
+  },
+  {
+    "id": 7,
+    "userId": 7,
+    "bio": "파이썬 전문 개발자. AI와 데이터 분석에 관심이 많습니다.",
+    "location": "대구, 대한민국",
+    "website": "https://kangcoder.dev",
+    "skills": ["Python", "Django", "Machine Learning", "Data Analysis"],
+    "socialLinks": {
+      "github": "https://github.com/kangcoder"
+    },
+    "isPublic": true
+  },
+  {
+    "id": 8,
+    "userId": 8,
+    "bio": "모바일 앱 개발자. Flutter로 크로스플랫폼 앱을 만듭니다.",
+    "location": "울산, 대한민국",
+    "website": null,
+    "skills": ["Flutter", "Dart", "Firebase", "React Native"],
+    "socialLinks": {
+      "github": "https://github.com/yoontech"
+    },
+    "isPublic": true
+  },
+  {
+    "id": 9,
+    "userId": 9,
+    "bio": "게임 개발자. Unity와 Unreal Engine을 다룹니다.",
+    "location": "경기, 대한민국",
+    "website": "https://limdev.games",
+    "skills": ["Unity", "C#", "Unreal Engine", "3D Modeling"],
+    "socialLinks": {
+      "youtube": "https://youtube.com/@limdev"
+    },
+    "isPublic": true
+  },
+  {
+    "id": 10,
+    "userId": 10,
+    "bio": "DevOps 엔지니어. 인프라와 자동화에 집중합니다.",
+    "location": "서울, 대한민국",
+    "website": "https://hancreator.io",
+    "skills": ["Kubernetes", "Docker", "AWS", "CI/CD"],
+    "socialLinks": {
+      "github": "https://github.com/hancreator",
+      "linkedin": "https://linkedin.com/in/hancreator"
+    },
+    "isPublic": true
+  },
+  {
+    "id": 11,
+    "userId": 11,
+    "bio": "블록체인 개발자. Web3와 스마트 컨트랙트 전문입니다.",
+    "location": "제주, 대한민국",
+    "website": "https://ohpro.blockchain",
+    "skills": ["Solidity", "Web3", "Ethereum", "Smart Contracts"],
+    "socialLinks": {
+      "github": "https://github.com/ohpro",
+      "twitter": "https://twitter.com/ohpro"
+    },
+    "isPublic": true
+  },
+  {
+    "id": 12,
+    "userId": 12,
+    "bio": "기술 블로그를 읽는 것을 좋아합니다.",
+    "location": "서울, 대한민국",
+    "website": null,
+    "skills": [],
+    "socialLinks": {},
+    "isPublic": true
+  },
+  {
+    "id": 13,
+    "userId": 13,
+    "bio": "개발 공부 중인 학생입니다.",
+    "location": "부산, 대한민국",
+    "website": null,
+    "skills": ["HTML", "CSS", "JavaScript"],
+    "socialLinks": {},
+    "isPublic": true
+  },
+  {
+    "id": 14,
+    "userId": 14,
+    "bio": "IT 뉴스와 트렌드에 관심이 많습니다.",
+    "location": "대전, 대한민국",
+    "website": null,
+    "skills": [],
+    "socialLinks": {},
+    "isPublic": true
+  },
+  {
+    "id": 15,
+    "userId": 15,
+    "bio": "좋은 콘텐츠를 찾아다니는 구독자입니다.",
+    "location": "인천, 대한민국",
+    "website": null,
+    "skills": [],
+    "socialLinks": {},
+    "isPublic": true
+  },
+  {
+    "id": 16,
+    "userId": 16,
+    "bio": "프로그래밍을 배우고 싶어하는 초보자입니다.",
+    "location": "광주, 대한민국",
+    "website": null,
+    "skills": [],
+    "socialLinks": {},
+    "isPublic": true
+  },
+  {
+    "id": 17,
+    "userId": 17,
+    "bio": "여러 크리에이터를 팔로우하며 배우고 있습니다.",
+    "location": "대구, 대한민국",
+    "website": null,
+    "skills": ["Python"],
+    "socialLinks": {},
+    "isPublic": true
+  },
+  {
+    "id": 18,
+    "userId": 18,
+    "bio": "가끔 들러서 좋은 글을 읽습니다.",
+    "location": "울산, 대한민국",
+    "website": null,
+    "skills": [],
+    "socialLinks": {},
+    "isPublic": false
+  },
+  {
+    "id": 19,
+    "userId": 19,
+    "bio": "댓글로 소통하는 것을 좋아합니다.",
+    "location": "경기, 대한민국",
+    "website": null,
+    "skills": [],
+    "socialLinks": {},
+    "isPublic": true
+  },
+  {
+    "id": 20,
+    "userId": 20,
+    "bio": "취미로 코딩을 배우는 직장인입니다.",
+    "location": "서울, 대한민국",
+    "website": null,
+    "skills": ["Java"],
+    "socialLinks": {},
+    "isPublic": true
+  },
+  {
+    "id": 21,
+    "userId": 21,
+    "bio": "이제 막 가입한 신입 멤버입니다!",
+    "location": "부산, 대한민국",
+    "website": null,
+    "skills": [],
+    "socialLinks": {},
+    "isPublic": true
+  }
+]

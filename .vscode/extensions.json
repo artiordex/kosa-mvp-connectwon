@@ -1,82 +1,76 @@
 /**
- * Description : extensions.json - 📌 VS Code에서 확장 프로그램 정의 파일
+ * Description : extensions.json - 📌 VS Code 확장 프로그램 추천 목록 (ConnectWon)
  * Author : Shiwoo Min
- * Date : 2025-09-09
- * 09-09: Playwright 관련 필요 없는 확장 제거
+ * Date : 2025-10-09
+ * Note : Next.js + NestJS + Prisma + Nx + Docker + Firebase 통합 환경에 맞춘 실전형 구성
  */
+{
+  "recommendations": [
 
-  {
-    "recommendations": [
-      // Live Server
-      // "ritwickdey.LiveServer",
+    // 코드 품질 / 정적 분석
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "rvest.vs-code-prettier-eslint",
+    "sonarsource.sonarlint-vscode",
 
-      // Error Lens - 오류 표시
-      "usernamehw.errorlens",
+    // 맞춤법 / 문서화
+    "streetsidesoftware.code-spell-checker",
+    "streetsidesoftware.code-spell-checker-korean",
+    "yzhang.markdown-all-in-one",
+    "DavidAnson.vscode-markdownlint",
 
-      // Material Icon Theme - 아이콘 테마
-      "PKief.material-icon-theme",
+    // Tailwind / UI / 스타일링
+    "bradlc.vscode-tailwindcss",
+    "austenc.tailwind-docs",
+    "oderwat.indent-rainbow",
+    "formulahendry.auto-rename-tag",
 
-      // Prettier - 코드 자동 포맷팅
-      "esbenp.prettier-vscode",
+    // Git / 협업
+    "eamodio.gitlens",
+    "mhutchie.git-graph",
+    "github.vscode-github-actions",
+    "github.vscode-pull-request-github",
+    "donjayamanne.githistory",
 
-      // ESLint - 코드 스타일 체크
-      "dbaeumer.vscode-eslint",
+    // AI / 생산성
+    "GitHub.copilot",
+    "GitHub.copilot-chat",
 
-      // 영어 맞춤법
-      "streetsidesoftware.code-spell-checker",
+    // Prisma / Database / GraphQL
+    "prisma.prisma",
+    "GraphQL.vscode-graphql",
+    "mtxr.sqltools",
+    "cweijan.vscode-database-client2",
 
-      // 한국어 맞춤법
-      "streetsidesoftware.code-spell-checker-korean",
+    // 테스트 / 품질
+    "vitest.explorer",
+    "ms-playwright.playwright",
 
-      // TypeScript Import Sorter 자동정렬
-      "mika-perry.vscode-typescript-imports-sorter",
+    // API / HTTP 클라이언트
+    "humao.rest-client",
+    "rangav.vscode-thunder-client",
 
-      // 마크다운
-      "yzhang.markdown-all-in-one",
+    // Infra / Docker / K8s / Nx
+    "ms-azuretools.vscode-docker",
+    "ms-vscode-remote.remote-containers",
+    "ms-kubernetes-tools.vscode-kubernetes-tools",
+    "nrwl.angular-console",
 
-      // GitLens - Git 히스토리 및 코드 변경 추적
-      "eamodio.gitlens",
+    // 클라우드 / Firebase
+    "firebase.firebase-vscode",
 
-      // 코파일럿 사용
-      "GitHub.copilot",
+    // 보안 / 민감정보 보호
+    "tamj0rd2.vscode-secretlint",
 
-      // GitHub Actions 워크플로 편집/검증
-      "github.vscode-github-actions",
+    // i18n / 다국어 지원
+    "lokalise.i18n-ally",
 
-      // VS Code에서 PR 리뷰/코멘트
-      "github.vscode-pull-request-github",
+    // YAML / JSON Schema
+    "redhat.vscode-yaml",
 
-      // Git Graph - Git 브랜치 시각화
-      "mhutchie.git-graph",
-
-      // Prisma 스키마 하이라이트/검증
-      "prisma.prisma",
-
-      // Tailwind IntelliSense(클래스 자동완성)
-      "bradlc.vscode-tailwindcss",
-
-      // Tailwind CSS 문서 바로가기
-      "austenc.tailwind-docs",
-
-      // Indent Rainbow - 들여쓰기 색상화
-      "oderwat.indent-rainbow",
-
-      // TODO/FIXME 주석 하이라이트
-      "gruntfuggly.todo-tree",
-
-      // HTTP 클라이언트(REST Client)
-      "humao.rest-client",
-
-      // 컨테이너/원격 Dockerfile/Compose 지원
-      "ms-azuretools.vscode-docker",
-
-      // Dev Container 환경 지원
-      "ms-vscode-remote.remote-containers",
-
-      // 모노레포/Nx/환경파일/경로 자동완성
-      "nrwl.angular-console",
-
-      // Playwright 공식 확장 프로그램
-      "ms-playwright.playwright",
-    ]
-  }
+    // 유틸리티 / 품질보강
+    "usernamehw.errorlens",
+    "gruntfuggly.todo-tree",
+    "PKief.material-icon-theme"
+  ]
+}

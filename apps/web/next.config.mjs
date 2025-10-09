@@ -1,71 +1,89 @@
 /**
- * Description : next.config.mjs - 📌 Web 앱 Next.js 설정
+ * Description : next.config.mjs - 📌 Web 앱 Next.js 설정 (Firebase Hosting / Cloud Run 완전 호환)
  * Author : Shiwoo Min
- * Date : 2025-09-06
- * 09-16 - packages 컴포넌트 추가, public 폴더 없이 빌드 가능하도록 수정
- * 09-17 - 빌드 에러 해결을 위한 임시 설정 추가
- * Note :
- *  - build 시 "/" 프리렌더링에서 clientModules 관련 에러 발생
- *  - experimental 옵션 전부 끄고 빌드 성공 여부 확인 → 이후 점진적 활성화
+ * Date : 2025-10-09
+ *
+ * Environment :
+ *  - Firebase Hosting : 정적 export 모드 (output: 'export')
+ *  - Cloud Run / Docker : SSR 모드 (server.ts 사용)
+ *  - Azure / Local : next dev / start 병행 지원
+ *
+ * Notes :
+ *  - @connectwon/ui/dist/public 자산 직접 참조
+ *  - Firebase Hosting export 모드 자동 인식
+ *  - Cloud Run에서는 SSR 모드 자동 빌드
  */
+
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import 'dotenv/config';
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+const IS_FIREBASE = process.env.FIREBASE === 'true';
+const IS_DOCKER = process.env.DOCKER === 'true';
+const IS_CLOUD_RUN = process.env.CLOUD_RUN === 'true';
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Docker standalone 모드 유지
-  output: 'standalone',
+  // ✅ 배포 환경에 따른 모드 자동 설정
+  output: IS_FIREBASE ? 'export' : 'standalone',
 
-  // experimental 전부 OFF (필요시 하나씩 복원)
-  // experimental: {
-  //   outputFileTracingRoot: path.resolve(__dirname, '../../'),
-  //   optimizePackageImports: ['lucide-react', 'date-fns'],
-  // },
-
-  /**
-   * @property transpilePackages
-   * @description 내부 패키지(ESM/클라 전용 포함) 트랜스파일
-   */
+  // 내부 패키지 빌드 대상
   transpilePackages: [
     '@connectwon/ui',
     '@connectwon/api-contract',
-    '@connectwon/sdk',
-    '@connectwon/configs'
+    '@connectwon/client',
+    '@connectwon/configs',
+    '@connectwon/sdk'
   ],
 
+  // 이미지 최적화 비활성화 (Firebase / Docker 호환)
   images: {
-    unoptimized: true,
+    unoptimized: IS_FIREBASE,
     domains: ['localhost', 'your-domain.com'],
-    formats: ['image/avif', 'image/webp'],
+    formats: ['image/avif', 'image/webp']
   },
 
-  // 클라이언트 공개 ENV (없으면 기본값)
+  // 클라이언트 환경변수 주입
   env: {
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080',
+    NEXT_PUBLIC_DEPLOY_ENV: IS_FIREBASE
+      ? 'firebase'
+      : IS_CLOUD_RUN
+      ? 'cloud-run'
+      : IS_DOCKER
+      ? 'docker'
+      : 'local'
   },
 
-  // SVG 등 웹팩 커스텀
+  // SVG 처리
   webpack: (config, { dev, isServer }) => {
-    if (dev && !isServer) {
-      config.devtool = 'source-map';
-    }
+    if (dev && !isServer) config.devtool = 'source-map';
     config.module.rules.push({
       test: /\.svg$/i,
       issuer: /\.[jt]sx?$/,
-      use: ['@svgr/webpack'],
+      use: ['@svgr/webpack']
     });
     return config;
   },
 
-  // 품질 옵션 (빌드 막히지 않게 임시 완화)
+  // @connectwon/ui 정적 리소스 매핑
+  async rewrites() {
+    return [
+      { source: '/ui/:path*', destination: '/_next/static/ui/:path*' }
+    ];
+  },
+
+  // 루트 기준으로 추적
+  outputFileTracingRoot: path.resolve(__dirname, '../../'),
+
   reactStrictMode: false,
   poweredByHeader: false,
   compress: true,
   typescript: { ignoreBuildErrors: true },
-  eslint: { ignoreDuringBuilds: true },
+  eslint: { ignoreDuringBuilds: true }
 };
 
 export default nextConfig;

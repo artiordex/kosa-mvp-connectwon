@@ -3,29 +3,34 @@
   "version": "1.0.0",
   "description": "ConnectWon 사용자 웹 애플리케이션",
   "private": true,
+
   "__comment_scripts": "pnpm scripts 명령어",
   "scripts": {
     "dev": "next dev --port 3000",
     "build": "next build",
     "start": "next start --port 3000",
+    "export": "next build && next export",
+    "serve": "node server.js",
     "lint": "next lint",
     "type-check": "pnpm -w exec tsc --noEmit -p tsconfig.json",
     "clean": "pnpm -w exec rimraf .next dist"
   },
-  "engines": {
-    "node": ">=20.11"
-  },
-  "__comment_dependencies": "직접 사용되는 앱 런타임 의존성",
+
+  "engines": { "node": ">=20.11" },
+
+  "__comment_dependencies": "앱 런타임 의존성",
   "dependencies": {
     "@connectwon/api-contract": "workspace:*",
     "@connectwon/ui": "workspace:*",
     "@connectwon/client": "workspace:*",
+    "@connectwon/configs": "workspace:*",
+    "@connectwon/sdk": "workspace:*",
     "clsx": "^2.0.0",
+    "framer-motion": "^12.23.15",
     "next": "15.1.6",
     "next-auth": "^4.24.11",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "framer-motion": "^12.23.15",
     "react-big-calendar": "^1.19.4",
     "react-datepicker": "^8.7.0",
     "react-dropzone": "^14.3.8",
@@ -34,6 +39,7 @@
     "react-player": "^3.3.2",
     "stripe": "^18.5.0"
   },
+
   "__comment_devDependencies": "개발 도구 및 Tailwind 관련 의존성",
   "devDependencies": {
     "@types/react": "18.3.7",

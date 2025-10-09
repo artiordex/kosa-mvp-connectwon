@@ -1,36 +1,44 @@
 {
   "name": "@connectwon/core",
   "version": "1.0.0",
-  "description": "ConnectWon 핵심 라이브러리",
+  "description": "ConnectWon 핵심 라이브러리 (AI · Auth · Queue · Infra Core)",
   "private": true,
+  "author": "Shiwoo Min <artiordex@gmail.com>",
   "type": "module",
   "sideEffects": false,
-  "author": "Shiwoo Min <artiordex@gmail.com>",
-  "files": [
-    "dist"
-  ],
+
+  "files": ["dist"],
+
+  "__comment_exports": "ESM/TS 타입 정의 - Docker / Cloud Run / Firebase / Azure / Local 개발환경 완전 호환",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
     "./core-types": {
-      "types": "./dist/packages/core/core-types.d.ts",
-      "import": "./dist/packages/core/core-types.js"
+      "types": "./dist/core-types.d.ts",
+      "import": "./dist/core-types.js"
     },
     "./package.json": "./package.json"
   },
+
   "__comment_scripts": "빌드/개발/배포 스크립트",
   "scripts": {
+    "clean": "rimraf dist",
     "build": "tsc -p tsconfig.json",
     "dev": "tsc -p tsconfig.json -w",
-    "clean": "rimraf dist",
-    "prepublishOnly": "pnpm run build"
+    "type-check": "tsc --noEmit -p tsconfig.json",
+    "prepublishOnly": "pnpm run clean && pnpm run build"
   },
+
+  "__comment_engines": "Node 20+ 런타임 보장 - Docker / Cloud Run / Firebase / Azure / Local 완전 호환",
   "engines": {
     "node": ">=20.11"
   },
-  "__comment_dependencies": "런타임 핵심 의존성",
+
+  "__comment_dependencies": "런타임 핵심 의존성 (AI, Queue, Crypto, Mail, Redis 등)",
   "dependencies": {
     "@anthropic-ai/sdk": "^0.61.0",
     "@huggingface/inference": "^4.7.1",
@@ -48,7 +56,8 @@
     "openapi3-ts": "^4.5.0",
     "zod": "^3.23.8"
   },
-  "__comment_peerDependencies": "외부에서 설치 필요 (NestJS/TS/Eslint)",
+
+  "__comment_peerDependencies": "외부 설치 필요 패키지 (NestJS, ESLint, TypeScript)",
   "peerDependencies": {
     "@nestjs/common": "^11",
     "@nestjs/core": "^11",
@@ -56,13 +65,10 @@
     "typescript": "5.6.3"
   },
   "peerDependenciesMeta": {
-    "@nestjs/common": {
-      "optional": true
-    },
-    "@nestjs/core": {
-      "optional": true
-    }
+    "@nestjs/common": { "optional": true },
+    "@nestjs/core": { "optional": true }
   },
+
   "__comment_devDependencies": "개발 및 빌드 도구",
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",
@@ -73,5 +79,15 @@
     "@types/nodemailer": "^7.0.1",
     "rimraf": "^6.0.1",
     "typescript": "5.6.3"
+  },
+
+  "__comment_nx": "Nx 그래프 자동 종속 관리 (api-contract과의 의존 관계 명시)",
+  "nx": {
+    "implicitDependencies": ["@connectwon/api-contract"],
+    "targets": {
+      "build": {
+        "dependsOn": ["^build"]
+      }
+    }
   }
 }

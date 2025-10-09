@@ -5,37 +5,65 @@
   "private": true,
   "type": "module",
   "sideEffects": false,
-  "files": [
-    "dist"
-  ],
+
+  "__comment_files": "Docker/Firebase/Nx 빌드 대상 경로 제한",
+  "files": ["dist"],
+
+  "__comment_exports": "ESM/TS 타입 정의 - 모든 환경 호환",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/packages/api-contract/index.d.ts",
-      "import": "./dist/packages/api-contract/index.js"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
     },
     "./api-contract-types": {
-      "types": "./dist/packages/api-contract/api-contract-types.d.ts",
-      "import": "./dist/packages/api-contract/api-contract-types.js"
+      "types": "./dist/api-contract-types.d.ts",
+      "import": "./dist/api-contract-types.js"
     },
     "./package.json": "./package.json"
   },
-  "__comment_scripts": "빌드 및 타입 체크 관련 스크립트",
+
+  "__comment_scripts": "빌드/타입/배포 관련 스크립트 (CI/CD, 로컬, Docker 호환)",
   "scripts": {
+    "clean": "rimraf dist",
     "build": "tsc -p tsconfig.json",
     "dev": "tsc --watch -p tsconfig.json",
-    "clean": "rimraf dist",
-    "prepublishOnly": "pnpm run clean && pnpm run build",
-    "type-check": "tsc --noEmit -p tsconfig.json"
+    "type-check": "tsc --noEmit -p tsconfig.json",
+    "prepublishOnly": "pnpm run clean && pnpm run build"
   },
+
   "__comment_dependencies": "런타임 의존성",
   "dependencies": {
+    "swagger-ui-dist": "^5.29.0"
+  },
+
+  "__comment_peerDependencies": "상위 프로젝트에서도 동일 버전 사용",
+  "peerDependencies": {
     "@ts-rest/core": "^3.52.1",
-    "swagger-ui-dist": "^5.29.0",
     "zod": "^3.23.8"
   },
-  "__comment_devDependencies": "개발 의존성",
+
+  "__comment_devDependencies": "개발/타입 전용",
   "devDependencies": {
     "@types/node": "^24.3.1",
-    "openapi-types": "^12.1.3"
+    "openapi-types": "^12.1.3",
+    "typescript": "^5.6.3",
+    "rimraf": "^6.0.1"
+  },
+
+  "__comment_nx": "Nx 종속성 그래프 및 CI/CD 안정성",
+  "nx": {
+    "implicitDependencies": [],
+    "targets": {
+      "build": {
+        "dependsOn": ["^build"]
+      }
+    }
+  },
+
+  "__comment_engines": "빌드 및 CI 환경 Node 버전 명시",
+  "engines": {
+    "node": ">=20.11.0"
   }
 }

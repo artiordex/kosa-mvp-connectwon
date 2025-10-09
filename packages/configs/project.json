@@ -4,6 +4,8 @@
   "projectType": "library",
   "version": "1.0.0",
   "tags": ["type:lib", "layer:tooling"],
+
+  "__comment_targets": "Nx 빌드/린트/테스트 설정 - Docker / Cloud Run / Firebase / Azure / Local 호환",
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",

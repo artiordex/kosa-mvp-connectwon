@@ -1,0 +1,91 @@
+# Description : cloudbuild.yaml - 📌 ConnectWon CI/CD 파이프라인
+# Author : Shiwoo Min
+# Date : 2025-10-08
+# 수동 실행 : gcloud builds submit --config infra/cloudbuild.yaml .
+
+steps:
+  # 1. pnpm install
+  - name: 'gcr.io/cloud-builders/pnpm'
+    entrypoint: pnpm
+    args: ['install', '--frozen-lockfile']
+
+  # 2. API 빌드 및 푸시
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      ['build', '-f', 'infra/docker/Dockerfile.api', '-t', 'asia-northeast3-docker.pkg.dev/connectwon-prod/connectwon/connectwon-api:$SHORT_SHA', '.']
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      ['push', 'asia-northeast3-docker.pkg.dev/connectwon-prod/connectwon/connectwon-api:$SHORT_SHA']
+
+  # 3. Web 빌드 및 푸시
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      ['build', '-f', 'infra/docker/Dockerfile.web', '-t', 'asia-northeast3-docker.pkg.dev/connectwon-prod/connectwon/connectwon-web:$SHORT_SHA', '.']
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      ['push', 'asia-northeast3-docker.pkg.dev/connectwon-prod/connectwon/connectwon-web:$SHORT_SHA']
+
+  # 4. Worker 빌드 및 푸시
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      ['build', '-f', 'infra/docker/Dockerfile.worker', '-t', 'asia-northeast3-docker.pkg.dev/connectwon-prod/connectwon/connectwon-worker:$SHORT_SHA', '.']
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      ['push', 'asia-northeast3-docker.pkg.dev/connectwon-prod/connectwon/connectwon-worker:$SHORT_SHA']
+
+  # 5. E2E 테스트 실행
+  - name: 'mcr.microsoft.com/playwright:v1.51.1-jammy'
+    entrypoint: /bin/sh
+    args:
+      - '-c'
+      - |
+        echo "Running E2E tests..."
+        pnpm nx run @connectwon/e2e:test:ci || exit 1
+
+  # 6. Cloud Run 배포 - API
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      [
+        'run',
+        'deploy',
+        'connectwon-api',
+        '--image=asia-northeast3-docker.pkg.dev/connectwon-prod/connectwon/connectwon-api:$SHORT_SHA',
+        '--region=asia-northeast3',
+        '--platform=managed',
+        '--allow-unauthenticated',
+      ]
+
+  # 7. Cloud Run 배포 - Web
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      [
+        'run',
+        'deploy',
+        'connectwon-web',
+        '--image=asia-northeast3-docker.pkg.dev/connectwon-prod/connectwon/connectwon-web:$SHORT_SHA',
+        '--region=asia-northeast3',
+        '--platform=managed',
+        '--allow-unauthenticated',
+      ]
+
+  # 8. Cloud Run 배포 - Worker
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      [
+        'run',
+        'deploy',
+        'connectwon-worker',
+        '--image=asia-northeast3-docker.pkg.dev/connectwon-prod/connectwon/connectwon-worker:$SHORT_SHA',
+        '--region=asia-northeast3',
+        '--platform=managed',
+      ]
+
+images:
+  - 'asia-northeast3-docker.pkg.dev/connectwon-prod/connectwon/connectwon-api:$SHORT_SHA'
+  - 'asia-northeast3-docker.pkg.dev/connectwon-prod/connectwon/connectwon-web:$SHORT_SHA'
+  - 'asia-northeast3-docker.pkg.dev/connectwon-prod/connectwon/connectwon-worker:$SHORT_SHA'
+
+timeout: 3600s

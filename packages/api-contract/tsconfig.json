@@ -1,43 +1,49 @@
 /**
  * Description : tsconfig.json - 📌 API 계약 패키지 (TypeScript 설정)
  * Author : Shiwoo Min
- * Date  : 2025-09-24
- * 09-12 : ESNext/Bundler 해석, d.ts/소스맵/증분빌드, Node 타입 차단(types: [])
- * 09-30 : Config 패키지와 경로 일관화, outDir/declarationDir 정리
- * 명령어 : ls -l dist/packages/api-contract/index.*
+ * Date  : 2025-10-09
+ *
+ * Environment :
+ *  - Docker / Cloud Run / Firebase / Azure / Local 개발환경 완전 호환
+ *  - ESM 기반 (NodeNext) + 번들러 호환 (Nx tsc executor)
+ *
+ * Note :
+ *  - outDir / declarationDir 통합
+ *  - incremental 빌드 지원
+ *  - Node 타입 포함 (emit.ts 등 Node 실행용)
  */
 {
-  // 루트의 tsconfig.base.json 상속
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "composite": true,
-    // I/O 경로
+
+    // 입출력 디렉토리
     "rootDir": "./src",
     "outDir": "../../dist/packages/api-contract",
     "declarationDir": "../../dist/packages/api-contract",
+    "tsBuildInfoFile": "../../dist/packages/api-contract/.tsbuildinfo",
 
-    // 서버 전용 타깃
+    // 모듈 설정 (ESM + 번들러 호환)
     "target": "es2022",
     "module": "esnext",
     "moduleResolution": "bundler",
     "verbatimModuleSyntax": true,
 
-    // 선언 파일/소스맵 + 증분 빌드
+    // 선언 파일, 소스맵, 증분 빌드
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
     "incremental": true,
-    "tsBuildInfoFile": "../../dist/packages/api-contract/.tsbuildinfo",
 
-    // 브라우저/서버 공통을 위해 Node 전역타입 최소화
+    // 라이브러리 및 타입
     "lib": ["es2022"],
     "types": ["node"],
 
-    // JS 파일 처리
+    // JS 허용
     "allowJs": true,
     "checkJs": true,
 
-    // 품질/편의
+    // 품질/편의 설정
     "exactOptionalPropertyTypes": true,
     "resolveJsonModule": true,
     "stripInternal": true,
@@ -45,13 +51,11 @@
     "forceConsistentCasingInFileNames": true
   },
 
-  // 포함 범위
+  // 포함/제외 경로
   "include": ["src/**/*"],
-
-  // 불필요한 폴더 제외
   "exclude": ["dist", "node_modules"],
 
-  // Project References
+  // 상위 core 패키지 참조
   "references": [
     { "path": "../core" }
   ]

@@ -1,8 +1,10 @@
 {
   "name": "@connectwon/ui",
-  "sourceRoot": "packages/ui/src",
   "projectType": "library",
+  "sourceRoot": "packages/ui/src",
+  "root": "packages/ui",
   "tags": ["scope:ui", "type:library", "layer:frontend"],
+
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
@@ -28,19 +30,33 @@
             "output": "public"
           }
         ]
+      },
+      "dependsOn": ["^build"],
+      "outputs": ["{options.outputPath}"]
+    },
+
+    "type-check": {
+      "executor": "@nx/js:tsc",
+      "options": {
+        "tsConfig": "packages/ui/tsconfig.json",
+        "noEmit": true
       }
     },
+
     "lint": {
       "executor": "@nx/eslint:lint",
       "options": {
         "lintFilePatterns": ["packages/ui/**/*.{ts,tsx}"]
       }
     },
+
     "test": {
       "executor": "@nx/vite:test",
       "options": {
         "passWithNoTests": true
       }
     }
-  }
+  },
+
+  "implicitDependencies": ["@connectwon/configs", "@connectwon/core", "@connectwon/logger"]
 }

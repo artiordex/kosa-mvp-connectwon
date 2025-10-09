@@ -1,44 +1,58 @@
 /**
- * Description : tsconfig.json - 📌 Logger 패키지 (TypeScript 설정)
+ * Description : tsconfig.json - 📌 Logger 패키지
  * Author : Shiwoo Min
- * Date : 2025-09-10
+ * Date : 2025-10-09
+ *
+ * Environment :
+ *  - Docker / Cloud Run / Firebase / Azure / Local 개발환경 완전 호환
+ *  - ESM 기반 (NodeNext) + 번들러 호환 (Nx tsc executor)
+ *
+ * Note :
+ *  - Winston 기반 로깅 (File, Console, Cloud stdout 통합)
+ *  - winston-daily-rotate-file 및 custom transport 사용 가능
+ *  - 빌드 로그 : tsc -p tsconfig.json --listEmittedFiles
  */
 {
-  // 루트의 tsconfig.base.json 상속
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    // I/O 경로
+    "composite": true,
+
+    // 출력 설정
     "rootDir": "./src",
     "outDir": "../../dist/packages/logger",
+    "declarationDir": "../../dist/packages/logger",
+    "tsBuildInfoFile": "../../dist/packages/logger/.tsbuildinfo",
 
-    // Node ESM 권장
-    "module": "nodenext",
-    "moduleResolution": "nodenext",
-    "resolveJsonModule": true,
-
-    // 서버 전용 타깃
+    // NodeNext / Bundler 해석
+    "module": "esnext",
+    "moduleResolution": "bundler",
     "target": "es2022",
     "lib": ["es2022"],
-    "types": ["node"],
+    "verbatimModuleSyntax": true,
 
-    // 타입 선언 및 소스맵
+    // 선언 및 디버깅
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
-
-    // 모노레포 최적화
     "incremental": true,
-    "tsBuildInfoFile": "../../dist/packages/logger/.tsbuildinfo",
 
-    // CJS 호환
+    // Node 환경
+    "types": ["node"],
+    "resolveJsonModule": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "noEmit": false,
 
-    // 품질/편의
+    // 품질
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "noImplicitAny": true
+    "exactOptionalPropertyTypes": true,
+
+    // 내부 경로 alias
+    "baseUrl": "./",
+    "paths": {
+      "@connectwon/logger/*": ["src/*"],
+      "@connectwon/logger-types": ["src/logger-types.ts"]
+    }
   },
 
   "include": ["src/**/*"],

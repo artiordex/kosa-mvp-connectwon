@@ -3,14 +3,18 @@
   "sourceRoot": "packages/server/src",
   "projectType": "library",
   "tags": ["type:lib", "layer:backend"],
+
+  "__comment_targets": "Nx 빌드/린트/테스트 설정",
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
       "options": {
         "main": "packages/server/src/index.ts",
         "outputPath": "dist/packages/server",
-        "tsConfig": "packages/server/tsconfig.json"
-      }
+        "tsConfig": "packages/server/tsconfig.json",
+        "assets": ["packages/server/package.json"]
+      },
+      "outputs": ["{options.outputPath}"]
     },
     "lint": {
       "executor": "@nx/eslint:lint",
@@ -25,5 +29,11 @@
       }
     }
   },
-  "implicitDependencies": ["@connectwon/logger"]
+
+  "__comment_dependencies": "logger/core/database 종속성 자동 관리",
+  "implicitDependencies": [
+    "@connectwon/logger",
+    "@connectwon/core",
+    "@connectwon/database"
+  ]
 }

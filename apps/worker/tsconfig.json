@@ -3,9 +3,9 @@
  * Author : Shiwoo Min
  * Date : 2025-09-06
  * 09-12 : NodeNext/ES2022, d.ts/소스맵/증분빌드, 서버전용 lib로 정리
+ * 10-09 : Docker / Cloud Run / Firebase / Azure / Local 완전 호환 버전
  */
 {
-  // 루트의 tsconfig.base.json 상속
   "extends": "../../tsconfig.base.json",
 
   "compilerOptions": {
@@ -13,14 +13,14 @@
     "rootDir": "./src",
     "outDir": "../../dist/apps/worker",
 
-    // ES2022 타겟 및 NodeNext 모듈
+    // ES2022 + NodeNext 모듈 시스템
     "target": "es2022",
     "module": "nodenext",
     "moduleResolution": "nodenext",
     "lib": ["es2022"],
     "types": ["node"],
 
-    // 선언 파일 생성
+    // 선언 파일 및 디버깅
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
@@ -32,37 +32,26 @@
     // 모듈 상호 운용성
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
 
-    // 모노레포 패키지 경로 매핑
-    "paths": {},
+    // 배포 안전성
+    "isolatedModules": false,
+    "exactOptionalPropertyTypes": false,
 
-    "exactOptionalPropertyTypes": false
+    // 모노레포 경로 매핑 (nx build 시 자동 처리됨)
+    "baseUrl": "."
   },
 
-  // 포함할 파일들
   "include": ["src/**/*", "**/*.d.ts"],
-
-  // 제외할 파일들
   "exclude": ["node_modules", "dist", "**/*.test.*", "**/*.spec.*", "coverage"],
 
-  // 프로젝트 참조
   "references": [
-    {
-      "path": "../../packages/core"
-    },
-    {
-      "path": "../../packages/database"
-    },
-    {
-      "path": "../../packages/logger"
-    },
-    {
-      "path": "../../packages/api-contract"
-    },
-    {
-      "path": "../../packages/sdk"
-    }
+    { "path": "../../packages/core" },
+    { "path": "../../packages/database" },
+    { "path": "../../packages/logger" },
+    { "path": "../../packages/api-contract" },
+    { "path": "../../packages/sdk" }
   ]
 }

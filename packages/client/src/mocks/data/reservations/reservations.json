@@ -1,0 +1,112 @@
+[
+  {
+    "id": 1,
+    "userId": 2,
+    "isVerified": true,
+    "followers": 1250,
+    "following": 340,
+    "totalPosts": 45,
+    "totalLikes": 3890,
+    "tier": "gold",
+    "joinedCreatorAt": "2024-02-01T09:00:00Z"
+  },
+  {
+    "id": 2,
+    "userId": 3,
+    "isVerified": true,
+    "followers": 2340,
+    "following": 180,
+    "totalPosts": 78,
+    "totalLikes": 6750,
+    "tier": "platinum",
+    "joinedCreatorAt": "2024-02-25T10:00:00Z"
+  },
+  {
+    "id": 3,
+    "userId": 4,
+    "isVerified": false,
+    "followers": 890,
+    "following": 420,
+    "totalPosts": 32,
+    "totalLikes": 2340,
+    "tier": "silver",
+    "joinedCreatorAt": "2024-03-20T11:30:00Z"
+  },
+  {
+    "id": 4,
+    "userId": 5,
+    "isVerified": true,
+    "followers": 3450,
+    "following": 95,
+    "totalPosts": 120,
+    "totalLikes": 9870,
+    "tier": "platinum",
+    "joinedCreatorAt": "2024-04-10T14:00:00Z"
+  },
+  {
+    "id": 5,
+    "userId": 6,
+    "isVerified": true,
+    "followers": 4120,
+    "following": 210,
+    "totalPosts": 156,
+    "totalLikes": 12450,
+    "tier": "diamond",
+    "joinedCreatorAt": "2024-05-20T09:30:00Z"
+  },
+  {
+    "id": 6,
+    "userId": 7,
+    "isVerified": true,
+    "followers": 1890,
+    "following": 275,
+    "totalPosts": 67,
+    "totalLikes": 5230,
+    "tier": "gold",
+    "joinedCreatorAt": "2024-06-05T10:00:00Z"
+  },
+  {
+    "id": 7,
+    "userId": 8,
+    "isVerified": false,
+    "followers": 650,
+    "following": 380,
+    "totalPosts": 28,
+    "totalLikes": 1890,
+    "tier": "bronze",
+    "joinedCreatorAt": "2024-06-20T11:20:00Z"
+  },
+  {
+    "id": 8,
+    "userId": 9,
+    "isVerified": true,
+    "followers": 2780,
+    "following": 145,
+    "totalPosts": 95,
+    "totalLikes": 7650,
+    "tier": "platinum",
+    "joinedCreatorAt": "2024-07-15T09:30:00Z"
+  },
+  {
+    "id": 9,
+    "userId": 10,
+    "isVerified": false,
+    "followers": 1120,
+    "following": 295,
+    "totalPosts": 42,
+    "totalLikes": 3120,
+    "tier": "silver",
+    "joinedCreatorAt": "2024-08-01T14:00:00Z"
+  },
+  {
+    "id": 10,
+    "userId": 11,
+    "isVerified": true,
+    "followers": 5230,
+    "following": 165,
+    "totalPosts": 203,
+    "totalLikes": 15890,
+    "tier": "diamond",
+    "joinedCreatorAt": "2024-08-10T10:45:00Z"
+  }
+]

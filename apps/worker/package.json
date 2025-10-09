@@ -4,22 +4,26 @@
   "description": "ConnectWon 백그라운드 워커 서비스 (BullMQ 기반)",
   "private": true,
   "type": "module",
+
   "__comment_scripts": "pnpm scripts 명령어",
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "dev": "nodemon --exec \"tsc && node dist/apps/worker/main.js\" --ext ts",
+    "dev": "tsc -w -p tsconfig.json & nodemon dist/apps/worker/main.js",
     "start": "node dist/apps/worker/main.js",
-    "start:dev": "tsc -w -p tsconfig.json & nodemon dist/apps/worker/main.js",
+    "start:dev": "NODE_ENV=development node dist/apps/worker/main.js",
     "start:prod": "NODE_ENV=production node dist/apps/worker/main.js",
-    "test": "vitest",
-    "test:watch": "vitest --watch",
     "lint": "eslint src --ext .ts",
     "lint:fix": "eslint src --ext .ts --fix",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run",
+    "test:watch": "vitest watch",
+    "docker:build": "docker build -f ../../infra/docker/Dockerfile.worker -t connectwon/worker:latest ."
   },
+
   "engines": {
     "node": ">=20.11"
   },
+
   "__comment_core_deps": "핵심 워커 의존성",
   "dependencies": {
     "@bull-board/api": "^6.13.0",
@@ -41,6 +45,7 @@
     "date-fns": "^4.1.0",
     "lodash": "^4.17.21"
   },
+
   "__comment_dev_deps": "개발 의존성",
   "devDependencies": {
     "@types/express": "^4.17.23",
@@ -49,6 +54,8 @@
     "@types/node-cron": "^3.0.11",
     "@types/lodash": "^4.17.12",
     "vitest": "^3.2.4",
-    "nodemon": "^3.1.7"
+    "nodemon": "^3.1.7",
+    "eslint": "^9.36.0",
+    "@nx/eslint": ">=19.0.0"
   }
 }

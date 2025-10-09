@@ -1,39 +1,49 @@
 {
-  "$schema": "./node_modules/nx/schemas/nx-schema.json",
-  "description": "Nx 워크스페이스 설정",
+  "$schema": "./node_modules/@nx/devkit/schemas/nx-schema.json",
+  "description": "Nx 워크스페이스 설정 (ConnectWon Monorepo)",
   "extends": "nx/presets/npm.json",
   "defaultBase": "origin/main",
 
-  "__comment_namedInputs": "namedInputs: 빌드 캐시와 의존성 관리를 위한 입력 파일 집합을 정의",
+  "__comment_namedInputs": "namedInputs: 빌드 캐시 및 의존성 관리를 위한 입력 파일 집합 정의",
   "namedInputs": {
-    "default": ["{projectRoot}/**/*", "!{projectRoot}/dist/**/*", "!{projectRoot}/build/**/*", "!{projectRoot}/.next/**/*"],
+    "default": [
+      "{projectRoot}/**/*",
+      "!{projectRoot}/dist/**/*",
+      "!{projectRoot}/build/**/*",
+      "!{projectRoot}/.next/**/*"
+    ],
     "production": [
       "default",
-      "!{projectRoot}/**/*.spec.ts",
-      "!{projectRoot}/**/*.test.ts",
-      "!{projectRoot}/**/*.spec.tsx",
-      "!{projectRoot}/**/*.test.tsx",
+      "!{projectRoot}/**/*.spec.*",
+      "!{projectRoot}/**/*.test.*",
       "!{projectRoot}/**/*.stories.*",
       "!{projectRoot}/**/*.mdx",
-      "!{projectRoot}/playwright-report/**",
       "!{projectRoot}/coverage/**",
+      "!{projectRoot}/playwright-report/**",
       "!{projectRoot}/generated/**",
       "!{projectRoot}/dist/**/*"
     ],
-    "env": ["{workspaceRoot}/.env*", "{workspaceRoot}/infra/docker/.env", "{workspaceRoot}/secrets/**", "{projectRoot}/.env*"]
+    "env": [
+      "{workspaceRoot}/.env*",
+      "{workspaceRoot}/infra/docker/.env",
+      "{workspaceRoot}/secrets/**",
+      "{projectRoot}/.env*"
+    ]
   },
 
-  "__comment_targetDefaults": "targetDefaults: Nx 작업 단위별 기본 입력, 출력, 캐싱, 의존성 등을 정의",
+  "__comment_targetDefaults": "targetDefaults: Nx 작업 단위별 기본 입력, 출력, 캐싱, 의존성 설정",
   "targetDefaults": {
     "build": {
       "inputs": ["production", "^production", "env"],
       "outputs": ["{workspaceRoot}/dist", "{projectRoot}/.next"],
       "cache": true,
-      "dependsOn": ["^build"]
+      "dependsOn": ["^build"],
+      "envFile": ".env"
     },
     "dev": {
       "inputs": ["default"],
-      "cache": false
+      "cache": false,
+      "envFile": ".env"
     },
     "lint": {
       "inputs": ["default"],
@@ -41,11 +51,13 @@
     },
     "test": {
       "inputs": ["default"],
-      "cache": true
+      "cache": true,
+      "envFile": ".env"
     },
     "e2e": {
       "inputs": ["default"],
-      "cache": false
+      "cache": false,
+      "envFile": ".env"
     },
     "gen:openapi": {
       "inputs": ["production", "^production"],
@@ -54,11 +66,13 @@
     },
     "prisma:generate": {
       "inputs": ["default", "^default", "env"],
-      "cache": false
+      "cache": false,
+      "envFile": ".env"
     },
     "db:generate": {
       "inputs": ["default", "^default", "env"],
-      "cache": false
+      "cache": false,
+      "envFile": ".env"
     },
     "type-check": {
       "inputs": ["default", "^default"],
@@ -70,38 +84,45 @@
     },
     "ci": {
       "inputs": ["production", "^production", "env"],
-      "cache": false
+      "cache": false,
+      "envFile": ".env"
     }
   },
 
-  "__comment_tasksRunnerOptions": "tasksRunnerOptions: 병렬 처리 및 성능 최적화 설정 추가",
+  "__comment_tasksRunnerOptions": "tasksRunnerOptions: 병렬 처리, 캐시, Daemon 등 실행 최적화 설정",
   "tasksRunnerOptions": {
     "default": {
       "runner": "nx/tasks-runners/default",
       "options": {
-        "cacheableOperations": ["build", "lint", "test", "type-check", "gen:openapi"],
-        "parallel": 8,
-        "maxParallel": 8,
-        "useDaemonProcess": true,
+        "cacheableOperations": [
+          "build",
+          "lint",
+          "test",
+          "type-check",
+          "gen:openapi"
+        ],
+        "parallel": 4,
+        "maxParallel": 4,
+        "useDaemonProcess": false,
         "skipNxCache": false,
-        "cacheDirectory": "node_modules/.cache/nx"
+        "cacheDirectory": ".nx/cache"
       }
     }
   },
 
-  "__comment_pluginsConfig": "pluginsConfig: Nx에서 사용하는 빌드와 검사 플러그인 지정",
+  "__comment_pluginsConfig": "pluginsConfig: Nx에서 사용하는 빌드 및 검사 플러그인 설정",
   "pluginsConfig": {
     "@nx/js": {},
     "@nx/web": {}
   },
 
-  "__comment_workspaceLayout": "workspaceLayout: 워크스페이스 내 앱과 라이브러리 디렉터리 구조 정의",
+  "__comment_workspaceLayout": "workspaceLayout: 워크스페이스 내 앱/패키지 디렉터리 구조 정의",
   "workspaceLayout": {
     "appsDir": "apps",
     "libsDir": "packages"
   },
 
-  "__comment_generators": "generators: 코드 생성 시 기본 설정",
+  "__comment_generators": "generators: 코드 생성 시 기본 옵션 설정",
   "generators": {
     "@nx/react": {
       "application": {

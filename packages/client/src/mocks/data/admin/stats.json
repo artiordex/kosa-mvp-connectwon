@@ -1,0 +1,21 @@
+{
+  "totalUsers": 1548,
+  "activeUsers": 1274,
+  "newUsersThisMonth": 62,
+  "totalPrograms": 94,
+  "activePrograms": 78,
+  "completedPrograms": 66,
+  "totalReservations": 441,
+  "confirmedReservations": 406,
+  "cancelledReservations": 19,
+  "pendingReservations": 16,
+  "totalRevenue": 132480000,
+  "revenueThisMonth": 21240000,
+  "totalPayments": 438,
+  "activeSubscriptions": 372,
+  "equipmentInUse": 33,
+  "equipmentAvailable": 117,
+  "averageSatisfaction": 4.6,
+  "systemHealth": "green",
+  "lastUpdated": "2025-10-09T08:00:00Z"
+}

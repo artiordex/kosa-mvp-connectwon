@@ -3,6 +3,8 @@
  * Author : Shiwoo Min
  * Date : 2025-09-29
  */
+"use client";
+
 import { useEffect, useRef } from 'react';
 import type { UseInfiniteQueryResult } from '@tanstack/react-query';
 

@@ -6,6 +6,7 @@
  * 09-17 - root로 이동
  * 09-18 - reflect-metadata, @anthropic-ai/sdk 오류 해결을 위한 추가 제외사항
  * 09-23 - Node.js/monorepo 구조 반영 및 ignore 단순화
+ * 10-08 - packages 레벨 Tailwind/PostCSS 허용 (UI 빌드 대응)
  */
 
 # Node.js 관련
@@ -59,6 +60,12 @@ test
 !packages/*/*.ts
 !packages/*/*.d.ts
 !packages/*/prisma/**
+# Tailwind / PostCSS / Config 허용
+!packages/*/tailwind.config.*
+!packages/*/postcss.config.*
+!packages/*/next.config.*
+!packages/*/*.json
+
 !apps/*/src
 !apps/*/public
 !apps/*/package.json
@@ -66,6 +73,7 @@ test
 !apps/*/tailwind.config.*
 !apps/*/postcss.config.*
 !apps/*/tsconfig.json
+
 !infra
 !pnpm-lock.yaml
 !package.json
