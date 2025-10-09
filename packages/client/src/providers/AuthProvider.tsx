@@ -43,7 +43,7 @@ interface AuthProviderProps {
    * @description 권한 확인 로직 (선택사항)
    * @default 모든 권한 true 반환
    */
-  permissionResolver?: (user: SessionUser, perm: string) => boolean; // ✅ optional 처리
+  permissionResolver?: (user: SessionUser, perm: string) => boolean; 
 }
 
 /**

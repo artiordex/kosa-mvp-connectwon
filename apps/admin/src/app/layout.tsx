@@ -5,7 +5,8 @@
  */
 import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
-import { RootProvider } from '../providers/RootProvider';
+// TODO: Firebase 임시 주석처리
+// import { RootProvider } from '../providers/RootProvider';
 import './globals.css';
 import AppShell from 'components/AppShell';
 
@@ -41,9 +42,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="ko">
       <body className={`${inter.className} bg-gray-100`}>
         {/* Firebase + QueryProvider + 기타 Provider 통합 */}
-        <RootProvider>
+        {/* <RootProvider> */}
           <AppShell>{children}</AppShell>
-        </RootProvider>
+        {/* </RootProvider> */}
       </body>
     </html>
   );

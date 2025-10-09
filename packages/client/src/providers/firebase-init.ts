@@ -1,5 +1,5 @@
 /**
- * Description : firebase/index.ts - 📌 Firebase 초기화 및 SDK 인스턴스
+ * Description : firebase-init.ts - 📌 Firebase 초기화 및 SDK 인스턴스
  * Author : Shiwoo Min
  * Date : 2025-10-07
  */
@@ -9,6 +9,9 @@ import { getApp, getApps, initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 
 const firebaseConfig = getFirebaseConfig();
+
+// 환경 로깅
+console.log(`[Firebase Init] APP_TYPE=${process.env['NEXT_PUBLIC_APP_TYPE']}`);
 
 // Firebase 앱 중복 초기화 방지
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();

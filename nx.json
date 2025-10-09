@@ -31,19 +31,52 @@
     ]
   },
 
-  "__comment_targetDefaults": "targetDefaults: Nx 작업 단위별 기본 입력, 출력, 캐싱, 의존성 설정",
+  "__comment_targetDefaults": "targetDefaults: Nx 작업 단위별 기본 입력, 출력, 캐싱, 의존성 및 환경 설정",
   "targetDefaults": {
     "build": {
       "inputs": ["production", "^production", "env"],
       "outputs": ["{workspaceRoot}/dist", "{projectRoot}/.next"],
       "cache": true,
       "dependsOn": ["^build"],
-      "envFile": ".env"
+      "envFile": ".env",
+      "configurations": {
+        "admin": {
+          "env": {
+            "NEXT_PUBLIC_APP_TYPE": "admin",
+            "NEXT_PUBLIC_ENV_MODE": "production"
+          }
+        },
+        "web": {
+          "env": {
+            "NEXT_PUBLIC_APP_TYPE": "web",
+            "NEXT_PUBLIC_ENV_MODE": "production"
+          }
+        },
+        "development": {
+          "env": {
+            "NEXT_PUBLIC_ENV_MODE": "development"
+          }
+        }
+      }
     },
     "dev": {
       "inputs": ["default"],
       "cache": false,
-      "envFile": ".env"
+      "envFile": ".env",
+      "configurations": {
+        "admin": {
+          "env": {
+            "NEXT_PUBLIC_APP_TYPE": "admin",
+            "NEXT_PUBLIC_ENV_MODE": "development"
+          }
+        },
+        "web": {
+          "env": {
+            "NEXT_PUBLIC_APP_TYPE": "web",
+            "NEXT_PUBLIC_ENV_MODE": "development"
+          }
+        }
+      }
     },
     "lint": {
       "inputs": ["default"],

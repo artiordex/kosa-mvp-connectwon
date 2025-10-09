@@ -82,7 +82,7 @@
      * 경로 매핑 (packages / apps)
      * dev 환경(src) + build 환경(dist) 이중 매핑
      */
-     "paths": {
+    "paths": {
       // Core
       "@connectwon/core": [
         "packages/core/src/index.ts",
@@ -223,5 +223,6 @@
         "dist/apps/e2e/*"
       ]
     }
-  }
+  },
+  "include": ["packages/**/*", "apps/**/*", "dist/**/*"]
 }

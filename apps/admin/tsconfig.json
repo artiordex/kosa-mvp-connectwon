@@ -6,6 +6,7 @@
  * 09-17 : TypeScript 컴파일 에러 해결을 위한 설정 추가
  * 10-01 : baseUrl=src, paths alias 추가 (components, data, lib)
  * 10-07 : dist 기반 workspace 패키지(@connectwon/*) 경로 추가
+ * 10-09 : baseUrl을 '.'으로 변경, NodeNext 모듈 해석 및 dist 경로 인식 강화
  */
 {
   "extends": "../../tsconfig.base.json",
@@ -13,47 +14,71 @@
   "compilerOptions": {
     // Next.js가 빌드/트랜스파일 처리 → TS는 타입체크 전용
     "noEmit": true,
+
+    // NodeNext 조합 (패키지 exports 해석)
     "target": "es2022",
-    "module": "esnext",
-    "moduleResolution": "bundler",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
 
     // Next가 JSX 변환 담당 → preserve
     "jsx": "preserve",
     "plugins": [{ "name": "next" }],
 
-    // Admin 전용 경로 alias
-    "baseUrl": "src",
+    // Admin 전용 경로 alias (루트 기준)
+    "baseUrl": ".",
     "paths": {
-      /**
-       * 루트 dist 기준 workspace 패키지 경로
-       * Next.js baseUrl=src 환경에서도 절대경로 import 가능
-       */
-      "@connectwon/core": ["../../dist/packages/core/index.d.ts"],
+      "@connectwon/core": [
+        "../../dist/packages/core/index.d.ts",
+        "../../dist/packages/core/index.js"
+      ],
       "@connectwon/core/*": ["../../dist/packages/core/*"],
-      "@connectwon/configs": ["../../dist/packages/configs/index.d.ts"],
+
+      "@connectwon/configs": [
+        "../../dist/packages/configs/index.d.ts",
+        "../../dist/packages/configs/index.js"
+      ],
       "@connectwon/configs/*": ["../../dist/packages/configs/*"],
-      "@connectwon/logger": ["../../dist/packages/logger/index.d.ts"],
+
+      "@connectwon/logger": [
+        "../../dist/packages/logger/index.d.ts",
+        "../../dist/packages/logger/index.js"
+      ],
       "@connectwon/logger/*": ["../../dist/packages/logger/*"],
-      "@connectwon/client": ["../../dist/packages/client/index.d.ts"],
+
+      "@connectwon/client": [
+        "../../dist/packages/client/index.d.ts",
+        "../../dist/packages/client/index.js"
+      ],
       "@connectwon/client/*": ["../../dist/packages/client/*"],
-      "@connectwon/ui": ["../../dist/packages/ui/index.d.ts"],
+
+      "@connectwon/ui": [
+        "../../dist/packages/ui/index.d.ts",
+        "../../dist/packages/ui/index.js"
+      ],
       "@connectwon/ui/*": ["../../dist/packages/ui/*"],
-      "@connectwon/sdk": ["../../dist/packages/sdk/index.d.ts"],
+
+      "@connectwon/sdk": [
+        "../../dist/packages/sdk/index.d.ts",
+        "../../dist/packages/sdk/index.js"
+      ],
       "@connectwon/sdk/*": ["../../dist/packages/sdk/*"],
-      "@connectwon/api-contract": ["../../dist/packages/api-contract/index.d.ts"],
+
+      "@connectwon/api-contract": [
+        "../../dist/packages/api-contract/index.d.ts",
+        "../../dist/packages/api-contract/index.js"
+      ],
       "@connectwon/api-contract/*": ["../../dist/packages/api-contract/*"],
 
-      /**
-       * Admin 전용 로컬 alias (src 기준)
-       */
-      "components/*": ["components/*"],
-      "data/*": ["data/*"],
-      "lib/*": ["lib/*"]
+      // Admin 전용 로컬 alias (src 기준)
+      "components/*": ["src/components/*"],
+      "data/*": ["src/data/*"],
+      "lib/*": ["src/lib/*"]
     },
 
     // DOM 및 ES2022 API 사용
     "lib": ["dom", "dom.iterable", "es2022"],
-    "types": ["node"],
+    "typeRoots": ["../../node_modules/@types"],
+    "types": ["node", "react", "react-dom"],
 
     // TS 컴파일러 옵션 (편의/호환성)
     "verbatimModuleSyntax": false,

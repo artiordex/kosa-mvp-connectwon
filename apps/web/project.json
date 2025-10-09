@@ -10,17 +10,9 @@
       "executor": "@nx/next:build",
       "options": {
         "outputPath": "dist/apps/web",
-        "root": "apps/web"
-      },
-      "configurations": {
-        "firebase": {
-          "env": { "FIREBASE": "true" }
-        },
-        "cloud-run": {
-          "env": { "CLOUD_RUN": "true" }
-        },
-        "docker": {
-          "env": { "DOCKER": "true" }
+        "root": "apps/web",
+        "env": {
+          "NEXT_PUBLIC_APP_TYPE": "web"
         }
       }
     },
@@ -30,15 +22,10 @@
       "options": {
         "buildTarget": "@connectwon/web:build",
         "dev": true,
-        "port": 3000
-      }
-    },
-
-    "serve:ssr": {
-      "__comment": "Cloud Run / Docker 배포 시 SSR 커스텀 서버 구동",
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "node apps/web/server.js"
+        "port": 3000,
+        "env": {
+          "NEXT_PUBLIC_APP_TYPE": "web"
+        }
       }
     },
 
@@ -62,6 +49,5 @@
     "@connectwon/client",
     "@connectwon/api-contract",
     "@connectwon/configs",
-    "@connectwon/sdk"
   ]
 }

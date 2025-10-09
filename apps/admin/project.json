@@ -3,27 +3,39 @@
   "sourceRoot": "apps/admin/src",
   "projectType": "application",
   "tags": ["type:app", "layer:frontend", "platform:nextjs"],
+
+  "__comment_targets": "Next.js 빌드/서버/테스트 설정",
   "targets": {
     "build": {
       "executor": "@nx/next:build",
       "options": {
-        "outputPath": "dist/apps/admin"
+        "outputPath": "dist/apps/admin",
+        "root": "apps/admin",
+        "env": {
+          "NEXT_PUBLIC_APP_TYPE": "admin"
+        }
       }
     },
+
     "serve": {
       "executor": "@nx/next:server",
       "options": {
-        "buildTarget": "@connectwon/web:build",
+        "buildTarget": "@connectwon/admin:build",
         "dev": true,
-        "port": 3001
+        "port": 3001,
+        "env": {
+          "NEXT_PUBLIC_APP_TYPE": "admin"
+        }
       }
     },
+
     "lint": {
       "executor": "@nx/eslint:lint",
       "options": {
         "lintFilePatterns": ["apps/admin/**/*.ts", "apps/admin/**/*.tsx"]
       }
     },
+
     "test": {
       "executor": "@nx/vite:test",
       "options": {
@@ -31,6 +43,11 @@
       }
     }
   },
+
   "implicitDependencies": [
+    "@connectwon/ui",
+    "@connectwon/client",
+    "@connectwon/api-contract",
+    "@connectwon/configs"
   ]
 }

@@ -1,12 +1,7 @@
 /**
  * Description : next.config.mjs - 📌 Admin 앱 Next.js 설정 (Docker / Cloud Run 배포용)
  * Author : Shiwoo Min
- * Date : 2025-10-08
- *
- * Note :
- *  - SSR 및 API 라우트 포함 관리 콘솔 서버 전용 설정
- *  - Firebase Cloud Run 또는 Docker 기반 배포에 적합
- *  - @connectwon/ui/dist/public 자산 (파비콘 등) 직접 참조 가능
+ * Date : 2025-10-09
  */
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -20,8 +15,24 @@ const nextConfig = {
   // Cloud Run / Docker용 서버 빌드
   output: 'standalone',
 
-  // 내부 워크스페이스 패키지 트랜스파일 (React 기반 패키지만)
+  // 내부 React 기반 패키지 트랜스파일
   transpilePackages: ['@connectwon/ui', '@connectwon/client'],
+
+  // Webpack alias 추가 (← 핵심)
+  webpack: (config) => {
+    const aliasBase = path.resolve(__dirname, '../../dist/packages');
+
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@connectwon/client': path.join(aliasBase, 'client'),
+      '@connectwon/ui': path.join(aliasBase, 'ui'),
+      '@connectwon/core': path.join(aliasBase, 'core'),
+      '@connectwon/configs': path.join(aliasBase, 'configs'),
+      '@connectwon/logger': path.join(aliasBase, 'logger'),
+    };
+
+    return config;
+  },
 
   reactStrictMode: false,
 
@@ -34,7 +45,8 @@ const nextConfig = {
     ],
   },
 
-  // Firebase Admin 환경변수
+  // Firebase Admin 환경변수 주입 (MSW 모드에서는 비활성화)
+  /*
   env: {
     NEXT_PUBLIC_FIREBASE_ADMIN_API_KEY: process.env.NEXT_PUBLIC_FIREBASE_ADMIN_API_KEY,
     NEXT_PUBLIC_FIREBASE_ADMIN_AUTH_DOMAIN: process.env.NEXT_PUBLIC_FIREBASE_ADMIN_AUTH_DOMAIN,
@@ -44,8 +56,9 @@ const nextConfig = {
     NEXT_PUBLIC_FIREBASE_ADMIN_APP_ID: process.env.NEXT_PUBLIC_FIREBASE_ADMIN_APP_ID,
     NEXT_PUBLIC_FIREBASE_ADMIN_MEASUREMENT_ID: process.env.NEXT_PUBLIC_FIREBASE_ADMIN_MEASUREMENT_ID,
   },
+  */
 
-  // 개발 시 API 프록시 + UI 정적 자산 경로 매핑
+  // 개발 시 API 프록시 + UI 정적 자산 매핑
   async rewrites() {
     const rules = [
       {
@@ -64,7 +77,7 @@ const nextConfig = {
     return rules;
   },
 
-  // experimental.outputFileTracingRoot → 루트 레벨로 이동
+  // dist 기준 루트 트레이싱
   outputFileTracingRoot: path.resolve(__dirname, '../../'),
 
   compress: true,

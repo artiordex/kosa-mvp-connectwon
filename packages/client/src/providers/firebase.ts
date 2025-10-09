@@ -25,6 +25,7 @@ export const getFirebaseConfig = (): FirebaseConfig => {
 
   // prefix 자동 결정
   const prefix = isAdmin ? 'NEXT_PUBLIC_FIREBASE_ADMIN' : 'NEXT_PUBLIC_FIREBASE_WEB';
+  console.log(`[FirebaseConfig] APP_TYPE=${appType}, PREFIX=${prefix}`);
 
   // Firebase 설정 로드
   const config: FirebaseConfig = {
@@ -40,18 +41,15 @@ export const getFirebaseConfig = (): FirebaseConfig => {
   const measurementId = process.env[`${prefix}_MEASUREMENT_ID`];
   if (measurementId) config.measurementId = measurementId;
 
-  // 개발 모드에서 누락된 항목 확인
-  const envMode = process.env['NEXT_PUBLIC_ENV_MODE'] ?? 'production';
-  if (envMode === 'development') {
-    const missing = Object.entries(config)
-      .filter(([_, v]) => !v)
-      .map(([k]) => k);
+  // 누락 항목 경고 (모드 구분 없이 항상 확인)
+  const missing = Object.entries(config)
+    .filter(([_, v]) => !v)
+    .map(([k]) => k);
 
-    if (missing.length > 0) {
-      console.warn(
-        `[Firebase Config Warning] ${isAdmin ? 'Admin' : 'Web'} 환경에서 누락된 항목: ${missing.join(', ')}`
-      );
-    }
+  if (missing.length > 0) {
+    console.warn(
+      `[Firebase Config Warning] ${isAdmin ? 'Admin' : 'Web'} 환경에서 누락된 항목: ${missing.join(', ')}`
+    );
   }
 
   return config;
