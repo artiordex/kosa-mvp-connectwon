@@ -35,6 +35,7 @@
   },
   "__comment_dependencies": "직접 사용되는 앱 런타임 의존성",
   "dependencies": {
+    "date-fns": "*",
     "@auth/prisma-adapter": "^2.10.0",
     "@connectwon/api-contract": "workspace:*",
     "@connectwon/core": "workspace:*",

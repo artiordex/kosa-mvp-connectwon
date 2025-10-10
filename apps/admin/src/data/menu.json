@@ -1,10 +1,16 @@
 [
   {
-    "href": "/",
+    "href": "/dashboard",
     "icon": "ri-dashboard-line",
     "label": "대시보드",
     "exact": true,
     "title": "대시보드"
+  },
+  {
+    "href": "/board",
+    "icon": "ri-file-list-line",
+    "label": "게시판 관리",
+    "title": "게시판 관리"
   },
   {
     "href": "/users",
@@ -21,14 +27,8 @@
   {
     "href": "/facilities",
     "icon": "ri-building-line",
-    "label": "시설 관리",
-    "title": "시설 관리"
-  },
-  {
-    "href": "/equipments",
-    "icon": "ri-tools-line",
-    "label": "장비 관리",
-    "title": "장비 관리"
+    "label": "공간 및 장비 관리",
+    "title": "공간 및 장비 관리"
   },
   {
     "href": "/reservations",

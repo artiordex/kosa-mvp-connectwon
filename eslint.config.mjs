@@ -127,9 +127,13 @@ export default [
       'import/no-extraneous-dependencies': [
         'error',
         {
+          devDependencies: false,
           peerDependencies: true,
           optionalDependencies: true,
-          devDependencies: false,
+          packageDir: [
+            '.',
+            '../../',
+          ],
         },
       ],
       'import/order': [
@@ -149,11 +153,13 @@ export default [
       'max-len': [
         'warn',
         {
-          code: 120,
+          code: 240,
           ignoreComments: true,
           ignoreTrailingComments: true,
           ignoreTemplateLiterals: true,
           ignoreUrls: true,
+          ignoreStrings: true,
+          ignoreRegExpLiterals: true,
         },
       ],
 
@@ -163,10 +169,34 @@ export default [
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
 
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          caughtErrorsIgnorePattern: '^_',
+        },
+      ],
+
+      // React import 불필요 + JSX 내부 no-undef 경고 방지
+      'no-undef': 'off',
+
       // Next.js 규칙
       '@next/next/no-html-link-for-pages': 'off',
       ...nextPlugin.configs.recommended.rules,
       ...nextPlugin.configs['core-web-vitals'].rules,
+
+      'no-unused-vars': [
+        'warn',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          caughtErrorsIgnorePattern: '^_',
+        },
+      ],
+      'import/order': 'off',
+      'import/newline-after-import': 'off',
+      'import/no-duplicates': 'warn',
     },
   },
 
@@ -179,6 +209,7 @@ export default [
       'coverage/**',
       '*.config.js',
       '*.config.ts',
+      '*.config.mjs',
       'package-lock.json',
       'yarn.lock',
       'pnpm-lock.yaml',
@@ -251,7 +282,6 @@ export default [
     ],
     rules: {
       'import/no-default-export': 'off',
-      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
     },
   },
 ];

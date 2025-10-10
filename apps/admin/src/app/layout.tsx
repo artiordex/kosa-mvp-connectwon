@@ -8,7 +8,6 @@ import { Inter } from 'next/font/google';
 // TODO: Firebase 임시 주석처리
 // import { RootProvider } from '../providers/RootProvider';
 import './globals.css';
-import AppShell from 'components/AppShell';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -41,10 +40,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="ko">
       <body className={`${inter.className} bg-gray-100`}>
-        {/* Firebase + QueryProvider + 기타 Provider 통합 */}
-        {/* <RootProvider> */}
-          <AppShell>{children}</AppShell>
-        {/* </RootProvider> */}
+        {children}
       </body>
     </html>
   );

@@ -1,0 +1,274 @@
+{
+  "posts": [
+    {
+      "id": 1,
+      "type": "notice",
+      "title": "10월 시설 이용 안내",
+      "author": "관리자",
+      "date": "2025-10-10",
+      "views": 234,
+      "status": "published"
+    },
+    {
+      "id": 2,
+      "type": "program",
+      "title": "신규 요가 프로그램 안내",
+      "author": "관리자",
+      "date": "2025-10-09",
+      "views": 156,
+      "status": "published"
+    },
+    {
+      "id": 3,
+      "type": "notice",
+      "title": "추석 연휴 운영 시간 공지",
+      "author": "관리자",
+      "date": "2025-10-08",
+      "views": 445,
+      "status": "published"
+    },
+    {
+      "id": 4,
+      "type": "general",
+      "title": "회원 간담회 개최 안내",
+      "author": "운영팀",
+      "date": "2025-10-07",
+      "views": 89,
+      "status": "draft"
+    },
+    {
+      "id": 5,
+      "type": "program",
+      "title": "필라테스 클래스 오픈",
+      "author": "관리자",
+      "date": "2025-10-06",
+      "views": 312,
+      "status": "published"
+    },
+    {
+      "id": 6,
+      "type": "notice",
+      "title": "주차장 이용 안내",
+      "author": "관리자",
+      "date": "2025-10-05",
+      "views": 523,
+      "status": "published"
+    },
+    {
+      "id": 7,
+      "type": "program",
+      "title": "수영 강습 등록 안내",
+      "author": "운영팀",
+      "date": "2025-10-04",
+      "views": 267,
+      "status": "published"
+    },
+    {
+      "id": 8,
+      "type": "general",
+      "title": "시설 개선 완료 공지",
+      "author": "관리자",
+      "date": "2025-10-03",
+      "views": 178,
+      "status": "published"
+    },
+    {
+      "id": 9,
+      "type": "notice",
+      "title": "회원권 갱신 안내",
+      "author": "관리자",
+      "date": "2025-10-02",
+      "views": 401,
+      "status": "published"
+    },
+    {
+      "id": 10,
+      "type": "program",
+      "title": "헬스 PT 프로그램 소개",
+      "author": "운영팀",
+      "date": "2025-10-01",
+      "views": 195,
+      "status": "draft"
+    },
+    {
+      "id": 11,
+      "type": "general",
+      "title": "10월 이벤트 안내",
+      "author": "마케팅팀",
+      "date": "2025-09-30",
+      "views": 356,
+      "status": "published"
+    },
+    {
+      "id": 12,
+      "type": "notice",
+      "title": "시설 점검 일정 공지",
+      "author": "관리자",
+      "date": "2025-09-29",
+      "views": 289,
+      "status": "published"
+    },
+    {
+      "id": 13,
+      "type": "program",
+      "title": "댄스 클래스 신청 접수",
+      "author": "운영팀",
+      "date": "2025-09-28",
+      "views": 412,
+      "status": "published"
+    },
+    {
+      "id": 14,
+      "type": "general",
+      "title": "회원 혜택 안내",
+      "author": "마케팅팀",
+      "date": "2025-09-27",
+      "views": 234,
+      "status": "published"
+    },
+    {
+      "id": 15,
+      "type": "notice",
+      "title": "안전 수칙 준수 안내",
+      "author": "관리자",
+      "date": "2025-09-26",
+      "views": 167,
+      "status": "published"
+    },
+    {
+      "id": 16,
+      "type": "program",
+      "title": "테니스 레슨 모집",
+      "author": "운영팀",
+      "date": "2025-09-25",
+      "views": 298,
+      "status": "draft"
+    },
+    {
+      "id": 17,
+      "type": "general",
+      "title": "가을 건강 관리 팁",
+      "author": "마케팅팀",
+      "date": "2025-09-24",
+      "views": 445,
+      "status": "published"
+    },
+    {
+      "id": 18,
+      "type": "notice",
+      "title": "휴일 운영 시간 변경",
+      "author": "관리자",
+      "date": "2025-09-23",
+      "views": 512,
+      "status": "published"
+    },
+    {
+      "id": 19,
+      "type": "program",
+      "title": "키즈 체육 프로그램",
+      "author": "운영팀",
+      "date": "2025-09-22",
+      "views": 223,
+      "status": "published"
+    },
+    {
+      "id": 20,
+      "type": "general",
+      "title": "신규 트레이너 소개",
+      "author": "운영팀",
+      "date": "2025-09-21",
+      "views": 189,
+      "status": "published"
+    },
+    {
+      "id": 21,
+      "type": "notice",
+      "title": "9월 정기 휴무 안내",
+      "author": "관리자",
+      "date": "2025-09-20",
+      "views": 378,
+      "status": "published"
+    },
+    {
+      "id": 22,
+      "type": "program",
+      "title": "골프 레슨 등록 시작",
+      "author": "운영팀",
+      "date": "2025-09-19",
+      "views": 467,
+      "status": "published"
+    },
+    {
+      "id": 23,
+      "type": "general",
+      "title": "회원 만족도 조사",
+      "author": "마케팅팀",
+      "date": "2025-09-18",
+      "views": 145,
+      "status": "draft"
+    },
+    {
+      "id": 24,
+      "type": "notice",
+      "title": "락커룸 이용 규칙",
+      "author": "관리자",
+      "date": "2025-09-17",
+      "views": 256,
+      "status": "published"
+    },
+    {
+      "id": 25,
+      "type": "program",
+      "title": "크로스핏 클래스 오픈",
+      "author": "운영팀",
+      "date": "2025-09-16",
+      "views": 534,
+      "status": "published"
+    },
+    {
+      "id": 26,
+      "type": "general",
+      "title": "건강 세미나 개최",
+      "author": "마케팅팀",
+      "date": "2025-09-15",
+      "views": 312,
+      "status": "published"
+    },
+    {
+      "id": 27,
+      "type": "notice",
+      "title": "주차 요금 변경 안내",
+      "author": "관리자",
+      "date": "2025-09-14",
+      "views": 423,
+      "status": "published"
+    },
+    {
+      "id": 28,
+      "type": "program",
+      "title": "복싱 클래스 신청",
+      "author": "운영팀",
+      "date": "2025-09-13",
+      "views": 289,
+      "status": "published"
+    },
+    {
+      "id": 29,
+      "type": "general",
+      "title": "추천 운동 루틴",
+      "author": "마케팅팀",
+      "date": "2025-09-12",
+      "views": 367,
+      "status": "draft"
+    },
+    {
+      "id": 30,
+      "type": "notice",
+      "title": "회원 등급제 시행 안내",
+      "author": "관리자",
+      "date": "2025-09-11",
+      "views": 678,
+      "status": "published"
+    }
+  ]
+}

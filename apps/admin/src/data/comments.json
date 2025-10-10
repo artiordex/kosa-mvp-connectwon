@@ -1,0 +1,72 @@
+[
+  {
+    "id": 1,
+    "postId": 1,
+    "userId": 2,
+    "content": "좋은 글 감사합니다!",
+    "createdAt": "2024-10-01T10:00:00Z"
+  },
+  {
+    "id": 2,
+    "postId": 1,
+    "userId": 3,
+    "content": "도움이 많이 되었어요.",
+    "createdAt": "2024-10-01T11:30:00Z"
+  },
+  {
+    "id": 3,
+    "postId": 2,
+    "userId": 1,
+    "content": "React 공부하는데 참고하겠습니다!",
+    "createdAt": "2024-10-02T12:00:00Z"
+  },
+  {
+    "id": 4,
+    "postId": 2,
+    "userId": 4,
+    "content": "더 자세한 설명 부탁드립니다.",
+    "createdAt": "2024-10-02T14:20:00Z"
+  },
+  {
+    "id": 5,
+    "postId": 3,
+    "userId": 5,
+    "content": "비동기 처리 잘 정리되어 있네요.",
+    "createdAt": "2024-10-03T15:00:00Z"
+  },
+  {
+    "id": 6,
+    "postId": 4,
+    "userId": 2,
+    "content": "TypeScript 너무 좋아요!",
+    "createdAt": "2024-10-04T12:30:00Z"
+  },
+  {
+    "id": 7,
+    "postId": 5,
+    "userId": 1,
+    "content": "Grid 레이아웃 예제가 명확하네요.",
+    "createdAt": "2024-10-05T17:00:00Z"
+  },
+  {
+    "id": 8,
+    "postId": 6,
+    "userId": 3,
+    "content": "실습해보고 질문 드릴게요.",
+    "createdAt": "2024-10-06T14:00:00Z"
+  },
+  {
+    "id": 9,
+    "postId": 8,
+    "userId": 4,
+    "content": "Hooks 사용법 완전 이해했습니다!",
+    "createdAt": "2024-10-08T16:00:00Z"
+  },
+  {
+    "id": 10,
+    "postId": 8,
+    "userId": 1,
+    "content": "useCallback과 useMemo의 차이점도 궁금해요.",
+    "createdAt": "2024-10-08T17:30:00Z"
+  }
+]

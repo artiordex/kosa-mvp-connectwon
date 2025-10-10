@@ -1,0 +1,169 @@
+[
+  {
+    "venueId": 1,
+    "venueName": "ConnectWon 강남지점",
+    "category": "laptop",
+    "total": 12,
+    "available": 9,
+    "inUse": 2,
+    "maintenance": 1,
+    "utilizationRate": 16.7,
+    "lastUpdated": "2025-10-09T09:00:00Z"
+  },
+  {
+    "venueId": 1,
+    "venueName": "ConnectWon 강남지점",
+    "category": "projector",
+    "total": 6,
+    "available": 5,
+    "inUse": 1,
+    "maintenance": 0,
+    "utilizationRate": 16.6,
+    "lastUpdated": "2025-10-09T09:00:00Z"
+  },
+  {
+    "venueId": 1,
+    "venueName": "ConnectWon 강남지점",
+    "category": "microphone",
+    "total": 5,
+    "available": 4,
+    "inUse": 1,
+    "maintenance": 0,
+    "utilizationRate": 20,
+    "lastUpdated": "2025-10-09T09:00:00Z"
+  },
+  {
+    "venueId": 1,
+    "venueName": "ConnectWon 강남지점",
+    "category": "lighting",
+    "total": 4,
+    "available": 3,
+    "inUse": 1,
+    "maintenance": 0,
+    "utilizationRate": 25,
+    "lastUpdated": "2025-10-09T09:00:00Z"
+  },
+  {
+    "venueId": 1,
+    "venueName": "ConnectWon 강남지점",
+    "category": "adapter",
+    "total": 10,
+    "available": 9,
+    "inUse": 0,
+    "maintenance": 1,
+    "utilizationRate": 0,
+    "lastUpdated": "2025-10-09T09:00:00Z"
+  },
+
+  {
+    "venueId": 2,
+    "venueName": "ConnectWon 마포지점",
+    "category": "laptop",
+    "total": 8,
+    "available": 6,
+    "inUse": 2,
+    "maintenance": 0,
+    "utilizationRate": 25,
+    "lastUpdated": "2025-10-09T09:00:00Z"
+  },
+  {
+    "venueId": 2,
+    "venueName": "ConnectWon 마포지점",
+    "category": "projector",
+    "total": 5,
+    "available": 4,
+    "inUse": 1,
+    "maintenance": 0,
+    "utilizationRate": 20,
+    "lastUpdated": "2025-10-09T09:00:00Z"
+  },
+  {
+    "venueId": 2,
+    "venueName": "ConnectWon 마포지점",
+    "category": "lighting",
+    "total": 6,
+    "available": 4,
+    "inUse": 2,
+    "maintenance": 0,
+    "utilizationRate": 33.3,
+    "lastUpdated": "2025-10-09T09:00:00Z"
+  },
+  {
+    "venueId": 2,
+    "venueName": "ConnectWon 마포지점",
+    "category": "camera",
+    "total": 4,
+    "available": 3,
+    "inUse": 1,
+    "maintenance": 0,
+    "utilizationRate": 25,
+    "lastUpdated": "2025-10-09T09:00:00Z"
+  },
+  {
+    "venueId": 2,
+    "venueName": "ConnectWon 마포지점",
+    "category": "tripod",
+    "total": 3,
+    "available": 2,
+    "inUse": 1,
+    "maintenance": 0,
+    "utilizationRate": 33.3,
+    "lastUpdated": "2025-10-09T09:00:00Z"
+  },
+
+  {
+    "venueId": 3,
+    "venueName": "ConnectWon 광명지점",
+    "category": "tablet",
+    "total": 5,
+    "available": 4,
+    "inUse": 1,
+    "maintenance": 0,
+    "utilizationRate": 20,
+    "lastUpdated": "2025-10-09T09:00:00Z"
+  },
+  {
+    "venueId": 3,
+    "venueName": "ConnectWon 광명지점",
+    "category": "whiteboard",
+    "total": 4,
+    "available": 4,
+    "inUse": 0,
+    "maintenance": 0,
+    "utilizationRate": 0,
+    "lastUpdated": "2025-10-09T09:00:00Z"
+  },
+  {
+    "venueId": 3,
+    "venueName": "ConnectWon 광명지점",
+    "category": "speaker",
+    "total": 4,
+    "available": 3,
+    "inUse": 1,
+    "maintenance": 0,
+    "utilizationRate": 25,
+    "lastUpdated": "2025-10-09T09:00:00Z"
+  },
+  {
+    "venueId": 3,
+    "venueName": "ConnectWon 광명지점",
+    "category": "adapter",
+    "total": 8,
+    "available": 7,
+    "inUse": 0,
+    "maintenance": 1,
+    "utilizationRate": 0,
+    "lastUpdated": "2025-10-09T09:00:00Z"
+  },
+  {
+    "venueId": 3,
+    "venueName": "ConnectWon 광명지점",
+    "category": "monitor",
+    "total": 6,
+    "available": 5,
+    "inUse": 1,
+    "maintenance": 0,
+    "utilizationRate": 16.6,
+    "lastUpdated": "2025-10-09T09:00:00Z"
+  }
+]
