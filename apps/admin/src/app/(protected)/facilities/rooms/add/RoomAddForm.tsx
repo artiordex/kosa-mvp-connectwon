@@ -8,7 +8,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import roomData from 'data/rooms_by_venue.json';
+import roomData from 'data/rooms-by-venue.json';
 
 export default function RoomAddForm() {
   const venues = (roomData as any).venues || [];

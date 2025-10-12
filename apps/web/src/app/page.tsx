@@ -7,7 +7,7 @@ import InsightSection from 'components/home/InsightSection';
 import HeroSection from 'components/home/MainHeroSection';
 import ProgramSection from 'components/home/ProgramSection';
 import QuickAccessSection from 'components/home/QuickMenuSection';
-import RoomSection from 'components/home/RoomSection';
+import RoomSection from 'components/home/FacilitiesSection';
 
 /* 사용자 페이지 메인 */
 export default function HomePage() {

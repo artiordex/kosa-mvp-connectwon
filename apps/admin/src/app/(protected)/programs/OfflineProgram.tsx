@@ -164,7 +164,7 @@ export default function OfflineProgram() {
           </div>
         </>
       )}
-    {/* 공간 탭 / 스케줄 탭은 추후 rooms_by_venue.json, schedules.json 연동 가능 */}
+    {/* 공간 탭 / 스케줄 탭은 추후 rooms-by-venue.json, schedules.json 연동 가능 */}
   </div>
   );
 }

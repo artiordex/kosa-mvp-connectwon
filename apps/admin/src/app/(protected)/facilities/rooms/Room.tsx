@@ -7,7 +7,7 @@
 
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
-import roomData from 'data/rooms_by_venue.json';
+import roomData from 'data/rooms-by-venue.json';
 
 interface RoomType {
   id: number;

@@ -1,22 +1,101 @@
 [
   {
-    "title": "커넥트원 공지사항 - 2025 테스트디바이스 리스트",
-    "date": "2025-09-17",
-    "category": "공지사항"
+    "id": 1,
+    "title": "커넥트원 개인정보처리방침 변경 안내 (시행 2025.01.01)",
+    "date": "2024-12-15",
+    "category": "#공지사항",
+    "tags": ["#공지사항", "#기타"],
+    "image": "https://readdy.ai/api/search-image?query=official%20announcement%20document%20with%20corporate%20branding%2C%20privacy%20policy%20update%20notification%2C%20professional%20business%20communication%2C%20clean%20document%20design&width=300&height=180&seq=privacy-notice&orientation=landscape",
+    "author": "커넥트원 운영팀",
+    "views": 856,
+    "content": "<h2>개인정보처리방침 변경 안내</h2><p>커넥트원은 이용자의 개인정보를 소중히 다루며, 관련 법령을 준수하고 있습니다. 이번 개인정보처리방침 개정은 2025년 1월 1일부터 시행됩니다.</p><h3>주요 변경 사항</h3><ul><li>개인정보 수집 및 이용 목적 명확화</li><li>제3자 제공 기준 강화</li><li>정보주체의 권리 행사 절차 개선</li><li>개인정보 보유 및 이용기간 조정</li><li>개인정보 파기 절차 및 방법 구체화</li></ul>"
   },
   {
-    "title": "정부지원사업소식 - 2025년 길음청년희망스토어 청년창업 지원사업",
-    "date": "2025-09-15",
-    "category": "정부지원사업"
+    "id": 2,
+    "title": "2025 커넥트원 온라인 창업 성장 프로그램, 스타트업 부트캠프 5기 참가자 모집",
+    "date": "2024-12-10",
+    "category": "#커넥트원 소식",
+    "tags": ["#커넥트원 소식", "#프로그램 소식"],
+    "image": "https://readdy.ai/api/search-image?query=startup%20bootcamp%20recruitment%20poster%20with%20modern%20design%2C%20entrepreneurship%20program%20announcement%2C%20business%20incubation%20opportunity%2C%20professional%20marketing%20material&width=300&height=180&seq=bootcamp-recruit&orientation=landscape",
+    "author": "커넥트원 운영팀",
+    "views": 1247,
+    "content": "<h2>프로그램 개요</h2><p>커넥트원에서 2025년 스타트업 부트캠프 5기 참가자를 모집합니다. 이번 프로그램은 예비창업자와 초기 스타트업을 대상으로 체계적인 창업 교육과 멘토링을 제공합니다.</p><h3>주요 프로그램</h3><ul><li>창업 아이디어 발굴 및 검증</li><li>비즈니스 모델 수립</li><li>시제품 개발 및 테스트</li><li>투자 유치 전략</li><li>마케팅 및 세일즈</li></ul><h3>지원 혜택</h3><p>선발된 팀에게는 다음과 같은 혜택이 제공됩니다:</p><ul><li>전문 멘토 1:1 매칭</li><li>사무공간 및 개발환경 제공</li><li>법무, 회계, 특허 등 전문서비스 지원</li><li>데모데이 발표 기회</li><li>투자연계 프로그램 참여 자격</li></ul>"
   },
   {
-    "title": "정부지원사업소식 - 2025 제6회 하남도시공사 창업경진대회",
-    "date": "2025-09-15",
-    "category": "정부지원사업"
+    "id": 3,
+    "title": "25년도 상반기 커넥트원 정기모집 (~1/31 18:00)",
+    "date": "2024-12-05",
+    "category": "#커넥트원 소식",
+    "tags": ["#커넥트원 소식", "#공지사항"],
+    "image": "https://readdy.ai/api/search-image?query=application%20deadline%20announcement%20with%20countdown%20timer%20design%2C%20regular%20recruitment%20notice%2C%20business%20opportunity%20advertisement%2C%20professional%20application%20process&width=300&height=180&seq=regular-recruit&orientation=landscape",
+    "author": "커넥트원 운영팀",
+    "views": 2156,
+    "content": "<h2>2025년도 상반기 정기모집 안내</h2><p>커넥트원에서 2025년도 상반기 입주기업을 모집합니다. 혁신적인 아이디어와 기술력을 가진 스타트업의 많은 지원 바랍니다.</p><h3>모집 개요</h3><p><strong>모집 기간:</strong> 2024년 12월 5일 ~ 2025년 1월 31일 18:00</p><p><strong>모집 분야:</strong> AI/ML, 핀테크, 헬스케어, 이커머스, 교육 등 전 분야</p><p><strong>모집 대상:</strong> 창업 7년 이내 스타트업</p><p><strong>선발 규모:</strong> 30개 팀</p>"
   },
   {
-    "title": "정부지원사업소식 - 2025년 오픈데이터포럼 공공데이터·AI 활용 프로젝트",
-    "date": "2025-09-15",
-    "category": "정부지원사업"
+    "id": 4,
+    "title": "2024 AI 스타트업 트렌드 분석 보고서",
+    "date": "2024-11-28",
+    "category": "#트렌드",
+    "tags": ["#트렌드", "#언론보도"],
+    "image": "https://readdy.ai/api/search-image?query=AI%20technology%20trend%20analysis%20report%20cover%2C%20artificial%20intelligence%20startup%20market%20research%2C%20data%20visualization%20charts%20and%20graphs%2C%20professional%20business%20report%20design&width=300&height=180&seq=ai-trend-report&orientation=landscape",
+    "author": "리서치팀",
+    "views": 3421,
+    "content": "<h2>2024년 AI 스타트업 시장 현황</h2><p>2024년은 생성형 AI의 폭발적 성장과 함께 AI 스타트업 생태계가 급격히 변화한 한 해였습니다.</p><h3>주요 트렌드</h3><p><strong>1. 생성형 AI의 대중화</strong></p><p>ChatGPT, Midjourney 등 생성형 AI 서비스가 대중화되면서 관련 스타트업 투자가 급증했습니다.</p>"
+  },
+  {
+    "id": 5,
+    "title": "커넥트원, '2024 우수 창업지원기관' 선정",
+    "date": "2024-11-20",
+    "category": "#언론보도",
+    "tags": ["#언론보도", "#커넥트원 소식"],
+    "image": "https://readdy.ai/api/search-image?query=award%20ceremony%20with%20trophy%20and%20certificate%2C%20excellence%20in%20startup%20support%20recognition%2C%20business%20achievement%20celebration%2C%20professional%20award%20presentation&width=300&height=180&seq=excellence-award&orientation=landscape",
+    "author": "홍보팀",
+    "views": 1892,
+    "content": "<h2>우수 창업지원기관 선정</h2><p>커넥트원이 중소벤처기업부가 주관하는 2024 우수 창업지원기관에 선정되는 영예를 안았습니다.</p><h3>선정 배경</h3><p>이번 선정은 커넥트원의 체계적인 창업 지원 프로그램과 뛰어난 성과가 인정받은 결과입니다.</p>"
+  },
+  {
+    "id": 6,
+    "title": "메타버스 기술을 활용한 원격 협업의 미래",
+    "date": "2024-11-15",
+    "category": "#트렌드",
+    "tags": ["#트렌드", "#기타"],
+    "image": "https://readdy.ai/api/search-image?query=metaverse%20virtual%20collaboration%20workspace%2C%20people%20working%20together%20in%20digital%20environment%2C%20futuristic%20remote%20work%20technology%2C%203D%20virtual%20meeting%20space&width=300&height=180&seq=metaverse-collab&orientation=landscape",
+    "author": "테크팀",
+    "views": 1534,
+    "content": "<h2>메타버스와 원격 협업의 만남</h2><p>코로나19 팬데믹 이후 원격 근무가 일상화되면서, 메타버스 기술을 활용한 새로운 형태의 협업 방식이 주목받고 있습니다.</p><h3>메타버스 협업의 장점</h3><p>아바타를 통한 가상공간 내 협업으로 화상회의보다 높은 몰입감을 제공합니다.</p>"
+  },
+  {
+    "id": 7,
+    "title": "스타트업 펀딩 라운드 완전 가이드",
+    "date": "2024-11-10",
+    "category": "#프로그램 소식",
+    "tags": ["#프로그램 소식", "#트렌드"],
+    "image": "https://readdy.ai/api/search-image?query=startup%20funding%20guide%20infographic%2C%20investment%20rounds%20explanation%20diagram%2C%20venture%20capital%20process%20visualization%2C%20professional%20business%20education%20material&width=300&height=180&seq=funding-guide&orientation=landscape",
+    "author": "투자팀",
+    "views": 2789,
+    "content": "<h2>스타트업 투자 단계별 가이드</h2><p>스타트업 투자는 일반적으로 여러 단계로 나뉘어 진행됩니다.</p><h3>Pre-Seed 단계</h3><p><strong>시기:</strong> 아이디어 검증 및 초기 제품 개발</p><p><strong>투자 규모:</strong> 5천만 원 ~ 3억 원</p>"
+  },
+  {
+    "id": 8,
+    "title": "글로벌 시장 진출을 위한 스타트업 전략",
+    "date": "2024-11-05",
+    "category": "#트렌드",
+    "tags": ["#트렌드", "#프로그램 소식"],
+    "image": "https://readdy.ai/api/search-image?query=global%20business%20expansion%20strategy%20presentation%2C%20world%20map%20with%20connection%20lines%2C%20international%20market%20entry%20planning%2C%20professional%20business%20strategy%20document&width=300&height=180&seq=global-strategy&orientation=landscape",
+    "author": "글로벌팀",
+    "views": 1678,
+    "content": "<h2>글로벌 진출, 언제 어떻게 시작할까?</h2><p>많은 스타트업이 국내 시장의 한계를 극복하고 더 큰 성장을 위해 글로벌 진출을 고민합니다.</p><h3>진출 시기 결정</h3><p>국내 시장에서 명확한 제품-시장 적합성을 확보한 후 진출을 고려해야 합니다.</p>"
+  },
+  {
+    "id": 9,
+    "title": "커넥트원 데모데이 2024 성공적 개최",
+    "date": "2024-10-30",
+    "category": "#커넥트원 소식",
+    "tags": ["#커넥트원 소식", "#프로그램 소식"],
+    "image": "https://readdy.ai/api/search-image?query=startup%20demo%20day%20event%20with%20presenters%20on%20stage%2C%20pitch%20competition%20audience%2C%20innovation%20showcase%20event%2C%20professional%20business%20presentation&width=300&height=180&seq=demo-day&orientation=landscape",
+    "author": "커넥트원 운영팀",
+    "views": 2943,
+    "content": "<h2>2024 데모데이 성황리에 종료</h2><p>지난 10월 25일, 커넥트원에서 2024 데모데이를 개최하여 입주 스타트업 15개 팀의 혁신적인 아이디어와 성과를 선보였습니다.</p><h3>주요 성과</h3><ul><li>총 8개 팀 투자 미팅 확정</li><li>3개 팀 현장에서 투자 의향서 체결</li><li>예상 투자 유치 금액: 총 150억 원</li></ul>"
   }
 ]

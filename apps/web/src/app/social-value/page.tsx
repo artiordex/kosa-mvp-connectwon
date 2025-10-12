@@ -1,5 +1,8 @@
-import CTASection from './CTASection';
-import EquipmentSpaceSection from './EquipmentSpaceSection';
+/**
+ * Description : page.ts - 📌 social-value 엔트리
+ * Author : Shiwoo Min
+ * Date : 2025-10-10
+ */
 import ImpactAreas from './ImpactAreas';
 import PartnershipsSection from './PartnershipsSection';
 import ProgramsSection from './ProgramsSection';
@@ -15,14 +18,10 @@ export default function SocialValuePage() {
       <ValueIntroduction />
       {/* 가치 영역 */}
       <ImpactAreas />
-      {/* 장비 및 공간 안내 */}
-      <EquipmentSpaceSection />
       {/* 프로그램 */}
       <ProgramsSection />
       {/* 파트너십 */}
       <PartnershipsSection />
-      {/* CTA 섹션 */}
-      <CTASection />
     </div>
   );
 }

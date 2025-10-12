@@ -27,17 +27,18 @@ export default function Signup() {
   const [agreedPrivacy, setAgreedPrivacy] = useState(false);
   const [agreedMarketing, setAgreedMarketing] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState<Record<string, string>>({});
   const [openModal, setOpenModal] = useState<null | 'terms' | 'privacy'>(null);
 
   const router = useRouter();
 
+  // 이메일 인증번호 발송 (Mock)
   const handleSendCode = () => {
     const code = Math.floor(100000 + Math.random() * 900000).toString();
     setSentCode(code);
-    alert(`인증번호 발송됨 (테스트: ${code})`);
+    alert(`인증번호 발송됨 (테스트용: ${code})`);
   };
 
+  // 인증번호 확인 (Mock)
   const handleVerifyCode = () => {
     if (verificationCode === sentCode) {
       setEmailVerified(true);
@@ -47,12 +48,59 @@ export default function Signup() {
     }
   };
 
+  // 회원가입 Mock 처리
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+
     try {
-      console.log('회원가입:', formData, { agreedTerms, agreedPrivacy, agreedMarketing });
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // 간단한 유효성 검사
+      if (!emailVerified) {
+        alert('이메일 인증을 완료해주세요.');
+        return;
+      }
+      if (formData.password !== formData.confirmPassword) {
+        alert('비밀번호가 일치하지 않습니다.');
+        return;
+      }
+      if (!agreedTerms || !agreedPrivacy) {
+        alert('필수 약관에 동의해주세요.');
+        return;
+      }
+
+      // 기존 유저 목록 확인
+      const users = JSON.parse(localStorage.getItem('mockUsers') || '[]');
+      if (users.some((u: any) => u.email === formData.email)) {
+        alert('이미 가입된 이메일입니다.');
+        return;
+      }
+
+      // 새 유저 생성
+      const newUser = {
+        id: `mock-${Date.now()}`,
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+        phone: formData.phone,
+        birthDate: formData.birthDate,
+        gender: formData.gender,
+        provider: 'local',
+        picture: `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(formData.name || 'user')}`,
+        agreed: {
+          terms: agreedTerms,
+          privacy: agreedPrivacy,
+          marketing: agreedMarketing,
+        },
+        createdAt: new Date().toISOString(),
+      };
+
+      // localStorage 저장
+      localStorage.setItem('mockUsers', JSON.stringify([...users, newUser]));
+      localStorage.setItem('mockUser', JSON.stringify(newUser)); // 자동 로그인
+
+      // UX용 딜레이
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      alert(`${newUser.name}님, 회원가입이 완료되었습니다.`);
       router.push('/onboarding');
     } finally {
       setLoading(false);
@@ -77,7 +125,6 @@ export default function Signup() {
             label="이름 *"
             value={formData.name}
             onChangeAction={v => setFormData(prev => ({ ...prev, name: v as string }))}
-            error={errors['name'] ?? ''}
           />
 
           {/* 이메일 + 인증 */}
@@ -91,12 +138,15 @@ export default function Signup() {
                   label="이메일 *"
                   value={formData.email}
                   onChangeAction={v => setFormData(prev => ({ ...prev, email: v as string }))}
-                  error={errors['email'] ?? ''}
                   disabled={emailVerified}
                 />
               </div>
               {!emailVerified && (
-                <button type="button" onClick={handleSendCode} className="px-3 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700">
+                <button
+                  type="button"
+                  onClick={handleSendCode}
+                  className="px-3 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700"
+                >
                   인증번호 보내기
                 </button>
               )}
@@ -111,7 +161,11 @@ export default function Signup() {
                   value={verificationCode}
                   onChangeAction={v => setVerificationCode(v as string)}
                 />
-                <button type="button" onClick={handleVerifyCode} className="px-3 py-2 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700">
+                <button
+                  type="button"
+                  onClick={handleVerifyCode}
+                  className="px-3 py-2 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700"
+                >
                   인증하기
                 </button>
               </div>
@@ -126,9 +180,12 @@ export default function Signup() {
             label="비밀번호 *"
             value={formData.password}
             onChangeAction={v => setFormData(prev => ({ ...prev, password: v as string }))}
-            error={errors['password'] ?? ''}
             rightElement={
-              <button type="button" onClick={() => setShowPassword(!showPassword)} className="text-gray-500">
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="text-gray-500"
+              >
                 <i className={showPassword ? 'ri-eye-off-line' : 'ri-eye-line'} />
               </button>
             }
@@ -142,9 +199,12 @@ export default function Signup() {
             label="비밀번호 확인 *"
             value={formData.confirmPassword}
             onChangeAction={v => setFormData(prev => ({ ...prev, confirmPassword: v as string }))}
-            error={errors['confirmPassword'] ?? ''}
             rightElement={
-              <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="text-gray-500">
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className="text-gray-500"
+              >
                 <i className={showConfirmPassword ? 'ri-eye-off-line' : 'ri-eye-line'} />
               </button>
             }
@@ -158,7 +218,6 @@ export default function Signup() {
             label="휴대폰 번호 *"
             value={formData.phone}
             onChangeAction={v => setFormData(prev => ({ ...prev, phone: v as string }))}
-            error={errors['phone'] ?? ''}
           />
 
           {/* 생년월일 + 성별 */}
@@ -170,7 +229,6 @@ export default function Signup() {
               label="생년월일"
               value={formData.birthDate}
               onChangeAction={v => setFormData(prev => ({ ...prev, birthDate: v as Date | null }))}
-              error={errors['birthDate'] ?? ''}
             />
 
             <Input
@@ -180,7 +238,6 @@ export default function Signup() {
               label="성별"
               value={formData.gender}
               onChangeAction={v => setFormData(prev => ({ ...prev, gender: v as string }))}
-              error={errors['gender'] ?? ''}
               options={[
                 { value: 'none', label: '선택안함' },
                 { value: 'male', label: '남성' },
@@ -200,7 +257,11 @@ export default function Signup() {
                 className="w-4 h-4 text-blue-600 border-gray-300 rounded"
               />
               <span className="text-sm">이용약관 동의 *</span>
-              <button type="button" onClick={() => setOpenModal('terms')} className="text-blue-600 text-sm ml-2 hover:underline">
+              <button
+                type="button"
+                onClick={() => setOpenModal('terms')}
+                className="text-blue-600 text-sm ml-2 hover:underline"
+              >
                 보기
               </button>
             </label>
@@ -213,7 +274,11 @@ export default function Signup() {
                 className="w-4 h-4 text-blue-600 border-gray-300 rounded"
               />
               <span className="text-sm">개인정보 처리방침 동의 *</span>
-              <button type="button" onClick={() => setOpenModal('privacy')} className="text-blue-600 text-sm ml-2 hover:underline">
+              <button
+                type="button"
+                onClick={() => setOpenModal('privacy')}
+                className="text-blue-600 text-sm ml-2 hover:underline"
+              >
                 보기
               </button>
             </label>
@@ -260,7 +325,11 @@ export default function Signup() {
       </div>
 
       {/* 약관 모달 */}
-      <TermsModal type={openModal ?? 'terms'} isOpen={openModal !== null} onClose={() => setOpenModal(null)} />
+      <TermsModal
+        type={openModal ?? 'terms'}
+        isOpen={openModal !== null}
+        onClose={() => setOpenModal(null)}
+      />
     </div>
   );
 }

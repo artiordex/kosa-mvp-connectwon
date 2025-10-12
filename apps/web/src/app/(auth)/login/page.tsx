@@ -1,3 +1,9 @@
+/**
+ * Description : page.tsx - 📌 로그인 페이지 (Login 컴포넌트 엔트리)
+ * Author : Shiwoo Min
+ * Date : 2025-10-10
+ */
+
 'use client';
 
 import Login from './Login';

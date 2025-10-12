@@ -165,6 +165,7 @@
     "firebase": "^12.3.0",
     "framer-motion": "^12.23.15",
     "react-color": "^2.19.3",
+    "react-datepicker": "^8.7.0",
     "react-dropzone": "^14.3.8",
     "react-hook-form": "^7.62.0",
     "zustand": "^4.4.2"

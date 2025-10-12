@@ -28,11 +28,6 @@ export default [
       parserOptions: {
         // 모노레포 경로 문제 대응 (Docker/Firebase 빌드 환경)
         tsconfigRootDir: process.cwd(),
-        project: [
-          './tsconfig.json',
-          './apps/*/tsconfig.json',
-          './packages/*/tsconfig.json',
-        ],
         ecmaFeatures: {
           jsx: true,
         },
@@ -133,6 +128,8 @@ export default [
           packageDir: [
             '.',
             '../../',
+            './apps/web',
+            './apps/admin', 
           ],
         },
       ],
@@ -263,6 +260,9 @@ export default [
   // JavaScript/Config 파일 설정
   {
     files: ['**/*.js', '**/*.cjs', '**/*.mjs'],
+    languageOptions: {
+      parser: null,
+    },
     rules: {
       '@typescript-eslint/no-var-requires': 'off',
     },

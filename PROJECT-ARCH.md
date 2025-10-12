@@ -1,4 +1,3 @@
-
 ```
 kosa-mvp-connectwon
 ├─ .changeset
@@ -42,9 +41,13 @@ kosa-mvp-connectwon
 │  │  │  │  ├─ favicon.ico
 │  │  │  │  └─ site.webmanifest
 │  │  │  └─ images
+│  │  │     ├─ avatar.png
 │  │  │     ├─ footer_logo.png
 │  │  │     ├─ header_logo.png
-│  │  │     └─ logo.png
+│  │  │     ├─ logo.png
+│  │  │     ├─ venue_sp_1.jpg
+│  │  │     ├─ venue_sp_2.jpg
+│  │  │     └─ venue_sp_3.jpg
 │  │  ├─ server.ts
 │  │  ├─ src
 │  │  │  ├─ app
@@ -52,55 +55,100 @@ kosa-mvp-connectwon
 │  │  │  │  │  └─ login
 │  │  │  │  │     ├─ page.tsx
 │  │  │  │  │     └─ [id]
-│  │  │  │  │        └─ edit
-│  │  │  │  │           └─ page.tsx
+│  │  │  │  ├─ (protected)
+│  │  │  │  │  ├─ board
+│  │  │  │  │  │  ├─ BoardManagement.tsx
+│  │  │  │  │  │  ├─ ContentCreation.tsx
+│  │  │  │  │  │  └─ page.tsx
+│  │  │  │  │  ├─ dashboard
+│  │  │  │  │  │  ├─ AiDashboard.tsx
+│  │  │  │  │  │  ├─ AnalyticsDashboard.tsx
+│  │  │  │  │  │  └─ page.tsx
+│  │  │  │  │  ├─ facilities
+│  │  │  │  │  │  ├─ equipments
+│  │  │  │  │  │  │  ├─ add
+│  │  │  │  │  │  │  │  ├─ EquipmentAddForm.tsx
+│  │  │  │  │  │  │  │  └─ page.tsx
+│  │  │  │  │  │  │  ├─ Equipment.tsx
+│  │  │  │  │  │  │  ├─ page.tsx
+│  │  │  │  │  │  │  └─ [id]
+│  │  │  │  │  │  │     ├─ edit
+│  │  │  │  │  │  │     │  ├─ EquipmentEditForm.tsx
+│  │  │  │  │  │  │     │  └─ page.tsx
+│  │  │  │  │  │  │     └─ EquipmentDetail.tsx
+│  │  │  │  │  │  ├─ page.tsx
+│  │  │  │  │  │  ├─ rooms
+│  │  │  │  │  │  │  ├─ add
+│  │  │  │  │  │  │  │  ├─ page.tsx
+│  │  │  │  │  │  │  │  └─ RoomAddForm.tsx
+│  │  │  │  │  │  │  ├─ page.tsx
+│  │  │  │  │  │  │  ├─ Room.tsx
+│  │  │  │  │  │  │  └─ [id]
+│  │  │  │  │  │  │     ├─ edit
+│  │  │  │  │  │  │     │  ├─ page.tsx
+│  │  │  │  │  │  │     │  └─ RoomEditForm.tsx
+│  │  │  │  │  │  │     ├─ page.tsx
+│  │  │  │  │  │  │     └─ RoomDetail.tsx
+│  │  │  │  │  │  └─ venues
+│  │  │  │  │  │     ├─ add
+│  │  │  │  │  │     │  ├─ page.tsx
+│  │  │  │  │  │     │  └─ VenueAddForm.tsx
+│  │  │  │  │  │     ├─ page.tsx
+│  │  │  │  │  │     ├─ Venue.tsx
+│  │  │  │  │  │     └─ [id]
+│  │  │  │  │  │        ├─ edit
+│  │  │  │  │  │        │  ├─ page.tsx
+│  │  │  │  │  │        │  └─ VenueEditForm.tsx
+│  │  │  │  │  │        ├─ equipments
+│  │  │  │  │  │        ├─ page.tsx
+│  │  │  │  │  │        ├─ rooms
+│  │  │  │  │  │        └─ VenueDetail.tsx
+│  │  │  │  │  ├─ feedback
+│  │  │  │  │  │  └─ Feedback.tsx
+│  │  │  │  │  ├─ help
+│  │  │  │  │  │  └─ page.tsx
+│  │  │  │  │  ├─ profile
+│  │  │  │  │  │  ├─ edit
+│  │  │  │  │  │  │  └─ page.tsx
+│  │  │  │  │  │  └─ page.tsx
+│  │  │  │  │  ├─ programs
+│  │  │  │  │  │  ├─ add
+│  │  │  │  │  │  │  ├─ page.tsx
+│  │  │  │  │  │  │  └─ Post.tsx
+│  │  │  │  │  │  ├─ OfflineProgram.tsx
+│  │  │  │  │  │  ├─ OnlineProgram.tsx
+│  │  │  │  │  │  ├─ page.tsx
+│  │  │  │  │  │  └─ [id]
+│  │  │  │  │  │     ├─ edit
+│  │  │  │  │  │     │  └─ page.tsx
+│  │  │  │  │  │     └─ sessions
+│  │  │  │  │  │        └─ page.tsx
+│  │  │  │  │  ├─ reservations
+│  │  │  │  │  │  ├─ page.tsx
+│  │  │  │  │  │  ├─ ProgramReservation.tsx
+│  │  │  │  │  │  ├─ Reservation.tsx
+│  │  │  │  │  │  ├─ Scheduler.tsx
+│  │  │  │  │  │  └─ SpaceReservation.tsx
+│  │  │  │  │  ├─ settings
+│  │  │  │  │  │  ├─ Contact.tsx
+│  │  │  │  │  │  └─ page.tsx
+│  │  │  │  │  └─ users
+│  │  │  │  │     ├─ page.tsx
+│  │  │  │  │     └─ UserSettings.tsx
+│  │  │  │  ├─ (public)
+│  │  │  │  │  └─ page.tsx
 │  │  │  │  ├─ api
 │  │  │  │  │  ├─ auth
 │  │  │  │  │  ├─ proxy
 │  │  │  │  │  │  └─ [...path]
 │  │  │  │  │  └─ webhooks
 │  │  │  │  │     └─ stripe
-│  │  │  │  ├─ content
-│  │  │  │  │  └─ AdminContent.tsx
-│  │  │  │  ├─ dashboard
-│  │  │  │  │  ├─ AiDashboard.tsx
-│  │  │  │  │  └─ AnalyticsDashboard.tsx
 │  │  │  │  ├─ error.tsx
-│  │  │  │  ├─ feedback
-│  │  │  │  │  └─ Feedback.tsx
 │  │  │  │  ├─ globals.css
-│  │  │  │  ├─ help
-│  │  │  │  │  └─ page.tsx
 │  │  │  │  ├─ loading.tsx
 │  │  │  │  ├─ not-found.tsx
-│  │  │  │  ├─ page.tsx
-│  │  │  │  ├─ programs
-│  │  │  │  │  ├─ add
-│  │  │  │  │  │  └─ page.tsx
-│  │  │  │  │  ├─ page.tsx
-│  │  │  │  │  ├─ ProgramAdd.tsx
-│  │  │  │  │  └─ [id]
-│  │  │  │  │     ├─ edit
-│  │  │  │  │     │  └─ page.tsx
-│  │  │  │  │     └─ sessions
-│  │  │  │  │        └─ page.tsx
-│  │  │  │  ├─ reservation
-│  │  │  │  │  └─ Reservation.tsx
-│  │  │  │  ├─ settings
-│  │  │  │  │  ├─ Contact.tsx
-│  │  │  │  │  └─ page.tsx
-│  │  │  │  ├─ test-firebase
-│  │  │  │  │  └─ page.tsx
-│  │  │  │  ├─ users
-│  │  │  │  │  ├─ page.tsx
-│  │  │  │  │  └─ UserSettings.tsx
-│  │  │  │  └─ venues
-│  │  │  │     ├─ page.tsx
-│  │  │  │     ├─ RoomSettings.tsx
-│  │  │  │     └─ [id]
-│  │  │  │        └─ rooms
-│  │  │  │           └─ [roomId]
-│  │  │  │              └─ page.tsx
+│  │  │  │  └─ test-firebase
+│  │  │  │     └─ page.tsx
 │  │  │  ├─ components
 │  │  │  │  ├─ ai
 │  │  │  │  │  ├─ AutomationTasks.tsx
@@ -116,25 +164,30 @@ kosa-mvp-connectwon
 │  │  │  │  │  ├─ SlackIntegration.tsx
 │  │  │  │  │  ├─ WebhookManager.tsx
 │  │  │  │  │  └─ WorkflowAutomation.tsx
+│  │  │  │  ├─ Pagination.tsx
 │  │  │  │  ├─ PeriodFilter.tsx
 │  │  │  │  ├─ RealTimeStats.tsx
 │  │  │  │  ├─ RoomUsagePrediction.tsx
 │  │  │  │  ├─ Sidebar.tsx
 │  │  │  │  └─ WeeklyTrends.tsx
 │  │  │  ├─ data
+│  │  │  │  ├─ comments.json
 │  │  │  │  ├─ content.json
 │  │  │  │  ├─ devices.json
+│  │  │  │  ├─ equipment-with-venues.json
+│  │  │  │  ├─ equipmentRentals.json
 │  │  │  │  ├─ features.json
 │  │  │  │  ├─ hero.json
 │  │  │  │  ├─ insights.json
+│  │  │  │  ├─ inventories.json
 │  │  │  │  ├─ menu.json
 │  │  │  │  ├─ partners.json
+│  │  │  │  ├─ posts.json
 │  │  │  │  ├─ programs.json
+│  │  │  │  ├─ rooms-by-venue.json
 │  │  │  │  ├─ rooms.json
 │  │  │  │  ├─ users.json
 │  │  │  │  └─ venues.json
-│  │  │  ├─ pages
-│  │  │  │  └─ _document.tsx
 │  │  │  └─ providers
 │  │  │     └─ RootProvider.tsx
 │  │  └─ tsconfig.json
@@ -236,9 +289,10 @@ kosa-mvp-connectwon
 │  │  │  │  ├─ favicon.ico
 │  │  │  │  └─ site.webmanifest
 │  │  │  ├─ images
-│  │  │  │  ├─ avatar.jpg
+│  │  │  │  ├─ avatar.png
 │  │  │  │  ├─ creator_hero_bg.jpg
 │  │  │  │  ├─ cta_sec_bk.jpg
+│  │  │  │  ├─ facilities_hero_bg.jpg
 │  │  │  │  ├─ feature_sp_1.png
 │  │  │  │  ├─ feature_sp_2.png
 │  │  │  │  ├─ feature_sp_3.png
@@ -248,16 +302,12 @@ kosa-mvp-connectwon
 │  │  │  │  ├─ hero_sp_2.png
 │  │  │  │  ├─ hero_sp_3.png
 │  │  │  │  ├─ logo.png
-│  │  │  │  ├─ program_sp_1.png
-│  │  │  │  ├─ program_sp_2.png
-│  │  │  │  ├─ program_sp_3.png
-│  │  │  │  ├─ program_sp_4.png
+│  │  │  │  ├─ program_hero_bg.png
 │  │  │  │  ├─ room_sp_1.jpg
 │  │  │  │  ├─ room_sp_2.jpg
 │  │  │  │  ├─ room_sp_3.jpg
 │  │  │  │  ├─ room_sp_4.jpg
 │  │  │  │  ├─ social_hero_bk.jpg
-│  │  │  │  ├─ venues_hero_bg.jpg
 │  │  │  │  ├─ venue_sp_1.jpg
 │  │  │  │  ├─ venue_sp_2.jpg
 │  │  │  │  └─ venue_sp_3.jpg
@@ -271,7 +321,7 @@ kosa-mvp-connectwon
 │  │  │  │  │  ├─ callback
 │  │  │  │  │  │  └─ page.tsx
 │  │  │  │  │  ├─ login
-│  │  │  │  │  │  ├─ login.tsx
+│  │  │  │  │  │  ├─ Login.tsx
 │  │  │  │  │  │  ├─ page.tsx
 │  │  │  │  │  │  └─ SSO.tsx
 │  │  │  │  │  ├─ onboarding
@@ -280,6 +330,25 @@ kosa-mvp-connectwon
 │  │  │  │  │  └─ signup
 │  │  │  │  │     ├─ page.tsx
 │  │  │  │  │     └─ Signup.tsx
+│  │  │  │  ├─ (protected)
+│  │  │  │  │  └─ mypage
+│  │  │  │  │     ├─ MyPageMainContent.tsx
+│  │  │  │  │     ├─ MyPageSidebar.tsx
+│  │  │  │  │     ├─ notifications
+│  │  │  │  │     │  └─ page.tsx
+│  │  │  │  │     ├─ page.tsx
+│  │  │  │  │     ├─ points
+│  │  │  │  │     │  └─ page.tsx
+│  │  │  │  │     ├─ profile
+│  │  │  │  │     │  └─ page.tsx
+│  │  │  │  │     ├─ programs
+│  │  │  │  │     │  └─ page.tsx
+│  │  │  │  │     ├─ reservations
+│  │  │  │  │     │  └─ page.tsx
+│  │  │  │  │     ├─ reviews
+│  │  │  │  │     │  └─ page.tsx
+│  │  │  │  │     └─ security
+│  │  │  │  │        └─ page.tsx
 │  │  │  │  ├─ api
 │  │  │  │  │  ├─ auth
 │  │  │  │  │  ├─ proxy
@@ -294,9 +363,34 @@ kosa-mvp-connectwon
 │  │  │  │  │  ├─ CreatorHero.tsx
 │  │  │  │  │  ├─ CreatorSection.tsx
 │  │  │  │  │  └─ page.tsx
-│  │  │  │  ├─ devices
-│  │  │  │  │  └─ page.tsx
 │  │  │  │  ├─ error.tsx
+│  │  │  │  ├─ facilities
+│  │  │  │  │  ├─ equipments
+│  │  │  │  │  │  ├─ Equipment.tsx
+│  │  │  │  │  │  └─ page.tsx
+│  │  │  │  │  ├─ FacilitiesHero.tsx
+│  │  │  │  │  ├─ FacilitiesSelector.tsx
+│  │  │  │  │  ├─ page.tsx
+│  │  │  │  │  ├─ reservations
+│  │  │  │  │  │  ├─ complete
+│  │  │  │  │  │  │  └─ page.tsx
+│  │  │  │  │  │  ├─ EquipmentSelection.tsx
+│  │  │  │  │  │  ├─ page.tsx
+│  │  │  │  │  │  ├─ ReservationFlow.tsx
+│  │  │  │  │  │  ├─ ReservationSidebar.tsx
+│  │  │  │  │  │  ├─ RoomDetail.tsx
+│  │  │  │  │  │  ├─ RoomSelection.tsx
+│  │  │  │  │  │  ├─ TimeSelection.tsx
+│  │  │  │  │  │  └─ VenueSelection.tsx
+│  │  │  │  │  └─ venues
+│  │  │  │  │     ├─ page.tsx
+│  │  │  │  │     └─ [id]
+│  │  │  │  │        ├─ page.tsx
+│  │  │  │  │        ├─ rooms
+│  │  │  │  │        │  └─ [roomId]
+│  │  │  │  │        │     ├─ page.tsx
+│  │  │  │  │        │     └─ RoomDetail.tsx
+│  │  │  │  │        └─ VenueDetail.tsx
 │  │  │  │  ├─ globals.css
 │  │  │  │  ├─ insights
 │  │  │  │  │  ├─ InsightsContent.tsx
@@ -306,62 +400,27 @@ kosa-mvp-connectwon
 │  │  │  │  │     ├─ InsightDetail.tsx
 │  │  │  │  │     └─ page.tsx
 │  │  │  │  ├─ loading.tsx
-│  │  │  │  ├─ mypage
-│  │  │  │  │  ├─ page.tsx
-│  │  │  │  │  ├─ points
-│  │  │  │  │  │  └─ page.tsx
-│  │  │  │  │  ├─ profile
-│  │  │  │  │  │  └─ page.tsx
-│  │  │  │  │  └─ reservation
-│  │  │  │  │     └─ page.tsx
 │  │  │  │  ├─ not-found.tsx
 │  │  │  │  ├─ page.tsx
 │  │  │  │  ├─ programs
+│  │  │  │  │  ├─ create
+│  │  │  │  │  │  ├─ page.tsx
+│  │  │  │  │  │  └─ ProgramCreate.tsx
 │  │  │  │  │  ├─ page.tsx
+│  │  │  │  │  ├─ Program.tsx
+│  │  │  │  │  ├─ ProgramHero.tsx
+│  │  │  │  │  ├─ ProgramProposalSection.tsx
 │  │  │  │  │  └─ [id]
 │  │  │  │  │     ├─ page.tsx
 │  │  │  │  │     └─ ProgramDetail.tsx
-│  │  │  │  ├─ reservation
-│  │  │  │  │  ├─ new
-│  │  │  │  │  │  └─ page.tsx
-│  │  │  │  │  ├─ success
-│  │  │  │  │  │  └─ page.tsx
-│  │  │  │  │  └─ [id]
-│  │  │  │  │     └─ page.tsx
-│  │  │  │  ├─ social-value
-│  │  │  │  │  ├─ CTASection.tsx
-│  │  │  │  │  ├─ EquipmentSpaceSection.tsx
-│  │  │  │  │  ├─ ImpactAreas.tsx
-│  │  │  │  │  ├─ page.tsx
-│  │  │  │  │  ├─ PartnershipsSection.tsx
-│  │  │  │  │  ├─ ProgramsSection.tsx
-│  │  │  │  │  ├─ SocialValueHero.tsx
-│  │  │  │  │  ├─ StorySection.tsx
-│  │  │  │  │  └─ ValueIntroduction.tsx
-│  │  │  │  ├─ users
-│  │  │  │  │  └─ page.tsx
-│  │  │  │  └─ venues
-│  │  │  │     ├─ gangnam
-│  │  │  │     │  ├─ page.tsx
-│  │  │  │     │  └─ VenueDetail.tsx
-│  │  │  │     ├─ gwangmyeong
-│  │  │  │     │  ├─ CenterDetail.tsx
-│  │  │  │     │  └─ page.tsx
-│  │  │  │     ├─ mapo
-│  │  │  │     │  ├─ CenterDetail.tsx
-│  │  │  │     │  └─ page.tsx
+│  │  │  │  └─ social-value
+│  │  │  │     ├─ ImpactAreas.tsx
 │  │  │  │     ├─ page.tsx
-│  │  │  │     ├─ rooms
-│  │  │  │     │  ├─ floor-plan
-│  │  │  │     │  │  └─ page.tsx
-│  │  │  │     │  ├─ page.tsx
-│  │  │  │     │  └─ [id]
-│  │  │  │     │     └─ booking
-│  │  │  │     │        └─ page.tsx
-│  │  │  │     ├─ VenueHeroSection.tsx
-│  │  │  │     ├─ VenueListSection.tsx
-│  │  │  │     └─ [id]
-│  │  │  │        └─ page.tsx
+│  │  │  │     ├─ PartnershipsSection.tsx
+│  │  │  │     ├─ ProgramsSection.tsx
+│  │  │  │     ├─ SocialValueHero.tsx
+│  │  │  │     ├─ StorySection.tsx
+│  │  │  │     └─ ValueIntroduction.tsx
 │  │  │  ├─ components
 │  │  │  │  ├─ ai
 │  │  │  │  │  ├─ AIChat.tsx
@@ -382,6 +441,7 @@ kosa-mvp-connectwon
 │  │  │  │  │  ├─ QuickMenuSection.tsx
 │  │  │  │  │  └─ RoomSection.tsx
 │  │  │  │  ├─ Input.tsx
+│  │  │  │  ├─ Pagination.tsx
 │  │  │  │  ├─ programs
 │  │  │  │  │  ├─ ProgramCard.tsx
 │  │  │  │  │  ├─ ProgramList.tsx
@@ -389,13 +449,20 @@ kosa-mvp-connectwon
 │  │  │  │  ├─ QuickFab.tsx
 │  │  │  │  └─ TermsModal.tsx
 │  │  │  ├─ data
+│  │  │  │  ├─ ai.json
 │  │  │  │  ├─ creator.json
 │  │  │  │  ├─ devices.json
+│  │  │  │  ├─ equipment-with-venues.json
+│  │  │  │  ├─ equipmentRentals.json
 │  │  │  │  ├─ features.json
 │  │  │  │  ├─ hero.json
 │  │  │  │  ├─ insights.json
+│  │  │  │  ├─ mypage-with-user.json
 │  │  │  │  ├─ partners.json
+│  │  │  │  ├─ posts.json
+│  │  │  │  ├─ program-details.json
 │  │  │  │  ├─ programs.json
+│  │  │  │  ├─ rooms-by-venue.json
 │  │  │  │  ├─ rooms.json
 │  │  │  │  └─ venues.json
 │  │  │  ├─ global.d.ts
@@ -403,8 +470,6 @@ kosa-mvp-connectwon
 │  │  │  │  ├─ email.ts
 │  │  │  │  └─ huggingface.ts
 │  │  │  ├─ next-env.d.ts
-│  │  │  ├─ pages
-│  │  │  │  └─ _document.tsx
 │  │  │  ├─ providers
 │  │  │  │  └─ RootProvider.tsx
 │  │  │  ├─ web-types.d.ts
@@ -545,6 +610,7 @@ kosa-mvp-connectwon
 │  │  │  │  │  │  ├─ interactions.json
 │  │  │  │  │  │  ├─ recommendations.json
 │  │  │  │  │  │  └─ sentiments.json
+│  │  │  │  │  ├─ index.ts
 │  │  │  │  │  ├─ memberships
 │  │  │  │  │  │  ├─ comparisons.json
 │  │  │  │  │  │  ├─ plans.json
@@ -890,6 +956,14 @@ kosa-mvp-connectwon
 ├─ renovate.json
 ├─ setup-structure.ps1
 ├─ tmp
+│  └─ packages
+│     ├─ api-contract
+│     ├─ configs
+│     ├─ core
+│     ├─ database
+│     ├─ logger
+│     ├─ sdk
+│     └─ ui
 ├─ tools
 │  ├─ services
 │  │  ├─ postbuild.ts

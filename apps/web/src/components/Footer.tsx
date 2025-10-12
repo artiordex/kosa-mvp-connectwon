@@ -1,3 +1,9 @@
+/**
+ * Description : Footer.ts - 📌 푸터 컴포넌트
+ * Author : Shiwoo Min
+ * Date : 2025-10-10
+ */
+
 'use client';
 
 import { useState } from 'react';

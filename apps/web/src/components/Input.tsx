@@ -1,12 +1,14 @@
+/**
+ * Description : Input.tsx - 📌 입력 필드 컴포넌트 (텍스트, 비밀번호, 이메일 등)
+ * Author : Shiwoo Min
+ * Date : 2025-10-10
+ */
+
 'use client';
 
 import { ReactNode } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-
-
-
-
 
 type InputKind = 'text' | 'password' | 'email' | 'tel' | 'textarea' | 'select' | 'date';
 

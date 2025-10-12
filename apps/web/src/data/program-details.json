@@ -1,0 +1,630 @@
+{
+  "programs": {
+    "1": {
+      "id": "1",
+      "title": "2025 제5회 투자상담회 참가기업 모집",
+      "category": "investment",
+      "location": "온라인",
+      "centerInfo": {
+        "name": "온라인",
+        "address": "온라인으로 진행됩니다",
+        "phone": "1544-0000",
+        "room": "Zoom 미팅룸"
+      },
+      "price": 0,
+      "rating": 4.8,
+      "reviewCount": 3,
+      "participants": 28,
+      "maxParticipants": 50,
+      "duration": "120분",
+      "level": "전체",
+      "instructor": {
+        "name": "김투자",
+        "bio": "20년 경력의 벤처캐피탈 전문가로, 다수의 스타트업 투자 및 육성 경험을 보유하고 있습니다. 투자 유치 전략과 IR 피칭 노하우를 실무 중심으로 전달합니다.",
+        "experience": "20년",
+        "certification": "공인회계사, 투자자문사",
+        "specialty": ["벤처투자", "IR 전략", "사업계획서 작성", "투자유치"]
+      },
+      "description": "스타트업과 투자자를 연결하는 온라인 투자상담회입니다. 1:1 맞춤형 상담을 통해 투자 유치 기회를 얻을 수 있습니다.",
+      "fullDescription": "2025년 제5회 투자상담회는 혁신적인 아이디어와 기술을 보유한 스타트업과 벤처캐피탈, 엔젤투자자를 연결하는 온라인 행사입니다.\n\n참가 기업은 사전 제출한 사업계획서를 바탕으로 관심 있는 투자자와 1:1 화상 미팅을 진행하게 됩니다. 각 미팅은 30분간 진행되며, 하루 최대 5개의 투자사와 상담할 수 있는 기회가 제공됩니다.",
+      "objectives": [
+        "투자자 관점 이해",
+        "효과적인 IR 덱 작성",
+        "밸류에이션 협상 전략",
+        "투자 유치 프로세스 마스터"
+      ],
+      "curriculum": [],
+      "whatYouLearn": [
+        "투자자가 보는 핵심 지표",
+        "IR 피칭 덱 작성법",
+        "밸류에이션 산정 방법",
+        "투자 계약서 이해",
+        "성공적인 투자 유치 사례"
+      ],
+      "requirements": [
+        "스타트업 운영 경험 또는 예비 창업자",
+        "사업계획서 초안 준비",
+        "노트북 지참"
+      ],
+      "providedItems": [
+        "IR 덱 템플릿",
+        "투자 계약서 샘플",
+        "세미나 자료집",
+        "1:1 상담 기회 (30분)"
+      ],
+      "sessions": [
+        { "id": 1, "date": "2025-10-18", "time": "14:00-17:00", "spots": 2, "status": "available" }
+      ],
+      "images": [
+        "images/program_of_2.png"
+      ],
+      "reviews": [
+        {"id": 1, "name": "스타트업A", "rating": 5, "date": "2025-10-11", "comment": "실제 투자자와 직접 상담할 수 있어 큰 도움이 됐습니다."},
+        {"id": 2, "name": "창업준비생", "rating": 4, "date": "2025-10-10", "comment": "IR 피칭 노하우를 체계적으로 배울 수 있었습니다."},
+        {"id": 3, "name": "TechSeed", "rating": 5, "date": "2025-10-09", "comment": "멘토링이 실무 중심으로 구성되어 있어 유익했습니다."}
+      ]
+    },
+    "8": {
+      "id": "8",
+      "title": "React 실무 프로젝트 교육",
+      "category": "education",
+      "location": "ConnectWon 강남지점",
+      "centerInfo": {
+        "name": "ConnectWon 강남지점",
+        "address": "서울시 강남구 테헤란로 123",
+        "phone": "02-1234-5678",
+        "room": "SW개발실 A"
+      },
+      "price": 200000,
+      "rating": 4.9,
+      "reviewCount": 4,
+      "participants": 20,
+      "maxParticipants": 20,
+      "duration": "180분 x 10회",
+      "level": "중급-고급",
+      "instructor": {
+        "name": "박개발",
+        "bio": "토스, 당근마켓에서 프론트엔드 개발자로 근무했으며, 현재는 프리랜서 개발자이자 강사로 활동 중입니다.",
+        "experience": "8년",
+        "certification": "React 공인 전문가",
+        "specialty": ["React", "Next.js", "TypeScript", "상태관리"]
+      },
+      "description": "React를 활용한 실전 웹 애플리케이션 개발 교육입니다. 포트폴리오 프로젝트 완성까지.",
+      "fullDescription": "이 과정은 React의 기초부터 고급 개념까지, 실무에서 바로 사용할 수 있는 기술을 체계적으로 학습합니다.\n\n실제 서비스 수준의 프로젝트를 직접 만들어보며, 포트폴리오로 활용할 수 있는 결과물을 완성합니다.",
+      "objectives": [
+        "React 핵심 개념 마스터",
+        "실무 프로젝트 경험",
+        "포트폴리오 구축",
+        "취업 준비"
+      ],
+      "curriculum": [],
+      "whatYouLearn": [
+        "React Hooks",
+        "상태관리 (Redux, Zustand)",
+        "Next.js 프레임워크",
+        "TypeScript",
+        "API 연동 및 데이터 페칭"
+      ],
+      "requirements": [
+        "JavaScript ES6+ 필수",
+        "HTML/CSS 기초",
+        "개인 노트북 필수",
+        "Git/GitHub 계정"
+      ],
+      "providedItems": [
+        "강의 자료",
+        "프로젝트 소스 코드",
+        "수료증",
+        "취업 컨설팅 (1회)"
+      ],
+      "sessions": [
+        { "id": 1, "date": "2025-10-20", "time": "19:00-22:00", "spots": 0, "status": "closed" }
+      ],
+      "images": [
+        "images/program_of_3.png"
+      ],
+      "reviews": [
+        {"id": 1, "name": "신입개발자", "rating": 5, "date": "2025-09-10", "comment": "이 강의 덕분에 포트폴리오 완성하고 취업했습니다!"},
+        {"id": 2, "name": "코드러버", "rating": 5, "date": "2025-09-15", "comment": "실무에서 바로 쓸 수 있는 내용이 많아요."},
+        {"id": 3, "name": "DevDream", "rating": 4, "date": "2025-09-16", "comment": "난이도는 있지만 성장에 큰 도움이 됩니다."},
+        {"id": 4, "name": "FE초보", "rating": 5, "date": "2025-09-18", "comment": "강사님이 정말 친절하고 설명이 명확했어요."}
+      ]
+    },
+    "9": {
+      "id": "9",
+      "title": "비즈니스 영어 집중 세션",
+      "category": "training",
+      "location": "ConnectWon 강남지점",
+      "centerInfo": {
+        "name": "ConnectWon 강남지점",
+        "address": "서울시 강남구 테헤란로 123",
+        "phone": "02-1234-5678",
+        "room": "중회의실 A"
+      },
+      "price": 120000,
+      "rating": 4.7,
+      "reviewCount": 3,
+      "participants": 10,
+      "maxParticipants": 12,
+      "duration": "120분 x 6회",
+      "level": "중급",
+      "instructor": {
+        "name": "John Smith",
+        "bio": "미국 출신의 비즈니스 영어 전문 강사로, 10년 이상 한국에서 기업 임직원 대상 영어 교육을 진행해왔습니다.",
+        "experience": "10년",
+        "certification": "TESOL, TEFL 자격증",
+        "specialty": ["비즈니스 영어", "프레젠테이션", "이메일 작성", "회의 진행"]
+      },
+      "description": "실무에서 바로 사용 가능한 비즈니스 영어 스킬을 집중적으로 학습하는 프로그램입니다.",
+      "fullDescription": "글로벌 비즈니스 환경에서 필수적인 영어 커뮤니케이션 스킬을 6주간 집중적으로 향상시킵니다.\n\n이메일 작성, 전화 응대, 프레젠테이션, 회의 진행 등 실무 상황별 영어 표현과 스킬을 학습합니다.",
+      "objectives": [
+        "비즈니스 영어 의사소통 능력 향상",
+        "실무 상황별 영어 표현 습득",
+        "자신감 있는 영어 프레젠테이션",
+        "글로벌 비즈니스 매너 이해"
+      ],
+      "curriculum": [],
+      "whatYouLearn": [
+        "비즈니스 이메일 작성",
+        "전화 영어 및 화상회의",
+        "프레젠테이션 영어",
+        "협상 및 미팅 영어",
+        "네트워킹 영어"
+      ],
+      "requirements": [
+        "중급 이상 영어 실력 (TOEIC 700+)",
+        "적극적인 참여 의지",
+        "과제 수행 필수"
+      ],
+      "providedItems": [
+        "교재 및 워크북",
+        "비즈니스 영어 표현집",
+        "녹음 피드백",
+        "수료증"
+      ],
+      "sessions": [
+        { "id": 1, "date": "2025-10-25", "time": "19:00-21:00", "spots": 2, "status": "available" }
+      ],
+      "images": [
+        "images/program_of_4.png"
+      ],
+      "reviews": []
+    },
+    "10": {
+      "id": "10",
+      "title": "데이터 시각화 실무 교육",
+      "category": "education",
+      "location": "ConnectWon 광명지점",
+      "centerInfo": {
+        "name": "ConnectWon 광명지점",
+        "address": "경기도 광명시 광명로 789",
+        "phone": "02-3456-7890",
+        "room": "교육실 A"
+      },
+      "price": 100000,
+      "rating": 4.6,
+      "reviewCount": 54,
+      "participants": 18,
+      "maxParticipants": 25,
+      "duration": "180분 x 4회",
+      "level": "초급-중급",
+      "instructor": {
+        "name": "이데이터",
+        "bio": "네이버 데이터 분석팀 출신으로, 현재는 데이터 컨설턴트로 활동하며 기업 대상 데이터 시각화 교육을 진행하고 있습니다.",
+        "experience": "7년",
+        "certification": "Tableau 공인 전문가",
+        "specialty": ["데이터 시각화", "Tableau", "Power BI", "데이터 분석"]
+      },
+      "description": "Tableau, Power BI를 활용한 실전 데이터 시각화 기법을 배우는 교육입니다.",
+      "fullDescription": "데이터를 효과적으로 전달하는 시각화 기법을 학습하고, Tableau와 Power BI 도구를 실무에 바로 적용할 수 있도록 실습 중심으로 진행됩니다.",
+      "objectives": [
+        "데이터 시각화 원칙 이해",
+        "Tableau 실무 활용",
+        "Power BI 대시보드 제작",
+        "인사이트 도출 및 스토리텔링"
+      ],
+      "curriculum": [],
+      "whatYouLearn": [
+        "데이터 시각화 기본 원칙",
+        "Tableau 기초 및 고급",
+        "Power BI 대시보드",
+        "차트 선택 및 디자인",
+        "데이터 스토리텔링"
+      ],
+      "requirements": [
+        "Excel 기본 사용 가능",
+        "개인 노트북 필수",
+        "Tableau Public 설치 (무료)"
+      ],
+      "providedItems": [
+        "실습 데이터셋",
+        "강의 자료",
+        "Tableau 템플릿",
+        "수료증"
+      ],
+      "sessions": [
+        { "id": 1, "date": "2025-10-28", "time": "19:00-22:00", "spots": 7, "status": "available" }
+      ],
+      "images": [
+        "images/program_of_5.png"
+      ],
+    "reviews": [
+      {"id": 1, "name": "회사원A", "rating": 5, "date": "2025-10-01", "comment": "업무에 바로 쓸 수 있는 표현을 배웠어요."},
+      {"id": 2, "name": "마케터B", "rating": 4, "date": "2025-10-03", "comment": "비즈니스 상황에 맞는 영어 표현이 유용했습니다."},
+      {"id": 3, "name": "HR담당자", "rating": 5, "date": "2025-10-05", "comment": "강사님의 피드백이 세밀하고 실용적이었습니다."}
+    ]
+    },
+    "11": {
+      "id": "11",
+      "title": "리더십 향상 워크샵",
+      "category": "workshop",
+      "location": "ConnectWon 마포지점",
+      "centerInfo": {
+        "name": "ConnectWon 마포지점",
+        "address": "서울시 마포구 월드컵북로 456",
+        "phone": "02-2345-6789",
+        "room": "회의실"
+      },
+      "price": 90000,
+      "rating": 4.8,
+      "reviewCount": 6,
+      "participants": 8,
+      "maxParticipants": 10,
+      "duration": "240분",
+      "level": "중급",
+      "instructor": {
+        "name": "최리더",
+        "bio": "글로벌 기업 임원 출신으로, 현재는 리더십 코치이자 조직 문화 컨설턴트로 활동하고 있습니다.",
+        "experience": "15년",
+        "certification": "ICC 공인 코치",
+        "specialty": ["리더십", "팀 빌딩", "조직 문화", "코칭"]
+      },
+      "description": "효과적인 팀 리더십과 조직 관리 스킬을 배우는 집중 워크샵입니다.",
+      "fullDescription": "리더로서 팀을 이끌고, 조직의 성과를 높이는 실질적인 리더십 스킬을 학습합니다.\n\n이론보다는 실습과 롤플레이를 통해 현장에서 바로 적용 가능한 리더십 역량을 키웁니다.",
+      "objectives": [
+        "효과적인 리더십 스타일 발견",
+        "팀 빌딩 및 동기부여",
+        "갈등 관리 및 문제 해결",
+        "성과 관리 및 피드백"
+      ],
+      "curriculum": [],
+      "whatYouLearn": [
+        "리더십 유형 및 스타일",
+        "팀원 동기부여 방법",
+        "효과적인 커뮤니케이션",
+        "갈등 해결 전략",
+        "성과 관리 시스템"
+      ],
+      "requirements": [
+        "팀장 또는 예비 리더",
+        "리더십 향상 의지"
+      ],
+      "providedItems": [
+        "워크샵 교재",
+        "리더십 진단 도구",
+        "액션 플랜 템플릿",
+        "수료증",
+        "다과 제공"
+      ],
+      "sessions": [
+        { "id": 1, "date": "2025-11-01", "time": "10:00-18:00", "spots": 2, "status": "available" }
+      ],
+      "images": [
+        "images/program_of_6.png"
+      ],
+      "reviews": [
+        { "id": 1, "name": "박리더", "rating": 5, "date": "2025-11-02", "comment": "실습 위주라서 바로 현장에서 써먹을 수 있었어요. 팀원들과의 관계가 훨씬 좋아졌습니다." },
+        { "id": 2, "name": "윤코치", "rating": 4, "date": "2025-11-03", "comment": "내용은 좋았는데, 시간이 조금 길었어요. 그래도 얻어가는 게 많았습니다." },
+        { "id": 3, "name": "리더되는중", "rating": 5, "date": "2025-11-04", "comment": "코칭 툴을 직접 써볼 수 있어서 실감났어요. 피드백도 구체적이었습니다." },
+        { "id": 4, "name": "김매니저", "rating": 5, "date": "2025-11-05", "comment": "이론보다 실습이 많아서 지루하지 않았습니다. 다음 과정도 듣고 싶어요!" },
+        { "id": 5, "name": "조팀장", "rating": 4, "date": "2025-11-06", "comment": "팀 빌딩 관련 부분이 특히 유익했어요. 좀 더 다양한 사례가 있었으면 좋겠어요." },
+        { "id": 6, "name": "이신입리더", "rating": 5, "date": "2025-11-07", "comment": "리더십 스타일 진단이 인상적이었어요. 제 강점을 명확히 알게 됐습니다." }
+      ]
+    },
+    "12": {
+      "id": "12",
+      "title": "스타트업 마케팅 세미나",
+      "category": "seminar",
+      "location": "ConnectWon 강남지점",
+      "centerInfo": {
+        "name": "ConnectWon 강남지점",
+        "address": "서울시 강남구 테헤란로 123",
+        "phone": "02-1234-5678",
+        "room": "대회의실"
+      },
+      "price": 60000,
+      "rating": 4.7,
+      "reviewCount": 5,
+      "participants": 22,
+      "maxParticipants": 30,
+      "duration": "180분",
+      "level": "초급-중급",
+      "instructor": {
+        "name": "김마케팅",
+        "bio": "스타트업 마케팅 전문가로, 다수의 스타트업 성장을 이끈 경험이 있습니다.",
+        "experience": "9년",
+        "certification": "구글 애널리틱스 공인 전문가",
+        "specialty": ["그로스 해킹", "퍼포먼스 마케팅", "콘텐츠 마케팅", "SNS 마케팅"]
+      },
+      "description": "적은 예산으로 최대 효과를 내는 스타트업 마케팅 전략을 배웁니다.",
+      "fullDescription": "스타트업이 제한된 예산으로 성장하기 위한 실전 마케팅 전략과 그로스 해킹 기법을 학습합니다.",
+      "objectives": [
+        "저예산 고효율 마케팅 전략",
+        "그로스 해킹 기법 습득",
+        "데이터 기반 의사결정",
+        "채널별 마케팅 전략"
+      ],
+      "curriculum": [],
+      "whatYouLearn": [
+        "그로스 해킹 프레임워크",
+        "퍼포먼스 마케팅",
+        "바이럴 마케팅",
+        "콘텐츠 마케팅 전략",
+        "마케팅 데이터 분석"
+      ],
+      "requirements": [
+        "스타트업 운영자 또는 마케터",
+        "마케팅 기초 지식"
+      ],
+      "providedItems": [
+        "세미나 자료",
+        "마케팅 체크리스트",
+        "성공 사례집"
+      ],
+      "sessions": [
+        { "id": 1, "date": "2025-11-05", "time": "14:00-17:00", "spots": 8, "status": "available" }
+      ],
+      "images": [
+        "images/program_of_7.png"
+      ],
+      "reviews": []
+    },
+    "13": {
+      "id": "13",
+      "title": "Python 데이터 분석 교육",
+      "category": "education",
+      "location": "ConnectWon 강남지점",
+      "centerInfo": {
+        "name": "ConnectWon 강남지점",
+        "address": "서울시 강남구 테헤란로 123",
+        "phone": "02-1234-5678",
+        "room": "SW개발실 B"
+      },
+      "price": 180000,
+      "rating": 4.8,
+      "reviewCount": 112,
+      "participants": 12,
+      "maxParticipants": 15,
+      "duration": "180분 x 8회",
+      "level": "초급-중급",
+      "instructor": {
+        "name": "홍데이터",
+        "bio": "데이터 사이언티스트로 금융, 커머스 분야에서 다양한 데이터 분석 프로젝트를 수행했습니다.",
+        "experience": "8년",
+        "certification": "데이터 분석 전문가(ADP)",
+        "specialty": ["Python", "pandas", "데이터 분석", "머신러닝"]
+      },
+      "description": "Python을 활용한 실전 데이터 분석 기법을 배우는 실무 중심 교육입니다.",
+      "fullDescription": "Python 프로그래밍 기초부터 pandas, numpy를 활용한 데이터 분석, 시각화까지 체계적으로 학습합니다.",
+      "objectives": [
+        "Python 데이터 분석 기초",
+        "pandas 라이브러리 활용",
+        "데이터 전처리 및 정제",
+        "시각화 및 인사이트 도출"
+      ],
+      "curriculum": [],
+      "whatYouLearn": [
+        "Python 기초 문법",
+        "pandas, numpy",
+        "데이터 전처리",
+        "시각화 (matplotlib, seaborn)",
+        "통계 분석 기초"
+      ],
+      "requirements": [
+        "프로그래밍 경험 없어도 가능",
+        "개인 노트북 필수",
+        "Python 설치 (무료)"
+      ],
+      "providedItems": [
+        "강의 자료",
+        "실습 데이터셋",
+        "코드 샘플",
+        "수료증"
+      ],
+      "sessions": [
+        { "id": 1, "date": "2025-11-08", "time": "19:00-22:00", "spots": 3, "status": "available" }
+      ],
+      "images": [
+        "images/program_of_8.png"
+      ],
+      "reviews": [
+        { "id": 1, "name": "마케팅초보", "rating": 5, "date": "2025-11-05", "comment": "그로스 해킹 개념을 명확히 이해할 수 있었습니다. 실전 예시가 많아요." },
+        { "id": 2, "name": "스타트업대표", "rating": 5, "date": "2025-11-06", "comment": "강연자 경험이 풍부해서 현실적인 조언을 많이 얻었어요." },
+        { "id": 3, "name": "신마케터", "rating": 4, "date": "2025-11-06", "comment": "시간이 조금 부족했지만 핵심 포인트는 잘 전달되었습니다." },
+        { "id": 4, "name": "홍콘텐츠", "rating": 5, "date": "2025-11-07", "comment": "바이럴 마케팅 파트가 특히 유익했습니다. 바로 적용 중이에요." },
+        { "id": 5, "name": "이성장", "rating": 4, "date": "2025-11-07", "comment": "데이터 기반 마케팅 접근법이 새로웠습니다. 다음 세션도 기대돼요." }
+      ]
+    },
+    "14": {
+      "id": "14",
+      "title": "창업 멘토링 1기 오프라인 세션",
+      "category": "mentoring",
+      "location": "ConnectWon 강남지점",
+      "centerInfo": {
+        "name": "ConnectWon 강남지점",
+        "address": "서울시 강남구 테헤란로 123",
+        "phone": "02-1234-5678",
+        "room": "중회의실 B"
+      },
+      "price": 0,
+      "rating": 4.9,
+      "reviewCount": 63,
+      "participants": 10,
+      "maxParticipants": 12,
+      "duration": "90분 x 6회",
+      "level": "전체",
+      "instructor": {
+        "name": "정멘토",
+        "bio": "3번의 창업 경험과 1번의 엑시트 경험이 있는 시리얼 앙트러프러너입니다.",
+        "experience": "12년",
+        "certification": "중소벤처기업부 인증 멘토",
+        "specialty": ["창업", "사업 전략", "팀 빌딩", "투자 유치"]
+      },
+      "description": "창업의 모든 과정을 경험한 선배 창업가의 1:1 멘토링을 받을 수 있습니다.",
+      "fullDescription": "창업 초기부터 성장, 투자 유치까지 전 과정에 대한 실질적인 조언과 멘토링을 제공합니다.",
+      "objectives": [
+        "창업 로드맵 설정",
+        "실전 경험 공유",
+        "문제 해결 지원",
+        "네트워크 연결"
+      ],
+      "curriculum": [],
+      "whatYouLearn": [
+        "창업 아이템 검증",
+        "사업 모델 구체화",
+        "팀 빌딩 전략",
+        "초기 고객 확보",
+        "투자 유치 준비"
+      ],
+      "requirements": [
+        "창업 1년 이내 또는 예비 창업자",
+        "사업 아이디어 또는 초안"
+      ],
+      "providedItems": [
+        "1:1 멘토링 (6회)",
+        "멘토링 자료",
+        "네트워킹 행사"
+      ],
+      "sessions": [
+        { "id": 1, "date": "2025-11-12", "time": "매주 화요일 19:00", "spots": 2, "status": "available" }
+      ],
+      "images": [
+        "images/program_of_9.png"
+      ],
+      "reviews": []
+    },
+    "15": {
+      "id": "15",
+      "title": "AI 스타트업 데모데이",
+      "category": "competition",
+      "location": "ConnectWon 마포지점",
+      "centerInfo": {
+        "name": "ConnectWon 마포지점",
+        "address": "서울시 마포구 월드컵북로 456",
+        "phone": "02-2345-6789",
+        "room": "커뮤니티라운지"
+      },
+      "price": 0,
+      "rating": 4.6,
+      "reviewCount": 34,
+      "participants": 15,
+      "maxParticipants": 20,
+      "duration": "300분",
+      "level": "전체",
+      "instructor": {
+        "name": "오창업",
+        "bio": "AI 스타트업 액셀러레이터 운영자로, 다수의 AI 스타트업을 발굴하고 육성한 경험이 있습니다.",
+        "experience": "10년",
+        "certification": "스타트업 액셀러레이터",
+        "specialty": ["AI 기술", "스타트업 육성", "투자 연계", "사업화"]
+      },
+      "description": "AI 스타트업의 아이디어와 기술을 투자자와 대중에게 선보이는 데모데이입니다.",
+      "fullDescription": "혁신적인 AI 기술과 비즈니스 모델을 보유한 스타트업이 투자자, 파트너사, 일반 대중 앞에서 직접 피칭하고 시연하는 행사입니다.",
+      "objectives": [
+        "투자 유치 기회",
+        "파트너십 발굴",
+        "미디어 노출",
+        "네트워킹"
+      ],
+      "curriculum": [],
+      "whatYouLearn": [
+        "피칭 스킬",
+        "투자자 네트워킹",
+        "데모 시연 노하우"
+      ],
+      "requirements": [
+        "AI 관련 스타트업",
+        "피칭 자료 및 데모 준비"
+      ],
+      "providedItems": [
+        "피칭 기회",
+        "투자자 미팅",
+        "네트워킹 세션",
+        "미디어 홍보"
+      ],
+      "sessions": [
+        { "id": 1, "date": "2025-11-15", "time": "14:00-19:00", "spots": 5, "status": "available" }
+      ],
+      "images": [
+        "images/program_of_10.png"
+      ],
+      "reviews": [
+        { "id": 1, "name": "창업준비생", "rating": 5, "date": "2025-11-12", "comment": "멘토님이 직접 창업 경험이 있어서 조언이 현실적이에요." },
+        { "id": 2, "name": "예비CEO", "rating": 5, "date": "2025-11-13", "comment": "피드백이 구체적이고 실질적이었습니다. 동기부여가 확실히 됐어요." },
+        { "id": 3, "name": "창창한", "rating": 4, "date": "2025-11-14", "comment": "세션마다 다른 주제가 흥미로웠어요. 더 길었으면 좋겠네요." },
+        { "id": 4, "name": "스타트업꿈나무", "rating": 5, "date": "2025-11-15", "comment": "멘토링 후 아이템 피보팅 성공했습니다! 정말 감사해요." },
+        { "id": 5, "name": "정창업", "rating": 5, "date": "2025-11-15", "comment": "네트워킹이 너무 좋았습니다. 동기들과 아직도 연락해요." }
+      ]
+    },
+    "16": {
+      "id": "16",
+      "title": "비즈니스 프레젠테이션 마스터클래스",
+      "category": "education",
+      "location": "ConnectWon 광명지점",
+      "centerInfo": {
+        "name": "ConnectWon 광명지점",
+        "address": "경기도 광명시 광명로 789",
+        "phone": "02-3456-7890",
+        "room": "회의실 A"
+      },
+      "price": 80000,
+      "rating": 4.7,
+      "reviewCount": 58,
+      "participants": 8,
+      "maxParticipants": 10,
+      "duration": "240분",
+      "level": "중급",
+      "instructor": {
+        "name": "유발표",
+        "bio": "프레젠테이션 전문 코치로, 글로벌 기업 임원 및 TED 스피커들을 코칭한 경험이 있습니다.",
+        "experience": "12년",
+        "certification": "국제 프레젠테이션 협회 인증",
+        "specialty": ["프레젠테이션", "스토리텔링", "설득 화법", "무대 매너"]
+      },
+      "description": "청중을 사로잡는 효과적인 비즈니스 프레젠테이션 스킬을 배웁니다.",
+      "fullDescription": "프레젠테이션의 기획부터 슬라이드 디자인, 발표 스킬까지 전 과정을 실습 중심으로 학습합니다.",
+      "objectives": [
+        "효과적인 프레젠테이션 구조",
+        "스토리텔링 기법",
+        "슬라이드 디자인",
+        "발표 스킬 향상"
+      ],
+      "curriculum": [],
+      "whatYouLearn": [
+        "프레젠테이션 기획",
+        "스토리라인 구성",
+        "슬라이드 디자인 원칙",
+        "발표 스킬 및 무대 매너",
+        "질의응답 전략"
+      ],
+      "requirements": [
+        "프레젠테이션 경험",
+        "개인 노트북 필수",
+        "PowerPoint 또는 Keynote"
+      ],
+      "providedItems": [
+        "프레젠테이션 템플릿",
+        "체크리스트",
+        "영상 피드백",
+        "수료증"
+      ],
+      "sessions": [
+        { "id": 1, "date": "2025-11-18", "time": "10:00-18:00", "spots": 2, "status": "available" }
+      ],
+      "images": [
+        "images/program_of_11.png"
+      ],
+      "reviews": []
+    }
+  }
+}

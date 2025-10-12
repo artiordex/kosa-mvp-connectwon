@@ -8,7 +8,7 @@
 
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
-import roomsData from 'data/rooms_by_venue.json';
+import roomsData from 'data/rooms-by-venue.json';
 import Link from 'next/link';
 
 interface Room {

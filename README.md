@@ -947,3 +947,4 @@ pnpm e2e
 
 - **총괄개발**: 민시우 - [artiordex@gmail.com](mailto:artiordex@gmail.com)
 - **총괄기획**: 소나무 - [snmaterial13@naver.com](mailto:snmaterial13@naver.com)
+

@@ -1,9 +1,15 @@
+/**
+ * Description : CTASection.tsx - 📌 ConnectWon 메인 CTA 섹션
+ * Author : Shiwoo Min
+ * Date : 2025-10-13
+ */
+
 import Link from 'next/link';
 
 export default function CTASection() {
   return (
     <section
-      className="py-20 relative text-center"
+      className="py-32 relative text-center"
       style={{
         backgroundImage: "linear-gradient(rgba(30,58,138,0.85), rgba(30,58,138,0.85)), url('/images/cta_sec_bk.jpg')",
         backgroundSize: 'cover',
@@ -22,7 +28,7 @@ export default function CTASection() {
         {/* CTA 버튼들 */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           {[
-            { href: '/devices', label: '공간 및 디바이스' },
+            { href: '/facilities/equipments', label: '공간 및 디바이스' },
             { href: '/creator', label: '크리에이터 소개' },
             { href: '/programs', label: '공간 및 프로그램' },
             { href: '/contact', label: '커넥트원 문의' },

@@ -10,20 +10,20 @@
  */
 import http, { IncomingMessage, ServerResponse } from 'http';
 import next from 'next';
-import process from 'node:process'; // ✅ Node 런타임 안전참조 추가 (Vercel/Firebase 런타임 대응)
+import process from 'node:process'; // Node 런타임 안전참조 추가 (Vercel/Firebase 런타임 대응)
 
-const PORT = Number(process.env.PORT || process.env.WEB_PORT || 3000);
-const HOST = process.env.HOST || '0.0.0.0';
-const NODE_ENV = process.env.NODE_ENV || 'production';
+const PORT = Number(process.env['WEB_PORT'] || 3000);
+const HOST = process.env['HOST'] || '0.0.0.0';
+const NODE_ENV = process.env['NODE_ENV'] || 'production';
 const isDev = NODE_ENV !== 'production';
 
 // Cloud Run / Docker 감지 로그 (optional)
 const DEPLOY_ENV =
-  process.env.FIREBASE === 'true'
+  process.env['FIREBASE'] === 'true'
     ? 'firebase'
-    : process.env.CLOUD_RUN === 'true'
+    : process.env['CLOUD_RUN'] === 'true'
     ? 'cloud-run'
-    : process.env.DOCKER === 'true'
+    : process.env['DOCKER'] === 'true'
     ? 'docker'
     : 'local';
 

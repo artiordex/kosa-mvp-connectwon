@@ -1,20 +1,27 @@
+/**
+ * Description : page.tsx - 📌 인사이트 인트리
+ * Author : Shiwoo Min
+ * Date : 2025-10-10
+ */
 
 import InsightDetail from './InsightDetail';
+import insightsData from 'data/insights.json';
+import InsightsHero from '../InsightsHero';
 
 export async function generateStaticParams() {
-  return [
-    { id: '1' },
-    { id: '2' },
-    { id: '3' },
-    { id: '4' },
-    { id: '5' },
-    { id: '6' },
-    { id: '7' },
-    { id: '8' },
-    { id: '9' },
-  ];
+  return insightsData.map((insight) => ({
+    id: insight.id.toString(),
+  }));
 }
 
 export default function InsightPage({ params }: { params: { id: string } }) {
-  return <InsightDetail insightId={params.id} />;
+  return (
+    <>
+      {/* 히어로 섹션 */}
+      <InsightsHero />
+
+      {/* 상세 컨텐츠 */}
+      <InsightDetail insightId={params.id} />
+    </>
+  );
 }

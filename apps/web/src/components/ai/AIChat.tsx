@@ -1,37 +1,60 @@
+/**
+ * Description : AIChat.tsx - 📌  AI 챗봇 (타입 안정 + 첫 글자 타이핑 누락 수정)
+ * Author : Shiwoo Min
+ * Date : 2025-10-13
+ */
+
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { analyzeIntent, getRecommendations, IntentResult, RecommendationResult } from '../../lib/huggingface';
+import rawData from 'data/ai.json';
+
+interface Pattern {
+  keywords: string[];
+  responses: string[];
+}
+interface Suggestions {
+  [key: string]: string[];
+}
+interface AIData {
+  patterns: Pattern[];
+  defaultResponses: string[];
+  suggestions?: Suggestions;
+}
+
+const aiData: AIData = (rawData as AIData) ?? {
+  patterns: [],
+  defaultResponses: [],
+  suggestions: {},
+};
 
 interface Message {
   id: string;
   type: 'user' | 'ai';
   content: string;
   timestamp: Date;
-  metadata?: {
-    intent?: IntentResult;
-    recommendations?: RecommendationResult | undefined;
-  };
+  isTyping?: boolean;
+  intent?: string;
 }
 
-interface AIChatProps {
-  onBookingRequest?: (data: any) => void;
-  onProgramRequest?: (data: any) => void;
-}
-
-export default function AIChat({ onBookingRequest, onProgramRequest }: AIChatProps) {
+export default function AIChat() {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
       type: 'ai',
-      content: '안녕하세요! 커넥트원 AI 도우미입니다. 회의실 예약이나 프로그램 참여를 도와드릴게요. 어떤 도움이 필요하신가요?',
+      content:
+        '안녕하세요! 커넥트원 AI 도우미입니다.\n회의실 예약, 장비 대여, 프로그램 참여 등을 도와드릴게요.\n무엇을 원하시나요?',
       timestamp: new Date(),
     },
   ]);
   const [inputText, setInputText] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [isAITyping, setIsAITyping] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [typingText, setTypingText] = useState('');
+  const [currentIntent, setCurrentIntent] = useState<string | undefined>(undefined);
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const typingIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -39,210 +62,214 @@ export default function AIChat({ onBookingRequest, onProgramRequest }: AIChatPro
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);
+  }, [messages, isAITyping, typingText]);
 
-  const handleSendMessage = async () => {
-    if (!inputText.trim()) return;
+  // Intent 추론
+  const detectIntent = (input: string): string => {
+    const lower = input.toLowerCase();
+
+    if (['회의실', '예약', '공간', '룸'].some((k) => lower.includes(k)))
+      return 'room_booking';
+    if (['프로그램', '참여', '교육', '강의', '클래스'].some((k) => lower.includes(k)))
+      return 'program';
+    if (['위치', '주소', '찾아가는', '오시는'].some((k) => lower.includes(k)))
+      return 'general';
+    if (['장비', '렌탈', '대여'].some((k) => lower.includes(k)))
+      return 'equipment';
+
+    return 'general';
+  };
+
+  // AI 응답 찾기 (타입 안전)
+  const findAIResponse = (userInput: string): { text: string; intent: string } => {
+    const lowerInput = userInput.toLowerCase();
+
+    for (const pattern of aiData?.patterns ?? []) {
+      if (
+        Array.isArray(pattern.keywords) &&
+        pattern.keywords.some((keyword) => lowerInput.includes(keyword))
+      ) {
+        const responses = pattern.responses ?? [];
+        if (responses.length > 0) {
+          const randomText =
+            responses[Math.floor(Math.random() * responses.length)] ??
+            '죄송합니다, 응답을 찾지 못했어요.';
+          return {
+            text: randomText,
+            intent: detectIntent(userInput) ?? 'general',
+          };
+        }
+      }
+    }
+
+    // fallback
+    const defaults = aiData?.defaultResponses ?? ['죄송합니다, 이해하지 못했어요.'];
+    const randomIndex = Math.floor(Math.random() * defaults.length);
+    const fallbackText =
+      defaults[randomIndex] ?? '죄송합니다, 이해하지 못했습니다.';
+
+    return {
+      text: fallbackText,
+      intent: detectIntent(userInput) ?? 'general',
+    };
+  };
+
+  // 💬 타이핑 효과 (첫 글자 누락 방지)
+  const typeMessage = (text: string, callback: () => void) => {
+    let index = 0;
+    setTypingText('');
+    if (typingIntervalRef.current) clearInterval(typingIntervalRef.current);
+
+    // ✅ 렌더링 완료 후 타이핑 시작 (첫 글자 누락 방지)
+    setTimeout(() => {
+      setIsAITyping(true);
+
+      typingIntervalRef.current = setInterval(() => {
+        setTypingText((prev) => {
+          if (index < text.length) {
+            const next = prev + text[index];
+            index++;
+            return next;
+          } else {
+            clearInterval(typingIntervalRef.current!);
+            setIsAITyping(false);
+            setTypingText('');
+            callback();
+            return prev;
+          }
+        });
+      }, 30);
+    }, 50);
+  };
+
+  const handleSendMessage = async (text?: string) => {
+    const messageText = text ?? inputText;
+    if (!messageText.trim() || isAITyping) return;
 
     const userMessage: Message = {
       id: Date.now().toString(),
       type: 'user',
-      content: inputText,
+      content: messageText,
       timestamp: new Date(),
     };
 
-    setMessages(prev => [...prev, userMessage]);
+    setMessages((prev) => [...prev, userMessage]);
+    const currentInput = messageText;
     setInputText('');
-    setIsLoading(true);
 
-    try {
-      // AI 의도 분석
-      const intentResult = await analyzeIntent(inputText);
+    // ⏳ 0.5초 후 AI 타이핑 시작
+    setTimeout(() => {
+      const result = findAIResponse(currentInput);
+      const { text: aiResponse, intent } = result;
+      setCurrentIntent(intent);
 
-      let aiResponse = '';
-      let recommendations: RecommendationResult | undefined;
-
-      if (intentResult.intent === 'room_booking') {
-        aiResponse = await handleRoomBookingIntent(intentResult);
-        recommendations = await getRoomRecommendations(intentResult);
-      } else if (intentResult.intent === 'program_registration') {
-        aiResponse = await handleProgramIntent(intentResult);
-        recommendations = await getProgramRecommendations(intentResult);
-      } else {
-        aiResponse = handleGeneralInquiry(inputText);
-      }
-
-      const aiMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        type: 'ai',
-        content: aiResponse,
-        timestamp: new Date(),
-        metadata: {
-          intent: intentResult,
-          recommendations,
-        },
-      };
-
-      setMessages(prev => [...prev, aiMessage]);
-    } catch (error) {
-      console.error('AI Chat Error:', error);
-      const errorMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        type: 'ai',
-        content: '죄송합니다. 일시적인 오류가 발생했습니다. 다시 시도해주세요.',
-        timestamp: new Date(),
-      };
-      setMessages(prev => [...prev, errorMessage]);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleRoomBookingIntent = async (intent: IntentResult): Promise<string> => {
-    const { entities } = intent;
-    let response = '회의실 예약을 도와드리겠습니다!\n\n';
-
-    if (entities.date && entities.time) {
-      response += `📅 요청하신 예약 정보:\n`;
-      response += `• 날짜: ${entities.date}\n`;
-      response += `• 시간: ${entities.time}\n`;
-      if (entities.capacity) response += `• 인원: ${entities.capacity}명\n`;
-      if (entities.facilities) response += `• 필요 시설: ${entities.facilities.join(', ')}\n`;
-
-      response += '\n아래 추천 회의실 중 선택하시거나, 직접 예약 페이지로 이동하실 수 있습니다.';
-    } else {
-      response += '더 정확한 예약을 위해 다음 정보를 알려주세요:\n';
-      if (!entities.date) response += '• 희망 날짜 (예: 내일, 12월 25일)\n';
-      if (!entities.time) response += '• 희망 시간 (예: 오후 3시, 14:00)\n';
-      response += '• 예상 참여 인원\n• 필요한 시설 (프로젝터, 화이트보드 등)';
-    }
-
-    return response;
-  };
-
-  const handleProgramIntent = async (intent: IntentResult): Promise<string> => {
-    const { entities } = intent;
-    let response = '프로그램 참여를 도와드리겠습니다!\n\n';
-
-    if (entities.programType) {
-      response += `관심 있는 프로그램: ${entities.programType}\n`;
-    }
-
-    response += '현재 진행 중인 프로그램을 추천해드릴게요. 아래에서 선택하시거나 프로그램 페이지에서 더 많은 정보를 확인하실 수 있습니다.';
-
-    return response;
-  };
-
-  const handleGeneralInquiry = (text: string): string => {
-    if (text.includes('위치') || text.includes('주소')) {
-      return (
-        '**커넥트원 센터 위치:**\n\n' +
-        '🏢 강남센터: 서울특별시 강남구 테헤란로 123\n' +
-        '🏢 마포센터: 서울특별시 마포구 홍익로 456\n' +
-        '🏢 광명센터: 경기도 광명시 광명로 789\n\n' +
-        '📞 대표번호: 02-1234-5678'
-      );
-    }
-
-    return (
-      '커넥트원에 대해 궁금한 것이 있으시면 언제든 말씀해주세요!\n\n' +
-      '• 회의실 예약: "내일 오후 3시에 회의실 예약"\n' +
-      '• 프로그램 참여: "요가 클래스 참여하고 싶어요"\n' +
-      '• 센터 정보: "위치 알려주세요"'
-    );
-  };
-
-  const getRoomRecommendations = async (intent: IntentResult) => {
-    return await getRecommendations('user1', 'room', [], intent.entities);
-  };
-
-  const getProgramRecommendations = async (intent: IntentResult) => {
-    return await getRecommendations('user1', 'program', [], intent.entities);
-  };
-
-  const handleRecommendationClick = (recommendation: any, type: 'room' | 'program') => {
-    if (type === 'room' && onBookingRequest) {
-      onBookingRequest({
-        roomId: recommendation.id,
-        roomName: recommendation.name,
+      typeMessage(aiResponse, () => {
+        const aiMessage: Message = {
+          id: (Date.now() + 1).toString(),
+          type: 'ai',
+          content: aiResponse,
+          timestamp: new Date(),
+          intent,
+        };
+        setMessages((prev) => [...prev, aiMessage]);
       });
-    } else if (type === 'program' && onProgramRequest) {
-      onProgramRequest({
-        programId: recommendation.id,
-        programName: recommendation.name,
-      });
-    }
+    }, 500);
   };
+
+  // 추천 질문 목록
+  const fullSuggestions =
+    (currentIntent && aiData.suggestions?.[currentIntent]) || [];
+
+  const suggestedQuestions =
+    fullSuggestions.length > 5
+      ? fullSuggestions.sort(() => Math.random() - 0.5).slice(0, 5)
+      : fullSuggestions;
 
   const quickActions = [
-    { text: '내일 오후 3시에 회의실 예약', icon: 'ri-calendar-line' },
-    { text: '요가 클래스 참여하고 싶어요', icon: 'ri-heart-pulse-line' },
+    { text: '내일 오후 3시에 회의실 예약하고 싶어요', icon: 'ri-calendar-line' },
     { text: '프로젝터가 있는 회의실 찾아주세요', icon: 'ri-slideshow-line' },
-    { text: '센터 위치 알려주세요', icon: 'ri-map-pin-line' },
+    { text: '이번 주 프로그램 일정 알려주세요', icon: 'ri-heart-pulse-line' },
+    { text: '강남센터 위치 알려주세요', icon: 'ri-map-pin-line' },
   ];
 
   return (
-    <div className={`fixed bottom-4 left-4 z-50 transition-all duration-300 ${isExpanded ? 'w-96 h-[600px]' : 'w-14 h-14'}`}>
+    <div
+      className={`fixed bottom-4 left-4 z-50 transition-all duration-300 ${
+        isExpanded ? 'w-96 h-[600px]' : 'w-14 h-14'
+      }`}
+    >
       {!isExpanded ? (
         <button
           onClick={() => setIsExpanded(true)}
-          className="w-14 h-14 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 transition-colors flex items-center justify-center cursor-pointer"
+          className="w-14 h-14 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 transition-colors flex items-center justify-center group relative"
         >
-          <i className="ri-chat-3-line w-6 h-6 flex items-center justify-center text-xl"></i>
+          <i className="ri-message-3-line text-2xl"></i>
+          <span className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></span>
         </button>
       ) : (
-        <div className="bg-white rounded-lg shadow-xl border border-gray-200 flex flex-col h-full">
+        <div className="bg-white rounded-lg shadow-2xl border border-gray-200 flex flex-col h-full">
           {/* 헤더 */}
-          <div className="flex items-center justify-between p-4 border-b border-gray-200">
+          <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-gradient-to-r from-blue-600 to-indigo-600">
             <div className="flex items-center">
-              <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center mr-3">
-                <i className="ri-robot-line w-4 h-4 flex items-center justify-center text-white"></i>
+              <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center mr-3 relative">
+                <i className="ri-robot-2-line text-blue-600 text-xl"></i>
+                <span className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></span>
               </div>
               <div>
-                <h3 className="font-semibold text-gray-900">AI 도우미</h3>
-                <p className="text-xs text-green-600">온라인</p>
+                <h3 className="font-bold text-white">ConnectWon AI</h3>
+                <p className="text-xs text-blue-100 flex items-center">
+                  <span className="w-2 h-2 bg-green-400 rounded-full mr-1 animate-pulse"></span>
+                  온라인
+                </p>
               </div>
             </div>
-            <button onClick={() => setIsExpanded(false)} className="text-gray-400 hover:text-gray-600 cursor-pointer">
-              <i className="ri-close-line w-5 h-5 flex items-center justify-center"></i>
+            <button
+              onClick={() => setIsExpanded(false)}
+              className="text-white/80 hover:text-white transition-colors"
+            >
+              <i className="ri-close-line text-xl"></i>
             </button>
           </div>
 
           {/* 메시지 영역 */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4">
-            {messages.map(message => (
-              <div key={message.id} className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
-                <div className={`max-w-[80%] p-3 rounded-lg ${message.type === 'user' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-900'}`}>
-                  <p className="text-sm whitespace-pre-line">{message.content}</p>
-
-                  {/* 추천 항목 표시 */}
-                  {message.metadata?.recommendations?.items && (
-                    <div className="mt-3 space-y-2">
-                      {message.metadata.recommendations.items.map((rec, index) => (
-                        <button
-                          key={index}
-                          onClick={() => handleRecommendationClick(rec, message.metadata!.recommendations!.type)}
-                          className="w-full text-left p-2 bg-white/10 rounded border border-white/20 hover:bg-white/20 transition-colors cursor-pointer"
-                        >
-                          <div className="font-medium text-sm">{rec.name}</div>
-                          <div className="text-xs opacity-75">{rec.reason}</div>
-                          <div className="text-xs opacity-60">신뢰도: {Math.round(rec.confidence * 100)}%</div>
-                        </button>
-                      ))}
-                    </div>
-                  )}
+          <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
+            {messages.map((message) => (
+              <div
+                key={message.id}
+                className={`flex ${
+                  message.type === 'user' ? 'justify-end' : 'justify-start'
+                }`}
+              >
+                <div
+                  className={`max-w-[80%] ${
+                    message.type === 'user'
+                      ? 'bg-blue-600 text-white rounded-2xl rounded-tr-sm'
+                      : 'bg-white text-gray-900 rounded-2xl rounded-tl-sm shadow-sm'
+                  } p-3`}
+                >
+                  <p className="text-sm whitespace-pre-line leading-relaxed">{message.content}</p>
+                  <p
+                    className={`text-xs mt-1 ${
+                      message.type === 'user' ? 'text-blue-100' : 'text-gray-400'
+                    }`}
+                  >
+                    {message.timestamp.toLocaleTimeString('ko-KR', {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })}
+                  </p>
                 </div>
               </div>
             ))}
 
-            {isLoading && (
+            {/* AI 타이핑 중 */}
+            {isAITyping && (
               <div className="flex justify-start">
-                <div className="bg-gray-100 p-3 rounded-lg">
-                  <div className="flex space-x-1">
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                  </div>
+                <div className="max-w-[80%] bg-white text-gray-900 rounded-2xl rounded-tl-sm shadow-sm p-3">
+                  <p className="text-sm whitespace-pre-line leading-relaxed">
+                    {typingText}
+                    <span className="inline-block w-1 h-4 bg-gray-400 ml-1 animate-pulse"></span>
+                  </p>
                 </div>
               </div>
             )}
@@ -250,19 +277,43 @@ export default function AIChat({ onBookingRequest, onProgramRequest }: AIChatPro
             <div ref={messagesEndRef} />
           </div>
 
-          {/* 빠른 액션 */}
-          {messages.length === 1 && (
-            <div className="px-4 pb-2">
-              <div className="text-xs text-gray-500 mb-2">빠른 요청:</div>
+          {/* intent 기반 추천 질문 */}
+          {suggestedQuestions.length > 0 && !isAITyping && (
+            <div className="px-4 py-3 border-t border-gray-200 bg-gray-50">
+              <div className="text-xs font-medium text-gray-600 mb-2 flex items-center">
+                <i className="ri-sparkling-2-line mr-1 text-blue-500"></i>
+                추천 질문
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {suggestedQuestions.map((q, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleSendMessage(q)}
+                    className="px-3 py-2 text-xs bg-white hover:bg-blue-50 border border-gray-200 text-gray-700 rounded-lg transition-all hover:shadow-sm"
+                  >
+                    {q}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* 기본 빠른 질문 */}
+          {messages.length === 1 && !isAITyping && suggestedQuestions.length === 0 && (
+            <div className="px-4 py-3 border-t border-gray-200 bg-white">
+              <div className="text-xs font-medium text-gray-600 mb-2 flex items-center">
+                <i className="ri-flashlight-line mr-1"></i>
+                빠른 질문
+              </div>
               <div className="grid grid-cols-2 gap-2">
                 {quickActions.map((action, index) => (
                   <button
                     key={index}
-                    onClick={() => setInputText(action.text)}
-                    className="p-2 text-xs bg-gray-50 hover:bg-gray-100 rounded-lg text-left transition-colors cursor-pointer"
+                    onClick={() => handleSendMessage(action.text)}
+                    className="p-2 text-xs bg-gray-50 hover:bg-gray-100 rounded-lg text-left transition-all hover:shadow-sm border border-gray-200"
                   >
-                    <i className={`${action.icon} mr-1 w-3 h-3 inline-flex items-center justify-center`}></i>
-                    {action.text}
+                    <i className={`${action.icon} text-blue-600 mr-1`}></i>
+                    <span className="text-gray-700">{action.text}</span>
                   </button>
                 ))}
               </div>
@@ -270,23 +321,23 @@ export default function AIChat({ onBookingRequest, onProgramRequest }: AIChatPro
           )}
 
           {/* 입력 영역 */}
-          <div className="border-t border-gray-200 p-4">
+          <div className="border-t border-gray-200 p-4 bg-white">
             <div className="flex space-x-2">
               <input
                 type="text"
                 value={inputText}
-                onChange={e => setInputText(e.target.value)}
-                onKeyPress={e => e.key === 'Enter' && handleSendMessage()}
+                onChange={(e) => setInputText(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
                 placeholder="메시지를 입력하세요..."
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-                disabled={isLoading}
+                className="flex-1 px-4 py-2 border border-gray-300 rounded-full focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                disabled={isAITyping}
               />
               <button
-                onClick={handleSendMessage}
-                disabled={isLoading || !inputText.trim()}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer whitespace-nowrap"
+                onClick={() => handleSendMessage()}
+                disabled={isAITyping || !inputText.trim()}
+                className="px-5 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center"
               >
-                <i className="ri-send-plane-line w-4 h-4 flex items-center justify-center"></i>
+                <i className="ri-send-plane-fill"></i>
               </button>
             </div>
           </div>

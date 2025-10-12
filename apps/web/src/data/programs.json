@@ -6,7 +6,8 @@
       "date": "2025-09-26",
       "image": "images/program_sp_1.png",
       "category": "investment",
-      "status": "recruiting"
+      "status": "recruiting",
+      "type": "online"
     },
     {
       "id": 2,
@@ -14,7 +15,8 @@
       "date": "2025-09-25 ~ 2025-10-24",
       "image": "images/program_sp_2.png",
       "category": "education",
-      "status": "ongoing"
+      "status": "ongoing",
+      "type": "online"
     },
     {
       "id": 3,
@@ -22,7 +24,8 @@
       "date": "2025-09-01 ~ 2025-12-17",
       "image": "images/program_sp_3.png",
       "category": "competition",
-      "status": "recruiting"
+      "status": "recruiting",
+      "type": "online"
     },
     {
       "id": 4,
@@ -30,7 +33,197 @@
       "date": "2025-04-09 ~ 2025-11-30",
       "image": "images/program_sp_4.png",
       "category": "mentoring",
-      "status": "recruiting"
+      "status": "recruiting",
+      "type": "online"
+    },
+    {
+      "id": 5,
+      "title": "AI 창업 아이디어톤 온라인 세션",
+      "date": "2025-11-10 ~ 2025-11-14",
+      "image": "images/program_sp_5.png",
+      "category": "education",
+      "status": "upcoming",
+      "type": "online"
+    },
+    {
+      "id": 6,
+      "title": "UX/UI 디자인 워크샵",
+      "date": "2025-10-15",
+      "image": "images/program_of_1.png",
+      "category": "workshop",
+      "status": "recruiting",
+      "type": "offline",
+      "venueId": 1,
+      "roomId": 104,
+      "instructor": "김디자인"
+    },
+    {
+      "id": 7,
+      "title": "스타트업 투자 유치 전략 세미나",
+      "date": "2025-10-18",
+      "image": "images/program_of_2.png",
+      "category": "seminar",
+      "status": "recruiting",
+      "type": "offline",
+      "venueId": 2,
+      "roomId": 206,
+      "instructor": "이투자"
+    },
+    {
+      "id": 8,
+      "title": "React 실무 프로젝트 교육",
+      "date": "2025-10-20",
+      "image": "images/program_of_3.png",
+      "category": "education",
+      "status": "closed",
+      "type": "offline",
+      "venueId": 1,
+      "roomId": 101,
+      "instructor": "박개발"
+    },
+    {
+      "id": 9,
+      "title": "비즈니스 영어 집중 세션",
+      "date": "2025-10-25",
+      "image": "images/program_of_4.png",
+      "category": "training",
+      "status": "recruiting",
+      "type": "offline",
+      "venueId": 1,
+      "roomId": 105,
+      "instructor": "John Smith"
+    },
+    {
+      "id": 10,
+      "title": "데이터 시각화 실무 교육",
+      "date": "2025-10-28",
+      "image": "images/program_of_5.png",
+      "category": "education",
+      "status": "upcoming",
+      "type": "offline",
+      "venueId": 3,
+      "roomId": 302,
+      "instructor": "이데이터"
+    },
+    {
+      "id": 11,
+      "title": "리더십 향상 워크샵",
+      "date": "2025-11-01",
+      "image": "images/program_of_6.png",
+      "category": "workshop",
+      "status": "recruiting",
+      "type": "offline",
+      "venueId": 2,
+      "roomId": 206,
+      "instructor": "최리더"
+    },
+    {
+      "id": 12,
+      "title": "스타트업 마케팅 세미나",
+      "date": "2025-11-05",
+      "image": "images/program_of_7.png",
+      "category": "seminar",
+      "status": "ongoing",
+      "type": "offline",
+      "venueId": 1,
+      "roomId": 104,
+      "instructor": "김마케팅"
+    },
+    {
+      "id": 13,
+      "title": "Python 데이터 분석 교육",
+      "date": "2025-11-08",
+      "image": "images/program_of_8.png",
+      "category": "education",
+      "status": "recruiting",
+      "type": "offline",
+      "venueId": 1,
+      "roomId": 102,
+      "instructor": "홍데이터"
+    },
+    {
+      "id": 14,
+      "title": "창업 멘토링 1기 오프라인 세션",
+      "date": "2025-11-12",
+      "image": "images/program_of_9.png",
+      "category": "mentoring",
+      "status": "recruiting",
+      "type": "offline",
+      "venueId": 1,
+      "roomId": 106,
+      "instructor": "정멘토"
+    },
+    {
+      "id": 15,
+      "title": "AI 스타트업 데모데이",
+      "date": "2025-11-15",
+      "image": "images/program_of_10.png",
+      "category": "competition",
+      "status": "upcoming",
+      "type": "offline",
+      "venueId": 2,
+      "roomId": 203,
+      "instructor": "오창업"
+    },
+    {
+      "id": 16,
+      "title": "비즈니스 프레젠테이션 마스터클래스",
+      "date": "2025-11-18",
+      "image": "images/program_of_11.png",
+      "category": "education",
+      "status": "recruiting",
+      "type": "offline",
+      "venueId": 3,
+      "roomId": 305,
+      "instructor": "유발표"
+    },
+    {
+      "id": 17,
+      "title": "디지털 마케팅 워크샵",
+      "date": "2025-11-20",
+      "image": "images/program_of_12.png",
+      "category": "workshop",
+      "status": "ongoing",
+      "type": "offline",
+      "venueId": 3,
+      "roomId": 310,
+      "instructor": "안마케팅"
+    },
+    {
+      "id": 18,
+      "title": "스타트업 법률 세미나",
+      "date": "2025-11-22",
+      "image": "images/program_of_13.png",
+      "category": "seminar",
+      "status": "recruiting",
+      "type": "offline",
+      "venueId": 1,
+      "roomId": 105,
+      "instructor": "변호사 김법"
+    },
+    {
+      "id": 19,
+      "title": "AI 모델 서밋 2025",
+      "date": "2025-11-25",
+      "image": "images/program_of_14.png",
+      "category": "conference",
+      "status": "upcoming",
+      "type": "offline",
+      "venueId": 1,
+      "roomId": 104,
+      "instructor": "박인공지능"
+    },
+    {
+      "id": 20,
+      "title": "창업자 네트워킹 나이트",
+      "date": "2025-11-28",
+      "image": "images/program_of_15.png",
+      "category": "networking",
+      "status": "recruiting",
+      "type": "offline",
+      "venueId": 2,
+      "roomId": 203,
+      "instructor": "최창업"
     }
   ]
 }

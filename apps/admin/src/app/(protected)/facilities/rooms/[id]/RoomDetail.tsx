@@ -9,7 +9,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import roomsData from 'data/rooms_by_venue.json';
+import roomsData from 'data/rooms-by-venue.json';
 
 interface Room {
   id: number;

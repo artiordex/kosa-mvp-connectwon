@@ -1,0 +1,136 @@
+{
+  "venues": [
+    {
+      "id": 1,
+      "name": "ConnectWon 강남지점",
+      "slug": "gangnam-center",
+      "categories": [
+        {
+          "type": "development",
+          "label": "개발실",
+          "rooms": [
+            { "id": 101, "name": "SW개발실 A", "capacity": 20, "status": "available", "hourlyRate": 30000, "thumbnail": "/images/rooms/dev-a.jpg" },
+            { "id": 102, "name": "SW개발실 B", "capacity": 15, "status": "available", "hourlyRate": 25000, "thumbnail": "/images/rooms/dev-b.jpg" }
+          ]
+        },
+        {
+          "type": "meeting",
+          "label": "회의실",
+          "rooms": [
+            { "id": 104, "name": "대회의실", "capacity": 30, "status": "available", "hourlyRate": 50000, "thumbnail": "/images/rooms/meeting-large.jpg" },
+            { "id": 105, "name": "중회의실 A", "capacity": 12, "status": "available", "hourlyRate": 30000, "thumbnail": "/images/rooms/meeting-mid-a.jpg" },
+            { "id": 106, "name": "중회의실 B", "capacity": 12, "status": "occupied", "hourlyRate": 30000, "thumbnail": "/images/rooms/meeting-mid-b.jpg" },
+            { "id": 107, "name": "소회의실", "capacity": 6, "status": "available", "hourlyRate": 20000, "thumbnail": "/images/rooms/meeting-small.jpg" }
+          ]
+        },
+        {
+          "type": "lounge",
+          "label": "커뮤니티라운지",
+          "rooms": [
+            { "id": 103, "name": "커뮤니티라운지", "capacity": 50, "status": "available", "hourlyRate": 0, "thumbnail": "/images/rooms/lounge.jpg" }
+          ]
+        },
+        {
+          "type": "relax",
+          "label": "릴렉스존 (예약 불필요)",
+          "rooms": [
+            { "id": 108, "name": "릴렉스존", "capacity": 15, "status": "available", "hourlyRate": 0, "thumbnail": "/images/rooms/relax.jpg" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "ConnectWon 마포지점",
+      "slug": "mapo-studio",
+      "categories": [
+        {
+          "type": "studio",
+          "label": "스튜디오",
+          "rooms": [
+            { "id": 201, "name": "영상편집실 A", "capacity": 8, "status": "available", "hourlyRate": 40000, "thumbnail": "/images/rooms/video-edit-a.jpg" },
+            { "id": 202, "name": "영상편집실 B", "capacity": 6, "status": "occupied", "hourlyRate": 35000, "thumbnail": "/images/rooms/video-edit-b.jpg" },
+            { "id": 214, "name": "라이브방송룸", "capacity": 3, "status": "available", "hourlyRate": 60000, "thumbnail": "/images/rooms/live-broadcast.jpg" },
+            { "id": 208, "name": "팟캐스트룸", "capacity": 4, "status": "available", "hourlyRate": 50000, "thumbnail": "/images/rooms/podcast.jpg" }
+          ]
+        },
+        {
+          "type": "meeting",
+          "label": "회의실",
+          "rooms": [
+            { "id": 206, "name": "회의실", "capacity": 10, "status": "available", "hourlyRate": 25000, "thumbnail": "/images/rooms/meeting-mapo.jpg" },
+            { "id": 215, "name": "소회의실", "capacity": 6, "status": "available", "hourlyRate": 15000, "thumbnail": "/images/rooms/meeting-small-mapo.jpg" }
+          ]
+        },
+        {
+          "type": "workspace",
+          "label": "프로젝트룸",
+          "rooms": [
+            { "id": 211, "name": "프로젝트룸 A", "capacity": 8, "status": "available", "hourlyRate": 20000, "thumbnail": "/images/rooms/project-a.jpg" },
+            { "id": 212, "name": "프로젝트룸 B", "capacity": 8, "status": "occupied", "hourlyRate": 20000, "thumbnail": "/images/rooms/project-b.jpg" }
+          ]
+        },
+        {
+          "type": "lounge",
+          "label": "커뮤니티라운지",
+          "rooms": [
+            { "id": 203, "name": "커뮤니티라운지", "capacity": 40, "status": "available", "hourlyRate": 0, "thumbnail": "/images/rooms/lounge-mapo.jpg" }
+          ]
+        },
+        {
+          "type": "relax",
+          "label": "릴렉스존 (예약 불필요)",
+          "rooms": [
+            { "id": 207, "name": "릴렉스존", "capacity": 12, "status": "available", "hourlyRate": 0, "thumbnail": "/images/rooms/relax-mapo.jpg" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "ConnectWon 광명지점",
+      "slug": "gwangmyeong-campus",
+      "categories": [
+        {
+          "type": "education",
+          "label": "교육실",
+          "rooms": [
+            { "id": 302, "name": "교육실 A", "capacity": 30, "status": "available", "hourlyRate": 40000, "thumbnail": "/images/rooms/education-a.jpg" },
+            { "id": 303, "name": "교육실 B", "capacity": 25, "status": "occupied", "hourlyRate": 35000, "thumbnail": "/images/rooms/education-b.jpg" }
+          ]
+        },
+        {
+          "type": "meeting",
+          "label": "회의실",
+          "rooms": [
+            { "id": 305, "name": "회의실 A", "capacity": 12, "status": "available", "hourlyRate": 25000, "thumbnail": "/images/rooms/meeting-a-gwangmyeong.jpg" },
+            { "id": 306, "name": "회의실 B", "capacity": 10, "status": "available", "hourlyRate": 20000, "thumbnail": "/images/rooms/meeting-b-gwangmyeong.jpg" },
+            { "id": 307, "name": "소회의실", "capacity": 6, "status": "occupied", "hourlyRate": 15000, "thumbnail": "/images/rooms/meeting-small-gwangmyeong.jpg" }
+          ]
+        },
+        {
+          "type": "workspace",
+          "label": "업무실 / 실습실",
+          "rooms": [
+            { "id": 310, "name": "스타트업실습실", "capacity": 20, "status": "available", "hourlyRate": 15000, "thumbnail": "/images/rooms/startup-lab.jpg" },
+            { "id": 313, "name": "팀프로젝트룸", "capacity": 12, "status": "available", "hourlyRate": 25000, "thumbnail": "/images/rooms/team-project.jpg" }
+          ]
+        },
+        {
+          "type": "lounge",
+          "label": "커뮤니티라운지",
+          "rooms": [
+            { "id": 304, "name": "커뮤니티라운지", "capacity": 30, "status": "available", "hourlyRate": 0, "thumbnail": "/images/rooms/lounge-gwangmyeong.jpg" }
+          ]
+        },
+        {
+          "type": "relax",
+          "label": "릴렉스존 (예약 불필요)",
+          "rooms": [
+            { "id": 308, "name": "릴렉스존", "capacity": 10, "status": "available", "hourlyRate": 0, "thumbnail": "/images/rooms/relax-gwangmyeong.jpg" }
+          ]
+        }
+      ]
+    }
+  ]
+}
