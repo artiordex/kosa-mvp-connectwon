@@ -1,5 +1,5 @@
 /**
- * Description : ProgramInquirySection.tsx - 📌 프로그램 문의 섹션 (비밀번호 수정·삭제 + 답글 3단계 + localStorage 영속 + 검색/정렬/내보내기)
+ * Description : ProgramInquirySection.tsx - 📌 프로그램 문의 섹션
  * Author : Shiwoo Min
  * Date : 2025-10-12
  */
@@ -10,26 +10,40 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 import toast from 'react-hot-toast';
 import '@toast-ui/editor/dist/toastui-editor.css';
-import sessionUser from 'data/mypage-with-user.json';
 
 /* Toast UI Editor */
-const Editor = dynamic(() => import('@toast-ui/react-editor').then((m) => m.Editor), {
-  ssr: false,
-  loading: () => (
-    <div className="border border-gray-300 rounded-md p-4 bg-gray-50 text-center text-gray-600">
-      에디터 로딩 중...
-    </div>
-  ),
-});
+const Editor = dynamic(
+  () => import('@toast-ui/react-editor').then((m) => m.Editor),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="border border-gray-300 rounded-md p-4 bg-gray-50 text-center text-gray-600">
+        에디터 로딩 중...
+      </div>
+    ),
+  }
+);
 
 /* Types */
+type SessionUser = {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string;
+  profileImage?: string;
+};
+
+interface ProgramInquiryProps {
+  demoOn?: boolean;
+  seedUser?: SessionUser | null;
+}
+
 interface Reply {
   id: number;
   text: string;
   date: string;
   replies: Reply[];
 }
-
 interface Inquiry {
   id: number;
   name: string;
@@ -43,9 +57,29 @@ interface Inquiry {
   profileImage?: string | undefined;
 }
 
-const STORAGE_KEY = 'program_inquiries';
-const DRAFT_KEY = 'program_inquiry_draft';
+/* LocalStorage Namespace */
+const STORAGE_NAMESPACE = 'program_inquiries';
+const DRAFT_NAMESPACE   = 'program_inquiry_draft';
+const sk = (userKey: string) => `${STORAGE_NAMESPACE}:${userKey}`;
+const dk = (userKey: string) => `${DRAFT_NAMESPACE}:${userKey}`;
 
+const normalizeImageUrl = (u?: string): string | undefined => {
+  const raw = (u ?? '').trim();
+  if (!raw) return undefined;
+  if (raw.startsWith('http://') || raw.startsWith('https://') || raw.startsWith('/') || raw.startsWith('data:')) {
+    return raw;
+  }
+  return `/${raw.replace(/^\/+/, '')}`;
+};
+
+const sanitizeInquiries = (arr: any[]): Inquiry[] =>
+  (arr ?? []).map((it: any) => ({
+    ...it,
+    email: (it?.email ?? '').trim(),
+    profileImage: normalizeImageUrl(it?.profileImage ?? it?.profile_image ?? it?.avatar),
+  }));
+
+/** 날짜 유틸 */
 const fmtDateISO = (d: Date = new Date()) => {
   const offset = d.getTimezoneOffset() * 60000;
   const localTime = new Date(d.getTime() - offset);
@@ -114,17 +148,10 @@ function randomPastel(seed: number) {
 }
 
 function maskEmail(email?: string): string {
-  // undefined나 빈 문자열이면 바로 반환
   if (!email) return '';
-
-  // split 전에 안전하게 처리
   const [id = '', domain = ''] = email.split('@');
   if (!domain) return email;
-
-  // 아이디 부분 길이에 따라 마스킹
-  return id.length > 2
-    ? `${id.slice(0, 2)}***@${domain}`
-    : `${id[0] ?? ''}***@${domain}`;
+  return id.length > 2 ? `${id.slice(0, 2)}***@${domain}` : `${id[0] ?? ''}***@${domain}`;
 }
 
 const sorters = {
@@ -134,24 +161,42 @@ const sorters = {
   titleDesc: (a: Inquiry, b: Inquiry) => b.title.localeCompare(a.title),
 };
 
-type SessionUser = {
-  id: string;
-  name: string;
-  email: string;
-  phone?: string;
-  profileImage?: string;
+/** 활성 사용자/네임스페이스 계산 */
+function getActiveUserKey() {
+  try {
+    if (typeof window === 'undefined') {
+      return { userKey: 'guest', activeUser: null as SessionUser | null };
+    }
+    const raw = localStorage.getItem('mockUser');
+    const parsed: SessionUser | null = raw ? JSON.parse(raw) : null;
+    if (parsed) {
+      const userKey = String(parsed.email || parsed.id || parsed.name || 'guest');
+      return { userKey, activeUser: parsed };
+    }
+    return { userKey: 'guest', activeUser: null };
+  } catch {
+    return { userKey: 'guest', activeUser: null };
+  }
+}
+
+/** 외부에서 로그인 스냅샷 반영 */
+export const applyAuthSnapshotInline = (u: SessionUser | null) => {
+  try {
+    if (typeof window === 'undefined') return;
+    if (u) localStorage.setItem('mockUser', JSON.stringify(u));
+    else localStorage.removeItem('mockUser');
+    window.dispatchEvent(new Event('user-switched'));
+    window.dispatchEvent(new Event('auth-changed'));
+  } catch (e) {
+    console.warn('[ProgramInquiry] applyAuthSnapshotInline failed', e);
+  }
 };
 
-const currentUser: SessionUser | null = (sessionUser as any)?.user
-  ? {
-      id: (sessionUser as any).user.id,
-      name: (sessionUser as any).user.name,
-      email: (sessionUser as any).user.email,
-      profileImage: (sessionUser as any).user.profileImage,
-    }
-  : null;
-
-export default function ProgramInquirySection() {
+/* ------------------------------ Main Component ----------------------------- */
+export default function ProgramInquirySection({
+  demoOn = false,
+  seedUser = null,
+}: ProgramInquiryProps) {
   const editorRef = useRef<any>(null);
   const editEditorRef = useRef<any>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -163,12 +208,9 @@ export default function ProgramInquirySection() {
   const [selectedInquiryId, setSelectedInquiryId] = useState<number | null>(null);
 
   // 폼 데이터
-  const [formData, setFormData] = useState<{ name: string; email: string; password: string; title: string }>({
-    name: '',
-    email: '',
-    password: '',
-    title: '',
-  });
+  const [formData, setFormData] = useState<{ name: string; email: string; password: string; title: string }>(
+    { name: '', email: '', password: '', title: '' }
+  );
 
   // 수정
   const [isEditing, setIsEditing] = useState(false);
@@ -180,46 +222,199 @@ export default function ProgramInquirySection() {
   const [targetInquiry, setTargetInquiry] = useState<Inquiry | null>(null);
   const [actionType, setActionType] = useState<'edit' | 'delete' | null>(null);
 
-  // 검색/정렬/페이징 (이메일 제외)
+  // 검색/정렬/페이징
   const [query, setQuery] = useState('');
   const [sortKey, setSortKey] = useState<keyof typeof sorters>('dateDesc');
   const [page, setPage] = useState(1);
   const PAGE_SIZE = 10;
 
-  // 초기 로드(localStorage) + JSON 사용자 프리필
+  // 현재 로그인 사용자 상태
+  const [activeUser, setActiveUser] = useState<SessionUser | null>(null);
+
+  // 사용자 키(스토리지 네임스페이스)
+  const userKeyRef = useRef<string>('guest');
+
+  /* 0) 상위에서 내려준 데모/시드유저 mockUser 주입 */
   useEffect(() => {
+    if (typeof window === 'undefined') return;
     try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) setInquiries(JSON.parse(saved) as Inquiry[]);
-      const draft = localStorage.getItem(DRAFT_KEY);
-      if (draft) {
-        const parsed = JSON.parse(draft);
-        setFormData((prev) => ({ ...prev, ...parsed }));
-        setShowForm(true);
-        toast('이전 작성 중인 초안을 복원했어요.', { icon: '📝' });
-      } else if (currentUser) {
-        setFormData((prev) => ({
-          ...prev,
-          name: currentUser.name ?? prev.name,
-          email: currentUser.email ?? prev.email,
-        }));
+      if (demoOn && seedUser) {
+        const prev = localStorage.getItem('mockUser');
+        const next = JSON.stringify(seedUser);
+        if (prev !== next) {
+          localStorage.setItem('mockUser', next);
+          window.dispatchEvent(new Event('user-switched'));
+          window.dispatchEvent(new Event('auth-changed'));
+        }
       }
     } catch {
-      // ignore
+      /* ignore */
     }
-  }, [currentUser]);
+  }, [demoOn, seedUser]);
 
-  // 변경 시 저장(localStorage)
+  /* 1) 초기 로드(localStorage) */
+  useEffect(() => {
+    const first = getActiveUserKey();
+    userKeyRef.current = first.userKey;
+
+    const au: SessionUser | null = first.activeUser ?? null;
+    setActiveUser(au);
+
+    try {
+      const savedRaw = localStorage.getItem(sk(first.userKey));
+      if (savedRaw) {
+        try {
+          setInquiries(sanitizeInquiries(JSON.parse(savedRaw)));
+        } catch (parseErr) {
+          console.warn('[inquiries:init] saved parse failed, fallback to []', parseErr);
+          setInquiries([]);
+        }
+      } else {
+        setInquiries([]);
+      }
+
+      const draftRaw = localStorage.getItem(dk(first.userKey));
+      if (draftRaw) {
+        try {
+          const parsed = JSON.parse(draftRaw);
+          setFormData((prev) => ({ ...prev, ...parsed }));
+          setShowForm(true);
+          toast('이전 작성 중인 초안을 복원했어요.', { icon: '📝' });
+        } catch (parseErr) {
+          console.warn('[inquiries:init] draft parse failed, ignore it', parseErr);
+          try { localStorage.removeItem(dk(first.userKey)); } catch { /* empty */ }
+          if (au) {
+            setFormData((prev) => ({
+              ...prev,
+              name: au.name ?? prev.name,
+              email: au.email ?? prev.email,
+            }));
+          } else {
+            setFormData({ name: '', email: '', password: '', title: '' });
+          }
+        }
+        return; // 초안 복원 시 조기 종료
+      }
+
+      // 초안이 없을 때 프리필
+      if (au) {
+        setFormData((prev) => ({
+          ...prev,
+          name: au.name ?? prev.name,
+          email: au.email ?? prev.email,
+        }));
+      } else {
+        setFormData({ name: '', email: '', password: '', title: '' });
+      }
+    } catch (e) {
+      console.warn('[inquiries:init] load failed', e);
+      setInquiries([]);
+      if (au) {
+        setFormData((prev) => ({
+          ...prev,
+          name: au.name ?? prev.name,
+          email: au.email ?? prev.email,
+        }));
+      } else {
+        setFormData({ name: '', email: '', password: '', title: '' });
+      }
+    }
+  }, []);
+
+  /* 2) 계정 전환/다른 탭 동기화 */
+  useEffect(() => {
+    const reloadByUser = () => {
+      const { userKey, activeUser } = getActiveUserKey();
+      userKeyRef.current = userKey;
+      setActiveUser(activeUser);
+
+      try {
+        const saved = localStorage.getItem(sk(userKey));
+        setInquiries(saved ? sanitizeInquiries(JSON.parse(saved)) : []);
+
+        const draft = localStorage.getItem(dk(userKey));
+        if (draft) {
+          const parsed = JSON.parse(draft);
+          setFormData((prev) => ({ ...prev, ...parsed }));
+          setShowForm(true);
+        } else if (activeUser) {
+          setFormData((prev) => ({
+            ...prev,
+            name: activeUser.name ?? prev.name,
+            email: activeUser.email ?? prev.email,
+          }));
+        } else {
+          setFormData({ name: '', email: '', password: '', title: '' });
+        }
+
+        setSelectedInquiryId(null);
+        setPage(1);
+      } catch (e) {
+        console.warn('[inquiries:user-switch] reload failed', e);
+      }
+    };
+
+    const onStorage = (ev: StorageEvent) => {
+      if (!ev.key) return;
+      if (ev.key === 'mockUser') {
+        reloadByUser();
+        return;
+      }
+      const { userKey } = getActiveUserKey();
+
+      if (ev.key === sk(userKey)) {
+        try {
+          const next = ev.newValue ? JSON.parse(ev.newValue) : [];
+          setInquiries(sanitizeInquiries(next));
+          setSelectedInquiryId(null);
+          setPage(1);
+        } catch (e) {
+          console.warn('[inquiries:storage] load failed', e);
+        }
+        return;
+      }
+
+      if (ev.key === dk(userKey)) {
+        try {
+          const draft = ev.newValue ? JSON.parse(ev.newValue) : null;
+          if (draft) {
+            setFormData((prev) => ({ ...prev, ...draft }));
+            setShowForm(true);
+          }
+        } catch (e) {
+          console.warn('[inquiries:storage] load failed', e);
+        }
+      }
+    };
+
+    const onAuthChanged  = () => reloadByUser();
+    const onUserSwitched = () => reloadByUser();
+    const onVisibility   = () => { if (!document.hidden) reloadByUser(); };
+
+    window.addEventListener('auth-changed', onAuthChanged);
+    window.addEventListener('storage', onStorage);
+    window.addEventListener('user-switched', onUserSwitched as EventListener);
+    document.addEventListener('visibilitychange', onVisibility);
+
+    reloadByUser();
+
+    return () => {
+      window.removeEventListener('auth-changed', onAuthChanged);
+      window.removeEventListener('storage', onStorage);
+      window.removeEventListener('user-switched', onUserSwitched as EventListener);
+      document.removeEventListener('visibilitychange', onVisibility);
+    };
+  }, []);
+
+  /* 3) 변경 시 저장(localStorage) */
   useEffect(() => {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(inquiries));
+      localStorage.setItem(sk(userKeyRef.current), JSON.stringify(inquiries));
     } catch (err) {
       console.warn('[storage] Failed to persist inquiries to localStorage', err);
-
-      // 로컬스토리지 실패(사파리 프라이빗/용량 초과 등) → 세션스토리지 폴백
       try {
         if (typeof window !== 'undefined' && 'sessionStorage' in window) {
-          sessionStorage.setItem(STORAGE_KEY, JSON.stringify(inquiries));
+          sessionStorage.setItem(sk(userKeyRef.current), JSON.stringify(inquiries));
           toast('세션에 임시 저장했어요. 창을 닫으면 사라집니다.', { icon: '💾' });
         }
       } catch (fallbackErr) {
@@ -229,19 +424,17 @@ export default function ProgramInquirySection() {
     }
   }, [inquiries]);
 
-  // 폼 초안 자동 저장 (디바운스)
+  /* 4) 폼 초안 자동 저장 (디바운스) */
   const saveDraft = useMemo(
     () =>
       debounce((next: any) => {
         try {
-          localStorage.setItem(DRAFT_KEY, JSON.stringify(next));
+          localStorage.setItem(dk(userKeyRef.current), JSON.stringify(next));
         } catch (err) {
           console.warn('[storage] Failed to persist draft to localStorage', err);
-
-          // localStorage 실패(사파리 프라이빗/용량 초과 등) → sessionStorage 폴백
           try {
             if (typeof window !== 'undefined' && 'sessionStorage' in window) {
-              sessionStorage.setItem(DRAFT_KEY, JSON.stringify(next));
+              sessionStorage.setItem(dk(userKeyRef.current), JSON.stringify(next));
               toast('세션에 임시 저장했어요. 창을 닫으면 사라집니다.', { icon: '💾' });
             }
           } catch (fallbackErr) {
@@ -252,12 +445,11 @@ export default function ProgramInquirySection() {
       }, 500),
     []
   );
-
   useEffect(() => {
     saveDraft(formData);
   }, [formData, saveDraft]);
 
-  // 검색어 디바운스
+  /* 5) 검색어 디바운스 */
   const [debouncedQuery, setDebouncedQuery] = useState(query);
   const setDebounced = useMemo(
     () =>
@@ -289,10 +481,9 @@ export default function ProgramInquirySection() {
     return filtered.slice(start, start + PAGE_SIZE);
   }, [filtered, page]);
 
-  // 폼 변경 핸들러
+  /* 폼 변경 핸들러 */
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, maxLength } = e.target;
-
     if (name === 'password') {
       const onlyDigits = value.replace(/\D+/g, '').slice(0, 4);
       setFormData((prev) => ({ ...prev, password: onlyDigits }));
@@ -301,13 +492,12 @@ export default function ProgramInquirySection() {
     setFormData((prev) => ({ ...prev, [name]: maxLength ? value.slice(0, maxLength) : value }));
   };
 
-  // 폼 제출 핸들러
+  /* 폼 제출 */
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const content = editorRef.current?.getInstance().getHTML() || '';
-    // 유효성 검사
-    if (!formData.password || !formData.password.trim()) {
+    if (!formData.password?.trim()) {
       toast.error('비밀번호를 입력해주세요.');
       return;
     }
@@ -320,40 +510,50 @@ export default function ProgramInquirySection() {
       return;
     }
 
-    const userEmail = currentUser?.email ?? '';
+    // 비로그인 상태일 때 이름/이메일 필수
+    if (!activeUser) {
+      if (!formData.name.trim()) {
+        toast.error('이름을 입력해주세요.');
+        return;
+      }
+      if (!formData.email.trim()) {
+        toast.error('이메일을 입력해주세요.');
+        return;
+      }
+    }
+
     const newPost: Inquiry = {
       id: Date.now(),
-      name: formData.name || currentUser?.name || '익명',
-      email: formData.email || currentUser?.email || '',
+      name: activeUser ? (activeUser.name || '익명') : (formData.name.trim() || '익명'),
+      email: activeUser ? (activeUser.email ?? '').trim() : (formData.email ?? '').trim(),
       password: formData.password,
       title: formData.title,
       content,
       date: fmtDateISO()!,
       replies: [],
       answers: [],
-      profileImage: currentUser?.profileImage
+      profileImage: activeUser ? normalizeImageUrl((activeUser as any).profileImage) : undefined,
     };
 
     setInquiries((prev) => [newPost, ...prev]);
     setFormData({
-      name: currentUser?.name ?? '',
-      email: currentUser?.email ?? '',
+      name: activeUser?.name ?? '',
+      email: activeUser?.email ?? '',
       password: '',
       title: '',
     });
     editorRef.current?.getInstance().setHTML('');
 
     try {
-      localStorage.removeItem(DRAFT_KEY);
-    } catch (err) {
-      console.warn('[storage] Failed to remove draft from localStorage', err);
+      localStorage.removeItem(dk(userKeyRef.current));
+    } catch {
       try {
         if (typeof window !== 'undefined' && 'sessionStorage' in window) {
-          sessionStorage.removeItem(DRAFT_KEY);
+          sessionStorage.removeItem(dk(userKeyRef.current));
           toast('로컬 저장소 정리에 실패하여 세션에서만 초안을 정리했어요.', { icon: '🧹' });
         }
-      } catch (fallbackErr) {
-        console.error('[storage] sessionStorage fallback remove failed', fallbackErr);
+      } catch (e) {
+        console.warn('[inquiries:storage] clear failed', e);
       }
     }
     setShowForm(false);
@@ -392,12 +592,13 @@ export default function ProgramInquirySection() {
   };
 
   const handleExportJSON = () => {
+    const key = userKeyRef.current;
     const blob = new Blob([JSON.stringify(inquiries, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     const stamp = new Date().toISOString().replaceAll(':', '-').split('.')[0];
     a.href = url;
-    a.download = `program_inquiries_${stamp}.json`;
+    a.download = `program_inquiries_${key}_${stamp}.json`;
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -410,9 +611,9 @@ export default function ProgramInquirySection() {
     reader.onload = () => {
       try {
         const text = reader.result?.toString() || '[]';
-        const data = JSON.parse(text) as Inquiry[];
-        if (!Array.isArray(data)) throw new Error('Invalid');
-        setInquiries(data);
+        const raw = JSON.parse(text) as any[];
+        if (!Array.isArray(raw)) throw new Error('Invalid');
+        setInquiries(sanitizeInquiries(raw));
         setSelectedInquiryId(null);
         setPage(1);
         toast.success('JSON 데이터가 로드되었습니다.');
@@ -435,23 +636,47 @@ export default function ProgramInquirySection() {
     <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${color}`}>{text}</span>
   );
 
-  const Avatar = ({ name, seed, image }: { name: string; seed: number; image?: string | undefined }) => (
-    image ? (
+  /** 네트워크 실패 시 자동 폴백되는 Avatar */
+  const Avatar = ({ name, seed, image }: { name: string; seed: number; image?: string | undefined }) => {
+    const [broken, setBroken] = useState(false);
+    const normalized = normalizeImageUrl(image);
+    const showFallback = !normalized || broken;
+
+    if (showFallback) {
+      return (
+        <div
+          className={`w-8 h-8 flex items-center justify-center rounded-full border ${randomPastel(seed)} border-white shadow-sm`}
+          title={name}
+        >
+          <span className="text-xs font-bold">{initials(name)}</span>
+        </div>
+      );
+    }
+    return (
       <img
-        src={image}
+        src={normalized}
         alt={name}
         className="w-8 h-8 rounded-full object-cover border border-gray-200 shadow-sm"
         title={name}
+        onError={() => setBroken(true)}
+        loading="lazy"
+        referrerPolicy="no-referrer"
       />
-    ) : (
-      <div
-        className={`w-8 h-8 flex items-center justify-center rounded-full border ${randomPastel(seed)} border-white shadow-sm`}
-        title={name}
-      >
-        <span className="text-xs font-bold">{initials(name)}</span>
-      </div>
-    )
-  );
+    );
+  };
+
+  // 문의의 프로필 이미지 폴백 (게스트는 이미지 없이 이니셜로 표시)
+  const resolveProfileImage = (item: Inquiry): string | undefined => {
+    if (item.profileImage) return normalizeImageUrl(item.profileImage);
+    if (
+      activeUser?.email &&
+      item.email &&
+      item.email.toLowerCase() === activeUser.email.toLowerCase()
+    ) {
+      return normalizeImageUrl((activeUser as any).profileImage);
+    }
+    return undefined;
+  };
 
   return (
     <div className="w-full relative">
@@ -489,75 +714,36 @@ export default function ProgramInquirySection() {
             프로그램 문의
           </h1>
           <Badge text={`총 ${inquiries.length}건`} />
+          {activeUser ? (
+            <Badge text="로그인됨" color="bg-emerald-100 text-emerald-700" />
+          ) : (
+            <Badge text="익명 모드" color="bg-gray-200 text-gray-700" />
+          )}
         </div>
 
-        <div className="flex flex-wrap items-center gap-2">
-          <div className="flex items-center gap-2">
-            <input
-              type="text"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="제목/작성자 검색"
-              className="border rounded-md px-3 py-2 w-56 focus:ring-2 focus:ring-blue-500"
+        {/* 현재 사용자 칩 */}
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border shadow-sm">
+            <Avatar
+              name={activeUser ? (activeUser.name || '이름 없음') : (formData.name || '익명')}
+              seed={activeUser ? (activeUser.id ? Number(activeUser.id.toString().replace(/\D/g, '')) : Date.now()) : 0}
+              image={activeUser ? (activeUser as any).profileImage : undefined}
             />
-            <select
-              value={sortKey}
-              onChange={(e) => setSortKey(e.target.value as any)}
-              className="border rounded-md px-2 py-2 text-sm"
-            >
-              <option value="dateDesc">최신순</option>
-              <option value="dateAsc">오래된순</option>
-              <option value="titleAsc">오름차</option>
-              <option value="titleDesc">내림차</option>
-            </select>
+            <div className="leading-tight">
+              <div className="text-sm font-medium text-gray-900">
+                {activeUser ? (activeUser.name || '이름 없음') : (formData.name || '익명')}
+              </div>
+              <div className="text-[11px] text-gray-500">
+                {activeUser ? (activeUser.email || '') : '로그인하지 않음'}
+              </div>
+            </div>
           </div>
-
-          <div className="h-6 w-px bg-gray-300" />
-
-          <button
-            onClick={() => setShowForm((s) => !s)}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium flex items-center shadow-sm"
-          >
-            <i className={`${showForm ? 'ri-close-line' : 'ri-add-line'} mr-1`} />
-            {showForm ? '닫기' : '문의 작성'}
-          </button>
-
-          <button
-            onClick={handleExportJSON}
-            className="px-3 py-2 rounded-md border bg-white hover:bg-gray-50 flex items-center text-sm"
-            title="JSON 내보내기"
-          >
-            <i className="ri-download-2-line mr-1" />
-            내보내기
-          </button>
-
-          <input ref={fileInputRef} type="file" accept="application/json" className="hidden" onChange={handleImportJSON} />
-          <button
-            onClick={() => fileInputRef.current?.click()}
-            className="px-3 py-2 rounded-md border bg-white hover:bg-gray-50 flex items-center text-sm"
-            title="JSON 불러오기"
-          >
-            <i className="ri-upload-2-line mr-1" />
-            불러오기
-          </button>
-
-          <button
-            onClick={handleClearAll}
-            className="px-3 py-2 rounded-md border bg-white hover:bg-gray-50 flex items-center text-sm text-red-600"
-            title="전체 삭제"
-          >
-            <i className="ri-delete-bin-6-line mr-1" />
-            전체삭제
-          </button>
         </div>
       </div>
 
       {/* Form */}
       {showForm && (
-        <form
-          onSubmit={handleSubmit}
-          className="border rounded-lg bg-white p-6 mb-10 shadow-sm space-y-5"
-        >
+        <form onSubmit={handleSubmit} className="border rounded-lg bg-white p-6 mb-10 shadow-sm space-y-5">
           {/* 이름 + 이메일 + 비밀번호 */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="flex items-center gap-4">
@@ -570,6 +756,8 @@ export default function ProgramInquirySection() {
                 className="flex-1 border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500"
                 placeholder="홍길동"
                 maxLength={30}
+                disabled={!!activeUser}
+                required={!activeUser}
               />
             </div>
 
@@ -583,6 +771,8 @@ export default function ProgramInquirySection() {
                 placeholder="example@email.com"
                 className="flex-1 border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500"
                 maxLength={80}
+                disabled={!!activeUser}
+                required={!activeUser}
               />
             </div>
 
@@ -618,13 +808,7 @@ export default function ProgramInquirySection() {
           {/* 질문 내용 */}
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-2">질문 내용</label>
-            <Editor
-              ref={editorRef}
-              previewStyle="vertical"
-              height="320px"
-              initialEditType="wysiwyg"
-              useCommandShortcut
-            />
+            <Editor ref={editorRef} previewStyle="vertical" height="320px" initialEditType="wysiwyg" useCommandShortcut />
           </div>
 
           {/* 하단 버튼 */}
@@ -636,25 +820,15 @@ export default function ProgramInquirySection() {
                 type="button"
                 onClick={() => {
                   try {
-                    localStorage.removeItem(DRAFT_KEY);
+                    localStorage.removeItem(dk(userKeyRef.current));
                     toast('초안을 삭제했습니다.');
-                  } catch (err) {
-                    // eslint-disable-next-line no-console
-                    console.warn('[storage] Failed to remove draft from localStorage', err);
-
+                  } catch {
                     try {
                       if (typeof window !== 'undefined' && 'sessionStorage' in window) {
-                        sessionStorage.removeItem(DRAFT_KEY);
-                        toast('로컬 저장소 삭제에 실패하여 세션 초안만 삭제했어요.', {
-                          icon: '🧹',
-                        });
+                        sessionStorage.removeItem(dk(userKeyRef.current));
+                        toast('로컬 저장소 삭제에 실패하여 세션 초안만 삭제했어요.', { icon: '🧹' });
                       }
-                    } catch (fallbackErr) {
-                      // eslint-disable-next-line no-console
-                      console.error(
-                        '[storage] sessionStorage fallback remove failed',
-                        fallbackErr
-                      );
+                    } catch {
                       toast.error('초안 삭제에 실패했어요. 브라우저 저장소를 확인해주세요.');
                     }
                   }
@@ -674,17 +848,13 @@ export default function ProgramInquirySection() {
               >
                 취소
               </button>
-              <button
-                type="submit"
-                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md font-semibold"
-              >
+              <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md font-semibold">
                 등록
               </button>
             </div>
           </div>
         </form>
       )}
-
 
       {/* List */}
       <div className="mt-8">
@@ -703,6 +873,66 @@ export default function ProgramInquirySection() {
         ) : (
           <>
             <div className="overflow-x-auto border rounded-lg bg-white shadow-sm">
+              <div className="flex flex-wrap items-center gap-2 p-3 border-b">
+                <div className="flex items-center gap-2">
+                  <input
+                    type="text"
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    placeholder="제목/작성자 검색"
+                    className="border rounded-md px-3 py-2 w-56 focus:ring-2 focus:ring-blue-500"
+                  />
+                  <select
+                    value={sortKey}
+                    onChange={(e) => setSortKey(e.target.value as any)}
+                    className="border rounded-md px-2 py-2 text-sm"
+                  >
+                    <option value="dateDesc">최신순</option>
+                    <option value="dateAsc">오래된순</option>
+                    <option value="titleAsc">오름차</option>
+                    <option value="titleDesc">내림차</option>
+                  </select>
+                </div>
+
+                <div className="h-6 w-px bg-gray-300" />
+
+                <button
+                  onClick={() => setShowForm((s) => !s)}
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium flex items-center shadow-sm"
+                >
+                  <i className={`${showForm ? 'ri-close-line' : 'ri-add-line'} mr-1`} />
+                  {showForm ? '닫기' : '문의 작성'}
+                </button>
+
+                <button
+                  onClick={handleExportJSON}
+                  className="px-3 py-2 rounded-md border bg-white hover:bg-gray-50 flex items-center text-sm"
+                  title="JSON 내보내기"
+                >
+                  <i className="ri-download-2-line mr-1" />
+                  내보내기
+                </button>
+
+                <input ref={fileInputRef} type="file" accept="application/json" className="hidden" onChange={handleImportJSON} />
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  className="px-3 py-2 rounded-md border bg-white hover:bg-gray-50 flex items-center text-sm"
+                  title="JSON 불러오기"
+                >
+                  <i className="ri-upload-2-line mr-1" />
+                  불러오기
+                </button>
+
+                <button
+                  onClick={handleClearAll}
+                  className="px-3 py-2 rounded-md border bg-white hover:bg-gray-50 flex items-center text-sm text-red-600"
+                  title="전체 삭제"
+                >
+                  <i className="ri-delete-bin-6-line mr-1" />
+                  전체삭제
+                </button>
+              </div>
+
               <table className="w-full border-collapse text-left text-gray-800">
                 <thead className="bg-gray-100 border-b">
                   <tr>
@@ -720,9 +950,7 @@ export default function ProgramInquirySection() {
                     return (
                       <tr
                         key={inq.id}
-                        className={`hover:bg-gray-50 transition-colors border-b cursor-pointer ${
-                          selectedInquiryId === inq.id ? 'bg-blue-50' : ''
-                        }`}
+                        className={`hover:bg-gray-50 transition-colors border-b cursor-pointer ${selectedInquiryId === inq.id ? 'bg-blue-50' : ''}`}
                         onClick={(e) => {
                           const tag = (e.target as HTMLElement).tagName;
                           if (tag !== 'BUTTON' && tag !== 'I') {
@@ -740,9 +968,7 @@ export default function ProgramInquirySection() {
                         </td>
                         <td className="text-center">
                           <div className="flex items-center justify-center gap-2">
-                            <Avatar
-                              name={inq.name || '익명'} seed={inq.id} image={currentUser?.profileImage}
-                            />
+                            <Avatar name={inq.name || '익명'} seed={inq.id} image={resolveProfileImage(inq)} />
                             <div className="text-sm leading-tight">
                               <div className="font-medium">{inq.name || '익명'}</div>
                             </div>
@@ -811,62 +1037,44 @@ export default function ProgramInquirySection() {
               <div className="mt-6 border border-gray-200 rounded-lg bg-white p-6 shadow-sm">
                 <div className="flex items-start justify-between border-b pb-4 mb-4">
                   <div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-1">
-                      {selectedPost.title}
-                    </h3>
+                    <h3 className="text-xl font-bold text-gray-900 mb-1">{selectedPost.title}</h3>
                     <div className="text-sm text-gray-600 flex items-center gap-2">
                       <span className="inline-flex items-center gap-2">
-                        <Avatar
-                          name={selectedPost.name || '익명'}
-                          seed={selectedPost.id}
-                          image={selectedPost.profileImage}
-                        />
+                        <Avatar name={selectedPost.name || '익명'} seed={selectedPost.id} image={resolveProfileImage(selectedPost)} />
                         <span className="font-medium">{selectedPost.name || '익명'}</span>
                       </span>
 
                       <span className="text-gray-300">|</span>
                       <span>{fmtKoreanDate(selectedPost.date)}</span>
-                      <span className="text-gray-400 text-xs">
-                        ({relativeTimeFromISO(selectedPost.date)})
-                      </span>
+                      <span className="text-gray-400 text-xs">({relativeTimeFromISO(selectedPost.date)})</span>
 
-                      {/* 이메일 표시 (마스킹 처리) */}
                       {selectedPost.email && (
                         <>
                           <span className="text-gray-300">|</span>
-                          <span className="text-xs text-gray-500">
-                            {maskEmail(selectedPost.email)}
-                          </span>
+                          <span className="text-xs text-gray-500">{maskEmail(selectedPost.email)}</span>
                         </>
                       )}
                     </div>
                   </div>
 
                   <div className="flex gap-2">
-                    <button
-                      onClick={() => openPasswordModal(selectedPost, 'edit')}
-                      className="px-3 py-2 rounded-md border bg-white hover:bg-gray-50 flex items-center text-sm"
-                    >
+                    <button onClick={() => openPasswordModal(selectedPost, 'edit')} className="px-3 py-2 rounded-md border bg-white hover:bg-gray-50 flex items-center text-sm">
                       <i className="ri-edit-2-line mr-1" />
                       수정
                     </button>
-                    <button
-                      onClick={() => openPasswordModal(selectedPost, 'delete')}
-                      className="px-3 py-2 rounded-md border bg-white hover:bg-gray-50 flex items-center text-sm text-red-600"
-                    >
+                    <button onClick={() => openPasswordModal(selectedPost, 'delete')} className="px-3 py-2 rounded-md border bg-white hover:bg-gray-50 flex items-center text-sm text-red-600">
                       <i className="ri-delete-bin-6-line mr-1" />
                       삭제
                     </button>
                   </div>
                 </div>
 
-                <div
-                  className="prose max-w-none mb-6"
-                  dangerouslySetInnerHTML={{ __html: selectedPost.content }}
-                />
+                {/* 본문 */}
+                <div className="prose max-w-none mb-6" dangerouslySetInnerHTML={{ __html: selectedPost.content }} />
 
+                {/* 답변/댓글 섹션 */}
                 <AnswerSection post={selectedPost} setInquiries={setInquiries} />
-                <ReplySection post={selectedPost} setInquiries={setInquiries} />
+                <ReplySection  post={selectedPost} setInquiries={setInquiries} />
               </div>
             )}
 
@@ -893,9 +1101,7 @@ export default function ProgramInquirySection() {
                         return;
                       }
                       setInquiries((prev) =>
-                        prev.map((p) =>
-                          p.id === editingInquiry.id ? { ...p, title: editingInquiry.title, content: newContent } : p
-                        )
+                        prev.map((p) => (p.id === editingInquiry.id ? { ...p, title: editingInquiry.title, content: newContent } : p))
                       );
                       toast.success('문의가 수정되었습니다!');
                       setIsEditing(false);
@@ -1075,7 +1281,7 @@ function AnswerSection({
   );
 }
 
-
+/* ------------------------------ Reply Section ------------------------------ */
 function ReplySection({
   post,
   setInquiries,

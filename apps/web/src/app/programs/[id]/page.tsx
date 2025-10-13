@@ -4,9 +4,6 @@
  * Date : 2025-10-12
  */
 
-'use client';
-
-import { use } from 'react';
 import Link from 'next/link';
 import programsDataRaw from 'data/programs.json';
 import programDetailsRaw from 'data/program-details.json';
@@ -14,7 +11,6 @@ import ProgramHeader from './ProgramHeader';
 import ProgramTabContent from './ProgramTabContent';
 import ProgramHero from '../ProgramHero';
 
-// 타입 정의
 interface Program {
   id: number;
   title: string;
@@ -92,20 +88,17 @@ interface ProgramDetailData {
 }
 
 interface PageProps {
-  params: Promise<{
-    id: string;
-  }>;
+  params: { id: string };
 }
 
 const programsData = programsDataRaw.programs as Program[];
 const programDetailsData = programDetailsRaw.programs as Record<string, ProgramDetailData>;
 
 export default function ProgramDetail({ params }: PageProps) {
-  // React.use()로 Promise unwrap
-  const { id: programId } = use(params);
+  const programId = params.id;
 
   const program = programDetailsData[programId];
-  const basicProgram = programsData.find(p => p.id.toString() === programId);
+  const basicProgram = programsData.find((p) => p.id.toString() === programId);
 
   if (!program || !basicProgram) {
     return (
@@ -132,18 +125,18 @@ export default function ProgramDetail({ params }: PageProps) {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <nav className="flex items-center space-x-2 text-sm text-gray-600">
               <Link href="/" className="hover:text-blue-600">홈</Link>
-              <i className="ri-arrow-right-s-line"></i>
+              <i className="ri-arrow-right-s-line" />
               <Link href="/programs" className="hover:text-blue-600">프로그램</Link>
-              <i className="ri-arrow-right-s-line"></i>
+              <i className="ri-arrow-right-s-line" />
               <span className="text-gray-900">{program.title}</span>
             </nav>
           </div>
         </section>
 
-        {/* 프로그램 헤더 컴포넌트 */}
+        {/* 프로그램 헤더 */}
         <ProgramHeader program={program} programId={programId} />
 
-        {/* 프로그램 탭 콘텐츠 컴포넌트 */}
+        {/* 프로그램 탭 콘텐츠 */}
         <ProgramTabContent program={program} />
       </div>
     </div>

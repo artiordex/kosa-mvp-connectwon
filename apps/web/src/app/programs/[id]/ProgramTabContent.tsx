@@ -8,6 +8,7 @@
 
 import { useState } from 'react';
 import ProgramInquirySection from './ProgramInquirySection';
+import sessionUser from 'data/mypage-with-user.json';
 
 interface Review {
   id: number;
@@ -50,6 +51,13 @@ interface ProgramTabContentProps {
 export default function ProgramTabContent({ program }: ProgramTabContentProps) {
   const [activeTab, setActiveTab] = useState('overview');
   const [showFullDescription, setShowFullDescription] = useState(false);
+
+  const demoFlag = process.env['NEXT_PUBLIC_ALLOW_DEMO'] ?? '0';
+  const demoOn   = demoFlag === '1' || demoFlag === '2';
+  const demoUser =
+    (sessionUser as any)?.user ??
+    (sessionUser as any)?.newUser ??
+    null;
 
   const tabs = [
     { id: 'overview', name: '개요', icon: 'ri-information-line' },
@@ -137,7 +145,9 @@ export default function ProgramTabContent({ program }: ProgramTabContentProps) {
                           className="flex items-start bg-blue-50 p-4 rounded-lg"
                         >
                           <i className="ri-check-line text-blue-600 mr-3 mt-1" />
-                          <span className="text-gray-800 font-medium">{objective}</span>
+                          <span className="text-gray-800 font-medium">
+                            {objective}
+                          </span>
                         </div>
                       ))}
                     </div>
@@ -375,8 +385,10 @@ export default function ProgramTabContent({ program }: ProgramTabContentProps) {
               </div>
             )}
 
-            {/* 문의 섹션 (독립 컴포넌트) */}
-            {activeTab === 'inquiry' && <ProgramInquirySection />}
+            {/* 문의 섹션: JSON과 플래그를 내려줌 */}
+            {activeTab === 'inquiry' && (
+              <ProgramInquirySection demoOn={demoOn} seedUser={demoUser} />
+            )}
           </div>
         </div>
       </div>

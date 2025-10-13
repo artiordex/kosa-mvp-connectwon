@@ -109,54 +109,6 @@
       "reservedAt": "2025-10-05T14:20:00Z",
       "cancelable": true,
       "category": "비즈니스"
-    },
-    {
-      "id": 10,
-      "type": "program",
-      "title": "데이터 시각화 실무 교육",
-      "instructor": "이데이터",
-      "location": "ConnectWon 판교지점 세미나룸 A",
-      "date": "2025-10-28",
-      "time": "09:30-12:30",
-      "status": "upcoming",
-      "participants": 12,
-      "maxParticipants": 20,
-      "image": "images/program_of_5.png",
-      "reservedAt": "2025-10-08T10:15:00Z",
-      "cancelable": true,
-      "category": "데이터"
-    },
-    {
-      "id": 15,
-      "type": "program",
-      "title": "AI 스타트업 데모데이",
-      "instructor": "오창업",
-      "location": "ConnectWon 마포지점 대강당",
-      "date": "2025-11-15",
-      "time": "14:00-18:00",
-      "status": "upcoming",
-      "participants": 30,
-      "maxParticipants": 50,
-      "image": "images/program_of_10.png",
-      "reservedAt": "2025-10-20T11:00:00Z",
-      "cancelable": true,
-      "category": "스타트업"
-    },
-    {
-      "id": 20,
-      "type": "program",
-      "title": "창업자 네트워킹 나이트",
-      "instructor": "최창업",
-      "location": "ConnectWon 마포지점 라운지홀",
-      "date": "2025-11-28",
-      "time": "19:00-22:00",
-      "status": "upcoming",
-      "participants": 22,
-      "maxParticipants": 40,
-      "image": "images/program_of_15.png",
-      "reservedAt": "2025-10-25T15:30:00Z",
-      "cancelable": true,
-      "category": "네트워킹"
     }
   ],
   "myCreatedPrograms": [
@@ -224,48 +176,6 @@
       "difficulty": "intermediate"
     },
     {
-      "id": "prog-004",
-      "title": "와인 테이스팅 입문",
-      "category": "문화",
-      "instructor": "민시우",
-      "description": "와인의 기초부터 테이스팅 방법까지",
-      "date": "2024-11-30",
-      "time": "19:00-21:00",
-      "location": "ConnectWon 강남지점 라운지",
-      "price": 55000,
-      "participants": 15,
-      "maxParticipants": 15,
-      "status": "completed",
-      "rating": 4.9,
-      "reviews": 15,
-      "image": "images/wine_tasting.png",
-      "createdAt": "2024-10-15T14:00:00Z",
-      "materials": ["와인잔"],
-      "targetAudience": "성인",
-      "difficulty": "beginner"
-    },
-    {
-      "id": "prog-005",
-      "title": "퍼스널 브랜딩 전략",
-      "category": "마케팅",
-      "instructor": "민시우",
-      "description": "개인 브랜드 구축을 위한 전략 수립",
-      "date": "2025-01-20",
-      "time": "10:00-13:00",
-      "location": "ConnectWon 강남지점 세미나실 A",
-      "price": 40000,
-      "participants": 16,
-      "maxParticipants": 20,
-      "status": "scheduled",
-      "rating": 4.5,
-      "reviews": 10,
-      "image": "images/personal_branding.png",
-      "createdAt": "2024-12-05T09:00:00Z",
-      "materials": ["노트북"],
-      "targetAudience": "직장인",
-      "difficulty": "beginner"
-    },
-    {
       "id": "prog-006",
       "title": "Python 데이터 분석",
       "category": "개발",
@@ -285,48 +195,6 @@
       "materials": ["노트북", "Python 설치"],
       "targetAudience": "개발자",
       "difficulty": "intermediate"
-    },
-    {
-      "id": "prog-007",
-      "title": "사진 촬영 기초",
-      "category": "예술",
-      "instructor": "민시우",
-      "description": "DSLR 카메라 활용 기초 촬영 기법",
-      "date": "2025-02-10",
-      "time": "10:00-14:00",
-      "location": "ConnectWon 마포지점 스튜디오",
-      "price": 42000,
-      "participants": 10,
-      "maxParticipants": 12,
-      "status": "scheduled",
-      "rating": 4.8,
-      "reviews": 9,
-      "image": "images/photography_basics.png",
-      "createdAt": "2024-12-15T10:00:00Z",
-      "materials": ["DSLR 카메라"],
-      "targetAudience": "초보자",
-      "difficulty": "beginner"
-    },
-    {
-      "id": "prog-008",
-      "title": "리더십 코칭",
-      "category": "자기계발",
-      "instructor": "민시우",
-      "description": "조직을 이끄는 리더십 역량 강화",
-      "date": "2025-02-20",
-      "time": "15:00-18:00",
-      "location": "ConnectWon 강남지점 컨퍼런스룸",
-      "price": 48000,
-      "participants": 14,
-      "maxParticipants": 18,
-      "status": "scheduled",
-      "rating": 4.9,
-      "reviews": 11,
-      "image": "images/leadership_coaching.png",
-      "createdAt": "2024-12-18T14:00:00Z",
-      "materials": ["워크북"],
-      "targetAudience": "관리자",
-      "difficulty": "advanced"
     }
   ],
   "roomReservations": [
@@ -483,21 +351,6 @@
       "helpfulCount": 5,
       "createdAt": "2024-12-20T12:00:00Z",
       "isEditable": false
-    },
-    {
-      "id": "review-003",
-      "type": "program",
-      "relatedId": 10,
-      "relatedTitle": "데이터 시각화 실무 교육",
-      "relatedImage": "images/program_of_5.png",
-      "instructor": "이데이터",
-      "rating": 5,
-      "comment": "데이터 시각화의 기본부터 고급 기술까지 체계적으로 배울 수 있었습니다. 실무 예제가 특히 도움이 되었어요.",
-      "pros": ["체계적인 커리큘럼", "실무 예제 풍부", "친절한 강사"],
-      "cons": [],
-      "helpfulCount": 8,
-      "createdAt": "2025-10-28T16:00:00Z",
-      "isEditable": true
     }
   ],
   "myNotifications": [
@@ -670,5 +523,79 @@
       "createdAt": "2025-10-04T09:10:00Z",
       "actionUrl": "/notice/system"
     }
-  ]
+  ],
+  "newUser": {
+    "id": "mock-user-002",
+    "name": "소나무",
+    "email": "test@gmail.com",
+    "password": "sonamu123!",
+    "phone": "010-0000-0000",
+    "profileImage": "/images/image.png",
+    "role": "Family",
+    "role_flags": 1,
+    "joinDate": "2025-10-14",
+    "lastActivity": null,
+    "registeredAt": "2025-10-14",
+    "lastLogin": null,
+    "emailVerified": true,
+    "phoneVerified": false,
+    "bio": "test",
+    "interests": [],
+    "location": {
+      "city": "서울",
+      "district": ""
+    },
+    "social": {
+      "linkedin": null,
+      "github": null
+    },
+    "providers": [],
+    "security": {
+      "twoFactorEnabled": false,
+      "lastPasswordChange": "2025-10-14T03:00:00Z",
+      "activeSessions": 1,
+      "ssoEnabled": false,
+      "ssoProvider": null,
+      "ssoConfig": {
+        "domain": null,
+        "enforced": false,
+        "allowLocalLogin": true
+      }
+    },
+    "preferences": {
+      "language": "ko",
+      "theme": "light",
+      "emailNotifications": true,
+      "smsNotifications": false,
+      "pushNotifications": true
+    },
+    "stats": {
+      "totalReservations": 0,
+      "upcomingReservations": 0,
+      "completedPrograms": 0,
+      "totalPoints": 0,
+      "mentoringHours": 0,
+      "createdPrograms": 0,
+      "totalParticipants": 0
+    },
+    "reservations": [],
+    "createdPrograms": [],
+    "reviews": [],
+    "notifications": [
+      {
+        "id": "welcome-001",
+        "type": "welcome",
+        "title": "가입을 환영합니다, 소나무님! 🎉",
+        "message": "ConnectWon에 오신 것을 진심으로 환영합니다. 프로필을 완성하고 관심사를 설정해 맞춤 프로그램을 받아보세요.",
+        "relatedId": null,
+        "category": "시스템",
+        "icon": "ri-sparkling-2-line",
+        "status": "unread",
+        "isImportant": true,
+        "createdAt": "2025-10-14T15:40:00Z",
+        "actionUrl": "/onboarding"
+      }
+    ],
+    "pointHistory": []
+  }
 }
